@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>QA Skills for AI Agents</title>
 <meta name="description" content="Agent skills that make AI coding agents write tests like a senior QA engineer. Playwright, test strategy, CI/CD, flaky test management, and more.">
+<meta name="theme-color" content="#fafaf9">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236366f1'/><text x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='system-ui' font-weight='700'>Q</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,144 +22,182 @@ code,pre,.mono{font-family:'IBM Plex Mono',monospace}
 .container{max-width:960px;margin:0 auto;padding:0 20px}
 @media(min-width:640px){.container{padding:0 24px}}
 
-/* Hero */
-.hero{padding:100px 0 24px;text-align:center}
-@media(min-width:640px){.hero{padding:144px 0 36px}}
-.hero h1{font-size:30px;font-weight:700;letter-spacing:-0.035em;line-height:1.2;margin-bottom:18px;color:#1c1a18}
-@media(min-width:640px){.hero h1{font-size:40px}}
-@media(min-width:1024px){.hero h1{font-size:48px}}
-.hero .lead{font-size:16px;color:#57534e;max-width:520px;margin:0 auto 40px;line-height:1.7}
+/* Fade-in on load */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.fade{opacity:0;animation:fadeUp .6s ease forwards}
+.fade-d1{animation-delay:.1s}
+.fade-d2{animation-delay:.2s}
+.fade-d3{animation-delay:.35s}
+.fade-d4{animation-delay:.5s}
+.fade-d5{animation-delay:.65s}
+@media(prefers-reduced-motion:reduce){.fade{animation-duration:.01s}}
 
-/* Install */
-.install{max-width:480px;margin:0 auto 24px;display:flex;align-items:center;background:#3d3a36;border-radius:10px;overflow:hidden}
-.install code{flex:1;padding:14px 18px;font-size:13px;color:#ece8e1;white-space:nowrap;overflow-x:auto;line-height:1.8}
-.install .prompt{color:#a8a19a;user-select:none}
-.copy-btn{background:none;border:none;border-left:1px solid #4a4741;padding:14px 16px;cursor:pointer;color:#a8a19a;transition:color .2s;display:flex;align-items:center}
-.copy-btn:hover{color:#ece8e1}
-.copy-btn svg{width:16px;height:16px}
+/* Hero */
+.hero{padding:100px 0 48px;max-width:560px;margin:0 auto}
+@media(min-width:640px){.hero{padding:144px 0 56px}}
+.hero-inner{padding:0 20px}
+@media(min-width:640px){.hero-inner{padding:0 24px}}
+.hero-label{font-size:15px;font-weight:600;color:#6366f1;margin-bottom:14px}
+@media(min-width:640px){.hero-label{margin-bottom:18px}}
+.hero h1{font-size:30px;font-weight:700;letter-spacing:-0.035em;line-height:1.18;margin-bottom:14px;color:#1c1a18}
+@media(min-width:640px){.hero h1{font-size:40px;line-height:1.12}}
+@media(min-width:1024px){.hero h1{font-size:48px}}
+.hero .lead{font-size:16px;color:#78716c;max-width:400px;line-height:1.7}
+
+/* Install terminal */
+.terminal-section{max-width:560px;margin:0 auto;padding:12px 20px 64px}
+@media(min-width:640px){.terminal-section{padding:12px 24px 96px}}
+.terminal{background:#1c1917;border-radius:12px;overflow:hidden}
+.terminal-dots{display:flex;gap:6px;padding:12px 16px 0}
+.terminal-dots span{width:8px;height:8px;border-radius:50%;opacity:.6}
+.terminal-dots .dot-r{background:#ef4444}
+.terminal-dots .dot-y{background:#eab308}
+.terminal-dots .dot-g{background:#22c55e}
+.terminal-code{display:flex;align-items:center;padding:10px 16px 14px}
+@media(min-width:640px){.terminal-code{padding:10px 22px 18px}}
+.terminal-code code{flex:1;font-size:12.5px;color:#d6d3d1;white-space:nowrap;overflow-x:auto;line-height:1.7}
+@media(min-width:640px){.terminal-code code{font-size:13px}}
+.terminal-code .prompt{color:#57534e;user-select:none}
+.copy-btn{background:none;border:none;padding:8px;cursor:pointer;color:#57534e;transition:color .2s;display:flex;align-items:center;border-radius:4px}
+.copy-btn:hover{color:#d6d3d1}
+.copy-btn svg{width:15px;height:15px}
 .copy-btn.copied{color:#22c55e}
 
-.cta-row{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:10px;font-weight:600;font-size:15px;transition:all .2s;border:none;cursor:pointer;text-decoration:none}
-.btn-primary{background:#3d3a36;color:#ece8e1}
-.btn-primary:hover{background:#4a4741;color:#ece8e1}
-.btn-outline{background:transparent;color:#44403c;border:1px solid #d6d3d1}
+/* CTA row */
+.cta-section{max-width:560px;margin:0 auto;padding:0 20px}
+@media(min-width:640px){.cta-section{padding:0 24px}}
+.cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+@media(min-width:640px){.cta-row{margin-bottom:22px}}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:10px;font-weight:600;font-size:14px;transition:all .2s;border:none;cursor:pointer;text-decoration:none;min-height:44px}
+.btn-primary{background:#1c1917;color:#fafaf9;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500}
+.btn-primary:hover{background:#292524;color:#fafaf9}
+.btn-outline{background:transparent;color:#44403c;border:1px solid #d6d3d1;font-size:14px}
 .btn-outline:hover{border-color:#a8a29e;color:#1c1a18}
 .btn svg{width:16px;height:16px}
 
-.agents-inline{text-align:center;font-size:13px;color:#a8a29e;padding:16px 0 0}
-.agents-inline span{color:#78716c}
+/* Agents */
+.agents-line{font-size:12px;color:#a8a29e;font-weight:500;letter-spacing:.02em}
+.agents-line span{color:#78716c}
 
-.proof{max-width:480px;margin:28px auto 0;text-align:left}
+/* Proof block */
+.proof{margin-top:22px;padding-top:18px;border-top:1px solid #e7e5e4}
 .proof-label{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#a8a29e;font-weight:500;margin-bottom:10px}
 .proof ul{list-style:none;padding:0}
-.proof li{font-size:13px;color:#57534e;line-height:1.7;padding-left:16px;position:relative}
-.proof li::before{content:"\2013";position:absolute;left:0;color:#a8a29e}
+.proof li{font-size:13px;color:#57534e;line-height:1.8;padding-left:16px;position:relative}
+.proof li::before{content:"\2013";position:absolute;left:0;color:#c4bfb8}
 
-/* Problem section */
-.problem{padding:56px 0;border-top:1px solid #e7e5e4}
-@media(min-width:640px){.problem{padding:72px 0}}
-.problem h2{font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.3;margin-bottom:12px}
-@media(min-width:640px){.problem h2{font-size:26px}}
-.problem .sub{color:#78716c;margin-bottom:32px;font-size:15px;max-width:600px;line-height:1.7}
-.problem-grid{display:grid;grid-template-columns:1fr;gap:16px}
-@media(min-width:640px){.problem-grid{grid-template-columns:repeat(3,1fr);gap:20px}}
-.problem-item{background:#fff;border:1px solid #e7e5e4;border-radius:10px;padding:20px}
+/* Sections */
+.section{padding:48px 0;border-top:1px solid #e7e5e4}
+@media(min-width:640px){.section{padding:72px 0}}
+.section h2{font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.3;margin-bottom:12px}
+@media(min-width:640px){.section h2{font-size:28px}}
+.section .sub{color:#78716c;margin-bottom:32px;font-size:15px;line-height:1.7;max-width:600px}
+
+/* Problem cards */
+.problem-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:12px;overflow:hidden}
+@media(min-width:640px){.problem-grid{grid-template-columns:repeat(3,1fr)}}
+.problem-item{background:#fff;padding:20px 22px}
+@media(min-width:640px){.problem-item{padding:22px 22px 24px}}
 .problem-item .label{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#a8a29e;font-weight:500;margin-bottom:8px}
 .problem-item p{font-size:14px;color:#57534e;line-height:1.6}
 .problem-item p strong{color:#1c1a18;font-weight:600}
+.problem-item code{font-size:12px;background:#f5f5f4;padding:1px 5px;border-radius:4px;color:#44403c}
 
-/* What changes */
-.changes{padding:56px 0;border-top:1px solid #e7e5e4}
-@media(min-width:640px){.changes{padding:72px 0}}
-.changes h2{font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.3;margin-bottom:32px}
-@media(min-width:640px){.changes h2{font-size:26px}}
-.change-list{display:grid;grid-template-columns:1fr;gap:2px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:10px;overflow:hidden}
-.change-row{display:grid;grid-template-columns:1fr;gap:0;background:#fff;padding:18px 20px}
-@media(min-width:640px){.change-row{grid-template-columns:160px 1fr;gap:16px}}
+/* Changes list */
+.changes h2{max-width:640px}
+.change-list{display:grid;grid-template-columns:1fr;gap:1px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:12px;overflow:hidden}
+.change-row{display:grid;grid-template-columns:1fr;gap:4px;background:#fff;padding:18px 22px}
+@media(min-width:640px){.change-row{grid-template-columns:160px 1fr;gap:16px;padding:18px 22px}}
 .change-skill{font-size:13px;font-weight:600;color:#1c1a18;font-family:'IBM Plex Mono',monospace}
-.change-what{font-size:14px;color:#57534e;line-height:1.5}
+.change-what{font-size:14px;color:#57534e;line-height:1.6}
 
-/* Categories */
-.categories{padding:56px 0;border-top:1px solid #e7e5e4}
-@media(min-width:640px){.categories{padding:72px 0}}
-.categories h2{font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.3;margin-bottom:8px}
-@media(min-width:640px){.categories h2{font-size:26px}}
-.categories .sub{color:#78716c;margin-bottom:32px;font-size:15px}
-.cat-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:10px;overflow:hidden}
+/* Category grid */
+.cat-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:12px;overflow:hidden}
 @media(min-width:480px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:768px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
-.cat-cell{background:#fff;padding:18px 20px}
-.cat-name{font-weight:600;font-size:14px;margin-bottom:2px;color:#1c1a18}
-.cat-count{font-size:12px;color:#a8a29e;margin-bottom:6px}
-.cat-skills{font-size:11.5px;color:#78716c;line-height:1.6;font-family:'IBM Plex Mono',monospace}
+.cat-cell{background:#fff;padding:18px 22px}
+.cat-name{font-weight:600;font-size:14px;margin-bottom:1px;color:#1c1a18}
+.cat-count{font-size:12px;color:#a8a29e;margin-bottom:8px}
+.cat-skills{font-size:11px;color:#78716c;line-height:1.7;font-family:'IBM Plex Mono',monospace}
 
-/* AI callout */
-.ai-section{padding:56px 0;border-top:1px solid #e7e5e4}
+/* AI card */
+.ai-section{padding:48px 0;border-top:1px solid #e7e5e4}
 @media(min-width:640px){.ai-section{padding:72px 0}}
-.ai-card{background:#fff;border:1px solid #e7e5e4;border-radius:10px;padding:28px 22px}
-@media(min-width:640px){.ai-card{padding:36px}}
+.ai-card{background:#fff;border:1px solid #e7e5e4;border-radius:12px;padding:24px 22px}
+@media(min-width:640px){.ai-card{padding:32px 36px}}
 .ai-card h2{font-size:20px;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px}
 @media(min-width:640px){.ai-card h2{font-size:24px}}
-.ai-card .sub{color:#78716c;margin-bottom:24px;font-size:14px}
-.ai-grid{display:grid;grid-template-columns:1fr;gap:20px}
-@media(min-width:640px){.ai-grid{grid-template-columns:repeat(2,1fr);gap:20px}}
-.ai-item .ai-name{font-weight:600;font-size:13px;color:#1c1a18;margin-bottom:2px;font-family:'IBM Plex Mono',monospace}
-.ai-item .ai-desc{font-size:13px;color:#78716c;line-height:1.5}
+.ai-card .sub{color:#78716c;margin-bottom:28px;font-size:14px;line-height:1.6}
+.ai-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:10px;overflow:hidden}
+@media(min-width:640px){.ai-grid{grid-template-columns:repeat(2,1fr)}}
+.ai-item{background:#fff;padding:18px 20px}
+@media(min-width:640px){.ai-item{padding:20px 22px}}
+.ai-item .ai-name{font-weight:600;font-size:13px;color:#1c1a18;margin-bottom:4px;font-family:'IBM Plex Mono',monospace}
+.ai-item .ai-desc{font-size:13px;color:#78716c;line-height:1.6}
 
 /* Footer */
-footer{border-top:1px solid #e7e5e4;padding:40px 0;text-align:center}
+footer{border-top:1px solid #e7e5e4;padding:40px 0 48px;text-align:center}
 .footer-author{font-size:14px;color:#78716c;margin-bottom:6px}
-.footer-author a{color:#1c1a18}
-.footer-links{font-size:13px;color:#a8a29e}
-.footer-links a{color:#a8a29e;margin:0 6px}
+.footer-author a{color:#1c1a18;font-weight:600}
+.footer-links{font-size:12px;color:#a8a29e;letter-spacing:.01em}
+.footer-links a{color:#a8a29e;margin:0 5px;transition:color .2s}
 .footer-links a:hover{color:#78716c}
-
-@media(max-width:640px){
-  .install code{font-size:12px;padding:12px 14px}
-}
 </style>
 </head>
 <body>
 
 <section class="hero">
-  <div class="container">
-    <h1>Stop fixing your AI agent's tests.</h1>
-    <p class="lead">You ask it to write a Playwright test. It gives you CSS selectors, waitForTimeout, and login boilerplate copy-pasted into every file. You spend more time fixing the output than you saved. These 39 skills help your agent generate tests that follow modern QA practice instead of generic LLM patterns.</p>
-    <div class="install">
+  <div class="hero-inner">
+    <div class="hero-label fade">QA Skills for AI Agents</div>
+    <h1 class="fade fade-d1">Stop fixing your AI agent's tests.</h1>
+    <p class="lead fade fade-d2">You ask it to write a Playwright test. It gives you CSS selectors, waitForTimeout, and login boilerplate copy-pasted into every file. You spend more time fixing the output than you saved. These 39 skills help your agent generate tests that follow modern QA practice instead of generic LLM patterns.</p>
+  </div>
+</section>
+
+<section class="terminal-section">
+  <div class="terminal fade fade-d3">
+    <div class="terminal-dots">
+      <span class="dot-r"></span>
+      <span class="dot-y"></span>
+      <span class="dot-g"></span>
+    </div>
+    <div class="terminal-code">
       <code><span class="prompt">$ </span>npx skills add petrkindlmann/qa-skills</code>
-      <button class="copy-btn" onclick="copyCmd(this)" aria-label="Copy">
+      <button class="copy-btn" onclick="copyCmd(this)" aria-label="Copy install command">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
       </button>
-    </div>
-    <div class="cta-row">
-      <a href="https://github.com/petrkindlmann/qa-skills" class="btn btn-primary">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-        View on GitHub
-      </a>
-      <a href="#what-changes" class="btn btn-outline">See what changes</a>
-    </div>
-    <div class="agents-inline">Works with <span>Claude Code</span>, <span>Codex</span>, <span>Cursor</span>, <span>Gemini CLI</span>, <span>VS Code</span>, <span>Windsurf</span></div>
-    <div class="proof">
-      <div class="proof-label">What changes after install</div>
-      <ul>
-        <li>Avoids waitForTimeout and brittle CSS selectors</li>
-        <li>Plans tests before generating code</li>
-        <li>Classifies flaky failures by root cause</li>
-        <li>Follows reusable fixtures and POM patterns</li>
-      </ul>
     </div>
   </div>
 </section>
 
-<section class="problem">
+<div class="cta-section">
+  <div class="cta-row fade fade-d4">
+    <a href="https://github.com/petrkindlmann/qa-skills" class="btn btn-primary">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+      View on GitHub
+    </a>
+    <a href="#what-changes" class="btn btn-outline">See what changes</a>
+  </div>
+  <div class="agents-line fade fade-d5">Works with <span>Claude Code</span>, <span>Codex</span>, <span>Cursor</span>, <span>Gemini CLI</span>, <span>VS Code</span>, <span>Windsurf</span></div>
+  <div class="proof fade fade-d5">
+    <div class="proof-label">What changes after install</div>
+    <ul>
+      <li>Avoids waitForTimeout and brittle CSS selectors</li>
+      <li>Plans tests before generating code</li>
+      <li>Classifies flaky failures by root cause</li>
+      <li>Follows reusable fixtures and POM patterns</li>
+    </ul>
+  </div>
+</div>
+
+<section class="section">
   <div class="container">
     <h2>You've seen these in PR reviews</h2>
     <p class="sub">The tests technically pass. But you know they'll break next week, and nobody will know why.</p>
     <div class="problem-grid">
       <div class="problem-item">
         <div class="label">Selectors</div>
-        <p><strong>div.container > ul > li:nth-child(3)</strong> — breaks the moment someone touches the layout. No data-testid, no getByRole. Just fragile paths through the DOM.</p>
+        <p><code>div.container > ul > li:nth-child(3)</code> — breaks the moment someone touches the layout. No data-testid, no getByRole. Just fragile paths through the DOM.</p>
       </div>
       <div class="problem-item">
         <div class="label">Architecture</div>
@@ -172,7 +211,7 @@ footer{border-top:1px solid #e7e5e4;padding:40px 0;text-align:center}
   </div>
 </section>
 
-<section class="changes" id="what-changes">
+<section class="section changes" id="what-changes">
   <div class="container">
     <h2>After installing, your agent starts following QA patterns you'd normally enforce in review</h2>
     <div class="change-list">
@@ -204,10 +243,10 @@ footer{border-top:1px solid #e7e5e4;padding:40px 0;text-align:center}
   </div>
 </section>
 
-<section class="categories" id="categories">
+<section class="section" id="categories">
   <div class="container">
     <h2>39 skills across 10 categories</h2>
-    <p class="sub">Full QA lifecycle — from strategy through automation to production monitoring.</p>
+    <p class="sub">Coverage across the full QA lifecycle — from strategy through automation to production monitoring.</p>
     <div class="cat-grid">
       <div class="cat-cell">
         <div class="cat-name">Foundation</div>
@@ -237,7 +276,7 @@ footer{border-top:1px solid #e7e5e4;padding:40px 0;text-align:center}
       <div class="cat-cell">
         <div class="cat-name">Infrastructure</div>
         <div class="cat-count">5 skills</div>
-        <div class="cat-skills">ci-cd, test-environments, test-data-management, contract-testing, service-virtualization</div>
+        <div class="cat-skills">ci-cd-integration, test-environments, test-data-management, contract-testing, service-virtualization</div>
       </div>
       <div class="cat-cell">
         <div class="cat-name">Metrics</div>
