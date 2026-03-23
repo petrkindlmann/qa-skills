@@ -29,7 +29,7 @@ Each skill's YAML frontmatter `description` must be specific enough to match the
 - Tool-specific integration guides live in `tools/integrations/`
 - Examples: `playwright-automation` references the Playwright integration guide, `qa-metrics` references Allure/Grafana dashboards
 
-## Available Skills — 39 skills across 10 categories
+## Available Skills — 40 skills across 10 categories
 
 ### Foundation
 | `qa-project-context` | "set up QA context," "configure testing," first use of any skill |
@@ -79,6 +79,7 @@ Each skill's YAML frontmatter `description` must be specific enough to match the
 | `release-readiness` | "release ready," "go/no-go," "smoke test," "release checklist" |
 | `quality-postmortem` | "QA retro," "escaped bugs," "postmortem," "improvement" |
 | `compliance-testing` | "GDPR test," "compliance," "CMP test," "cookie consent" |
+| `qa-report-humanizer` | "humanize report," "rewrite QA summary," "fix test report," "make this sound human" |
 
 ### Production & Observability
 | `testing-in-production` | "production testing," "feature flags," "canary," "guardrails" |

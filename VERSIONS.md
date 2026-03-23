@@ -11,7 +11,7 @@
 
 ## v2.0.0 (2026-03-23)
 
-### Complete collection — 39 skills
+### Complete collection — 40 skills
 
 Added 25 Phase 2 skills to complete the full QA lifecycle coverage.
 

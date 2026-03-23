@@ -7,7 +7,7 @@ Gemini CLI, VS Code, and other agents that support the Agent Skills Standard.
 npx skills add petrkindlmann/qa-skills
 ```
 
-39 skills covering:
+40 skills covering:
 - Playwright and Cypress automation
 - API, unit, and mobile testing
 - Test strategy and risk-based planning
@@ -20,7 +20,7 @@ npx skills add petrkindlmann/qa-skills
 
 Based on patterns from QA automation work across 6+ production sites.
 
-[![Skills](https://img.shields.io/badge/Skills-39-blue.svg)](#full-skills-table)
+[![Skills](https://img.shields.io/badge/Skills-40-blue.svg)](#full-skills-table)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Agent Skills Standard](https://img.shields.io/badge/Agent_Skills-Standard-purple.svg)](https://agentskills.io)
 [![Playwright](https://img.shields.io/badge/Playwright-First-green.svg)](https://playwright.dev)
@@ -74,7 +74,7 @@ Ask your AI agent in natural language. The right skill activates automatically.
 
 ## Skill categories
 
-39 skills across 10 categories. Each skill is under 500 lines with cross-references to related skills.
+40 skills across 10 categories. Each skill is under 500 lines with cross-references to related skills.
 
 ### Foundation (1)
 `qa-project-context` — project context template that every other skill reads first
@@ -97,8 +97,8 @@ Ask your AI agent in natural language. The right skill activates automatically.
 ### Metrics (3)
 `qa-metrics` · `qa-dashboard` · `coverage-analysis` — quality gates and KPIs, Allure/Grafana/ReportPortal dashboards, coverage-as-ratchet in CI
 
-### Process (5)
-`shift-left-testing` · `qa-project-bootstrap` · `release-readiness` · `quality-postmortem` · `compliance-testing` — shift-left patterns, QA onboarding, go/no-go checklists, blameless postmortems, GDPR/CMP compliance
+### Process (6)
+`shift-left-testing` · `qa-project-bootstrap` · `release-readiness` · `quality-postmortem` · `compliance-testing` · `qa-report-humanizer` — shift-left patterns, QA onboarding, go/no-go checklists, blameless postmortems, GDPR/CMP compliance, QA report humanization
 
 ### Production and observability (3)
 `testing-in-production` · `synthetic-monitoring` · `observability-driven-testing` — feature flag validation, scheduled synthetic probes, trace-based test assertions
@@ -145,6 +145,7 @@ Ask your AI agent in natural language. The right skill activates automatically.
 | [`release-readiness`](skills/release-readiness) | Go/no-go checklists, smoke test suite design, rollback criteria, staged rollout validation, release sign-off. | Process |
 | [`quality-postmortem`](skills/quality-postmortem) | Blameless postmortems for escaped defects. Bug pattern analysis, 5 Whys root cause analysis, test gap identification. | Process |
 | [`compliance-testing`](skills/compliance-testing) | Regulatory compliance testing. GDPR/CMP consent verification, Better Ads Standards, cookie auditing, privacy policy validation. | Process |
+| [`qa-report-humanizer`](skills/qa-report-humanizer) | Remove AI patterns from QA reports, bug reports, test summaries, and status updates. Makes QA writing sound like a real engineer wrote it. | Process |
 | [`testing-in-production`](skills/testing-in-production) | Production validation with feature flags, progressive rollouts, canary analysis, guardrail metrics, production smoke tests. | Production |
 | [`synthetic-monitoring`](skills/synthetic-monitoring) | Post-deploy validation via scheduled synthetic tests. Probe design for critical user journeys, alert thresholds, SLA tracking. | Production |
 | [`observability-driven-testing`](skills/observability-driven-testing) | Use traces, logs, and telemetry as test evidence. OpenTelemetry integration, trace-based assertions, log-informed test design. | Production |
