@@ -1,20 +1,16 @@
-# Contributing to QA Skills
+# Contributing
 
-Thanks for your interest in improving QA skills for AI agents.
-
-## How to Contribute
-
-### Adding a New Skill
+## Adding a new skill
 
 1. Create `skills/your-skill-name/SKILL.md`
 2. Follow the [Agent Skills Standard](https://agentskills.io) format
-3. Include YAML frontmatter with `name` (matching directory) and `description`
-4. Keep SKILL.md under 500 lines — move deep content to `references/`
-5. Add cross-references to related skills in the `## Related Skills` section
+3. Include YAML frontmatter with `name` (must match directory) and `description`
+4. Keep SKILL.md under 500 lines. Move deep content to `references/`
+5. Add cross-references to related skills in a `## Related Skills` section
 6. Update `skills_index.json` with your skill entry
-7. Update `VERSIONS.md` with the new skill
+7. Update `VERSIONS.md`
 
-### SKILL.md Structure
+### SKILL.md structure
 
 ```markdown
 ---
@@ -36,31 +32,27 @@ Check for `.agents/qa-project-context.md` first.
 ## Tools
 ```
 
-### Improving an Existing Skill
+## Improving an existing skill
 
 - Fix errors, add missing patterns, improve code examples
-- Keep changes focused — one concern per PR
-- Update version in `VERSIONS.md` if the change is significant
+- One concern per PR
+- Update `VERSIONS.md` if the change is significant
 
-### Adding Reference Files
+## Reference files
 
-Reference files go in `skills/skill-name/references/` and contain deep-dive content that would make SKILL.md too long. They are loaded on-demand when the agent needs more detail.
+Reference files go in `skills/skill-name/references/` for content that would make SKILL.md too long. Agents load these on demand.
 
-### Adding Tool Integrations
+## Tool integrations
 
 Tool integration guides go in `tools/integrations/tool-name.md`. Update `tools/REGISTRY.md` with the new entry.
 
-## Quality Standards
+## What we look for
 
-- **Real patterns** — Code examples should be production-ready, not pseudocode
-- **Opinionated** — Take a stance on best practices, don't hedge everything
-- **Cross-referenced** — Link to related skills where relevant
-- **Tested** — If adding a skill, consider adding evals in `evals/`
-
-## Code of Conduct
-
-Be respectful. Focus on improving QA practices for the community.
+- Code examples that actually work, not pseudocode
+- Opinions on best practices rather than listing every option
+- Cross-references to related skills
+- Evals in `evals/` if you're adding a skill
 
 ## License
 
-By contributing, you agree that your contributions will be licensed under MIT.
+Contributions are licensed under MIT.
