@@ -1,0 +1,21 @@
+# Planning docs (not part of the published repo)
+_planning/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node (if any tooling added later)
+node_modules/
+.npm
+
+# Python
+__pycache__/
+*.pyc
+.venv/

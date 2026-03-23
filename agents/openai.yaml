@@ -1,0 +1,7 @@
+name: qa-skills
+description: >-
+  QA & test automation skills for AI coding agents. 39 skills covering strategy,
+  Playwright, AI-augmented testing, CI/CD, metrics, and engineering culture.
+author: petrkindlmann
+homepage: https://github.com/petrkindlmann/qa-skills
+license: MIT

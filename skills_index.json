@@ -1,0 +1,240 @@
+{
+  "repository": "petrkindlmann/qa-skills",
+  "version": "2.0.0",
+  "skills": [
+    {
+      "name": "qa-project-context",
+      "path": "skills/qa-project-context",
+      "category": "foundation",
+      "tags": ["context", "setup", "configuration", "project"]
+    },
+    {
+      "name": "test-strategy",
+      "path": "skills/test-strategy",
+      "category": "strategy",
+      "tags": ["strategy", "planning", "test-pyramid", "risk", "quality"]
+    },
+    {
+      "name": "test-planning",
+      "path": "skills/test-planning",
+      "category": "strategy",
+      "tags": ["planning", "sprint", "release", "estimation", "coverage-mapping"]
+    },
+    {
+      "name": "risk-based-testing",
+      "path": "skills/risk-based-testing",
+      "category": "strategy",
+      "tags": ["risk", "prioritization", "assessment", "impact", "heatmap"]
+    },
+    {
+      "name": "exploratory-testing",
+      "path": "skills/exploratory-testing",
+      "category": "strategy",
+      "tags": ["exploratory", "sbtm", "manual", "heuristics", "charter"]
+    },
+    {
+      "name": "playwright-automation",
+      "path": "skills/playwright-automation",
+      "category": "automation",
+      "tags": ["playwright", "e2e", "browser", "typescript", "testing"]
+    },
+    {
+      "name": "cypress-automation",
+      "path": "skills/cypress-automation",
+      "category": "automation",
+      "tags": ["cypress", "e2e", "component", "intercept", "testing"]
+    },
+    {
+      "name": "api-testing",
+      "path": "skills/api-testing",
+      "category": "automation",
+      "tags": ["api", "rest", "graphql", "schema", "contract"]
+    },
+    {
+      "name": "unit-testing",
+      "path": "skills/unit-testing",
+      "category": "automation",
+      "tags": ["unit", "jest", "vitest", "pytest", "mocking", "coverage"]
+    },
+    {
+      "name": "mobile-testing",
+      "path": "skills/mobile-testing",
+      "category": "automation",
+      "tags": ["mobile", "appium", "detox", "ios", "android", "react-native"]
+    },
+    {
+      "name": "visual-testing",
+      "path": "skills/visual-testing",
+      "category": "automation",
+      "tags": ["visual", "screenshot", "regression", "chromatic", "percy"]
+    },
+    {
+      "name": "performance-testing",
+      "path": "skills/performance-testing",
+      "category": "automation",
+      "tags": ["performance", "k6", "lighthouse", "load", "web-vitals"]
+    },
+    {
+      "name": "accessibility-testing",
+      "path": "skills/accessibility-testing",
+      "category": "specialized",
+      "tags": ["accessibility", "a11y", "wcag", "axe-core", "screen-reader"]
+    },
+    {
+      "name": "security-testing",
+      "path": "skills/security-testing",
+      "category": "specialized",
+      "tags": ["security", "owasp", "zap", "xss", "csrf", "dependency-scan"]
+    },
+    {
+      "name": "cross-browser-testing",
+      "path": "skills/cross-browser-testing",
+      "category": "specialized",
+      "tags": ["cross-browser", "browserstack", "safari", "browser-matrix"]
+    },
+    {
+      "name": "database-testing",
+      "path": "skills/database-testing",
+      "category": "specialized",
+      "tags": ["database", "migration", "integrity", "sql", "seed-data"]
+    },
+    {
+      "name": "ai-test-generation",
+      "path": "skills/ai-test-generation",
+      "category": "ai-qa",
+      "tags": ["ai", "llm", "test-generation", "prompt", "pipeline"]
+    },
+    {
+      "name": "ai-bug-triage",
+      "path": "skills/ai-bug-triage",
+      "category": "ai-qa",
+      "tags": ["ai", "bug-triage", "classification", "deduplication", "ci-failure"]
+    },
+    {
+      "name": "test-reliability",
+      "path": "skills/test-reliability",
+      "category": "ai-qa",
+      "tags": ["reliability", "flaky", "locator", "resilience", "quarantine"]
+    },
+    {
+      "name": "ai-qa-review",
+      "path": "skills/ai-qa-review",
+      "category": "ai-qa",
+      "tags": ["review", "test-smells", "testability", "coverage-gaps", "quality"]
+    },
+    {
+      "name": "ci-cd-integration",
+      "path": "skills/ci-cd-integration",
+      "category": "infrastructure",
+      "tags": ["ci", "cd", "github-actions", "gitlab", "pipeline"]
+    },
+    {
+      "name": "test-environments",
+      "path": "skills/test-environments",
+      "category": "infrastructure",
+      "tags": ["environments", "docker", "staging", "preview", "parity"]
+    },
+    {
+      "name": "test-data-management",
+      "path": "skills/test-data-management",
+      "category": "infrastructure",
+      "tags": ["test-data", "fixtures", "factories", "seeding", "synthetic"]
+    },
+    {
+      "name": "contract-testing",
+      "path": "skills/contract-testing",
+      "category": "infrastructure",
+      "tags": ["contract", "pact", "consumer-driven", "provider", "api"]
+    },
+    {
+      "name": "service-virtualization",
+      "path": "skills/service-virtualization",
+      "category": "infrastructure",
+      "tags": ["mock", "stub", "fake", "wiremock", "msw", "testcontainers"]
+    },
+    {
+      "name": "qa-metrics",
+      "path": "skills/qa-metrics",
+      "category": "metrics",
+      "tags": ["metrics", "kpi", "coverage", "flakiness", "dashboard"]
+    },
+    {
+      "name": "qa-dashboard",
+      "path": "skills/qa-dashboard",
+      "category": "metrics",
+      "tags": ["dashboard", "allure", "grafana", "reportportal", "reporting"]
+    },
+    {
+      "name": "coverage-analysis",
+      "path": "skills/coverage-analysis",
+      "category": "metrics",
+      "tags": ["coverage", "istanbul", "v8", "gap-analysis", "ratchet"]
+    },
+    {
+      "name": "shift-left-testing",
+      "path": "skills/shift-left-testing",
+      "category": "process",
+      "tags": ["shift-left", "tdd", "pairing", "code-review", "quality-culture"]
+    },
+    {
+      "name": "qa-project-bootstrap",
+      "path": "skills/qa-project-bootstrap",
+      "category": "process",
+      "tags": ["onboarding", "bootstrap", "audit", "first-test", "ramp-up"]
+    },
+    {
+      "name": "release-readiness",
+      "path": "skills/release-readiness",
+      "category": "process",
+      "tags": ["release", "go-no-go", "smoke-test", "rollback", "deploy"]
+    },
+    {
+      "name": "quality-postmortem",
+      "path": "skills/quality-postmortem",
+      "category": "process",
+      "tags": ["postmortem", "retro", "escaped-bugs", "improvement", "5-whys"]
+    },
+    {
+      "name": "compliance-testing",
+      "path": "skills/compliance-testing",
+      "category": "process",
+      "tags": ["gdpr", "compliance", "consent", "cookies", "better-ads"]
+    },
+    {
+      "name": "testing-in-production",
+      "path": "skills/testing-in-production",
+      "category": "production",
+      "tags": ["production", "feature-flags", "canary", "rollout", "guardrails"]
+    },
+    {
+      "name": "synthetic-monitoring",
+      "path": "skills/synthetic-monitoring",
+      "category": "production",
+      "tags": ["synthetic", "monitoring", "uptime", "sla", "probes"]
+    },
+    {
+      "name": "observability-driven-testing",
+      "path": "skills/observability-driven-testing",
+      "category": "production",
+      "tags": ["observability", "traces", "logs", "telemetry", "opentelemetry"]
+    },
+    {
+      "name": "ai-system-testing",
+      "path": "skills/ai-system-testing",
+      "category": "knowledge",
+      "tags": ["ai-testing", "llm", "prompts", "evals", "hallucination", "nondeterminism"]
+    },
+    {
+      "name": "chaos-engineering",
+      "path": "skills/chaos-engineering",
+      "category": "knowledge",
+      "tags": ["chaos", "fault-injection", "resilience", "game-day", "litmus"]
+    },
+    {
+      "name": "test-migration",
+      "path": "skills/test-migration",
+      "category": "knowledge",
+      "tags": ["migration", "selenium-to-playwright", "jest-to-vitest", "modernization"]
+    }
+  ]
+}

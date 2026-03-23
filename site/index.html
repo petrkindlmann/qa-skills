@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QA Skills for AI Agents</title>
+<meta name="description" content="39 production-ready QA skills for AI coding agents. Works with Claude Code, Codex, Cursor, Gemini CLI, VS Code, and Windsurf.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F9EA;</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;--border:#222;--text:#e5e5e5;--text-muted:#888;--primary:#2563EB;--primary-light:#3B82F6;--primary-glow:rgba(37,99,235,.15)}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--primary-light);text-decoration:none;transition:color .2s}
+a:hover{color:#60a5fa}
+
+.container{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* Hero */
+.hero{padding:100px 0 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:800px;height:600px;background:radial-gradient(ellipse,var(--primary-glow),transparent 70%);pointer-events:none}
+.badge-row{display:flex;justify-content:center;gap:12px;margin-bottom:32px;position:relative}
+.badge-row img{height:20px}
+.hero h1{font-size:clamp(2.5rem,6vw,4rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:16px;position:relative}
+.hero h1 span{background:linear-gradient(135deg,#fff 0%,var(--primary-light) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tagline{font-size:clamp(1.1rem,2.5vw,1.35rem);color:var(--text-muted);max-width:560px;margin:0 auto 48px;font-weight:400;line-height:1.5}
+
+/* Install block */
+.install-block{display:flex;align-items:center;justify-content:center;gap:0;max-width:520px;margin:0 auto 28px;background:#0d1117;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.install-block code{flex:1;padding:16px 20px;font-family:'JetBrains Mono',monospace;font-size:.95rem;color:#c9d1d9;white-space:nowrap;overflow-x:auto}
+.install-block code .prompt{color:#484f58;user-select:none}
+.copy-btn{background:none;border:none;border-left:1px solid var(--border);padding:16px 18px;cursor:pointer;color:var(--text-muted);transition:color .2s,background .2s;display:flex;align-items:center}
+.copy-btn:hover{color:#fff;background:rgba(255,255,255,.05)}
+.copy-btn svg{width:18px;height:18px}
+.copy-btn.copied{color:#22c55e}
+
+.cta-row{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:10px;font-weight:600;font-size:.95rem;transition:all .2s;border:none;cursor:pointer}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-light);color:#fff;transform:translateY(-1px);box-shadow:0 8px 24px rgba(37,99,235,.25)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{border-color:#444;color:#fff;transform:translateY(-1px)}
+.btn svg{width:18px;height:18px}
+
+/* Agents */
+.agents{padding:48px 0 64px;border-top:1px solid var(--border)}
+.agents-label{text-align:center;font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;color:var(--text-muted);margin-bottom:28px;font-weight:500}
+.agents-row{display:flex;justify-content:center;gap:40px;flex-wrap:wrap;align-items:center}
+.agent{display:flex;align-items:center;gap:10px;color:#666;font-weight:500;font-size:.9rem;transition:color .2s}
+.agent:hover{color:var(--text)}
+.agent-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--surface2);color:var(--text-muted);font-weight:700;flex-shrink:0}
+
+/* Stats */
+.stats{padding:48px 0;text-align:center}
+.stats-grid{display:flex;justify-content:center;gap:64px;flex-wrap:wrap}
+.stat-num{font-size:2.5rem;font-weight:800;color:#fff;line-height:1}
+.stat-num span{background:linear-gradient(135deg,var(--primary-light),#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:.85rem;color:var(--text-muted);margin-top:6px}
+
+/* Section headers */
+.section-title{font-size:clamp(1.5rem,3vw,2rem);font-weight:700;text-align:center;margin-bottom:8px;letter-spacing:-.02em}
+.section-sub{text-align:center;color:var(--text-muted);margin-bottom:48px;font-size:1.05rem}
+
+/* Categories */
+.categories{padding:64px 0}
+.cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px}
+.cat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:22px 20px;transition:all .25s;cursor:default}
+.cat-card:hover{border-color:#333;transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.cat-name{font-weight:600;font-size:.95rem;margin-bottom:4px}
+.cat-count{font-size:.8rem;color:var(--text-muted)}
+.cat-card .cat-dot{width:8px;height:8px;border-radius:50%;margin-bottom:12px}
+
+/* AI callout */
+.ai-callout{padding:64px 0}
+.ai-card{background:linear-gradient(135deg,rgba(37,99,235,.08),rgba(129,140,248,.06));border:1px solid rgba(37,99,235,.2);border-radius:16px;padding:48px;position:relative;overflow:hidden}
+.ai-card::before{content:'';position:absolute;top:0;right:0;width:300px;height:300px;background:radial-gradient(circle,rgba(37,99,235,.1),transparent 70%);pointer-events:none}
+.ai-card h2{font-size:1.6rem;font-weight:700;margin-bottom:8px;letter-spacing:-.02em}
+.ai-card .sub{color:var(--text-muted);margin-bottom:32px;font-size:1rem}
+.ai-skills{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.ai-skill{display:flex;align-items:flex-start;gap:12px}
+.ai-skill-icon{width:36px;height:36px;border-radius:8px;background:rgba(37,99,235,.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.ai-skill-name{font-weight:600;font-size:.9rem}
+.ai-skill-desc{font-size:.8rem;color:var(--text-muted);margin-top:2px}
+
+/* Footer */
+footer{border-top:1px solid var(--border);padding:48px 0;text-align:center}
+.footer-author{font-size:.95rem;margin-bottom:8px;color:var(--text-muted)}
+.footer-author a{color:var(--text);font-weight:500}
+.footer-links{font-size:.8rem;color:#555}
+.footer-links a{color:#555;margin:0 8px}
+.footer-links a:hover{color:var(--text-muted)}
+
+@media(max-width:640px){
+  .hero{padding:72px 0 56px}
+  .agents-row{gap:24px}
+  .stats-grid{gap:36px}
+  .ai-card{padding:28px 22px}
+  .cat-grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+  .install-block code{font-size:.82rem;padding:14px 16px}
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="container">
+    <div class="badge-row">
+      <img src="https://img.shields.io/github/stars/petrkindlmann/qa-skills?style=social" alt="GitHub stars" loading="lazy">
+      <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT License" loading="lazy">
+    </div>
+    <h1><span>QA Skills for AI Agents</span></h1>
+    <p class="tagline">39 production-ready skills that teach AI coding agents how to do quality assurance. Test strategies, automation, monitoring, and more.</p>
+    <div class="install-block">
+      <code><span class="prompt">$ </span>npx skills add petrkindlmann/qa-skills</code>
+      <button class="copy-btn" onclick="copyInstall(this)" aria-label="Copy install command">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      </button>
+    </div>
+    <div class="cta-row">
+      <a href="https://github.com/petrkindlmann/qa-skills" class="btn btn-primary">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+        View on GitHub
+      </a>
+      <a href="#categories" class="btn btn-outline">Browse Skills</a>
+    </div>
+  </div>
+</section>
+
+<section class="agents">
+  <div class="container">
+    <div class="agents-label">Works with your favorite AI agent</div>
+    <div class="agents-row">
+      <div class="agent"><div class="agent-icon">C</div>Claude Code</div>
+      <div class="agent"><div class="agent-icon">O</div>Codex</div>
+      <div class="agent"><div class="agent-icon">Cu</div>Cursor</div>
+      <div class="agent"><div class="agent-icon">G</div>Gemini CLI</div>
+      <div class="agent"><div class="agent-icon">V</div>VS Code</div>
+      <div class="agent"><div class="agent-icon">W</div>Windsurf</div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div><div class="stat-num"><span>39</span></div><div class="stat-label">Skills</div></div>
+      <div><div class="stat-num"><span>10</span></div><div class="stat-label">Categories</div></div>
+      <div><div class="stat-num"><span>6</span></div><div class="stat-label">Supported Agents</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="categories" id="categories">
+  <div class="container">
+    <h2 class="section-title">Skill Categories</h2>
+    <p class="section-sub">Comprehensive QA coverage from foundations to production monitoring</p>
+    <div class="cat-grid">
+      <div class="cat-card"><div class="cat-dot" style="background:#6366f1"></div><div class="cat-name">Foundation</div><div class="cat-count">1 skill</div></div>
+      <div class="cat-card"><div class="cat-dot" style="background:#8b5cf6"></div><div class="cat-name">Strategy</div><div class="cat-count">4 skills</div></div>
+      <div class="cat-card"><div class="cat-dot" style="background:#2563eb"></div><div class="cat-name">Automation</div><div class="cat-count">7 skills</div></div>
+      <div class="cat-card"><div class="cat-dot" style="background:#0891b2"></div><div class="cat-name">Specialized</div><div class="cat-count">4 skills</div></div>
+      <div class="cat-card"><div class="cat-dot" style="background:#059669"></div><div class="cat-name">AI-QA</div><div class="cat-count">4 skills</div></div>
+      <div class="cat-card"><div class="cat-dot" style="background:#d97706"></div><div class="cat-name">Infrastructure</div><div class="cat-count">5 skills</div></div>
+      <div class="cat-card"><div class="cat-dot" style="background:#dc2626"></div><div class="cat-name">Metrics</div><div class="cat-count">3 skills</div></div>
+      <div class="cat-card"><div class="cat-dot" style="background:#e11d48"></div><div class="cat-name">Process</div><div class="cat-count">5 skills</div></div>
+      <div class="cat-card"><div class="cat-dot" style="background:#7c3aed"></div><div class="cat-name">Production</div><div class="cat-count">3 skills</div></div>
+      <div class="cat-card"><div class="cat-dot" style="background:#475569"></div><div class="cat-name">Knowledge</div><div class="cat-count">3 skills</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="ai-callout">
+  <div class="container">
+    <div class="ai-card">
+      <h2>AI-Augmented QA</h2>
+      <p class="sub">Four unique skills designed for the intersection of AI and quality assurance</p>
+      <div class="ai-skills">
+        <div class="ai-skill">
+          <div class="ai-skill-icon">&#x1F9E0;</div>
+          <div><div class="ai-skill-name">AI Test Generation</div><div class="ai-skill-desc">Use LLMs to generate and maintain test cases</div></div>
+        </div>
+        <div class="ai-skill">
+          <div class="ai-skill-icon">&#x1F50D;</div>
+          <div><div class="ai-skill-name">AI Code Review</div><div class="ai-skill-desc">AI-powered code review for quality gates</div></div>
+        </div>
+        <div class="ai-skill">
+          <div class="ai-skill-icon">&#x1F4CA;</div>
+          <div><div class="ai-skill-name">AI Test Analysis</div><div class="ai-skill-desc">Analyze test results and flakiness with AI</div></div>
+        </div>
+        <div class="ai-skill">
+          <div class="ai-skill-icon">&#x26A1;</div>
+          <div><div class="ai-skill-name">AI Regression Detection</div><div class="ai-skill-desc">Predict and detect regressions using ML</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p class="footer-author">Built by <a href="https://kindlmann.com">Petr Kindlmann</a></p>
+    <p class="footer-links">
+      <a href="https://github.com/petrkindlmann/qa-skills">GitHub</a>
+      <span>&middot;</span>
+      <a href="https://github.com/petrkindlmann/qa-skills/blob/main/LICENSE">MIT License</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+function copyInstall(btn){
+  navigator.clipboard.writeText('npx skills add petrkindlmann/qa-skills').then(()=>{
+    btn.classList.add('copied');
+    btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    setTimeout(()=>{
+      btn.classList.remove('copied');
+      btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>';
+    },2000);
+  });
+}
+</script>
+</body>
+</html>

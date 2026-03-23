@@ -1,0 +1,154 @@
+{
+  "skill": "playwright-automation",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "pw-001",
+      "prompt": "Write a Playwright test for a login page with email and password fields",
+      "expected_patterns": [
+        "page.goto",
+        "getByRole OR getByLabel OR getByTestId",
+        "fill",
+        "click",
+        "expect"
+      ],
+      "anti_patterns": [
+        "waitForTimeout",
+        "page.pause",
+        "sleep",
+        "page.$()",
+        "page.click("
+      ],
+      "tags": ["basic", "auth", "form"]
+    },
+    {
+      "id": "pw-002",
+      "prompt": "Set up a Playwright Page Object for a dashboard page with sidebar navigation",
+      "expected_patterns": [
+        "class",
+        "constructor",
+        "this.page",
+        "async",
+        "getByRole OR getByTestId OR getByLabel"
+      ],
+      "anti_patterns": [
+        "page.$()",
+        "xpath",
+        "css="
+      ],
+      "tags": ["page-object", "architecture"]
+    },
+    {
+      "id": "pw-003",
+      "prompt": "Write a Playwright test that mocks an API response for /api/users",
+      "expected_patterns": [
+        "page.route",
+        "route.fulfill",
+        "json",
+        "expect"
+      ],
+      "anti_patterns": [
+        "waitForTimeout",
+        "fetch("
+      ],
+      "tags": ["api-mocking", "network"]
+    },
+    {
+      "id": "pw-004",
+      "prompt": "Configure playwright.config.ts for running tests against staging and production environments",
+      "expected_patterns": [
+        "defineConfig",
+        "projects",
+        "use",
+        "baseURL",
+        "process.env OR env"
+      ],
+      "anti_patterns": [
+        "hardcoded URL without env"
+      ],
+      "tags": ["config", "environments"]
+    },
+    {
+      "id": "pw-005",
+      "prompt": "Write a test that reuses authentication state across tests using storageState",
+      "expected_patterns": [
+        "storageState",
+        "globalSetup OR setup project",
+        "expect"
+      ],
+      "anti_patterns": [
+        "page.fill.*password in every test",
+        "beforeEach.*login"
+      ],
+      "tags": ["auth", "fixtures", "performance"]
+    },
+    {
+      "id": "pw-006",
+      "prompt": "Write a Playwright test that verifies a table has the correct data after sorting",
+      "expected_patterns": [
+        "getByRole",
+        "click",
+        "toHaveText OR toContainText",
+        "expect"
+      ],
+      "anti_patterns": [
+        "waitForTimeout",
+        "allTextContents",
+        "page.$$("
+      ],
+      "tags": ["table", "sorting", "assertions"]
+    },
+    {
+      "id": "pw-007",
+      "prompt": "Set up Playwright test sharding for CI with 4 parallel workers",
+      "expected_patterns": [
+        "shard",
+        "matrix OR strategy",
+        "merge-reports OR blob"
+      ],
+      "anti_patterns": [],
+      "tags": ["ci", "sharding", "parallel"]
+    },
+    {
+      "id": "pw-008",
+      "prompt": "Write a Playwright fixture that provides an authenticated API client",
+      "expected_patterns": [
+        "test.extend",
+        "request OR APIRequestContext",
+        "async",
+        "use"
+      ],
+      "anti_patterns": [
+        "global variable",
+        "beforeAll without fixture"
+      ],
+      "tags": ["fixtures", "api", "auth"]
+    },
+    {
+      "id": "pw-009",
+      "prompt": "Write a visual regression test for a product card component",
+      "expected_patterns": [
+        "toHaveScreenshot",
+        "locator OR getBy",
+        "expect"
+      ],
+      "anti_patterns": [
+        "waitForTimeout before screenshot",
+        "page.screenshot without assertion"
+      ],
+      "tags": ["visual", "screenshot", "regression"]
+    },
+    {
+      "id": "pw-010",
+      "prompt": "Write a Playwright accessibility test using axe-core",
+      "expected_patterns": [
+        "AxeBuilder OR @axe-core/playwright",
+        "analyze",
+        "violations",
+        "expect"
+      ],
+      "anti_patterns": [],
+      "tags": ["accessibility", "a11y", "axe"]
+    }
+  ]
+}

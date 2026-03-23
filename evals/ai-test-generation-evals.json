@@ -1,0 +1,132 @@
+{
+  "skill": "ai-test-generation",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "aitg-001",
+      "prompt": "Generate test scenarios for a user registration feature with email, password, and name fields",
+      "expected_patterns": [
+        "happy path OR valid registration",
+        "invalid email",
+        "password validation OR weak password",
+        "empty OR missing fields",
+        "duplicate email OR already exists"
+      ],
+      "anti_patterns": [
+        "import OR require (code before scenarios)",
+        "only happy path"
+      ],
+      "tags": ["scenario-extraction", "registration", "form"]
+    },
+    {
+      "id": "aitg-002",
+      "prompt": "Given this user story: 'As a user, I want to filter products by price range so I can find affordable items', generate test scenarios with edge cases",
+      "expected_patterns": [
+        "minimum OR lower bound",
+        "maximum OR upper bound",
+        "no results OR empty",
+        "boundary OR edge",
+        "reset OR clear filter"
+      ],
+      "anti_patterns": [
+        "only happy path",
+        "no negative cases"
+      ],
+      "tags": ["user-story", "edge-cases", "filtering"]
+    },
+    {
+      "id": "aitg-003",
+      "prompt": "Create a coverage matrix for an e-commerce checkout flow",
+      "expected_patterns": [
+        "cart OR items",
+        "payment",
+        "shipping OR address",
+        "validation OR error",
+        "matrix OR table OR coverage"
+      ],
+      "anti_patterns": [
+        "test code before matrix",
+        "only happy path"
+      ],
+      "tags": ["coverage-matrix", "checkout", "e-commerce"]
+    },
+    {
+      "id": "aitg-004",
+      "prompt": "Review these AI-generated tests for quality issues and suggest improvements",
+      "expected_patterns": [
+        "assertion quality OR weak assertion",
+        "test isolation OR shared state",
+        "naming OR readability",
+        "edge case OR missing scenario"
+      ],
+      "anti_patterns": [
+        "LGTM OR looks good",
+        "no suggestions"
+      ],
+      "tags": ["review", "quality", "improvement"]
+    },
+    {
+      "id": "aitg-005",
+      "prompt": "Generate assertions/oracles for a test scenario: 'User submits a form with valid data and sees a success confirmation'",
+      "expected_patterns": [
+        "visible OR displayed",
+        "text OR message",
+        "URL OR redirect OR navigation",
+        "data persisted OR saved OR API"
+      ],
+      "anti_patterns": [
+        "implementation detail",
+        "internal state OR private",
+        "only one assertion"
+      ],
+      "tags": ["oracles", "assertions", "form-submission"]
+    },
+    {
+      "id": "aitg-006",
+      "prompt": "From this git diff showing a change to the password validation logic, generate regression test cases",
+      "expected_patterns": [
+        "existing behavior OR backward compatible",
+        "new validation OR changed rule",
+        "boundary OR edge",
+        "error message"
+      ],
+      "anti_patterns": [
+        "unrelated test cases",
+        "no reference to the change"
+      ],
+      "tags": ["regression", "code-diff", "password"]
+    },
+    {
+      "id": "aitg-007",
+      "prompt": "Generate test scenarios from this OpenAPI spec for the /api/products endpoint",
+      "expected_patterns": [
+        "GET OR list",
+        "POST OR create",
+        "status code OR response",
+        "schema OR validation",
+        "auth OR unauthorized"
+      ],
+      "anti_patterns": [
+        "no error cases",
+        "no auth testing"
+      ],
+      "tags": ["api", "openapi", "schema"]
+    },
+    {
+      "id": "aitg-008",
+      "prompt": "Identify edge cases for a date picker component that allows selecting a date range",
+      "expected_patterns": [
+        "same start and end",
+        "end before start OR invalid range",
+        "leap year OR Feb 29",
+        "timezone OR DST",
+        "min OR max date"
+      ],
+      "anti_patterns": [
+        "only valid dates",
+        "no boundary testing"
+      ],
+      "tags": ["edge-cases", "date-picker", "boundaries"]
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+name: Validate Skills
+
+on:
+  push:
+    paths: ['skills/**']
+  pull_request:
+    paths: ['skills/**']
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate SKILL.md files
+        run: |
+          errors=0
+          for skill_dir in skills/*/; do
+            skill_name=$(basename "$skill_dir")
+            skill_file="$skill_dir/SKILL.md"
+
+            # Check SKILL.md exists
+            if [ ! -f "$skill_file" ]; then
+              echo "ERROR: $skill_dir missing SKILL.md"
+              errors=$((errors + 1))
+              continue
+            fi
+
+            # Check line count
+            lines=$(wc -l < "$skill_file")
+            if [ "$lines" -gt 500 ]; then
+              echo "ERROR: $skill_file is $lines lines (max 500)"
+              errors=$((errors + 1))
+            fi
+
+            # Check frontmatter exists
+            if ! head -1 "$skill_file" | grep -q '^---$'; then
+              echo "ERROR: $skill_file missing YAML frontmatter"
+              errors=$((errors + 1))
+              continue
+            fi
+
+            # Check name matches directory
+            fm_name=$(grep '^name:' "$skill_file" | head -1 | sed 's/name: *//')
+            if [ "$fm_name" != "$skill_name" ]; then
+              echo "ERROR: $skill_file name '$fm_name' doesn't match directory '$skill_name'"
+              errors=$((errors + 1))
+            fi
+
+            # Check description exists
+            if ! grep -q '^description:' "$skill_file"; then
+              echo "ERROR: $skill_file missing description"
+              errors=$((errors + 1))
+            fi
+
+            # Check referenced files exist
+            for ref in $(grep -oP 'references/[a-z0-9-]+\.md' "$skill_file" 2>/dev/null); do
+              if [ ! -f "$skill_dir/$ref" ]; then
+                echo "ERROR: $skill_file references $ref but file doesn't exist"
+                errors=$((errors + 1))
+              fi
+            done
+
+            echo "OK: $skill_name ($lines lines)"
+          done
+
+          if [ "$errors" -gt 0 ]; then
+            echo ""
+            echo "FAILED: $errors error(s) found"
+            exit 1
+          fi
+          echo ""
+          echo "All skills validated successfully"
