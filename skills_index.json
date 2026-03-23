@@ -235,6 +235,12 @@
       "path": "skills/test-migration",
       "category": "knowledge",
       "tags": ["migration", "selenium-to-playwright", "jest-to-vitest", "modernization"]
+    },
+    {
+      "name": "qa-report-humanizer",
+      "path": "skills/qa-report-humanizer",
+      "category": "process",
+      "tags": ["humanize", "writing", "reports", "communication", "bug-reports"]
     }
   ]
 }

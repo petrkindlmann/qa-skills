@@ -1,8 +1,17 @@
 # Versions
 
+## v2.1.0 (2026-03-23)
+
+### New skill
+
+**Process:**
+- `qa-report-humanizer` v1.0 — Remove AI patterns from QA reports, bug reports, test summaries, and status updates
+
+---
+
 ## v2.0.0 (2026-03-23)
 
-### Complete Collection — 39 Skills
+### Complete collection — 39 skills
 
 Added 25 Phase 2 skills to complete the full QA lifecycle coverage.
 
