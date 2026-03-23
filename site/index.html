@@ -9,201 +9,243 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236366f1'/><text x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='system-ui' font-weight='700'>Q</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 ::selection{background:#ddd6fe;color:#1c1a18}
 html{scroll-behavior:smooth}
-body{font-family:'Inter',-apple-system,sans-serif;background:#fafaf9;color:#1c1a18;line-height:1.6;-webkit-font-smoothing:antialiased}
+body{font-family:'Inter',-apple-system,sans-serif;background:#fafaf9;color:#1c1a18;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 a{color:#6366f1;text-decoration:none;font-weight:500;transition:color .2s}
 a:hover{color:#4f46e5}
 code,pre,.mono{font-family:'IBM Plex Mono',monospace}
 
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s cubic-bezier(.16,1,.3,1)}
+.reveal.visible{opacity:1;transform:none}
+
+/* Layout */
 .container{max-width:960px;margin:0 auto;padding:0 20px}
 @media(min-width:640px){.container{padding:0 24px}}
+.container-narrow{max-width:560px;margin:0 auto;padding:0 20px}
+@media(min-width:640px){.container-narrow{padding:0 24px}}
 
-/* Fade-in on load */
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.fade{opacity:0;animation:fadeUp .6s ease forwards}
-.fade-d1{animation-delay:.1s}
-.fade-d2{animation-delay:.2s}
-.fade-d3{animation-delay:.35s}
-.fade-d4{animation-delay:.5s}
-.fade-d5{animation-delay:.65s}
-@media(prefers-reduced-motion:reduce){.fade{animation-duration:.01s}}
+/* ─── HERO ─── */
+.hero{padding:120px 0 0;position:relative}
+@media(min-width:640px){.hero{padding:160px 0 0}}
+.hero-grid{display:grid;grid-template-columns:1fr;gap:40px}
+@media(min-width:768px){.hero-grid{grid-template-columns:1fr 1fr;gap:48px;align-items:center}}
 
-/* Hero */
-.hero{padding:100px 0 48px;max-width:560px;margin:0 auto}
-@media(min-width:640px){.hero{padding:144px 0 56px}}
-.hero-inner{padding:0 20px}
-@media(min-width:640px){.hero-inner{padding:0 24px}}
-.hero-label{font-size:15px;font-weight:600;color:#6366f1;margin-bottom:14px}
-@media(min-width:640px){.hero-label{margin-bottom:18px}}
-.hero h1{font-size:30px;font-weight:700;letter-spacing:-0.035em;line-height:1.18;margin-bottom:14px;color:#1c1a18}
-@media(min-width:640px){.hero h1{font-size:40px;line-height:1.12}}
+.hero-text{max-width:480px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#6366f1;background:#ede9fe;padding:5px 12px;border-radius:20px;margin-bottom:20px;letter-spacing:.02em}
+.hero h1{font-size:32px;font-weight:800;letter-spacing:-0.035em;line-height:1.12;margin-bottom:16px;color:#1c1a18}
+@media(min-width:640px){.hero h1{font-size:42px}}
 @media(min-width:1024px){.hero h1{font-size:48px}}
-.hero .lead{font-size:16px;color:#78716c;max-width:400px;line-height:1.7}
+.hero .lead{font-size:15px;color:#78716c;line-height:1.75;margin-bottom:24px}
 
-/* Install terminal */
-.terminal-section{max-width:560px;margin:0 auto;padding:12px 20px 64px}
-@media(min-width:640px){.terminal-section{padding:12px 24px 96px}}
-.terminal{background:#1c1917;border-radius:12px;overflow:hidden}
-.terminal-dots{display:flex;gap:6px;padding:12px 16px 0}
-.terminal-dots span{width:8px;height:8px;border-radius:50%;opacity:.6}
-.terminal-dots .dot-r{background:#ef4444}
-.terminal-dots .dot-y{background:#eab308}
-.terminal-dots .dot-g{background:#22c55e}
-.terminal-code{display:flex;align-items:center;padding:10px 16px 14px}
-@media(min-width:640px){.terminal-code{padding:10px 22px 18px}}
-.terminal-code code{flex:1;font-size:12.5px;color:#d6d3d1;white-space:nowrap;overflow-x:auto;line-height:1.7}
-@media(min-width:640px){.terminal-code code{font-size:13px}}
-.terminal-code .prompt{color:#57534e;user-select:none}
-.copy-btn{background:none;border:none;padding:8px;cursor:pointer;color:#57534e;transition:color .2s;display:flex;align-items:center;border-radius:4px}
-.copy-btn:hover{color:#d6d3d1}
-.copy-btn svg{width:15px;height:15px}
-.copy-btn.copied{color:#22c55e}
-
-/* CTA row */
-.cta-section{max-width:560px;margin:0 auto;padding:0 20px}
-@media(min-width:640px){.cta-section{padding:0 24px}}
-.cta-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
-@media(min-width:640px){.cta-row{margin-bottom:22px}}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:10px;font-weight:600;font-size:14px;transition:all .2s;border:none;cursor:pointer;text-decoration:none;min-height:44px}
-.btn-primary{background:#1c1917;color:#fafaf9;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:500}
-.btn-primary:hover{background:#292524;color:#fafaf9}
-.btn-outline{background:transparent;color:#44403c;border:1px solid #d6d3d1;font-size:14px}
-.btn-outline:hover{border-color:#a8a29e;color:#1c1a18}
+.hero-cta{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:10px;font-weight:600;font-size:14px;transition:all .2s;border:none;cursor:pointer;text-decoration:none;min-height:44px}
+.btn-dark{background:#1c1917;color:#fafaf9}
+.btn-dark:hover{background:#292524;color:#fafaf9}
+.btn-ghost{background:transparent;color:#57534e;border:1px solid #d6d3d1}
+.btn-ghost:hover{border-color:#a8a29e;color:#1c1a18}
 .btn svg{width:16px;height:16px}
+.hero-agents{font-size:12px;color:#a8a29e}
+.hero-agents span{color:#78716c}
+.hero-author{font-size:13px;color:#78716c;margin-top:12px;line-height:1.6}
+.hero-author a{color:#57534e;font-weight:500}
+.hero-author a:hover{color:#1c1a18}
 
-/* Agents */
-.agents-line{font-size:12px;color:#a8a29e;font-weight:500;letter-spacing:.02em}
-.agents-line span{color:#78716c}
+/* Other tools */
+.tools-section{padding:48px 0;border-top:1px solid #e7e5e4}
+@media(min-width:640px){.tools-section{padding:56px 0}}
+.tools-label{font-size:13px;color:#78716c;margin-bottom:16px}
+.tools-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:12px;overflow:hidden}
+@media(min-width:640px){.tools-grid{grid-template-columns:repeat(2,1fr)}}
+.tool-card{background:#fff;padding:18px 22px}
+.tool-card a{font-weight:600;font-size:14px;color:#1c1a18;text-decoration:none}
+.tool-card a:hover{color:#6366f1}
+.tool-card p{font-size:13px;color:#78716c;margin-top:2px;line-height:1.5}
 
-/* Proof block */
-.proof{margin-top:22px;padding-top:18px;border-top:1px solid #e7e5e4}
-.proof-label{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#a8a29e;font-weight:500;margin-bottom:10px}
-.proof ul{list-style:none;padding:0}
-.proof li{font-size:13px;color:#57534e;line-height:1.8;padding-left:16px;position:relative}
-.proof li::before{content:"\2013";position:absolute;left:0;color:#c4bfb8}
+/* Terminal */
+.hero-terminal{background:#1c1917;border-radius:12px;overflow:hidden;box-shadow:0 24px 48px -12px rgba(28,25,24,.18),0 0 0 1px rgba(28,25,24,.05)}
+.term-bar{display:flex;align-items:center;gap:6px;padding:12px 16px;border-bottom:1px solid #292524}
+.term-dot{width:8px;height:8px;border-radius:50%;opacity:.7}
+.term-dot-r{background:#ef4444}.term-dot-y{background:#eab308}.term-dot-g{background:#22c55e}
+.term-bar-title{margin-left:8px;font-size:11px;color:#57534e;font-family:'IBM Plex Mono',monospace}
+.term-body{padding:16px 18px 20px;font-family:'IBM Plex Mono',monospace;font-size:13px;line-height:1.85;color:#d6d3d1}
+@media(min-width:640px){.term-body{padding:18px 22px 22px}}
+.term-line{display:flex;align-items:center;gap:8px}
+.term-prompt{color:#57534e;user-select:none}
+.term-cursor{display:inline-block;width:7px;height:16px;background:#6366f1;margin-left:2px;animation:blink 1s step-end infinite;vertical-align:middle}
+@keyframes blink{50%{opacity:0}}
+.term-output{color:#57534e;margin-top:4px;font-size:12px}
+.term-output .ok{color:#4ade80}
+.term-output .count{color:#93c5fd}
+.term-copy{position:absolute;top:12px;right:14px;background:none;border:none;padding:6px;cursor:pointer;color:#57534e;transition:color .2s;border-radius:4px}
+.term-copy:hover{color:#d6d3d1}
+.term-copy svg{width:14px;height:14px}
+.term-copy.copied{color:#22c55e}
+.term-wrap{position:relative}
 
-/* Sections */
-.section{padding:48px 0;border-top:1px solid #e7e5e4}
-@media(min-width:640px){.section{padding:72px 0}}
-.section h2{font-size:22px;font-weight:700;letter-spacing:-0.02em;line-height:1.3;margin-bottom:12px}
-@media(min-width:640px){.section h2{font-size:28px}}
-.section .sub{color:#78716c;margin-bottom:32px;font-size:15px;line-height:1.7;max-width:600px}
+/* ─── PROOF STRIP ─── */
+.proof-strip{padding:48px 0;border-top:1px solid #e7e5e4;margin-top:64px}
+@media(min-width:640px){.proof-strip{padding:56px 0;margin-top:80px}}
+.proof-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px 24px}
+@media(min-width:640px){.proof-grid{grid-template-columns:repeat(4,1fr);gap:32px}}
+.proof-item{font-size:13px;color:#57534e;line-height:1.5;padding-left:14px;border-left:2px solid #e7e5e4}
+.proof-item strong{display:block;color:#1c1a18;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
 
-/* Problem cards */
+/* ─── PROBLEM ─── */
+.problem{padding:56px 0;border-top:1px solid #e7e5e4}
+@media(min-width:640px){.problem{padding:72px 0}}
+.problem h2{font-size:24px;font-weight:700;letter-spacing:-0.02em;line-height:1.3;margin-bottom:8px}
+@media(min-width:640px){.problem h2{font-size:28px}}
+.problem .sub{color:#78716c;margin-bottom:32px;font-size:15px;line-height:1.7;max-width:520px}
 .problem-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:12px;overflow:hidden}
 @media(min-width:640px){.problem-grid{grid-template-columns:repeat(3,1fr)}}
-.problem-item{background:#fff;padding:20px 22px}
-@media(min-width:640px){.problem-item{padding:22px 22px 24px}}
-.problem-item .label{font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:#a8a29e;font-weight:500;margin-bottom:8px}
-.problem-item p{font-size:14px;color:#57534e;line-height:1.6}
-.problem-item p strong{color:#1c1a18;font-weight:600}
-.problem-item code{font-size:12px;background:#f5f5f4;padding:1px 5px;border-radius:4px;color:#44403c}
+.problem-card{background:#fff;padding:22px}
+.problem-card .label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#a8a29e;font-weight:500;margin-bottom:10px}
+.problem-card p{font-size:14px;color:#57534e;line-height:1.65}
+.problem-card strong{color:#1c1a18;font-weight:600}
+.problem-card code{font-size:11.5px;background:#f5f5f4;padding:2px 6px;border-radius:4px;color:#44403c;word-break:break-all}
 
-/* Changes list */
-.changes h2{max-width:640px}
+/* ─── CHANGES ─── */
+.changes{padding:56px 0;border-top:1px solid #e7e5e4}
+@media(min-width:640px){.changes{padding:72px 0}}
+.changes h2{font-size:24px;font-weight:700;letter-spacing:-0.02em;line-height:1.3;margin-bottom:32px;max-width:600px}
+@media(min-width:640px){.changes h2{font-size:28px}}
 .change-list{display:grid;grid-template-columns:1fr;gap:1px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:12px;overflow:hidden}
 .change-row{display:grid;grid-template-columns:1fr;gap:4px;background:#fff;padding:18px 22px}
-@media(min-width:640px){.change-row{grid-template-columns:160px 1fr;gap:16px;padding:18px 22px}}
-.change-skill{font-size:13px;font-weight:600;color:#1c1a18;font-family:'IBM Plex Mono',monospace}
-.change-what{font-size:14px;color:#57534e;line-height:1.6}
+@media(min-width:640px){.change-row{grid-template-columns:140px 1fr;gap:20px;padding:20px 24px}}
+.change-skill{font-size:13px;font-weight:600;color:#1c1a18;font-family:'IBM Plex Mono',monospace;padding-top:1px}
+.change-what{font-size:14px;color:#57534e;line-height:1.65}
 
-/* Category grid */
+/* ─── CATEGORIES ─── */
+.categories{padding:56px 0;border-top:1px solid #e7e5e4}
+@media(min-width:640px){.categories{padding:72px 0}}
+.categories h2{font-size:24px;font-weight:700;letter-spacing:-0.02em;line-height:1.3;margin-bottom:6px}
+@media(min-width:640px){.categories h2{font-size:28px}}
+.categories .sub{color:#78716c;margin-bottom:32px;font-size:15px}
 .cat-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:12px;overflow:hidden}
 @media(min-width:480px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
 @media(min-width:768px){.cat-grid{grid-template-columns:repeat(3,1fr)}}
 .cat-cell{background:#fff;padding:18px 22px}
+.cat-cell:hover{background:#fefefe}
 .cat-name{font-weight:600;font-size:14px;margin-bottom:1px;color:#1c1a18}
 .cat-count{font-size:12px;color:#a8a29e;margin-bottom:8px}
 .cat-skills{font-size:11px;color:#78716c;line-height:1.7;font-family:'IBM Plex Mono',monospace}
 
-/* AI card */
-.ai-section{padding:48px 0;border-top:1px solid #e7e5e4}
+/* ─── AI SECTION ─── */
+.ai-section{padding:56px 0;border-top:1px solid #e7e5e4}
 @media(min-width:640px){.ai-section{padding:72px 0}}
-.ai-card{background:#fff;border:1px solid #e7e5e4;border-radius:12px;padding:24px 22px}
-@media(min-width:640px){.ai-card{padding:32px 36px}}
-.ai-card h2{font-size:20px;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px}
-@media(min-width:640px){.ai-card h2{font-size:24px}}
-.ai-card .sub{color:#78716c;margin-bottom:28px;font-size:14px;line-height:1.6}
-.ai-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:10px;overflow:hidden}
+.ai-header{margin-bottom:24px}
+.ai-header h2{font-size:22px;font-weight:700;letter-spacing:-0.02em;margin-bottom:4px}
+@media(min-width:640px){.ai-header h2{font-size:26px}}
+.ai-header .sub{color:#78716c;font-size:14px;line-height:1.6}
+.ai-grid{display:grid;grid-template-columns:1fr;gap:1px;background:#e7e5e4;border:1px solid #e7e5e4;border-radius:12px;overflow:hidden}
 @media(min-width:640px){.ai-grid{grid-template-columns:repeat(2,1fr)}}
-.ai-item{background:#fff;padding:18px 20px}
-@media(min-width:640px){.ai-item{padding:20px 22px}}
-.ai-item .ai-name{font-weight:600;font-size:13px;color:#1c1a18;margin-bottom:4px;font-family:'IBM Plex Mono',monospace}
+.ai-item{background:#fff;padding:20px 22px}
+.ai-item .ai-name{font-weight:600;font-size:13px;color:#1c1a18;margin-bottom:6px;font-family:'IBM Plex Mono',monospace}
 .ai-item .ai-desc{font-size:13px;color:#78716c;line-height:1.6}
 
-/* Footer */
+/* ─── WHY ─── */
+.why-section{padding:48px 0;border-top:1px solid #e7e5e4}
+@media(min-width:640px){.why-section{padding:56px 0}}
+.why-section h2{font-size:20px;font-weight:700;letter-spacing:-0.02em;margin-bottom:10px}
+.why-text{font-size:15px;color:#57534e;line-height:1.75;max-width:600px}
+
+/* ─── FOOTER ─── */
 footer{border-top:1px solid #e7e5e4;padding:40px 0 48px;text-align:center}
 .footer-author{font-size:14px;color:#78716c;margin-bottom:6px}
 .footer-author a{color:#1c1a18;font-weight:600}
-.footer-links{font-size:12px;color:#a8a29e;letter-spacing:.01em}
+.footer-links{font-size:12px;color:#a8a29e}
 .footer-links a{color:#a8a29e;margin:0 5px;transition:color .2s}
 .footer-links a:hover{color:#78716c}
+
+@media(max-width:767px){
+  .hero-terminal{margin-top:8px}
+}
 </style>
 </head>
 <body>
 
+<!-- ─── HERO ─── -->
 <section class="hero">
-  <div class="hero-inner">
-    <div class="hero-label fade">QA Skills for AI Agents</div>
-    <h1 class="fade fade-d1">Stop fixing your AI agent's tests.</h1>
-    <p class="lead fade fade-d2">You ask it to write a Playwright test. It gives you CSS selectors, waitForTimeout, and login boilerplate copy-pasted into every file. You spend more time fixing the output than you saved. These 39 skills help your agent generate tests that follow modern QA practice instead of generic LLM patterns.</p>
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-text">
+        <div class="hero-badge">39 skills &middot; Open source &middot; MIT</div>
+        <h1>Stop fixing your AI agent's tests.</h1>
+        <p class="lead">You ask it to write a Playwright test. It gives you CSS selectors, waitForTimeout, and login boilerplate copy-pasted into every file. You spend more time fixing the output than you saved. These 39 skills help your agent generate tests that follow modern QA practice instead of generic LLM patterns.</p>
+        <div class="hero-cta">
+          <a href="https://github.com/petrkindlmann/qa-skills" class="btn btn-dark">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+            View on GitHub
+          </a>
+          <a href="#what-changes" class="btn btn-ghost">See what changes</a>
+        </div>
+        <div class="hero-agents">Works with <span>Claude Code</span>, <span>Codex</span>, <span>Cursor</span>, <span>Gemini CLI</span>, <span>VS Code</span>, <span>Windsurf</span></div>
+        <div class="hero-author">Built by <a href="https://kindlmann.com">Petr Kindlmann</a> — QA automation across 6+ production sites, creator of <a href="https://breakit.dev">breakit</a>, <a href="https://complicer.com">Complicer</a>, and <a href="https://kindlm.com">KindLM</a>.</div>
+      </div>
+      <div class="term-wrap">
+        <div class="hero-terminal">
+          <div class="term-bar">
+            <span class="term-dot term-dot-r"></span>
+            <span class="term-dot term-dot-y"></span>
+            <span class="term-dot term-dot-g"></span>
+            <span class="term-bar-title">Terminal</span>
+          </div>
+          <div class="term-body">
+            <div class="term-line"><span class="term-prompt">$</span> npx skills add petrkindlmann/qa-skills</div>
+            <div class="term-output">
+              <div><span class="ok">&#10003;</span> Installed 39 skills from petrkindlmann/qa-skills</div>
+              <div><span class="count">10 categories</span> &middot; 14 reference files</div>
+              <div style="margin-top:12px"><span class="term-prompt">$</span> <span style="color:#d6d3d1">claude</span></div>
+              <div style="margin-top:4px;color:#78716c">&gt; Write a Playwright test for login</div>
+              <div style="margin-top:2px;color:#78716c;font-style:italic">Using skill: playwright-automation</div>
+              <div style="margin-top:2px"><span class="ok">&#10003;</span> getByRole selectors</div>
+              <div><span class="ok">&#10003;</span> storageState fixture</div>
+              <div><span class="ok">&#10003;</span> No waitForTimeout</div>
+              <div><span class="ok">&#10003;</span> Page Object pattern<span class="term-cursor"></span></div>
+            </div>
+          </div>
+        </div>
+        <button class="term-copy" onclick="copyCmd(this)" aria-label="Copy install command">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="terminal-section">
-  <div class="terminal fade fade-d3">
-    <div class="terminal-dots">
-      <span class="dot-r"></span>
-      <span class="dot-y"></span>
-      <span class="dot-g"></span>
-    </div>
-    <div class="terminal-code">
-      <code><span class="prompt">$ </span>npx skills add petrkindlmann/qa-skills</code>
-      <button class="copy-btn" onclick="copyCmd(this)" aria-label="Copy install command">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-      </button>
+<!-- ─── PROOF STRIP ─── -->
+<section class="proof-strip">
+  <div class="container">
+    <div class="proof-grid">
+      <div class="proof-item"><strong>Selectors</strong>Avoids waitForTimeout and brittle CSS selectors</div>
+      <div class="proof-item"><strong>Planning</strong>Plans tests before generating code</div>
+      <div class="proof-item"><strong>Reliability</strong>Classifies flaky failures by root cause</div>
+      <div class="proof-item"><strong>Patterns</strong>Follows reusable fixtures and POM patterns</div>
     </div>
   </div>
 </section>
 
-<div class="cta-section">
-  <div class="cta-row fade fade-d4">
-    <a href="https://github.com/petrkindlmann/qa-skills" class="btn btn-primary">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-      View on GitHub
-    </a>
-    <a href="#what-changes" class="btn btn-outline">See what changes</a>
-  </div>
-  <div class="agents-line fade fade-d5">Works with <span>Claude Code</span>, <span>Codex</span>, <span>Cursor</span>, <span>Gemini CLI</span>, <span>VS Code</span>, <span>Windsurf</span></div>
-  <div class="proof fade fade-d5">
-    <div class="proof-label">What changes after install</div>
-    <ul>
-      <li>Avoids waitForTimeout and brittle CSS selectors</li>
-      <li>Plans tests before generating code</li>
-      <li>Classifies flaky failures by root cause</li>
-      <li>Follows reusable fixtures and POM patterns</li>
-    </ul>
-  </div>
-</div>
-
-<section class="section">
+<!-- ─── PROBLEM ─── -->
+<section class="problem reveal">
   <div class="container">
     <h2>You've seen these in PR reviews</h2>
     <p class="sub">The tests technically pass. But you know they'll break next week, and nobody will know why.</p>
     <div class="problem-grid">
-      <div class="problem-item">
+      <div class="problem-card">
         <div class="label">Selectors</div>
         <p><code>div.container > ul > li:nth-child(3)</code> — breaks the moment someone touches the layout. No data-testid, no getByRole. Just fragile paths through the DOM.</p>
       </div>
-      <div class="problem-item">
+      <div class="problem-card">
         <div class="label">Architecture</div>
         <p><strong>Every test logs in from scratch.</strong> No storageState, no fixtures, no page objects. Tests that take 40 seconds when they should take 4.</p>
       </div>
-      <div class="problem-item">
+      <div class="problem-card">
         <div class="label">Strategy</div>
         <p><strong>Same depth everywhere.</strong> The settings page gets the same coverage as checkout. No risk assessment, no pyramid — just tests for the sake of tests.</p>
       </div>
@@ -211,7 +253,8 @@ footer{border-top:1px solid #e7e5e4;padding:40px 0 48px;text-align:center}
   </div>
 </section>
 
-<section class="section changes" id="what-changes">
+<!-- ─── CHANGES ─── -->
+<section class="changes reveal" id="what-changes">
   <div class="container">
     <h2>After installing, your agent starts following QA patterns you'd normally enforce in review</h2>
     <div class="change-list">
@@ -243,92 +286,60 @@ footer{border-top:1px solid #e7e5e4;padding:40px 0 48px;text-align:center}
   </div>
 </section>
 
-<section class="section" id="categories">
+<!-- ─── OTHER TOOLS ─── -->
+<section class="tools-section reveal">
+  <div class="container">
+    <div class="tools-label">Other tools by Petr</div>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <a href="https://breakit.dev">breakit</a>
+        <p>25 AI personas test your website in real Playwright browsers. Findings deduplicated, scored, delivered as HTML report.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://complicer.com">Complicer</a>
+        <p>GDPR, accessibility, and security compliance monitoring. Scheduled audits, visual review flows, evidence reports.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://kindlm.com">KindLM</a>
+        <p>Behavioral regression testing for AI agents and LLM workflows. YAML-defined tests, CI-native, multi-model.</p>
+      </div>
+      <div class="tool-card">
+        <a href="https://n8calls.com">N8Calls</a>
+        <p>Voice agents, chatbots, lead qualification, and workflow automation. 15 live builds, fixed pricing.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CATEGORIES ─── -->
+<section class="categories reveal" id="categories">
   <div class="container">
     <h2>39 skills across 10 categories</h2>
     <p class="sub">Coverage across the full QA lifecycle — from strategy through automation to production monitoring.</p>
     <div class="cat-grid">
-      <div class="cat-cell">
-        <div class="cat-name">Foundation</div>
-        <div class="cat-count">1 skill</div>
-        <div class="cat-skills">qa-project-context</div>
-      </div>
-      <div class="cat-cell">
-        <div class="cat-name">Strategy</div>
-        <div class="cat-count">4 skills</div>
-        <div class="cat-skills">test-strategy, test-planning, risk-based-testing, exploratory-testing</div>
-      </div>
-      <div class="cat-cell">
-        <div class="cat-name">Automation</div>
-        <div class="cat-count">7 skills</div>
-        <div class="cat-skills">playwright-automation, cypress-automation, api-testing, unit-testing, mobile-testing, visual-testing, performance-testing</div>
-      </div>
-      <div class="cat-cell">
-        <div class="cat-name">Specialized</div>
-        <div class="cat-count">4 skills</div>
-        <div class="cat-skills">accessibility-testing, security-testing, cross-browser-testing, database-testing</div>
-      </div>
-      <div class="cat-cell">
-        <div class="cat-name">AI-Augmented QA</div>
-        <div class="cat-count">4 skills</div>
-        <div class="cat-skills">ai-test-generation, ai-bug-triage, test-reliability, ai-qa-review</div>
-      </div>
-      <div class="cat-cell">
-        <div class="cat-name">Infrastructure</div>
-        <div class="cat-count">5 skills</div>
-        <div class="cat-skills">ci-cd-integration, test-environments, test-data-management, contract-testing, service-virtualization</div>
-      </div>
-      <div class="cat-cell">
-        <div class="cat-name">Metrics</div>
-        <div class="cat-count">3 skills</div>
-        <div class="cat-skills">qa-metrics, qa-dashboard, coverage-analysis</div>
-      </div>
-      <div class="cat-cell">
-        <div class="cat-name">Process</div>
-        <div class="cat-count">5 skills</div>
-        <div class="cat-skills">shift-left-testing, qa-project-bootstrap, release-readiness, quality-postmortem, compliance-testing</div>
-      </div>
-      <div class="cat-cell">
-        <div class="cat-name">Production</div>
-        <div class="cat-count">3 skills</div>
-        <div class="cat-skills">testing-in-production, synthetic-monitoring, observability-driven-testing</div>
-      </div>
-      <div class="cat-cell">
-        <div class="cat-name">Knowledge</div>
-        <div class="cat-count">3 skills</div>
-        <div class="cat-skills">ai-system-testing, chaos-engineering, test-migration</div>
-      </div>
+      <div class="cat-cell"><div class="cat-name">Foundation</div><div class="cat-count">1 skill</div><div class="cat-skills">qa-project-context</div></div>
+      <div class="cat-cell"><div class="cat-name">Strategy</div><div class="cat-count">4 skills</div><div class="cat-skills">test-strategy, test-planning, risk-based-testing, exploratory-testing</div></div>
+      <div class="cat-cell"><div class="cat-name">Automation</div><div class="cat-count">7 skills</div><div class="cat-skills">playwright-automation, cypress-automation, api-testing, unit-testing, mobile-testing, visual-testing, performance-testing</div></div>
+      <div class="cat-cell"><div class="cat-name">Specialized</div><div class="cat-count">4 skills</div><div class="cat-skills">accessibility-testing, security-testing, cross-browser-testing, database-testing</div></div>
+      <div class="cat-cell"><div class="cat-name">AI-Augmented QA</div><div class="cat-count">4 skills</div><div class="cat-skills">ai-test-generation, ai-bug-triage, test-reliability, ai-qa-review</div></div>
+      <div class="cat-cell"><div class="cat-name">Infrastructure</div><div class="cat-count">5 skills</div><div class="cat-skills">ci-cd-integration, test-environments, test-data-management, contract-testing, service-virtualization</div></div>
+      <div class="cat-cell"><div class="cat-name">Metrics</div><div class="cat-count">3 skills</div><div class="cat-skills">qa-metrics, qa-dashboard, coverage-analysis</div></div>
+      <div class="cat-cell"><div class="cat-name">Process</div><div class="cat-count">5 skills</div><div class="cat-skills">shift-left-testing, qa-project-bootstrap, release-readiness, quality-postmortem, compliance-testing</div></div>
+      <div class="cat-cell"><div class="cat-name">Production</div><div class="cat-count">3 skills</div><div class="cat-skills">testing-in-production, synthetic-monitoring, observability-driven-testing</div></div>
+      <div class="cat-cell"><div class="cat-name">Knowledge</div><div class="cat-count">3 skills</div><div class="cat-skills">ai-system-testing, chaos-engineering, test-migration</div></div>
     </div>
   </div>
 </section>
 
-<section class="ai-section">
+<!-- ─── WHY ─── -->
+<section class="why-section reveal">
   <div class="container">
-    <div class="ai-card">
-      <h2>Four skills built specifically for AI-assisted QA workflows</h2>
-      <p class="sub">AI-assisted QA is still lightly covered in public skills repos. This package focuses on that gap directly.</p>
-      <div class="ai-grid">
-        <div class="ai-item">
-          <div class="ai-name">ai-test-generation</div>
-          <div class="ai-desc">Won't let the agent jump straight to code. Forces it through requirements, risks, and a coverage matrix first. You review assumptions before it writes a single test.</div>
-        </div>
-        <div class="ai-item">
-          <div class="ai-name">ai-bug-triage</div>
-          <div class="ai-desc">Strips timestamps and random IDs from CI logs, fingerprints the failure, deduplicates against known issues, then uses the LLM to classify what's left. You approve before anything gets filed.</div>
-        </div>
-        <div class="ai-item">
-          <div class="ai-name">test-reliability</div>
-          <div class="ai-desc">A flaky test isn't "just flaky." Is it timing? Shared data? An environment issue? This skill classifies the root cause and applies the right fix, not a blanket retry.</div>
-        </div>
-        <div class="ai-item">
-          <div class="ai-name">ai-qa-review</div>
-          <div class="ai-desc">Catches mystery guests, sleep-based waits, weak assertions, and tests that only cover the happy path. Each smell maps to a specific review action — not just "needs improvement."</div>
-        </div>
-      </div>
-    </div>
+    <h2>Why I built this</h2>
+    <p class="why-text">I review and maintain Playwright and QA automation in production environments. I kept seeing AI agents generate tests that technically pass but add review debt — brittle selectors, boilerplate setup, weak assertions, no risk-based thinking. QA Skills packages the patterns I actually want enforced.</p>
   </div>
 </section>
 
+<!-- ─── FOOTER ─── -->
 <footer>
   <div class="container">
     <p class="footer-author">Built by <a href="https://kindlmann.com">Petr Kindlmann</a></p>
@@ -359,6 +370,9 @@ function copyCmd(btn){
     },2000);
   });
 }
+// Scroll reveal
+const obs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}})},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
 </body>
 </html>
