@@ -14,9 +14,9 @@ metadata:
   category: automation
 ---
 
-# Performance Testing
-
+<objective>
 Measure, assert, and protect application performance. This skill covers two domains: **load testing** (can the backend handle traffic?) and **web performance** (is the frontend fast for users?). Both use measurable budgets enforced in CI, not subjective "feels fast enough" assessments.
+</objective>
 
 ---
 
@@ -412,6 +412,14 @@ Spending days optimizing a function that contributes 2% of the total response ti
 Running load tests against a freshly seeded database with 100 records when production has 10 million. Query performance is radically different at scale. Seed the load-test environment with production-scale data (anonymized) before testing.
 
 ---
+
+## Done When
+
+- k6 script covers all target load scenarios: baseline (normal traffic), stress (ramp to breaking point), and soak (sustained load over hours).
+- Performance budgets defined for critical flows and encoded as k6 thresholds (e.g., `p(95)<500`, `http_req_failed rate<0.01`) that fail the CI job when exceeded.
+- Lighthouse CI configured with a `budget.json` that gates merges on LCP, INP, CLS, and total JS/resource size.
+- Core Web Vitals baselines documented for each key page (home, checkout, dashboard) with Good/Needs Improvement/Poor classification.
+- Test results include p95 and p99 latency, error rate, and throughput for each scenario, stored as CI artifacts.
 
 ## Related Skills
 

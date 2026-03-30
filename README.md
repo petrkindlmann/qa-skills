@@ -7,7 +7,7 @@ Gemini CLI, VS Code, and other agents that support the Agent Skills Standard.
 npx skills add petrkindlmann/qa-skills
 ```
 
-40 skills covering:
+42 skills covering:
 - Playwright and Cypress automation
 - API, unit, and mobile testing
 - Test strategy and risk-based planning
@@ -20,7 +20,7 @@ npx skills add petrkindlmann/qa-skills
 
 Based on patterns from QA automation work across 6+ production sites.
 
-[![Skills](https://img.shields.io/badge/Skills-40-blue.svg)](#full-skills-table)
+[![Skills](https://img.shields.io/badge/Skills-42-blue.svg)](#full-skills-table)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Agent Skills Standard](https://img.shields.io/badge/Agent_Skills-Standard-purple.svg)](https://agentskills.io)
 [![Playwright](https://img.shields.io/badge/Playwright-First-green.svg)](https://playwright.dev)
@@ -74,7 +74,7 @@ Ask your AI agent in natural language. The right skill activates automatically.
 
 ## Skill categories
 
-40 skills across 10 categories. Each skill is under 500 lines with cross-references to related skills.
+42 skills across 10 categories. Each skill is under 500 lines with cross-references to related skills.
 
 ### Foundation (1)
 `qa-project-context` — project context template that every other skill reads first

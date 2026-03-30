@@ -14,9 +14,9 @@ metadata:
   category: knowledge
 ---
 
-# Chaos Engineering
-
+<objective>
 Chaos engineering is the discipline of experimenting on a system to build confidence in its ability to withstand turbulent conditions. It is not random destruction -- it is hypothesis-driven, controlled experimentation that reveals weaknesses before they cause outages.
+</objective>
 
 ---
 
@@ -476,6 +476,14 @@ The experiment revealed that the circuit breaker does not work correctly. The te
 **Fix:** Every chaos experiment finding gets a ticket with an owner and a due date. Re-run the experiment after the fix to verify. Track the backlog of chaos findings alongside production incident action items.
 
 ---
+
+## Done When
+
+- Every experiment has a written hypothesis stating the expected system behavior before any fault is injected
+- Blast radius is explicitly bounded (target scope, duration, and abort conditions defined) and experiments are not run directly in production until staging results are stable
+- Steady-state baseline metrics are measured immediately before each injection so results have a valid comparison point
+- Experiment results are documented with actual vs. expected behavior, recovery time, and whether data integrity was maintained
+- Each weakness found has a remediation action item with an assigned owner, due date, and a scheduled re-run to verify the fix
 
 ## Related Skills
 

@@ -14,7 +14,9 @@ metadata:
   category: automation
 ---
 
-# API Testing
+<objective>
+Test REST and GraphQL APIs with schema validation, auth flow testing, CRUD lifecycle coverage, and performance assertions. Use this skill instead of playwright-automation when the test target is an HTTP endpoint rather than a browser UI.
+</objective>
 
 ## Discovery Questions
 
@@ -479,6 +481,14 @@ Don't mock the database -- API tests verify the contract from the consumer's per
 PUT and DELETE should be idempotent. Test that calling them twice produces the same result.
 
 ---
+
+## Done When
+
+- Every target endpoint has at least a happy-path test and at least one error-path test (4xx or 5xx response validated)
+- Auth flow tested as its own describe block: successful login, invalid credentials, expired token, and permission boundary (403)
+- Schema validation assertions on response shape using Zod or AJV — not just `toHaveProperty` spot-checks
+- Contract tests in place for any endpoint consumed by a different team or service (shared schema file or Pact)
+- Test suite runs cleanly in CI without any external service dependencies — all third-party calls mocked or virtualized
 
 ## Related Skills
 

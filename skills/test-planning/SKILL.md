@@ -14,9 +14,9 @@ metadata:
   category: strategy
 ---
 
-# Test Planning
-
+<objective>
 Create actionable test plans for sprints and releases. A test plan answers four questions: what to test, how deeply, who does it, and when it must be done. The output is a living document that tracks progress, not a bureaucratic artifact filed and forgotten.
+</objective>
 
 ---
 
@@ -63,19 +63,19 @@ A test plan without traceability to requirements is a guess. Every user story, a
 
 ### 2. Time-Boxed: Plan Fits the Available Window
 
-Testing expands to fill available time if unbounded. Set a time box for each testing activity and stick to it. When the window is too short for everything, the prioritization matrix (below) determines what gets cut -- not the tester's gut feeling.
+Testing expands to fill available time if unbounded. Set a time box for each activity and stick to it. When the window is too short, the prioritization matrix determines what gets cut -- not gut feeling.
 
 ### 3. Prioritized: Not Everything Gets Equal Depth
 
-A change to the payment flow and a tooltip copy fix do not deserve equal testing effort. Use the risk x effort matrix to allocate depth. Some features get full regression. Others get a smoke test. Some get nothing if they are low-risk and unchanged.
+A payment flow change and a tooltip fix do not deserve equal effort. Use the risk x effort matrix to allocate depth: some features get full regression, others a smoke test, some nothing if low-risk and unchanged.
 
 ### 4. Buffered: Leave Room for the Unexpected
 
-Plans that schedule 100% of available time fail when bugs are found (and they will be). Reserve 20-30% of the testing window for bug verification, re-testing, and unplanned investigation.
+Plans that schedule 100% of available time fail when bugs are found. Reserve 20-30% of the testing window for bug verification, re-testing, and unplanned investigation.
 
 ### 5. Visible: The Plan Is a Communication Tool
 
-A test plan is not just for testers. Developers need to know what gets tested so they can write testable code. Product managers need to know what is covered so they can make informed release decisions. Publish the plan where the team can see it.
+Developers need to know what gets tested to write testable code. Product managers need coverage visibility to make release decisions. Publish the plan where the team can see it.
 
 ---
 
@@ -434,21 +434,17 @@ Buffer consumed: 2h of 8h (25%)
 After each sprint, feed these data points back into future planning:
 
 ```
-Estimation accuracy:
-  Estimated: 40h | Actual: 46h | Variance: +15%
+Estimation accuracy: Estimated 40h | Actual 46h | Variance +15%
   Cause: Bug verification took 6h more than buffered
 
-Coverage achieved:
-  Planned: 22 scenarios | Tested: 20 | Skipped: 2 (low risk, time pressure)
-  Gaps: accessibility review deferred to next sprint
+Coverage: Planned 22 scenarios | Tested 20 | Skipped 2 (low risk, time pressure)
+  Gap: accessibility review deferred
 
-Bugs found:
-  Total: 7 | P0: 0 | P1: 2 | P2: 3 | P3: 2
-  Escaped to production: 0
+Bugs: Total 7 | P0: 0 | P1: 2 | P2: 3 | P3: 2 | Escaped: 0
 
-Lessons for next sprint:
-  - Buffer was too low for this feature complexity (increase to 30%)
-  - E2E estimation was accurate, unit test estimation was too low
+Lessons:
+  - Buffer was too low for this complexity (increase to 30%)
+  - E2E estimation accurate; unit test estimation too low
   - Start testing Day 2 instead of Day 3
 ```
 
@@ -458,33 +454,41 @@ Lessons for next sprint:
 
 ### Planning Without Risk Assessment
 
-Creating a test plan that treats every feature with equal depth. A tooltip change and a payment flow change both get 10 test cases. This wastes effort on low-risk areas and under-tests critical paths. Always run the prioritization matrix (Step 4) before allocating effort. For the full risk methodology, see `risk-based-testing`.
+Treating every feature with equal depth wastes effort on low-risk areas and under-tests critical paths. Always run the prioritization matrix (Step 4) before allocating effort. For the full risk methodology, see `risk-based-testing`.
 
 ### No Buffer for Bug Discovery
 
-Scheduling 100% of available testing hours for planned activities. When bugs are found (and they will be), there is no time for verification, re-testing, or investigation. The plan collapses by mid-sprint. Reserve 20-30% as buffer, and track buffer consumption daily.
+Scheduling 100% of available hours for planned activities leaves no time for verification when bugs are found. Reserve 20-30% as buffer and track consumption daily.
 
 ### Back-Loading Testing to Sprint End
 
-Leaving all testing for the last two days of the sprint. Features arrive late, testing is rushed, bugs are found with no time to fix, and the release slips. Start testing as features become available, not when all features are done. Continuous testing during the sprint, not batch testing at the end.
+Leaving all testing for the last two days rushes coverage and surfaces bugs too late to fix. Start testing as features become available; continuous testing beats batch testing at sprint end.
 
 ### Test Plan as Compliance Artifact
 
-Writing a 30-page test plan because process demands it, then filing it away. Nobody reads it, nobody updates it, nobody tracks progress against it. The plan should be one page for a sprint, actively tracked, and updated daily. If the plan is not changing, nobody is using it.
+A 30-page plan filed and forgotten helps nobody. The plan should be one page for a sprint, actively tracked, and updated daily. If the plan is not changing, nobody is using it.
 
 ### Estimating Without Historical Data
 
-Pulling effort estimates from thin air. "E2E tests take 2 hours" might be true for simple flows and wildly wrong for complex ones. Track actual time spent on test activities and use that data for future estimates. After 2-3 sprints, estimates become reliable.
+Effort estimates pulled from thin air are unreliable. Track actual time spent and use that data for future estimates. After 2-3 sprints, estimates become reliable.
 
 ### Ignoring Environment and Data Setup
 
-Planning test execution time but not test preparation time. Environment setup, test data creation, account provisioning, and mock configuration can consume 20-40% of the total testing effort. Include preparation in the estimate or the plan will always run over.
+Environment setup, test data creation, and mock configuration can consume 20-40% of testing effort. Include preparation in the estimate or the plan will always run over.
 
 ### Single-Person Coverage on Critical Path
 
-Assigning one tester to all critical-path testing with no backup. When that person is sick, pulled into another project, or overwhelmed, critical testing does not happen. Ensure at least two people can cover critical-path testing.
+A single tester covering all critical-path work is a failure point. Ensure at least two people can cover critical-path testing.
 
 ---
+
+## Done When
+
+- A sprint or release test plan document exists (using the 1-page sprint template or release template) with scope, coverage summary, effort budget, and entry/exit criteria filled in
+- Every in-scope feature is decomposed into specific testable scenarios with pass/fail criteria
+- Each scenario is estimated and plotted on the risk x effort prioritization matrix, with deferred items explicitly noted
+- A requirements-to-test coverage matrix exists with no unexplained GAP entries
+- Test data requirements, environment details, and resource allocation are documented in the plan
 
 ## Related Skills
 

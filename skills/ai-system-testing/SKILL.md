@@ -14,9 +14,9 @@ metadata:
   category: knowledge
 ---
 
-# AI System Testing
-
+<objective>
 AI-powered features are fundamentally different from deterministic software. The same input can produce different outputs, correctness is subjective, and failure modes include hallucination, harmful content, and subtle quality degradation. This skill covers how to test AI features rigorously despite these challenges.
+</objective>
 
 ---
 
@@ -429,6 +429,14 @@ The AI produces great results but each request costs $0.10 and takes 8 seconds. 
 **Fix:** Include latency assertions in AI tests. Track cost per request. Set budgets: "This feature must cost less than $0.05 per request and respond in under 3 seconds."
 
 ---
+
+## Done When
+
+- LLM prompt regression suite covers all prompts used in production, with eval cases per prompt in a versioned golden dataset
+- Nondeterministic output evaluation strategy is explicitly defined for each prompt: exact match, property assertions, semantic similarity, or judge model
+- Tool call validation tests cover every tool the AI can invoke, including correct argument typing, sanitization, and error/fallback handling
+- Hallucination risk areas are identified (fact claims, URLs, numerical data, RAG responses) and each has at least one targeted test
+- Eval results are baselined and tracked across model versions so quality regressions are detectable when the underlying model changes
 
 ## Related Skills
 

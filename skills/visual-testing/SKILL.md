@@ -14,9 +14,9 @@ metadata:
   category: automation
 ---
 
-# Visual Testing
-
+<objective>
 Catch visual regressions that functional tests miss. A button that works perfectly but renders at 2px height is not caught by `toBeVisible()` or `click()`. Visual testing compares screenshots against approved baselines and flags pixel-level differences. This skill covers Playwright's built-in visual comparisons, dedicated tools (Chromatic, Percy, Argos CI), and the workflows around baseline management.
+</objective>
 
 ---
 
@@ -425,6 +425,14 @@ Running visual tests on developer machines (macOS, Windows, various displays) an
 Not disabling animations before taking screenshots. CSS transitions and JavaScript animations captured mid-frame produce random diffs. Use `animations: 'disabled'` in Playwright or inject CSS to zero-out animation durations.
 
 ---
+
+## Done When
+
+- Baseline screenshots captured in CI (not locally) and committed to the repository.
+- Diff threshold configured per component type (e.g., `maxDiffPixels: 0` for icons, `maxDiffPixelRatio: 0.005` for full pages).
+- Dynamic content masked or frozen before capture (timestamps, user avatars, live API data).
+- CI pipeline blocks merge when a visual diff exceeds the configured threshold.
+- Review workflow defined: who reviews diffs, how intentional changes get baseline updates, and PR reviewers sign off on baseline commits.
 
 ## Related Skills
 

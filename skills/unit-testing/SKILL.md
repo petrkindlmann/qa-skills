@@ -14,9 +14,9 @@ metadata:
   category: automation
 ---
 
-# Unit Testing
-
+<objective>
 Write effective, maintainable unit tests using Jest, Vitest, or pytest.
+</objective>
 
 ---
 
@@ -424,6 +424,14 @@ it("B", () => {                      it("A", () => { items.push("a"); expect(ite
 ```
 
 ---
+
+## Done When
+
+- Coverage thresholds configured in `jest.config.*`, `vitest.config.*`, or `pyproject.toml` and enforced as a CI gate (non-zero exit on failure)
+- Test files follow the project's co-location or `__tests__` directory convention consistently — no test files in ad-hoc locations
+- Mocking strategy documented (in `qa-project-context.md` or inline): which boundaries get mocked (HTTP, DB, time) and which internal collaborators use real implementations
+- No test reaches outside the process boundary — no real HTTP calls, no real database, no filesystem writes to shared state
+- All snapshot tests are intentional and reviewed: no auto-accepted snapshots with `--updateSnapshot` in CI
 
 ## Related Skills
 

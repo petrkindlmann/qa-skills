@@ -14,11 +14,11 @@ metadata:
   category: ai-qa
 ---
 
-# Test Reliability
-
+<objective>
 Build and maintain test suites that teams can trust. Covers the full spectrum of reliability: locator resilience, flake classification, environment-aware healing, data healing, and observable repair workflows with confidence scoring.
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains known flaky areas, selector strategy, and CI environment details.
+</objective>
 
 ---
 
@@ -406,6 +406,16 @@ Building a complex self-healing framework before adopting basic resilient locato
 ### 8. No Quarantine Expiry
 
 Tests sit in quarantine for months. Quarantine is a temporary state, not a permanent home. Enforce a 14-day maximum.
+
+---
+
+## Done When
+
+- All flaky tests identified and categorized by root cause (timing, data dependency, environment, etc.)
+- Each flaky test quarantined or fixed — no test silently retried without a documented plan and ticket reference
+- Locator stability scores documented for the test suite with a target average of 3.5+
+- Flakiness rate tracked in CI dashboard and visible to the team
+- Repair actions tracked with ticket references and quarantine expiry dates set
 
 ---
 

@@ -15,12 +15,12 @@ metadata:
   category: process
 ---
 
-# QA report humanizer
-
+<objective>
 Make QA reports, bug reports, test summaries, and status updates sound like
 a real QA engineer wrote them, not a template or an LLM.
 
 Check for `.agents/qa-project-context.md` first.
+</objective>
 
 ## When to use this
 
@@ -196,6 +196,14 @@ Be honest about what you missed and why.
 - Closing with optimistic statements that add no information
 - Using passive voice to avoid naming what broke ("an issue was identified")
 - Starting bug reports with context about the testing session instead of the bug
+
+## Done When
+
+- AI-pattern checklist applied to the report (hedging language, passive voice, synonym cycling, template openers, and filler phrases removed)
+- Report reviewed for natural flow and authentic voice — reads like a specific engineer wrote it, not a template
+- Technical accuracy preserved: no facts, numbers, bug descriptions, or test results altered during the rewrite
+- Output reviewed by a human before sending to stakeholders or submitting as a PR comment
+- The version without AI patterns is the deliverable — the original draft is discarded or archived
 
 ## Related skills
 

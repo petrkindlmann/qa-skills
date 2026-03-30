@@ -241,6 +241,18 @@
       "path": "skills/qa-report-humanizer",
       "category": "process",
       "tags": ["humanize", "writing", "reports", "communication", "bug-reports"]
+    },
+    {
+      "name": "qa-start",
+      "path": "skills/qa-start",
+      "category": "foundation",
+      "tags": ["onboarding", "setup", "new-project", "launcher", "qa-start"]
+    },
+    {
+      "name": "qa-do",
+      "path": "skills/qa-do",
+      "category": "foundation",
+      "tags": ["router", "discovery", "which-skill", "diagnostic", "qa-do"]
     }
   ]
 }

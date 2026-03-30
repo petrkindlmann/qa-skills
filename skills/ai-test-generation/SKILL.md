@@ -14,11 +14,11 @@ metadata:
   category: ai-qa
 ---
 
-# AI Test Generation
-
+<objective>
 A staged pipeline for generating tests with LLMs. The pipeline enforces structured intermediates at every step so that agents produce traceable, reviewable, high-quality tests instead of ad-hoc code.
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains tech stack, test frameworks, naming conventions, and project-specific patterns that dramatically improve generated test quality.
+</objective>
 
 ---
 
@@ -417,19 +417,14 @@ Extract: endpoints, request/response schemas, required fields, enum values, auth
 
 ---
 
-## Output Artifacts
+## Done When
 
-The pipeline produces these artifacts. All are reviewable and version-controllable.
-
-| Artifact | Step | Format | Purpose |
-|----------|------|--------|---------|
-| Requirements Document | 1 | Markdown | Entities, rules, explicit + implicit requirements |
-| Risk & Invariants | 2 | Markdown | What can go wrong, what must always be true |
-| Coverage Matrix | 3 | Table | Requirement → scenario → priority mapping |
-| Scenario Set | 4 | Given/When/Then | Test scenario specifications |
-| Oracle Definitions | 5 | Markdown | Assertion strategies per scenario |
-| Test Code | 6 | Framework-specific | Executable test files |
-| Review Notes | 7 | Markdown | KEEP/MODIFY/REJECT decisions with rationale |
+- Coverage matrix document exists and was reviewed before any test code was written
+- Generated tests reviewed by a human with intentional gaps noted in the review notes
+- At least one round of refinement applied to fix hallucinated selectors or wrong assertions
+- Tests run green in CI with no failures attributed to generation errors
+- Generation prompt and model version documented for reproducibility
+- All seven pipeline artifacts exist: requirements document, risk & invariants, coverage matrix, scenario set, oracle definitions, test code, and review notes with KEEP/MODIFY/REJECT decisions
 
 ---
 

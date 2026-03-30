@@ -13,9 +13,9 @@ metadata:
   category: production
 ---
 
-# Testing in Production
-
+<objective>
 Production is the only environment that is production. Every other environment is an approximation. This skill covers how to validate software quality in production safely -- with controlled blast radius, automated rollback, and guardrail metrics that catch problems before users do.
+</objective>
 
 ---
 
@@ -463,6 +463,14 @@ Flags that are fully rolled out but never removed accumulate. After a year, you 
 **Fix:** Every flag gets an expiration date at creation time. After full rollout + 2 weeks of stability, remove the flag. Track flag age and alert when flags exceed their expiration.
 
 ---
+
+## Done When
+
+- Feature flag rollout plan is documented with explicit percentage steps (1% → 10% → 50% → 100%) and named guardrail metrics at each stage
+- Canary analysis is configured with automated pass/fail criteria so promotion and rollback decisions do not require manual metric comparison
+- Production smoke tests run as a pipeline stage on every deploy (not only in CI pre-deploy)
+- Rollback trigger conditions are defined, documented, and verified to fire correctly (e.g., tested in staging before first production use)
+- Production test data strategy is documented, specifying whether synthetic users or anonymized real users are used and how they are excluded from analytics and billing
 
 ## Related Skills
 

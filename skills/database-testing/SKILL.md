@@ -14,11 +14,11 @@ metadata:
   category: automation
 ---
 
-# Database Testing
-
+<objective>
 Validate database integrity, test migrations safely, verify constraints, and detect query performance issues.
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains database type, ORM, migration tooling, and environment configuration that shape every pattern below.
+</objective>
 
 ---
 
@@ -475,6 +475,14 @@ Chain scripts in `package.json`: `test:db:up` (docker compose up), `test:db:migr
 **Seeding with random data.** `faker.random()` without a fixed seed produces different data every run. Tests become non-deterministic. Use fixed seeds: `faker.seed(42)` or explicit values.
 
 ---
+
+## Done When
+
+- Migration tests run both forward (`migrate deploy` from empty DB) and backward (rollback last step) for every schema change.
+- Data integrity constraints (NOT NULL, UNIQUE, FOREIGN KEY, CHECK) verified in CI with tests that assert correct rejection of invalid data.
+- Seed data covers all test scenarios (admin user, regular user, edge-case records, empty states) without requiring manual database setup.
+- Query performance assertions in place for known slow queries (e.g., dashboard aggregations, date range filters), with explicit execution time thresholds.
+- Migration rollback tested in the staging environment before each production deploy, confirming the application runs correctly after reverting.
 
 ## Related Skills
 

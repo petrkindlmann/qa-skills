@@ -14,11 +14,11 @@ metadata:
   category: automation
 ---
 
-# Cross-Browser Testing
-
+<objective>
 Design analytics-driven browser test matrices and catch cross-browser issues before users do.
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains target browsers, analytics data, and platform priorities that drive matrix design.
+</objective>
 
 ---
 
@@ -482,6 +482,14 @@ test('form works without JavaScript', async ({ page, browserName }) => {
 **Static browser matrix.** Browser usage changes. If your matrix is based on data from 2 years ago, it is wrong. Review analytics data quarterly.
 
 ---
+
+## Done When
+
+- Browser matrix defined using real analytics data (last 90 days), with tier assignments (P0/P1/P2) documented and justified by traffic share.
+- Playwright project config (or BrowserStack/Sauce Labs config) reflects the defined matrix and runs P0 browsers on every PR.
+- Known browser-specific bugs documented with the affected browser, reproduction steps, and either a workaround or a linked open ticket.
+- Rendering issues checklist (flexbox gaps, scroll behavior, date inputs, clipboard API, dialog element) run against all P0 and P1 target browsers.
+- Browser matrix reviewed and signed off by the team, with a calendar reminder set for quarterly refresh against updated analytics data.
 
 ## Related Skills
 

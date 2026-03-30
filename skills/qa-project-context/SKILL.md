@@ -13,7 +13,9 @@ metadata:
   category: foundation
 ---
 
-# QA Project Context
+<objective>
+Universal QA context file. Creates .agents/qa-project-context.md capturing tech stack, test frameworks, CI/CD, environments, coverage goals, risk areas, and team structure. Every other skill reads this first — run qa-project-context before any other skill to avoid redundant discovery questions.
+</objective>
 
 ## What Is This File
 
@@ -458,6 +460,14 @@ Before asking about tech stack, scan the project for common configuration files 
 | `vercel.json` | Vercel hosting |
 
 Present detected values to the user for confirmation rather than asking from scratch.
+
+## Done When
+
+- `.agents/qa-project-context.md` exists in the project root with no `[bracketed placeholders]` remaining
+- All sections are filled with real values: product name, URLs, key user flows, tech stack, test stack, CI/CD config, environments, and quality goals
+- The Team section reflects actual headcount, dev/QA ratio, and QA involvement model
+- The Risk Areas section contains at least 3 risk entries scored by impact and likelihood
+- The Test Stack section names the actual frameworks in use (or explicitly states "none selected yet" with a recommendation noted)
 
 ## Related Skills
 

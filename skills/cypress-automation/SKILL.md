@@ -14,9 +14,9 @@ metadata:
   category: automation
 ---
 
-# Cypress Automation
-
+<objective>
 Production-grade Cypress test suites in TypeScript. This skill covers the mental model (command queue, retry-ability), project structure, custom commands, network control with `cy.intercept`, component testing, and Cypress Cloud integration.
+</objective>
 
 ---
 
@@ -479,6 +479,14 @@ UI-based login in every test is slow and fragile. Use `cy.session()` (shown in c
 Parallelize once the suite exceeds 5 minutes. Use Cypress Cloud, `cypress-split`, or manual sharding across CI matrix jobs.
 
 ---
+
+## Done When
+
+- `cypress.config.ts` exists with a correct `baseUrl` (not hardcoded to `localhost` in CI) and explicit `viewportWidth`/`viewportHeight`
+- Custom commands extracted to `cypress/support/commands.ts` with TypeScript declarations in `cypress/support/index.d.ts`
+- `cy.intercept` used for all API dependencies that could be slow or unreliable — no tests relying on real network calls for determinism
+- Tests pass in CI with either a recorded Cypress Cloud run (parallel) or local video/screenshot artifacts uploaded on failure
+- Component tests co-located with source files (e.g. `ProductCard.cy.tsx` next to `ProductCard.tsx`) rather than in a separate top-level directory
 
 ## Related Skills
 

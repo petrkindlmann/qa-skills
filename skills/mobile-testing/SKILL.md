@@ -14,11 +14,11 @@ metadata:
   category: automation
 ---
 
-# Mobile Testing
-
+<objective>
 Test native, React Native, and hybrid mobile applications with production-grade tooling and real device strategies.
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains tech stack details, target platforms, and device coverage requirements that shape every decision below.
+</objective>
 
 ---
 
@@ -278,12 +278,8 @@ export const bsCapabilities = {
   platformName: 'Android',
   'appium:deviceName': 'Samsung Galaxy S24',
   'appium:platformVersion': '14.0',
-  'appium:app': process.env.BROWSERSTACK_APP_URL, // Upload via API first
+  'appium:app': process.env.BROWSERSTACK_APP_URL, // Upload via API: POST api-cloud.browserstack.com/app-automate/upload
 };
-
-// Upload app before test run
-// curl -u "USER:KEY" -X POST "https://api-cloud.browserstack.com/app-automate/upload"
-//   -F "file=@/path/to/app.apk" -F "custom_id=MyApp"
 ```
 
 ### Sauce Labs
@@ -427,19 +423,17 @@ await device.setStatusBar({ dataNetwork: 'wifi' });
 ### Permission Dialog Handling
 
 ```typescript
-// Appium: auto-grant all permissions (Android)
-// Set capability: 'appium:autoGrantPermissions': true
+// Android: set 'appium:autoGrantPermissions': true in capabilities
 
-// Appium: handle iOS permission dialogs explicitly
+// iOS: handle permission dialogs explicitly
 const allowButton = await driver.$('-ios predicate string:label == "Allow"');
 if (await allowButton.isDisplayed()) {
   await allowButton.click();
 }
-
-// Better: use Appium's mobile: alert command (iOS)
+// Or use the mobile: alert command
 await driver.execute('mobile: alert', { action: 'accept' });
 
-// Detox: handle system dialogs
+// Detox
 await systemDialog.accept(); // Tap "Allow"
 await systemDialog.deny();   // Tap "Don't Allow"
 ```
@@ -449,13 +443,11 @@ await systemDialog.deny();   // Tap "Don't Allow"
 ```typescript
 // Background and foreground
 await driver.execute('mobile: backgroundApp', { seconds: 5 });
-// App returns to foreground after 5 seconds
 await expect(driver.$('~dashboard-screen')).toBeDisplayed();
 
 // Terminate and relaunch (cold start)
 await driver.terminateApp('com.mycompany.myapp');
 await driver.activateApp('com.mycompany.myapp');
-// Verify state restoration
 await expect(driver.$('~last-viewed-screen')).toBeDisplayed();
 ```
 
@@ -488,6 +480,14 @@ await expect(element(by.id('onboarding-screen'))).toBeVisible();
 **Ignoring app size and startup time.** A 200MB app with a 6-second cold start is a real user experience issue. Include non-functional checks for app binary size and launch time in the test suite.
 
 ---
+
+## Done When
+
+- Device matrix defined and documented: real devices + emulators per platform, prioritized by analytics (P0/P1/P2 tiers)
+- Test suite runnable against both iOS and Android with a single CI configuration (matrix strategy or separate jobs)
+- Gesture tests (swipe, scroll, long-press) and deep link tests (cold start + authenticated redirect) cover the app's primary flows
+- Push notification tests exist or are explicitly deferred with a documented rationale (e.g. "deferred until FCM test endpoint available")
+- CI pipeline runs tests on at least one emulator per platform (iOS simulator + Android emulator) on every PR, with real device farm runs gated to nightly or release branches
 
 ## Related Skills
 

@@ -1,5 +1,32 @@
 # Versions
 
+## v2.3.0 (2026-03-30)
+
+### Improvements
+
+- Added `<objective>` semantic XML block to all 42 skills — replaces H1 heading with agent-facing context: why the skill is structured the way it is, when to use it vs. others, and the core approach
+- Added explicit state machine flow diagram to `risk-based-testing` `## Workflow` section (6-phase cycle with skip conditions)
+- Added `argument-hint` to `qa-do` frontmatter so agents know what input the router expects
+
+---
+
+## v2.2.0 (2026-03-29)
+
+### New skills
+
+**Foundation:**
+- `qa-start` v1.0 — Onboarding launcher: chains qa-project-context → test-strategy → test-planning in one guided sequence
+- `qa-do` v1.0 — Diagnostic router: maps a plain-language QA situation to the right 1-3 skills
+
+### Improvements
+
+- Added `## Done When` completion criteria to all 40 existing skills
+- Added team maturity callout (startup / growing / established) to test-strategy, playwright-automation, ci-cd-integration, qa-project-bootstrap
+- Added `Team Maturity` field to `.agents/qa-project-context.md` template
+- Normalized `## Output Artifacts` in ai-test-generation to `## Done When`
+
+---
+
 ## v2.1.0 (2026-03-23)
 
 ### New skill

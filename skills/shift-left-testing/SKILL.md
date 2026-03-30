@@ -14,11 +14,11 @@ metadata:
   category: process
 ---
 
-# Shift-Left Testing
-
+<objective>
 Move quality validation earlier in the development lifecycle where defects are cheaper, faster, and simpler to fix. This skill covers the practices, patterns, and cultural shifts that embed quality into every phase -- from story refinement to PR merge.
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains team composition, current dev/QA workflow, sprint structure, and quality goals that shape which shift-left practices to introduce first.
+</objective>
 
 ---
 
@@ -481,6 +481,14 @@ Writing E2E tests for business logic that should be validated by unit tests. Wri
 Tracking "number of Three Amigos sessions held" instead of "defects found in planning vs. found in production." Activities are inputs; outcomes are outputs. Measure whether shift-left practices actually reduce escaped defects and rework.
 
 ---
+
+## Done When
+
+- Definition of Done updated to include test criteria (unit, integration, and E2E gates) and enforced in CI
+- PR review checklist includes a test coverage check and QA is reviewing at least high-risk PRs
+- At least one Three Amigos session run for an upcoming feature, with gaps documented and acceptance criteria updated
+- Dev/QA pairing schedule established and first pairing session completed
+- Pre-merge quality gates (test pass, coverage not decreased, linting) active in CI and blocking merge
 
 ## Related Skills
 

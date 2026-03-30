@@ -14,9 +14,9 @@ metadata:
   category: production
 ---
 
-# Synthetic Monitoring
-
+<objective>
 Synthetic monitoring runs scripted tests against production on a schedule, 24/7. It catches outages, performance degradation, and broken flows before real users report them. This skill covers probe design, alerting integration, SLA validation, and multi-region execution.
+</objective>
 
 ---
 
@@ -478,6 +478,14 @@ An alert fires at 3 AM. The on-call engineer sees "Login probe failing" but has 
 **Fix:** Every probe has a linked runbook. The runbook includes: what the probe tests, what to check first (service status, recent deploys, third-party status), how to verify manually, and who to escalate to.
 
 ---
+
+## Done When
+
+- Probes cover all critical user journeys identified in discovery (not only homepage uptime or a single health endpoint)
+- Alert thresholds are calibrated with consecutive-failure rules so the team is neither flooded with noise nor missing real outages
+- SLA tracking dashboard is configured and shows current availability and error budget consumption
+- Probe failures trigger on-call notification within the response time defined in the SLA (verified with a test alert)
+- Monitoring results are reviewed in a regular health check cadence (weekly or per-sprint)
 
 ## Related Skills
 

@@ -29,10 +29,12 @@ Each skill's YAML frontmatter `description` must be specific enough to match the
 - Tool-specific integration guides live in `tools/integrations/`
 - Examples: `playwright-automation` references the Playwright integration guide, `qa-metrics` references Allure/Grafana dashboards
 
-## Available Skills — 40 skills across 10 categories
+## Available Skills — 42 skills across 10 categories
 
 ### Foundation
 | `qa-project-context` | "set up QA context," "configure testing," first use of any skill |
+| `qa-start` | "set up QA for a new project," "onboard QA," "QA from scratch," "new project QA," "qa:start" |
+| `qa-do` | "which skill should I use," "where do I start," "I'm not sure what to test," "qa:do" |
 
 ### Strategy
 | `test-strategy` | "test strategy," "QA plan," "quality strategy," "testing approach" |

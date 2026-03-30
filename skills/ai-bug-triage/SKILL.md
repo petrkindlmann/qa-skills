@@ -14,11 +14,11 @@ metadata:
   category: ai-qa
 ---
 
-# AI Bug Triage
-
+<objective>
 A hybrid pipeline for bug classification, deduplication, and ticket generation. Deterministic fingerprinting handles deduplication (what LLMs are bad at); LLM handles explanation, severity assessment, and ticket writing (what LLMs are good at).
 
 **Key reframe:** The LLM is best at explaining and routing, not deduplication. Teach agents to DESIGN the pipeline, not BE the pipeline.
+</objective>
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains tech stack, component mapping, and known flaky areas that improve classification accuracy.
 
@@ -461,6 +461,16 @@ Hashing raw log lines produces unstable fingerprints that change every run. Norm
 ### 8. No Component Ownership Mapping
 
 Classification without routing is useless. Maintain a component-to-team mapping so that classified bugs reach the right people.
+
+---
+
+## Done When
+
+- Each triaged bug has severity, component, and root cause labels assigned
+- Duplicates merged or linked with references to the canonical ticket
+- CI failure analysis report generated summarizing failure categories and counts
+- Actionable tickets created for all P0 and P1 issues with assigned owners
+- Triage session findings summarized and shared with the team
 
 ---
 

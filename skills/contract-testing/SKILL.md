@@ -14,9 +14,9 @@ metadata:
   category: infrastructure
 ---
 
-# Contract Testing
-
+<objective>
 Verify that services can communicate correctly without deploying them together.
+</objective>
 
 ---
 
@@ -37,11 +37,11 @@ Verify that services can communicate correctly without deploying them together.
 
 **2. Contracts are the shared source of truth.** Not documentation, not Slack threads, not "just deploy and see." Contracts are executable tests that live in CI and block deployments on violation.
 
-**3. Contract tests replace integration environments, not integration tests.** You still need integration tests for complex multi-step workflows. Contract tests eliminate the need to deploy consumer and provider together just to verify they can talk to each other.
+**3. Contract tests replace integration environments, not integration tests.** You still need integration tests for complex multi-step workflows. Contract tests eliminate the need to deploy consumer and provider together just to verify the interface.
 
 **4. Break the build on contract violation.** A contract test that logs a warning but allows deployment provides zero value. Contracts must be deployment gates.
 
-**5. Test the contract, not the business logic.** Consumer tests verify response shape and status codes. Provider verification ensures the contract is satisfiable. Neither side tests business rules -- that is what unit and integration tests do.
+**5. Test the contract, not the business logic.** Consumer tests verify response shape and status codes. Provider verification ensures the contract is satisfiable. Business rules belong in unit and integration tests.
 
 ---
 
@@ -187,18 +187,10 @@ describe("Provider Verification", () => {
       providerBaseUrl: serverUrl,
       provider: "user-service",
 
-      // Option A: Read pacts from local files (simple, no broker)
+      // Option A: local files; Option B: set pactBrokerUrl/pactBrokerToken/consumerVersionSelectors
       pactUrls: [
         path.resolve(__dirname, "../../../pacts/frontend-app-user-service.json"),
       ],
-
-      // Option B: Read pacts from Pact Broker (production setup)
-      // pactBrokerUrl: "https://pact.example.com",
-      // pactBrokerToken: process.env.PACT_BROKER_TOKEN,
-      // consumerVersionSelectors: [
-      //   { mainBranch: true },
-      //   { deployedOrReleased: true },
-      // ],
 
       // Provider states: set up data that matches consumer expectations
       stateHandlers: {
@@ -474,21 +466,29 @@ npx pact-broker record-deployment \
 
 ## Anti-Patterns
 
-**Testing business logic in contracts.** Contract tests verify response shape, not that the discount calculation is correct. Keep contracts thin: status codes, field presence, field types, field format. Business logic belongs in unit and integration tests.
+**Testing business logic in contracts.** Keep contracts thin: status codes, field presence, field types, field format. Business logic belongs in unit and integration tests.
 
 **Provider-driven contracts without consumer input.** If the provider team defines contracts alone, they test what they think consumers need, not what consumers actually use. Consumer-driven contracts catch real integration failures.
 
-**Skipping provider states.** If the consumer expects `given("user 123 exists")` but the provider verification runs against an empty database, the verification is meaningless. Provider state handlers must set up the exact scenario.
+**Skipping provider states.** If the consumer expects `given("user 123 exists")` but provider verification runs against an empty database, the verification is meaningless. Provider state handlers must set up the exact scenario.
 
 **Publishing pacts from local machines.** Pacts must be published from CI with a known commit SHA and branch. Local publishes produce untraceable versions that pollute the broker.
 
-**Ignoring `can-i-deploy` failures.** "It is probably fine, let me deploy anyway" is how you break production. If `can-i-deploy` says no, either fix the contract violation or negotiate the change with the consumer team.
+**Ignoring `can-i-deploy` failures.** If `can-i-deploy` says no, fix the contract violation or negotiate the change with the consumer team. Deploying anyway breaks production.
 
-**One massive pact covering every endpoint.** Start with the critical integration points. Add contracts incrementally as failures justify them. A 500-interaction pact is unmaintainable.
+**One massive pact covering every endpoint.** Start with critical integration points. Add contracts incrementally as failures justify them. A 500-interaction pact is unmaintainable.
 
 **Not cleaning up old pacts.** Configure Pact Broker to delete pact versions older than 90 days that are not deployed to any environment. Stale pacts slow down verification and confuse the matrix.
 
 ---
+
+## Done When
+
+- Consumer pact tests are written and publishing to Pact Broker on every CI run with a commit SHA and branch tag.
+- Provider verification job runs in CI on every provider change and on every new pact published (via Pact Broker webhook).
+- `can-i-deploy` gate is configured in both consumer and provider pipelines and blocks deployment when a contract is broken.
+- Consumer and provider teams have documented and agreed on the contract ownership model (who writes interactions, who reviews changes).
+- At least one breaking-change scenario has been tested end-to-end and confirmed caught by the `can-i-deploy` check before reaching production.
 
 ## Related Skills
 

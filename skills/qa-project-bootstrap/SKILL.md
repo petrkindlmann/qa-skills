@@ -14,11 +14,11 @@ metadata:
   category: process
 ---
 
-# QA Project Bootstrap
-
+<objective>
 Get a new QA engineer productive or bootstrap QA for a new project. The goal is clear: reduce time to first merged test. Everything in this skill serves that objective -- environment setup, codebase orientation, framework walkthrough, and mentorship patterns that build confidence through progressive complexity.
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. If it exists, it already answers most discovery questions and provides the technical context needed for onboarding. If it does not exist, creating it is the first action item.
+</objective>
 
 ---
 
@@ -67,6 +67,11 @@ The first 3 tests should be written in a pair -- the new person driving, an expe
 ### 5. Make the Easy Path the Right Path
 
 If the correct way to write a test is harder than the wrong way, people will write tests the wrong way. Ensure that test utilities, fixtures, page objects, and data factories make the recommended patterns the path of least resistance. If a new person has to fight the framework to follow conventions, fix the framework.
+
+> **Calibrate to your team maturity** (set `team_maturity` in `.agents/qa-project-context.md`):
+> - **startup** — Focus on days 1–10: get one test framework running and one critical path covered. Skip process ceremony until you have a working baseline.
+> - **growing** — Full 30-day plan: framework selection, CI integration, coverage baseline, team conventions documented.
+> - **established** — 30-day plan plus: audit existing suite for anti-patterns, propose tooling upgrades, establish metrics baseline, schedule recurring quality reviews.
 
 ---
 
@@ -478,6 +483,13 @@ Not soliciting feedback from the person being onboarded. They experienced the pr
 The new person copies an existing test, changes the locators and URL, and calls it done. The test works but they do not understand why. Pairing and code review should focus on the "why" behind each pattern. If someone cannot explain why a fixture is structured a certain way, they will misuse it when the context differs.
 
 ---
+## Done When
+
+- Test architecture audit completed with findings documented (strengths, gaps, risks, and quick wins)
+- First 30 days checklist reviewed, all items assigned to a person, and blocking items escalated
+- `.agents/qa-project-context.md` created and populated with framework, critical paths, team structure, and risk areas
+- Test framework selected with rationale documented (evaluated alternatives, decision recorded)
+- At least one working test merged to the repo and passing in CI, proving the local and pipeline setup end-to-end
 
 ## Related Skills
 

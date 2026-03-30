@@ -14,9 +14,9 @@ metadata:
   category: metrics
 ---
 
-# QA Dashboard
-
+<objective>
 Build dashboards that drive decisions, not dashboards that display data.
+</objective>
 
 ---
 
@@ -449,6 +449,14 @@ A practical set of panels that cover the most common questions teams ask.
 **Allure without history.** A single Allure report is a snapshot. Without history, you cannot see trends, identify intermittent failures, or measure improvement. Always preserve the `history/` directory across CI runs.
 
 ---
+
+## Done When
+
+- Dashboard is deployed and accessible to the full team without requiring local setup or manual report generation.
+- Test execution trends (pass rate, failure count, duration) are visible over at least 2 weeks of historical data.
+- Flakiness trend chart is configured showing the top flaky tests with retry counts over a rolling 14-day window.
+- Stakeholder-facing report template is created and generating automatically (weekly summary or per-release quality report with a clear READY/NOT READY verdict).
+- Alert is configured to notify the team (via Slack or equivalent) when the main branch pass rate drops by more than 2 percentage points in a single day.
 
 ## Related Skills
 

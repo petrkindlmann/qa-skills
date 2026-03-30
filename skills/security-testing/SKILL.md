@@ -15,9 +15,9 @@ metadata:
   category: automation
 ---
 
-# Security Testing
-
+<objective>
 Test application security systematically against known vulnerability classes with automated tooling integrated into CI.
+</objective>
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains auth mechanisms, compliance requirements, and infrastructure details that determine which security checks apply.
 
@@ -472,6 +472,14 @@ Block merges when `npm audit --json` reports high/critical vulnerabilities. Pars
 **Testing only known payloads.** The XSS and SQLi payloads above are examples, not an exhaustive list. Use tools like ZAP that maintain current payload databases.
 
 ---
+
+## Done When
+
+- OWASP Top 10 checklist reviewed against the application and each item marked as tested, mitigated, or accepted risk with justification.
+- ZAP passive scan run against the staging environment with all findings triaged (critical/high addressed, medium/low tracked in backlog).
+- Dependency scanning enabled on the repository via Snyk or Dependabot, with high/critical vulnerabilities treated as build failures.
+- SAST lint rules (ESLint security plugin or Semgrep) enabled in CI and producing zero unresolved errors on the main branch.
+- Auth and session edge cases explicitly tested: CSRF protection, token expiry rejection, session invalidation on logout, and role escalation prevention.
 
 ## Related Skills
 

@@ -14,11 +14,11 @@ metadata:
   category: process
 ---
 
-# Quality Postmortem
-
+<objective>
 Analyze escaped defects, test suite health, and quality process gaps through structured, blameless postmortems. Every postmortem produces 1-3 concrete, tracked action items -- not vague commitments to "be more careful." The goal is systemic improvement, not individual blame.
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains quality goals, risk areas, and test suite details that provide essential context for any postmortem analysis.
+</objective>
 
 ---
 
@@ -458,6 +458,14 @@ Waiting for a production fire to conduct a quality review. Proactive health revi
 Running quality retrospectives based on feelings and opinions rather than data. "It feels like we have more bugs lately" might be true or might be recency bias. Check the data: is the escaped bug count actually increasing? Where are the bugs concentrated? Without data, the team solves the loudest problem, not the most important one.
 
 ---
+
+## Done When
+
+- Escaped defect timeline reconstructed (introduced, released, detected, resolved) with supporting evidence from commit history and bug tracker
+- 5 Whys root cause analysis completed and stopped at a systemic cause, not at "developer didn't write a test"
+- Test gap identified and mapped to a specific coverage hole (missing test type, missing scenario, or missing area)
+- Action items assigned with named owners and due dates, added to the team's work tracker with a postmortem tag
+- Findings shared with the team in a written summary — not siloed in QA or lost in a private document
 
 ## Related Skills
 

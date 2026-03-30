@@ -14,9 +14,9 @@ metadata:
   category: strategy
 ---
 
-# Risk-Based Testing Skill
-
+<objective>
 Identify what matters most, test it first, and allocate effort proportional to business risk. This skill provides a systematic framework for discovering risk, quantifying it, mapping test coverage to risk levels, and keeping the assessment current as the product evolves.
+</objective>
 
 ---
 
@@ -87,7 +87,11 @@ Do not start with "we need 80% coverage everywhere." Start with "where would a f
 
 ## Workflow
 
-The risk-based testing workflow has six phases that cycle continuously.
+```
+1. Identify → 2. Classify → 3. Analyze → 4. Heatmap → 5. Coverage → 6. Reassess → (repeat)
+                                 ↑
+                       score ≥ 10 only; skip to 4 if no items reach threshold
+```
 
 ### Phase 1: Risk Identification
 
@@ -382,6 +386,14 @@ Over-weighting past incidents and under-weighting new risk vectors. A module tha
 Severity measures how bad a failure is. Priority measures how urgently to test it. A catastrophic but extremely rare failure (earthquake destroys data center) might be lower priority than a moderate but frequent failure (search results occasionally wrong). The risk matrix accounts for both dimensions -- use the composite score, not impact alone.
 
 ---
+
+## Done When
+
+- A risk matrix exists with every in-scope feature scored on both impact (1-5) and probability (1-5) axes
+- Each feature's composite risk score places it in a named zone (CRITICAL, HIGH, MEDIUM, or LOW) with a corresponding testing action assigned
+- Features scoring 10+ have a completed failure mode analysis with blast radius, detection method, and coverage gap documented
+- Test coverage requirements per risk zone are mapped against current coverage, with gaps explicitly listed and assigned to an owner and target sprint
+- Reassessment triggers and cadence are documented (quarterly minimum, plus post-incident)
 
 ## Related Skills
 

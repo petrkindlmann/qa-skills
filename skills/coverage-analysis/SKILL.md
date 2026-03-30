@@ -14,9 +14,9 @@ metadata:
   category: metrics
 ---
 
-# Coverage Analysis
-
+<objective>
 Measure coverage to find gaps, not to chase numbers.
+</objective>
 
 ---
 
@@ -465,6 +465,14 @@ Coverage percentage alone is insufficient. Combine it with:
 **Coverage in E2E tests only.** E2E tests execute many lines but cover broad, shallow paths. A single E2E test might touch 60% of the codebase without testing any edge case. Unit tests provide targeted, deep coverage of logic branches. Measure coverage from unit and integration tests separately from E2E.
 
 ---
+
+## Done When
+
+- Coverage is instrumented and running automatically in CI on every push (no manual steps to generate the report).
+- Coverage threshold is enforced in CI configuration (build fails when line or branch coverage drops below the defined minimum).
+- Coverage report is published as a CI artifact (HTML report and `json-summary`) and linked from PR comments showing per-PR coverage delta.
+- Meaningful vs. vanity coverage distinction is documented for the codebase: excluded paths are listed and justified (generated code, barrel exports, type definitions), and per-directory thresholds are set higher for critical paths such as payments and auth.
+- Coverage-as-ratchet is configured so the threshold only goes up: `.coverage-ratchet.json` is committed, the ratchet script runs in CI, and the build fails if coverage regresses from the recorded baseline.
 
 ## Related Skills
 

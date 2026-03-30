@@ -14,9 +14,9 @@ metadata:
   category: knowledge
 ---
 
-# Test Migration
-
+<objective>
 Migrating a test suite between frameworks is a high-risk, high-reward operation. Done well, it modernizes your testing infrastructure and improves reliability. Done poorly, it loses coverage, introduces flakiness, and burns months of effort. This skill covers how to migrate incrementally with zero coverage loss.
+</objective>
 
 ---
 
@@ -475,6 +475,14 @@ Migrating to Playwright while the team has never used Playwright means the migra
 **Fix:** Run a 2-hour workshop before starting the migration. Pair-program on the first 10 migrated tests (migration champion + team member). Create a team-specific style guide for the new framework. Require at least 2 team members to review each migrated test.
 
 ---
+
+## Done When
+
+- Migration scope is defined: which tests move first (critical paths), which move last (low priority), and which are intentionally not migrated (with documented rationale)
+- Coverage parity is verified before decommissioning the old framework, with an explicit feature-area comparison showing no regression in test count or critical scenario coverage
+- Parallel run period is completed with both frameworks passing in CI for at least 2 consecutive sprints
+- Migration retrospective has been conducted with lessons captured (flakiness root causes, pattern improvements, team training gaps)
+- Old framework is fully removed: dependencies deleted from package.json, old test files deleted (not just disabled), and CI config updated to run only the new suite
 
 ## Related Skills
 

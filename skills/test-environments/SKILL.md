@@ -14,9 +14,9 @@ metadata:
   category: infrastructure
 ---
 
-# Test Environments
-
+<objective>
 Design and manage test environments that give confidence without slowing teams down.
+</objective>
 
 ---
 
@@ -433,6 +433,16 @@ For factory-based seed data patterns, see `test-data-management`.
 **No health checks in Docker Compose.** Without health checks, `depends_on` only waits for the container to start, not for the service to be ready. Tests start before the database accepts connections and fail with connection errors.
 
 **Long-lived preview environments.** Preview environments that persist after the PR is merged waste resources and accumulate stale state. Automate teardown on PR close.
+
+---
+
+## Done When
+
+- Environment inventory documented (dev, staging, preview, production) with characteristics and access notes for each tier
+- Docker Compose config for the local environment verified working with a single `docker compose up` command
+- Seed data scripts are idempotent and checked into the repository
+- Environment parity gaps documented (e.g., SQLite in CI vs PostgreSQL in prod) with mitigations in place or tracked
+- Preview environments auto-created for PRs and auto-torn-down on merge or close
 
 ---
 

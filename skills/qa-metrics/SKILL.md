@@ -15,9 +15,9 @@ metadata:
   category: metrics
 ---
 
-# QA Metrics Skill
-
+<objective>
 Define, collect, and act on the metrics that actually improve software quality. The goal is not a pretty dashboard -- it is a feedback loop that changes behavior. Every metric in this skill has a formula, a target, an owner, and a concrete action to take when the metric goes red.
+</objective>
 
 ---
 
@@ -422,6 +422,14 @@ This dashboard supports sprint retrospectives and planning.
 - **Comparing across teams.** Coverage in a payment service vs. an admin tool is not comparable. Track improvement over time, not cross-team rankings.
 
 ---
+
+## Done When
+
+- Key metrics are defined with explicit formulas: coverage % (line and branch), flakiness rate, defect escape rate, and MTTR by severity.
+- Baseline values are established for each metric from at least 2 weeks of collected data, with targets set per the company-stage table.
+- Data collection is automated via CI pipeline integrations (coverage from test runner, flakiness from CI run history, defects from issue tracker labels) — no manual steps required.
+- Quality gates are configured in CI to block merges or deployments when flakiness exceeds threshold, coverage drops, or critical tests fail.
+- Metrics are reviewed in a recurring team cadence (at minimum in sprint retrospectives), with a named owner for each metric.
 
 ## Related Skills
 

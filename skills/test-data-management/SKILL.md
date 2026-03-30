@@ -14,9 +14,9 @@ metadata:
   category: infrastructure
 ---
 
-# Test Data Management Skill
-
+<objective>
 Create, maintain, and clean up test data that is deterministic, isolated, realistic, and safe. Good test data is the foundation of reliable tests -- without it, tests are either flaky (shared mutable state), unrealistic (hardcoded nonsense values), or dangerous (production PII in test environments).
+</objective>
 
 ---
 
@@ -427,6 +427,16 @@ Creating a complete user object with 30 fields when the test only cares about `r
 
 ### Hard-Coded IDs
 Using `userId: '1'` in tests. This couples tests to database state and breaks when running in parallel (ID collision) or against a database with existing data. Use factory sequences or UUIDs.
+
+---
+
+## Done When
+
+- Factory or fixture functions cover all entity types needed by the test suite
+- Test data isolated per test — no shared mutable state between tests
+- Seed scripts runnable in CI without manual intervention
+- No real PII used in test fixtures — all sensitive data anonymized or synthetic
+- Data cleanup verified after each test run (no orphaned records accumulate)
 
 ---
 

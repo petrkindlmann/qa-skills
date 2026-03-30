@@ -14,9 +14,9 @@ metadata:
   category: strategy
 ---
 
-# Test Strategy Skill
-
+<objective>
 Generate a comprehensive, actionable QA strategy document tailored to the product, team, and risk profile. The output should be a living document that drives daily testing decisions, not a compliance artifact that collects dust.
+</objective>
 
 ---
 
@@ -51,6 +51,13 @@ Before writing a single line of strategy, gather context. Check `.agents/qa-proj
 - Skill levels with automation tools
 - Budget constraints for tooling
 - Timeline pressure -- is there a deadline driving this strategy?
+
+---
+
+> **Calibrate to your team maturity** (set `team_maturity` in `.agents/qa-project-context.md`):
+> - **startup** — Focus on a minimal test pyramid: unit tests + a handful of critical E2E paths. Skip contract testing and formal metrics until you have CI running reliably.
+> - **growing** — Full pyramid with defined coverage targets, flakiness thresholds, and CI quality gates. Add risk-based prioritization.
+> - **established** — Comprehensive strategy with SLA-backed quality gates, multi-environment coverage, advanced tooling (contract testing, chaos, observability), and formal review cadence.
 
 ---
 
@@ -470,6 +477,14 @@ The final strategy document should follow this structure:
 ```
 
 ---
+
+## Done When
+
+- A strategy document exists at an agreed location with all 13 sections populated (Executive Summary through Revision History)
+- Test pyramid target ratios are defined with concrete counts and a timeline to reach them
+- Entry and exit criteria are written for each test level (unit, integration, E2E, release)
+- Tool selection decisions are documented with a scored rationale matrix, not just tool names
+- Quality gates are defined for all four stages (PR, merge, deploy, nightly) with specific pass/fail thresholds
 
 ## Related Skills
 

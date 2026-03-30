@@ -14,9 +14,9 @@ metadata:
   category: infrastructure
 ---
 
-# Service Virtualization
-
+<objective>
 Choose the right isolation strategy for every dependency in your test suite.
+</objective>
 
 ---
 
@@ -462,6 +462,14 @@ Record-replay captures real API responses and replays them in tests. Useful for 
 **Record-replay without expiration.** Recordings from 6 months ago reflect an API that no longer exists. Add a `recordedAt` timestamp and fail tests when recordings are older than 30 days, forcing a re-record.
 
 ---
+
+## Done When
+
+- Dependency isolation strategy is decided and documented for each external dependency (which get WireMock/MSW stubs, which use Testcontainers, which use sandbox modes).
+- WireMock or MSW stubs cover all critical external dependency scenarios including at least one error path (4xx/5xx, timeout, rate limit) per dependency.
+- Stubs and stub mapping files are versioned alongside test code in the same repository.
+- Tests run successfully in CI without any real external service calls (verified by `onUnhandledRequest: "error"` in MSW or equivalent WireMock enforcement).
+- Record-replay baseline is captured for any complex multi-step interaction sequences, with a `recordedAt` timestamp and a 30-day expiry check enforced in CI.
 
 ## Related Skills
 

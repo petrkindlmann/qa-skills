@@ -14,9 +14,9 @@ metadata:
   category: process
 ---
 
-# Release Readiness
-
+<objective>
 A framework for evidence-based release decisions. Every section provides concrete criteria, checklists, and procedures so that "ready to ship" means something measurable.
+</objective>
 
 ---
 
@@ -443,6 +443,14 @@ Next Steps:
 ```
 
 ---
+
+## Done When
+
+- Go/no-go checklist completed with evidence for each item and signed off by the named approver with timestamp
+- Smoke test suite run against the release candidate in staging and all tests pass
+- Rollback criteria documented (specific thresholds that trigger rollback) and rollback procedure practiced on staging
+- Staged rollout plan defined with traffic percentages, promotion criteria, and guardrail metrics for each stage
+- Release sign-off recorded with approver names, timestamp, and link to the go/no-go checklist artifact
 
 ## Related Skills
 

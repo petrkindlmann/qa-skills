@@ -14,9 +14,9 @@ metadata:
   category: production
 ---
 
-# Observability-Driven Testing
-
+<objective>
 Production is the richest source of test design input. Every error log, every slow trace, every spike in latency is a signal telling you where tests are missing. This skill closes the feedback loop between production observability and test creation.
+</objective>
 
 ---
 
@@ -409,10 +409,7 @@ When a test fails or a production error occurs, use the trace to understand exac
 ```
 Diagnosis flow:
 
-1. Get the trace ID
-   - From test output: logged by test infrastructure
-   - From error tracker: attached to the error event
-   - From user report: extract from request headers or error page
+1. Get the trace ID (from test output, error tracker, or user report)
 
 2. Open the trace in your APM tool
    - Jaeger: /trace/{traceId}
@@ -437,14 +434,14 @@ Diagnosis flow:
 
 ### Correlate test failures with production telemetry
 
-When a test fails, query your observability platform for similar patterns:
+When a test fails, query your observability platform:
 
-1. Search production errors for matching error messages (last 7 days)
+1. Search production errors for matching messages (last 7 days)
 2. Search traces for the same HTTP route with ERROR status
-3. If production matches exist: the bug is real and affecting users -- prioritize the fix
-4. If no matches: this may be a test-only issue or a new bug not yet in production
+3. Matches exist: the bug is real and affecting users -- prioritize the fix
+4. No matches: may be a test-only issue or a new bug not yet in production
 
-This correlation turns test failures from "probably flaky" into "confirmed production impact" or "test-only issue," enabling better prioritization.
+This turns "probably flaky" into "confirmed production impact" or "test-only issue," enabling better prioritization.
 
 ---
 
@@ -452,35 +449,43 @@ This correlation turns test failures from "probably flaky" into "confirmed produ
 
 ### Ignoring production signals
 
-The error tracker has 500 unresolved errors. Nobody looks at it. New errors are added daily. The test suite passes, so the team assumes quality is fine.
+The error tracker has 500 unresolved errors. Nobody looks at it. New errors added daily. The test suite passes, so the team assumes quality is fine.
 
-**Fix:** Schedule a weekly 30-minute "error review" meeting. Pull the top 10 new errors by frequency. For each: assign an owner, create a test, or mark as known/acceptable. The error tracker's unresolved count should trend downward.
+**Fix:** Schedule a weekly 30-minute error review. Pull the top 10 new errors by frequency; for each, assign an owner, create a test, or mark as known/acceptable.
 
 ### Testing only what is easy to observe
 
-Teams test what has clear metrics (HTTP status codes, response times) and ignore what is harder to observe (data consistency, background job completion, cache coherence).
+Teams test HTTP status codes and response times while ignoring data consistency, background job completion, and cache coherence.
 
 **Fix:** Use distributed tracing to make invisible code paths visible. Add spans to background jobs, cache operations, and async workflows. If it runs in production, it should produce telemetry.
 
 ### No feedback loop between production and testing
 
-Production errors are handled by SRE. Tests are written by QA. Neither team systematically shares information with the other. The same class of bugs recurs because the test suite never learns from production.
+Production errors are handled by SRE. Tests are written by QA. Neither team shares information systematically. The same class of bugs recurs.
 
-**Fix:** Establish the production-error-to-test pipeline described above. Make it a checklist item in incident postmortems: "What test would have prevented this?" Create the test before closing the incident.
+**Fix:** Establish the production-error-to-test pipeline above. Add to incident postmortems: "What test would have prevented this?" Create the test before closing the incident.
 
 ### Over-instrumenting tests without acting on data
 
-The test suite emits thousands of metrics, traces, and logs. Nobody analyzes them. Dashboards exist but are never viewed. The data collection has cost (performance, storage) but no benefit.
+Thousands of metrics and logs emitted. Nobody analyzes them. Data collection has cost but no benefit.
 
-**Fix:** Start with three things you want to learn from test telemetry. Build those three dashboards. Act on what they show. Add more instrumentation only when you have a specific question it would answer.
+**Fix:** Start with three specific questions you want to answer from test telemetry. Build those dashboards. Add more instrumentation only when you have a new question.
 
 ### Using traces only for debugging, not for assertions
 
-Traces are treated as a debugging tool used after something breaks, not as a source of test assertions used to prevent breaks.
+Traces treated as a post-break debugging tool rather than a source of test assertions to prevent breaks.
 
-**Fix:** Add trace-based assertions to integration tests. Verify that the correct services are called, that database queries are efficient, that cache hits occur when expected. These assertions catch regressions that HTTP-level assertions miss.
+**Fix:** Add trace-based assertions to integration tests -- correct services called, efficient queries, expected cache hits. These catch regressions that HTTP-level assertions miss.
 
 ---
+
+## Done When
+
+- OpenTelemetry covers all critical code paths -- no high-traffic endpoints or key service boundaries are invisible in traces
+- Trace-based assertions exist for at least one key user journey, verifying service calls and span attributes, not just HTTP status
+- Log-informed test cases exist for known failure modes from production error analysis
+- Telemetry data (hot-path or error-rate matrix) has identified and prioritized at least one set of untested code paths
+- Observability signals are reviewed as part of post-deploy validation before a release is considered stable
 
 ## Related Skills
 

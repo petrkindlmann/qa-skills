@@ -15,7 +15,9 @@ metadata:
   category: infrastructure
 ---
 
-# CI/CD Integration
+<objective>
+Design CI/CD pipelines for test execution. Covers GitHub Actions and GitLab CI pipeline templates, parallelism and sharding, artifact management, flaky test quarantine, and quality gates. Use this skill over others when the question is about running tests in a pipeline rather than writing them.
+</objective>
 
 ## Discovery Questions
 
@@ -35,6 +37,13 @@ metadata:
 3. **Artifacts are evidence.** Every CI run must store traces, screenshots, coverage reports, and HTML reports. Without artifacts, CI failures are undebuggable.
 4. **Flaky tests need quarantine, not retries.** Retrying hides the problem. Move flaky tests to a separate non-blocking job, track them, and fix them.
 5. **Quality gates at every stage.** Define what must pass before code moves forward. Gates get stricter as code gets closer to production.
+
+---
+
+> **Calibrate to your team maturity** (set `team_maturity` in `.agents/qa-project-context.md`):
+> - **startup** — Single pipeline job: lint + unit tests + one E2E smoke test on PR. Fast feedback over completeness.
+> - **growing** — Separate jobs for unit, integration, E2E. Parallelization, artifact uploads, test result publishing, flaky test quarantine.
+> - **established** — Full matrix: parallelized E2E sharding, multi-environment promotion gates, performance and security scans, deployment-gated quality checks, SLA-backed pipelines.
 
 ---
 
@@ -436,6 +445,16 @@ Never put tokens, passwords, or API keys in YAML. Use GitHub Actions secrets (`$
 
 ### 8. Ignoring job timeouts
 A stuck test can consume a runner for hours. Always set `timeout-minutes` on jobs and `actionTimeout` / `navigationTimeout` in test configs.
+
+---
+
+## Done When
+
+- Pipeline runs unit, integration, and E2E tests on every PR
+- Flaky tests quarantined in a non-blocking job with a tracking ticket — not silently retried without a plan
+- Test artifacts (reports, screenshots, traces) uploaded and accessible for every CI run
+- Concurrency groups configured to prevent redundant runs on the same branch
+- Secrets managed via the CI secrets store — no tokens or passwords hardcoded in workflow files
 
 ---
 

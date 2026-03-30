@@ -13,9 +13,9 @@ metadata:
   category: automation
 ---
 
-# Playwright Automation
-
+<objective>
 How an expert agent writes stable, maintainable, production-grade Playwright tests in TypeScript.
+</objective>
 
 ## Discovery Questions
 
@@ -36,11 +36,16 @@ Before generating any code, ask:
 4. **Parallel by default, serial only when necessary.** Use `fullyParallel: true` in config. Reserve `test.describe.serial` for flows that genuinely cannot be isolated (rare).
 5. **Fixtures for setup, not hooks.** Fixtures compose, provide type safety, and automatically tear down. Prefer them over `beforeEach`/`afterEach` for anything non-trivial. See `references/fixtures-and-projects.md`.
 
+> **Calibrate to your team maturity** (set `team_maturity` in `.agents/qa-project-context.md`):
+> - **startup** — Chromium only, 5–10 critical path tests, basic CI run on PR. Skip sharding and visual testing until the suite is stable.
+> - **growing** — Multi-browser (Chromium + Firefox), POM structure, parallel execution, CI with sharding, HTML report artifacts.
+> - **established** — Full browser matrix, auth fixtures, API mocking layer, visual regression baseline, trace-on-failure, flakiness tracking.
+
 ---
 
 ## Common AI Agent Mistakes
 
-These are the ten most frequent mistakes AI agents make when generating Playwright code. Each one produces tests that are flaky, slow, or unmaintainable. **Do not generate code that matches any of these patterns.**
+**Do not generate code that matches any of these patterns.**
 
 ### 1. Never use `waitForTimeout()` as synchronization
 
@@ -51,8 +56,8 @@ These are the ten most frequent mistakes AI agents make when generating Playwrig
 await page.waitForTimeout(2000);
 await page.click('#submit');
 
-// GOOD -- wait for the specific condition
-await page.getByRole('button', { name: 'Submit' }).click(); // auto-waits for actionability
+// GOOD
+await page.getByRole('button', { name: 'Submit' }).click(); // auto-waits
 ```
 
 ### 2. Never default to CSS/XPath when `getByRole`/`getByLabel`/`getByTestId` work
@@ -84,24 +89,24 @@ await page.getByLabel('Email').fill('user@example.com');
 
 ### 4. Never use `force: true` without documented justification
 
-**Why it is wrong:** `force: true` skips actionability checks (visible, enabled, stable, receives events). If an element needs `force: true`, the test is either targeting the wrong element, or the application has an accessibility bug that should be fixed.
+**Why it is wrong:** `force: true` skips actionability checks (visible, enabled, stable, receives events). Either the wrong element is targeted, or there is an accessibility bug.
 
 ```typescript
 // BAD
 await page.getByRole('button', { name: 'Save' }).click({ force: true });
 
-// GOOD -- if the button is covered by an overlay, dismiss the overlay first
+// GOOD -- dismiss any overlay first
 await page.getByRole('button', { name: 'Dismiss' }).click();
 await page.getByRole('button', { name: 'Save' }).click();
 ```
 
 ### 5. Never share mutable state between tests
 
-**Why it is wrong:** Tests run in parallel across workers. Shared module-level variables create race conditions and order-dependent failures. Use fixtures with setup/teardown instead. See `references/anti-patterns.md` for full BAD/GOOD examples.
+**Why it is wrong:** Tests run in parallel. Shared module-level variables create race conditions and order-dependent failures. Use fixtures instead. See `references/anti-patterns.md`.
 
 ### 6. Never put login boilerplate in every test -- use `storageState`
 
-**Why it is wrong:** Logging in through the UI for every test is slow and fragile. Playwright's `storageState` logs in once (in global setup) and replays cookies/localStorage for all tests. See `references/auth-patterns.md`.
+**Why it is wrong:** UI login for every test is slow and fragile. `storageState` logs in once and replays cookies/localStorage for all tests. See `references/auth-patterns.md`.
 
 ### 7. Never use `locator.all()` on dynamic collections without a stability check
 
@@ -112,15 +117,14 @@ await page.getByRole('button', { name: 'Save' }).click();
 const items = await page.getByRole('listitem').all();
 expect(items.length).toBe(5); // may be 0 if DOM is still rendering
 
-// GOOD -- use an assertion that retries
+// GOOD
 await expect(page.getByRole('listitem')).toHaveCount(5);
-// Then iterate if needed:
-const items = await page.getByRole('listitem').all();
+const items = await page.getByRole('listitem').all(); // then iterate if needed
 ```
 
 ### 8. Never assert with `allTextContents()` when `toHaveText()` gives retryability
 
-**Why it is wrong:** `allTextContents()` is a snapshot that does not retry. `toHaveText()` is a web-first assertion that retries until the condition is met or the timeout expires.
+**Why it is wrong:** `allTextContents()` is a snapshot that does not retry. `toHaveText()` retries until the condition is met or timeout expires.
 
 ```typescript
 // BAD
@@ -133,7 +137,7 @@ await expect(page.getByRole('listitem')).toHaveText(['Apple', 'Banana', 'Cherry'
 
 ### 9. Never test external dependencies you do not control
 
-**Why it is wrong:** Third-party services (payment gateways, OAuth providers, analytics) have their own uptime, rate limits, and UI changes. Tests that hit real external services are flaky by definition.
+**Why it is wrong:** Third-party services have their own uptime, rate limits, and UI changes. Tests that hit real external services are flaky by definition.
 
 ```typescript
 // BAD -- hitting real Stripe checkout
@@ -150,10 +154,7 @@ await page.route('**/api/create-checkout-session', async (route) => {
 **Why it is wrong:** A single `test.only` silently skips every other test in the suite. In CI, you run one test and think everything passes.
 
 ```typescript
-// playwright.config.ts -- enforce in CI
-export default defineConfig({
-  forbidOnly: !!process.env.CI,
-});
+export default defineConfig({ forbidOnly: !!process.env.CI });
 ```
 
 ---
@@ -222,7 +223,6 @@ export default defineConfig({
 ### Global Setup
 
 ```typescript
-// e2e/global-setup.ts -- login once, save session for all tests
 import { test as setup, expect } from '@playwright/test';
 
 setup('authenticate as default user', async ({ page }) => {
@@ -261,7 +261,7 @@ export abstract class BasePage {
 
 ### Component Objects
 
-Component objects represent reusable UI fragments (modals, data tables, navigation bars). They take a root `Locator`, not a `Page`.
+Component objects represent reusable UI fragments (modals, data tables, nav bars). They take a root `Locator`, not a `Page`.
 
 ```typescript
 export class DataTable {
@@ -280,7 +280,6 @@ export class DataTable {
 Inject page objects via fixtures, not constructors in test files.
 
 ```typescript
-// e2e/fixtures/base.fixture.ts
 export const test = base.extend<{ dashboardPage: DashboardPage }>({
   dashboardPage: async ({ page }, use) => { await use(new DashboardPage(page)); },
 });
@@ -289,7 +288,7 @@ export { expect } from '@playwright/test';
 
 ### Composition Over Inheritance
 
-Page objects should compose component objects rather than inherit from deep class hierarchies.
+Compose component objects rather than inherit from deep class hierarchies.
 
 ```typescript
 export class UsersPage extends BasePage {
@@ -312,7 +311,7 @@ Global setup logs in once and saves `storageState`. All test projects load it vi
 
 ### Form Interactions with test.step
 
-Wrap logical groups of actions in `test.step()` for better trace viewer output.
+Wrap logical action groups in `test.step()` for better trace viewer output.
 
 ```typescript
 test('submits a multi-step form', async ({ page }) => {
@@ -347,7 +346,7 @@ await page.route('**/api/feature-flags', async (route) => {
 // Simulate errors
 await page.route('**/api/products*', (route) => route.fulfill({ status: 500 }));
 
-// WebSocket interception (v1.49+)
+// WebSocket (v1.49+)
 await page.routeWebSocket('**/ws/notifications', (ws) => {
   ws.onMessage((msg) => { ws.send(JSON.stringify({ type: 'alert', title: 'Deployed' })); });
 });
@@ -368,9 +367,7 @@ test.fixme('known issue tracked in JIRA-1234', async ({ page }) => { /* ... */ }
 
 ## Assertions
 
-### Web-First Assertions (auto-retry)
-
-Always prefer these. They retry until the condition is met or the timeout expires.
+### Web-First Assertions (auto-retry — always prefer these)
 
 ```typescript
 await expect(page.getByRole('alert')).toBeVisible();
@@ -383,7 +380,7 @@ await expect(page.getByRole('listitem')).toHaveText(['Apple', 'Banana', 'Cherry'
 
 ### Soft Assertions
 
-Collect all failures instead of stopping at the first. The test continues; all failures are reported at the end.
+Collect all failures instead of stopping at the first; all are reported at the end.
 
 ```typescript
 await expect.soft(page.getByLabel('Name')).toHaveValue('Jane Doe');
@@ -392,7 +389,7 @@ await expect.soft(page.getByLabel('Email')).toHaveValue('jane@example.com');
 
 ### ARIA Snapshots
 
-Verify accessibility tree structure. Catches semantic regressions.
+Verify accessibility tree structure; catches semantic regressions.
 
 ```typescript
 await expect(page.getByRole('navigation', { name: 'Main' })).toMatchAriaSnapshot(`
@@ -427,17 +424,15 @@ Agents should be aware of these recent Playwright additions:
 ### Worker Configuration
 
 ```typescript
-// playwright.config.ts
 export default defineConfig({
   fullyParallel: true,
-  workers: process.env.CI ? '50%' : undefined, // Half of CPU cores in CI
+  workers: process.env.CI ? '50%' : undefined,
 });
 ```
 
 ### Sharding Across CI Nodes
 
 ```yaml
-# GitHub Actions
 strategy:
   fail-fast: false
   matrix:
@@ -450,10 +445,10 @@ steps:
 
 ```typescript
 reporter: [
-  ['html', { open: 'never' }],           // Human-readable
-  ['json', { outputFile: 'results.json' }], // Machine-readable
-  ['github'],                              // GitHub Actions annotations
-  ['junit', { outputFile: 'junit.xml' }],  // CI systems (Jenkins, etc.)
+  ['html', { open: 'never' }],
+  ['json', { outputFile: 'results.json' }],
+  ['github'],
+  ['junit', { outputFile: 'junit.xml' }],
 ],
 ```
 
@@ -472,6 +467,14 @@ See `references/ci-recipes.md` for complete GitHub Actions workflows, artifact u
 See `references/debugging-and-triage.md` for flaky test triage workflows and artifact analysis.
 
 ---
+
+## Done When
+
+- `playwright.config.ts` exists with `projects` defined for at least one target browser (Chromium minimum; Firefox and WebKit added for CI)
+- Page Object Model files live in the designated directory (`e2e/pages/` or equivalent) with component objects composed via root `Locator`
+- All locators in test code use `getByRole`, `getByLabel`, or `getByTestId` — no raw CSS selectors or XPath
+- CI workflow runs Playwright with `--shard` across matrix jobs and uploads the HTML report as an artifact on failure
+- No `waitForTimeout` calls exist anywhere in test code (`grep` or `forbidOnly`-style lint catches any regressions)
 
 ## Related Skills and References
 

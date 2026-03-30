@@ -14,11 +14,11 @@ metadata:
   category: ai-qa
 ---
 
-# AI QA Review
-
+<objective>
 QA-focused code review that detects test smells, analyzes testability of application code, and identifies coverage gaps.
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains test framework conventions, naming patterns, and project-specific quality standards that calibrate review feedback.
+</objective>
 
 ---
 
@@ -478,6 +478,15 @@ Three prompt patterns for AI-assisted review:
 **Reviewing without running.** Static analysis misses runtime issues. Run the tests. Check for flakiness (run 3x). Check execution time. A passing test suite that takes 20 minutes has a performance smell.
 
 **One-time review without follow-up.** Test quality degrades over time. Establish recurring review cadence or automated quality gates that catch regression.
+
+---
+
+## Done When
+
+- All five smell dimensions reviewed: coverage gaps, assertion quality, test independence, maintainability, and anti-patterns
+- Findings report created with severity ratings (high/medium/low) for each identified issue
+- High-severity issues have actionable remediation steps, not just descriptions of the problem
+- Review findings fed back into the team's Definition of Done to prevent recurrence
 
 ---
 

@@ -14,9 +14,9 @@ metadata:
   category: strategy
 ---
 
-# Exploratory Testing
-
+<objective>
 Structured exploration that finds bugs scripted tests miss. Exploratory testing is simultaneous learning, test design, and execution -- the tester adapts in real time based on what the application reveals. This skill provides the frameworks to make that exploration systematic, repeatable, and documentable.
+</objective>
 
 ---
 
@@ -462,6 +462,14 @@ Finding the same bug manually every release because nobody wrote an automated te
 Viewing exploratory testing as less rigorous than scripted testing. SBTM with charters, session logs, and debriefs produces documented, accountable testing. The documentation format is different from test scripts, but the rigor is equal.
 
 ---
+
+## Done When
+
+- Session charters are written for each target area, each following the "Explore [target] with [resources] to discover [information]" pattern
+- All planned sessions have been executed and debriefed using the debrief template, with coverage percentage and unexplored areas noted
+- Every bug found during sessions is logged with a reference to the originating charter and reproduction steps
+- Session logs exist with time-stamped observations tagged as BUG, QUESTION, IDEA, RISK, or NOTE
+- A findings summary captures total session count, bugs filed (by severity), test ideas identified, and follow-up sessions scheduled or explicitly deferred
 
 ## Related Skills
 

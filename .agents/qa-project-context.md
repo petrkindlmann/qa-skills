@@ -143,6 +143,10 @@
 - **Process:** [Agile Scrum / Kanban / Shape Up / etc.]
 - **Sprint Length:** [e.g., 2 weeks]
 - **QA Involvement:** [Shift-left — QA reviews specs before dev / traditional — QA tests after dev]
+- **Team Maturity:** [startup / growing / established]
+  - *startup* — early product, small team, limited QA process, focus on critical path coverage
+  - *growing* — established team, CI in place, expanding coverage and tooling
+  - *established* — mature QA practice, advanced tooling, metrics-driven, compliance/SLA requirements
 
 ---
 

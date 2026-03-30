@@ -14,9 +14,9 @@ metadata:
   category: automation
 ---
 
-# Accessibility Testing Skill
-
+<objective>
 Test applications for accessibility to ensure they are usable by everyone, including people who use assistive technologies. Automated tools catch 30-40% of accessibility issues -- the rest requires manual testing with keyboard navigation, screen readers, and human judgment. This skill covers both approaches.
+</objective>
 
 ---
 
@@ -455,6 +455,14 @@ Deprioritizing accessibility tickets because "nobody has complained." Users with
 Running accessibility checks only on the default page state. Interactive states (modals open, dropdowns expanded, error messages displayed, loading skeletons, empty states) all need accessibility testing. Components often have different ARIA attributes in different states.
 
 ---
+
+## Done When
+
+- axe-core integrated into the E2E test suite and runs automatically on all key pages (home, login, checkout, dashboard, settings).
+- CI pipeline reports zero critical or serious axe violations and blocks merge when any are introduced.
+- Keyboard navigation tested end-to-end for all interactive flows (forms, modals, dropdowns, navigation menus).
+- Color contrast validated for the full brand palette against WCAG AA thresholds (4.5:1 for normal text, 3:1 for large text and UI components).
+- Screen reader testing notes documented for complex custom widgets (date pickers, data tables, drag-and-drop), including which screen reader and version was used.
 
 ## Related Skills
 

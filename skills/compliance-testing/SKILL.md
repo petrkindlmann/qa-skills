@@ -14,11 +14,11 @@ metadata:
   category: process
 ---
 
-# Compliance Testing
-
+<objective>
 Test applications for regulatory compliance, focusing on privacy regulations (GDPR, CCPA, ePrivacy), consent management, cookie governance, and advertising standards. Compliance is binary -- you either comply or you do not -- and the penalties for non-compliance are significant. Automated testing catches configuration drift and regressions that manual audits miss between review cycles.
 
 **Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains applicable regulations, CMP details, ad networks, and geographic requirements that determine which compliance tests to implement.
+</objective>
 
 ---
 
@@ -454,6 +454,14 @@ Applying one consent model globally. GDPR requires opt-in; CCPA allows opt-out. 
 Building compliance tests once and never updating them. Regulations evolve (ePrivacy Regulation, new browser privacy features, updated CBA standards). Review compliance tests quarterly.
 
 ---
+
+## Done When
+
+- Applicable regulations identified for the product and geographic audience (GDPR, CCPA, ePrivacy, etc.) and documented in `.agents/qa-project-context.md`
+- Consent management flow tested for all user entry points: first visit, banner accept, banner reject, consent withdrawal, and cross-navigation persistence
+- Cookie audit completed with all cookies categorized in the typed inventory and no unknown cookies detected by the drift test
+- Privacy policy accuracy verified against actual data collection behavior (no cookies or tracking scripts present that the policy doesn't disclose)
+- Compliance test results stored as CI artifacts with 90-day retention to support audit trail requirements
 
 ## Related Skills
 
