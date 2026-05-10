@@ -2,9 +2,16 @@ name: Validate Skills
 
 on:
   push:
-    paths: ['skills/**']
+    paths:
+      - 'skills/**'
+      - 'skills_index.json'
+      - '.github/workflows/validate-skills.yml'
   pull_request:
-    paths: ['skills/**']
+    paths:
+      - 'skills/**'
+      - 'skills_index.json'
+      - '.github/workflows/validate-skills.yml'
+  workflow_dispatch: {}
 
 jobs:
   validate:
