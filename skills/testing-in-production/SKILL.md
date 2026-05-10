@@ -236,9 +236,9 @@ automatic_rollback:
     action: rollback_to_previous
     notify: [oncall-slack]
 
-  - condition: crash_rate > 0.1%
-    for: 2m
-    action: rollback_to_previous
+  - condition: crash_rate > 0.1%   # mobile: calibrate to user-perceived crash rate
+    for: 2m                          # (Play Console Vitals, App Store Connect Crashes,
+    action: rollback_to_previous     # iOS Hang Rate / ANR rate) — not raw exception counts
     notify: [oncall-slack, pagerduty, engineering-leads]
 
   - condition: health_check_failures > 3_consecutive
@@ -312,8 +312,10 @@ Synthetic account conventions:
 
 Account management:
   - Create accounts via admin API, not through the UI
-  - Rotate credentials quarterly
-  - Store credentials in secrets manager (Vault, AWS Secrets Manager)
+  - Prefer short-lived OIDC-issued tokens / workload identity over rotating passwords
+    (GitHub Actions OIDC -> cloud, AWS IAM Roles Anywhere, SPIFFE/SPIRE for mTLS)
+  - If long-lived credentials are unavoidable, rotate quarterly and store in a
+    secrets manager (Vault, AWS Secrets Manager, GCP Secret Manager)
   - Never reuse synthetic accounts across different test suites
 ```
 

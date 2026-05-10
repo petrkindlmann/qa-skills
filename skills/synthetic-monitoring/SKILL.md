@@ -382,6 +382,8 @@ SLA tiers:
   99.99% = 4min 23s downtime/month    (infrastructure/platform)
 ```
 
+> These are *common* availability targets, not prescriptive tiers. Pick targets from a user-impact analysis, not by tier name. Modern practice (Google SRE Workbook, OpenSLO) favors explicit SLO + error-budget policies over labelled tiers — define what user-visible failure looks like, set the budget that user impact tolerates, and let the SLO follow. References: https://sre.google/workbook/ ; https://openslo.com/
+
 ### Response time percentiles
 
 Track percentiles, not averages. Averages hide the worst experiences.

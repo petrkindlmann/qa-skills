@@ -318,6 +318,12 @@ Output:
   Action: Add tests for discount edge cases in pricing-service
 ```
 
+> **Pair endpoint-level traffic data with continuous profiling** to find CPU and allocation hot paths *inside* endpoints, not just at the endpoint boundary. The OTel **profiling signal** is moving toward stable; alternatives include **Pyroscope**, **Parca**, **Polar Signals**, and **Datadog Profiling**. eBPF-based zero-instrumentation profilers (no SDK changes) include Polar Signals, Parca, and Grafana **Beyla**.
+
+> **Zero-instrumentation observability** — when adding the OTel SDK isn't feasible, eBPF-based tools capture HTTP/gRPC traces from kernel syscalls without code changes: **Beyla** (Grafana), **Cilium Tetragon**, **Pixie**, **Coroot**. Useful for legacy services or polyglot environments where SDK rollout would take quarters.
+
+> **OTel Weaver** generates type-safe instrumentation code from semantic-convention YAML — keeping trace assertions in sync with sem-conv version bumps. Worth adopting if you maintain custom conventions or hit attribute drift between sem-conv versions.
+
 ### Error rate by endpoint to test coverage mapping
 
 ```
