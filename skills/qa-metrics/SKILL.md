@@ -101,7 +101,7 @@ Branch coverage = (branches executed by tests / total branches) × 100
 
 **When it goes red:** Coverage drops on PR: block merge or flag. Low in critical module: create targeted tasks. Plateaus: check for dead code vs. genuinely untested logic.
 
-**Warning:** Coverage measures execution, not assertion quality. Pair with mutation testing (Stryker, mutmut) for a truer picture.
+**Warning:** Coverage measures execution, not assertion quality. Pair with mutation testing (Stryker JS v9.6+, mutmut) for a truer picture. Stryker JS v9 requires Vitest 4.1+ for the runner; use `incremental: true` in monorepo CI to keep mutation runs cheap.
 
 #### Requirement Coverage Percentage
 
@@ -145,7 +145,7 @@ Flakiness rate = (test runs with flaky results / total test runs) × 100
 
 **When it goes red:** Quarantine flaky tests immediately. Investigate the top 3 weekly -- most flakiness comes from a small number of tests. Common causes: timing/race conditions, shared state, external dependencies, order-dependent tests. Tests flaky for 30+ days should be deleted or rewritten.
 
-**Detection:** Buildkite Test Analytics, Datadog CI Visibility, or a script comparing results across runs on the same commit.
+**Detection:** Buildkite Test Analytics, **Datadog Test Optimization** (formerly "Datadog CI Visibility" — now ships explicit Flaky Test Management with Auto Test Retries, Early Flake Detection, and Failed Test Replay, plus Test Impact Analysis to skip unaffected tests on PR), Trunk Flaky Tests, or a script comparing results across runs on the same commit.
 
 #### Pass Rate Trend (7-Day Rolling)
 

@@ -49,6 +49,12 @@ Build dashboards that drive decisions, not dashboards that display data.
 
 Allure generates rich HTML reports from test results with history, categories, and retries built in. It works with Playwright, Jest, Vitest, pytest, and most test frameworks.
 
+> **Allure 2 vs Allure 3.** Allure Report 3 (current v3.7.0, May 2026) is a TypeScript rewrite with a plugin system, single-file `allurerc` config, real-time `allure watch`, project-wide quality gates, multi-environment reports, and **Allure Service** for cloud history (replaces the manual artifact dance). The framework adapters (`allure-playwright`, `allure-vitest`, `allure-jest`) shown below currently target Allure 2; v3-native readers and plugins are landing across the v3.x line.
+>
+> **For new projects:** if your test framework has a v3-ready adapter, generate with `allure run` and add an `allurerc.mjs`. Otherwise stick with the Allure 2 CLI shown below — it remains supported (2.40.0, May 2026, mostly dependency bumps now).
+>
+> Reference: https://allurereport.org/docs/v3/
+
 ### Allure with Playwright
 
 ```bash
@@ -358,11 +364,18 @@ ReportPortal is a self-hosted test reporting platform with AI-powered failure an
 ### Setup with Docker Compose
 
 ```bash
-# ReportPortal provides an official docker-compose
-curl -LO https://raw.githubusercontent.com/reportportal/reportportal/master/docker-compose.yml
+# Pin to a tagged release (current: 26.0.2). The `master` branch may not match
+# the supported 26.x line.
+curl -LO https://raw.githubusercontent.com/reportportal/reportportal/26.0.2/docker-compose.yml
 docker compose up -d
 # Access at http://localhost:8080 (default: superadmin/erebus)
+# ML-based failure classification: ensure the `service-auto-analyzer` container
+# is running — it provides the AI auto-analysis ReportPortal advertises.
 ```
+
+### Allure TestOps (managed alternative)
+
+If self-hosting feels heavy, **Allure TestOps** (current 26.2.1.4, May 2026) is the SaaS path: it adds Allure 3 quality gates, named environments, global attachments, and Allure 3-style flaky detection (≥3 status transitions in last 10 runs). An MCP server is in open beta (26.1.1, March 2026), letting AI agents query launches and quality gates directly — relevant if your QA workflow runs through Claude Code / Codex / Cursor.
 
 ### Integration with Playwright
 

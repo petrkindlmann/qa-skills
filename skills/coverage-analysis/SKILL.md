@@ -58,12 +58,14 @@ expect(discount(100, true)).toBe(80);
 
 ## Coverage Tools
 
+> **Node baseline:** `c8` v11 and `nyc` v18 (both released 2026-02-22) require **Node 20 || >= 22**. If your project still runs on Node 18, pin `c8@^10` / `nyc@^17` until you can upgrade. New projects should standardize on Node 20+ and the current majors.
+
 ### V8 / c8 (Node.js Built-in)
 
 V8's built-in code coverage is faster than Istanbul because it does not instrument source code. Use `c8` as the CLI wrapper.
 
 ```bash
-npm i -D c8
+npm i -D c8@^11   # Node 20+ baseline
 ```
 
 ```json
@@ -112,7 +114,7 @@ export default defineConfig({
 Istanbul instruments source code for coverage tracking. Slower than V8 but more widely compatible.
 
 ```bash
-npm i -D nyc
+npm i -D nyc@^18   # Node 20+ baseline
 ```
 
 ```json
@@ -172,11 +174,13 @@ npm i -D nyc
 ### coverage.py (Python)
 
 ```bash
-pip install pytest-cov
+pip install pytest-cov   # current coverage.py 7.13.x
 ```
 
+> coverage.py 7.13.0 added `.coveragerc.toml` as a TOML-first standalone config — prefer it for new Python projects when you want config separated from `pyproject.toml`. 7.12.0 split statements vs branches totals in HTML and JSON reports.
+
 ```toml
-# pyproject.toml
+# pyproject.toml (or .coveragerc.toml in 7.13+)
 [tool.coverage.run]
 source = ["src"]
 branch = true
