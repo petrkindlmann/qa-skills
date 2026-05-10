@@ -103,6 +103,19 @@ services:
 
 Each pull request gets its own isolated environment. Reviewers can click a link and test the exact changes without interfering with other PRs.
 
+> **Hosting options for preview envs (2026):**
+> - **Vercel** preview deployments — Next.js / static / serverless
+> - **Cloudflare Pages** preview — git-integrated, free tier generous
+> - **Render** preview environments — full-stack including DBs
+> - **Railway** PR environments — quick setup
+> - **Coherence** / **Uffizzi** — both showed signs of inactivity in 2024–2025; verify project status before committing
+> - **Vercel `vercel.json` `git.deploymentEnabled`** — fine-grained control
+
+For local dev parity with CI:
+
+- **Devcontainers** (`.devcontainer/devcontainer.json`) — VS Code, GitHub Codespaces, JetBrains compatible. Standard for "everyone gets the same Docker-backed dev env."
+- **Tilt** (`Tiltfile`) — Kubernetes-first local dev, hot reload, multi-service orchestration. Pick when staging itself is K8s.
+
 **Vercel/Netlify (frontend):**
 
 ```yaml

@@ -435,6 +435,27 @@ Use OpenAPI as the design artifact and Pact as the enforcement mechanism.
 3. Consumers add specific interactions beyond the baseline.
 4. Provider verifies against Pact contracts (which are a subset of the OpenAPI spec).
 
+### Bi-Directional Contracts (Pactflow)
+
+Pactflow's bi-directional contract testing decouples consumer pacts from provider verification — the provider supplies an OpenAPI spec, the consumer supplies a pact, and Pactflow checks compatibility without requiring the provider to run pact verification. Useful when:
+
+- The provider team can't or won't run a Pact verifier in their CI.
+- The provider already publishes an OpenAPI spec as the source of truth.
+- You want contract coverage without a tight coupling between consumer and provider repos.
+
+Trade-off: bi-directional checks are coarser than full pact verification — they validate spec/contract overlap, not exact runtime behaviour. Use it as the on-ramp; promote to full verification once both teams are bought in.
+
+### Schemathesis (Property-Based, Spec-Driven)
+
+For OpenAPI-first projects, **Schemathesis** runs property-based tests against a live API directly from the spec — generating thousands of valid+invalid requests and checking response conformance. Catches a different class of bugs than Pact (encoding, edge-case payloads, status-code drift):
+
+```bash
+schemathesis run --base-url https://api.example.com/v1 ./openapi.yaml \
+  --checks all --hypothesis-deadline=2000
+```
+
+Pair Schemathesis with Pact: Pact for consumer-driven *interactions*, Schemathesis for spec-driven *coverage*. They overlap a little but solve different problems.
+
 ---
 
 ## can-i-deploy

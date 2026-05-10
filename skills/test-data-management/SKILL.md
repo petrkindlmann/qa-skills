@@ -321,6 +321,16 @@ Anonymizing a user's email must also update their email in orders, comments, aud
 
 Seed scripts should be safe to run multiple times without duplicating data. Use upsert patterns (`ON CONFLICT ... DO UPDATE`) for idempotency.
 
+### Database Branching (Postgres-as-a-Service)
+
+If your prod DB lives on **Supabase**, **Neon**, or **PlanetScale** (MySQL), use built-in branching to give each PR its own database copy without seeding from scratch:
+
+- **Supabase Branching** — `supabase branches create pr-123` clones schema + (optionally) data; preview env points at the branch URL.
+- **Neon Branching** — copy-on-write Postgres branches in seconds; ideal for ephemeral preview envs.
+- **PlanetScale Branching** — schema-only by default; use rewinds for safe migration testing.
+
+Pair with the Preview Environments pattern in `test-environments`. **Snaplet** showed signs of inactivity in late 2024 — verify project status before adopting; the database-branching providers above cover most of what Snaplet was used for.
+
 ### Per-Test vs Per-Suite Data
 
 | Strategy | When to Use | Pros | Cons |

@@ -124,6 +124,15 @@ steps:
   - run: npx playwright test --shard=${{ matrix.shard }}/4
 ```
 
+**Smarter sharding** — past 10–15 shards, naïve hash-based splitting wastes runner time on uneven shards. Use a balancer:
+
+- **`knapsack-pro`** (timing-data based, supports Playwright/Jest/Cypress/RSpec) — distributes by historical duration.
+- **CloudBees Smart Tests** (formerly **Launchable**) — ML-based prioritization + Test Impact Analysis; runs only the tests likely to fail given the diff.
+- **Datadog Test Optimization** — TIA + flake management; shard-balancing by historical time.
+- **Trunk Flaky Tests** — flake-aware quarantine + retry budgeting.
+
+For self-hosted runners on Kubernetes, use **Actions Runner Controller (`gha-runner-scale-set`)** — Helm-installed, auto-scales runner pods per workflow. Replaces the deprecated `actions-runner-controller/runner-deployment` CRD; current name is `arc-runner-set`.
+
 > **GitHub Actions versioning (May 2026):** the `actions/*` v4 family (`checkout`, `setup-node`, `cache`, `upload-artifact`, `download-artifact`) has rolled to v5/v6/v7/v8 on the Node 24 runner; Node 20 is deprecated on GH-hosted runners. Examples below pin v4/v5 for stability — verify the current major before adopting in new pipelines and use Dependabot to keep them current.
 
 **Caching** to avoid reinstalling on every run:

@@ -271,6 +271,17 @@ Use priority-based mappings for error scenarios (e.g., a priority-1 mapping that
 
 WireMock also supports programmatic stub creation via its admin API (`POST /__admin/mappings`), verification (`POST /__admin/requests/count`), and reset (`POST /__admin/mappings/reset`). Wrap these in helper functions for cleaner test setup.
 
+### Other HTTP Mock Servers
+
+| Tool | Strengths | When to use |
+|------|-----------|-------------|
+| **Mockoon** | Desktop UI + CLI; OpenAPI import; rule-based responses; lightweight | Dev-time mocking and quick CLI mocks in CI |
+| **Hoverfly** | Capture-replay (record real traffic, replay deterministically); simulation modes (capture, simulate, modify, synthesize) | Migrating from a real dependency to a mock — record once, replay forever |
+| **Prism** | OpenAPI-driven mock server (Stoplight); validates requests + generates responses from spec | OpenAPI-first projects that already have a published spec |
+| **MockServer** | Java-based; rich expectation matching; multi-protocol | JVM teams already on the MockServer ecosystem |
+
+Pick **WireMock** as the default for cross-language CI; **MSW** for in-process Node/browser tests; **Prism** when the OpenAPI spec is the contract; **Mockoon** for dev-time exploratory mocking.
+
 ### Testcontainers
 
 Spin up real services in Docker containers for integration tests. Containers start before the test suite and are destroyed after.
