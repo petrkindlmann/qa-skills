@@ -304,22 +304,32 @@ test('application handles Redis unavailability gracefully', async () => {
 
 | Tool | Type | Best For |
 |------|------|----------|
-| LitmusChaos | Kubernetes-native, open source | K8s environments, CI/CD integration |
-| Chaos Mesh | Kubernetes-native, CNCF | K8s with fine-grained control |
-| Gremlin | Managed platform | Teams wanting guided experiments |
-| Chaos Monkey (Netflix) | Service-level, open source | Random instance termination |
-| toxiproxy | Network proxy, open source | Network fault injection in tests |
+| LitmusChaos (3.28.x) | Kubernetes-native, CNCF | K8s environments, CI/CD integration; ChaosCenter UI; Workflows for GameDay-as-code |
+| Chaos Mesh (2.8.x) | Kubernetes-native, CNCF | K8s with fine-grained control; eBPF chaos via `bpfki` runtime for kernel-precision faults |
+| AWS FIS | Managed AWS service | Cloud-chaos for AWS workloads (EC2, ECS, RDS, EKS) — primary cloud-native option |
+| Gremlin | Managed platform | Teams wanting guided experiments + compliance reporting |
+| Steadybit | Managed platform | Reliability hub spanning Kubernetes + cloud + on-prem; direct alternative to Gremlin |
+| kube-monkey | Open source | Lightweight K8s alternative when Litmus/Chaos Mesh feel heavy |
+| Pumba | Open source | Docker-only chaos (containers, networks); pre-K8s and edge |
+| Chaos Monkey (Netflix) | Service-level, open source | **Maintenance mode** — Spinnaker-only path; new projects should pick Chaos Mesh, Litmus, or AWS FIS |
+| toxiproxy | Network proxy, open source | Network fault injection in integration tests |
 | tc (traffic control) | Linux kernel | Network latency and packet loss |
 | stress-ng | Linux utility | CPU, memory, disk stress testing |
-| k6 | Load testing tool | Combined load + chaos scenarios |
+| k6 (+ xk6-disruptor) | Load testing tool | Combined load + chaos scenarios |
 
 ### Choosing a tool
 
 ```
 Decision tree:
   Running on Kubernetes?
-    → Yes: LitmusChaos or Chaos Mesh (native integration)
-    → No: Gremlin (managed) or tc + stress-ng (manual)
+    → Cloud-managed AWS workloads: AWS FIS (cloud-native, IAM-integrated)
+    → On K8s with sidecar tolerance: Chaos Mesh (eBPF, fine-grained)
+    → On K8s wanting workflows + UI: LitmusChaos (ChaosCenter, Workflows)
+    → On K8s lightweight: kube-monkey
+
+  Running on plain VMs / Docker?
+    → Docker only: Pumba
+    → Linux: tc + stress-ng (manual)
 
   Need network fault injection in integration tests?
     → toxiproxy (lightweight, programmatic API)
@@ -328,8 +338,12 @@ Decision tree:
     → k6 with xk6-disruptor extension
 
   Need managed platform with UI and compliance?
-    → Gremlin (commercial)
+    → Gremlin or Steadybit (both commercial)
 ```
+
+### GameDay-as-code
+
+The 2026 trend is treating chaos as scheduled CI jobs rather than ad-hoc events: Litmus Workflows, Steadybit reliability hub, and Gremlin Scenarios all let you define a chaos run as YAML and trigger it from CI on a cron. Pair with the Game Day Planning section below — the human practice still matters; the automation just removes the bottleneck of "we never had time to schedule one."
 
 ---
 

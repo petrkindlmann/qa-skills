@@ -277,11 +277,14 @@ await expect(page).toHaveURL(/dashboard/);
 
 ### Jest to Vitest
 
+**Target version:** Vitest 4.x (current 4.1.5). Vitest 4 was a major bump — coverage and reporter APIs shifted slightly. The `vitest/config` import path is unchanged. Read https://vitest.dev/guide/migration before starting if your source is Jest 28 or older.
+
 **Key differences:**
 - Vitest is API-compatible with Jest for most use cases. Many tests work unchanged.
 - Vitest uses `vi` instead of `jest` for mock/spy/timer utilities.
 - Vitest uses Vite's transform pipeline (esbuild), which is significantly faster.
 - Vitest supports ESM natively without transformation.
+- Vitest 4 added `coverage.changed` for changed-files-only coverage — useful CI optimization post-migration.
 
 ```typescript
 // Jest
@@ -332,11 +335,19 @@ export default defineConfig({
 
 ### Cypress to Playwright
 
+**Target version:** Playwright ≥ 1.50 (current 1.59.1). Source projects may be on Cypress 13, 14, or 15 — Cypress 15.x is current and dropped Node 18 support. Translation tables hold across all three majors; Component Testing config keys differ between 13 and 15. **Playwright 1.55+ ships an automated Test Migrator** (`npx playwright migrate`) that handles a lot of the mechanical translation — run it first, then refine by hand using this guide.
+
 **Key differences:**
 - Cypress uses a command queue (chaining); Playwright uses async/await. This is the biggest mental model shift.
 - Cypress runs inside the browser; Playwright runs outside and controls it. This affects how you think about context and scope.
 - Cypress `cy.intercept()` becomes `page.route()`. Similar capability, different API.
 - Cypress custom commands become Playwright fixtures.
+
+> **Playwright 1.52 breaking changes** to know before migrating intercepts:
+> - `page.route()` glob patterns dropped `?` and `[]` — escape these or rewrite as regex.
+> - `route.continue()` no longer overrides the Cookie header — set headers explicitly.
+> - macOS 13 deprecated as a runner.
+> Reference: https://playwright.dev/docs/release-notes#version-152
 
 ```typescript
 // Cypress
@@ -367,9 +378,43 @@ await expect(page.locator('.product-card').first().locator('.price')).toContainT
 - Replace custom commands with fixtures (composable, typed, auto-teardown).
 - Remove `cy.wrap()`, `cy.then()` patterns -- async/await replaces the command queue.
 
+### Mocha to Vitest
+
+The shortest migration path of all — Mocha's API maps almost 1:1 to Vitest's, and you get esbuild speed plus first-party TS support.
+
+**Key differences:**
+- `describe` / `it` / `before` / `after` / `beforeEach` / `afterEach` are unchanged.
+- `chai` assertions (`expect(x).to.equal(y)`) become Vitest's `expect(x).toBe(y)` — the same `expect` name but the matchers are Jest-style. Replace mechanically: `to.equal` → `toBe`, `to.deep.equal` → `toEqual`, `to.contain` → `toContain`.
+- `sinon` for spies/stubs becomes `vi.fn()` / `vi.spyOn()`.
+- `mocharc` config becomes `vitest.config.ts`.
+
+```typescript
+// Mocha + Chai
+import { expect } from 'chai';
+describe('Calculator', () => {
+  it('adds positive numbers', () => {
+    expect(add(2, 3)).to.equal(5);
+  });
+});
+
+// Vitest
+import { describe, it, expect } from 'vitest';
+describe('Calculator', () => {
+  it('adds positive numbers', () => {
+    expect(add(2, 3)).toBe(5);
+  });
+});
+```
+
+**Migration notes:**
+- Run a codemod or sed pass for the assertion-style transforms; validate the test count matches before and after.
+- Remove `mocha.opts` / `.mocharc.*`; replace with `vitest.config.ts`.
+- Remove `ts-node` / `babel-register` setup; Vitest handles TS natively via esbuild.
+- Snapshot, in-source, and browser-mode features are Vitest-only — adopt them after migration if useful.
+
 ### Protractor to Playwright
 
-Protractor reached end-of-life in 2023. This migration is urgent if not already completed.
+Protractor reached end-of-life in 2023. This migration is urgent if not already completed. Angular CLI no longer scaffolds Protractor; `ng e2e` defaults are now Cypress, Playwright, or WebdriverIO.
 
 **Key differences:**
 - Protractor was built for AngularJS with automatic `waitForAngular`. Playwright has no Angular-specific handling (and does not need it with modern Angular).
@@ -437,6 +482,15 @@ Tag old tests as "migrated" rather than deleting immediately. Delete only after 
 ---
 
 ## Anti-Patterns
+
+### AI-assisted codemods (use as a first pass, never as the final answer)
+
+Cursor, Aider, Continue, and Claude Code all gained codemod-style migration workflows in 2025–2026, and Playwright's `npx playwright migrate` (1.55+) is essentially a built-in AI-assisted migrator. Community tools like `cypress-to-playwright` npm packages exist but quality varies.
+
+**How to use them well:**
+- Treat AI output as a *first translation pass*, not a finished test. Quality is uneven and the "translate, don't modernize" anti-pattern below applies tenfold to AI output.
+- Run the AI on one file. Diff the result against the source. If it modernized correctly, batch the rest. If it just translated, write your own first example and feed it back as a few-shot reference.
+- After every AI pass, run the original test suite against the new code (parallel run pattern). If results diverge, the AI got it wrong — investigate before promoting.
 
 ### Big bang migration
 

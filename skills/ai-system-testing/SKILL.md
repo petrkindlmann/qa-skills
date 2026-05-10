@@ -70,6 +70,65 @@ AI systems can produce harmful content, leak private data, or be manipulated thr
 
 ---
 
+## Tooling
+
+Pick the layer that fits the job. Don't reach for hand-rolled TS unless none of these match.
+
+| Tool | Best for | Notes |
+|------|----------|-------|
+| **Promptfoo** | Prompt regression, A/B tests, redteam scans | Open-source CLI; YAML-defined eval suites; weekly redteam additions; MCP target support; ~0.121.x current. https://github.com/promptfoo/promptfoo |
+| **DeepEval** | Pytest-style agent and LLM evals; agentic metrics | v3.9.9 added first-class TaskCompletion / ToolCorrectness / ArgumentCorrectness — exactly the "tool call validation" patterns this skill teaches. https://github.com/confident-ai/deepeval |
+| **Ragas** | RAG-specific eval (faithfulness, context precision/recall, answer relevance) | v0.4.3 added DSPy-based prompt optimization for grounding metrics. https://github.com/explodinggradients/ragas |
+| **TruLens** | Production tracing + RAG triad + non-LLM SchemaValidation | v2.8 (April 2026) added programmatic SchemaValidation feedback — cheaper and more deterministic than LLM-as-judge for structured outputs. https://github.com/truera/trulens |
+| **Inspect AI** | Government-backed agent eval harness; 200+ pre-built evals | UK AI Security Institute. Date-based releases (`release/2025-11-28`). https://inspect.aisi.org.uk |
+| **Garak** | Adversarial prompt scanner / red-team probes | v0.15.0 added GOAT (multi-turn jailbreaks), Agent Breaker (tool-aware), system-prompt-extraction, ModernBERT refusal detector. https://github.com/NVIDIA/garak |
+| **PyRIT** | Microsoft AI Red Team's orchestration framework | v0.13.0 (April 2026) — orchestrated multi-turn attacks; complements Garak. https://pypi.org/project/pyrit/ |
+| **Braintrust** | Commercial evals + prompt playground | Hosted, paid; SDK works alongside any of the above. |
+
+**Public benchmarks** (HELM, LMSYS Chatbot Arena, Inspect AI's catalog) are for *model selection*, not for app regression testing — they don't know your domain. Use them when picking a base model; use the tools above for everything after.
+
+### Tool-call validation with DeepEval (replaces hand-rolled assertions)
+
+```python
+# pip install deepeval
+from deepeval import evaluate
+from deepeval.metrics import TaskCompletionMetric, ToolCorrectnessMetric, ArgumentCorrectnessMetric
+from deepeval.test_case import LLMTestCase, ToolCall
+
+case = LLMTestCase(
+    input="What is the weather in Prague?",
+    actual_output="It is currently 18°C and partly cloudy.",
+    expected_tools=[ToolCall(name="get_weather", arguments={"city": "Prague"})],
+    tools_called=[ToolCall(name="get_weather", arguments={"city": "Prague"})],
+)
+
+evaluate(
+    test_cases=[case],
+    metrics=[TaskCompletionMetric(threshold=0.7), ToolCorrectnessMetric(), ArgumentCorrectnessMetric()],
+)
+```
+
+For prompt regression at the suite level, Promptfoo's YAML config is the lowest-friction entry point:
+
+```yaml
+# promptfooconfig.yaml
+prompts: [file://prompts/summarize.txt]
+providers:
+  - openai:gpt-4o
+  - anthropic:claude-sonnet-4-6
+tests:
+  - vars: { document: "..." }
+    assert:
+      - type: contains-all
+        value: ["actionable insight", "key finding"]
+      - type: llm-rubric
+        value: "Output is 3 sentences or fewer and contains no opinions"
+```
+
+For red-team / safety, run `garak --model_type openai --probes encoding.InjectAscii85,goat,system_prompt_extraction` against your deployed prompt before launch.
+
+---
+
 ## Prompt Regression Testing
 
 ### Version prompts like code
