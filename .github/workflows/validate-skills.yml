@@ -10,7 +10,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Validate SKILL.md files
         run: |
@@ -26,10 +26,13 @@ jobs:
               continue
             fi
 
-            # Check line count
+            # Check line count — raised from 500 to 700 for v2.4.0 currency pass
+            # (regulatory content + framework lists legitimately need the room).
+            # Still a soft signal that a skill may be sprawling; trim or split into
+            # references/ files if a skill approaches 700.
             lines=$(wc -l < "$skill_file")
-            if [ "$lines" -gt 500 ]; then
-              echo "ERROR: $skill_file is $lines lines (max 500)"
+            if [ "$lines" -gt 700 ]; then
+              echo "ERROR: $skill_file is $lines lines (max 700)"
               errors=$((errors + 1))
             fi
 
