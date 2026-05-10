@@ -499,6 +499,18 @@ Viewing exploratory testing as less rigorous than scripted testing. SBTM with ch
 - Session logs exist with time-stamped observations tagged as BUG, QUESTION, IDEA, RISK, or NOTE
 - A findings summary captures total session count, bugs filed (by severity), test ideas identified, and follow-up sessions scheduled or explicitly deferred
 
+## Tester Roles in Modern Teams
+
+CTAL-AT v2.0 (May 2026) names several tester archetypes worth knowing for staffing and self-positioning conversations:
+
+- **Embedded testers** ("Tissue Testers") — testers fully embedded inside delivery teams, contributing to development conversations end-to-end rather than acting as a separate gate. Most common 2026 model.
+- **Specialist testers** — deep skills in a domain (security, accessibility, performance) called in across teams.
+- **Coach testers** — senior testers who teach craft (heuristics, charter writing, exploratory thinking) to developers and junior testers; rarely test end-to-end themselves.
+
+If your org is moving toward embedded testers, exploratory testing is one of the highest-leverage skills to demonstrate — it's hard for developers to pick up without coaching, and it's where the testing mindset shows up most clearly.
+
+For background on the broader testing-vs-checking distinction and AI's role, see "What Is Testing? A Conversation with Bach and Bolton" (DevelopSense, Feb 2026): https://developsense.com/blog/2026/02/what-is-testing-a-conversation-with-james-bach-and-michael-bolton
+
 ## Related Skills
 
 - **test-planning** -- Sprint test plans allocate time for exploratory sessions and reference charters.

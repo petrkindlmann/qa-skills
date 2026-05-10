@@ -392,6 +392,8 @@ Treating bugs caught in staging or QA as pure successes. Near-misses are risk si
 
 Going through the motions of risk assessment (filling in matrices, creating heatmaps) without actually changing test allocation. If the risk heatmap exists but test coverage does not align to it, the exercise was wasted. Verify alignment quarterly.
 
+> Related framing: Bolton's "Quality Engineering Is Not Testing" (2026-04-20) argues that conflating quality engineering with testing distorts how teams think about risk — building a heatmap and calling it "QE done" is exactly the failure mode the post warns about. Reference: https://developsense.com/blog/2026/04/quality-engineering-is-not-testing
+
 ### Anchoring on Historical Risk
 
 Over-weighting past incidents and under-weighting new risk vectors. A module that failed 2 years ago and has since been rewritten may no longer be high risk. Conversely, a new integration with a third party has unknown risk that deserves attention.

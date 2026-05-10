@@ -403,6 +403,8 @@ A condensed example showing how the same template works for a different product 
 
 ## Workflow: Creating the Context File
 
+> If installed via the qaskills plugin, this skill is auto-discovered by Claude Code. To disable model-driven activation and keep it as a manual `/qa-project-context` command, add `skillOverrides` in `.claude/settings.local.json` or set `disable-model-invocation: true` in this skill's frontmatter. For local plugin development, run `claude --plugin-dir ./qaskills` and validate with `skills-ref validate`.
+
 When an agent activates this skill, follow this sequence:
 
 1. **Check for existing context:** Look for `.agents/qa-project-context.md` in the user's project root.

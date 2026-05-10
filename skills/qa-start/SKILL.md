@@ -10,6 +10,7 @@ metadata:
   author: kindlmann
   version: "1.0"
   category: foundation
+  argument-hint: "optional path to existing repo (e.g. './apps/web') if running from a monorepo root"
 ---
 
 <objective>
@@ -65,6 +66,8 @@ You now have the foundation: context, strategy, and a first plan. The next actio
 - **Tracking quality:** Use `qa-metrics` once the suite is running to define what health looks like and how to measure it over time.
 
 ## Quick Start (Skip Ahead)
+
+> Re-run anytime from the Claude Code `/skills` menu. To pin this skill as a manual command (no model-driven activation), add `disable-model-invocation: true` to the frontmatter or use `skillOverrides` in `.claude/settings.local.json`.
 
 If you already have a populated `.agents/qa-project-context.md`, skip Step 1 and go directly to Step 2.
 
