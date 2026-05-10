@@ -458,4 +458,6 @@ Using `userId: '1'` in tests. This couples tests to database state and breaks wh
 - **api-testing** -- API tests use both factories (for request bodies) and fixtures (for mocked responses).
 - **playwright-automation** -- E2E tests need test data seeded via API or fixtures before browser interaction.
 - **test-reliability** -- Deterministic test data eliminates a major source of test flakiness.
+- **test-environments** -- Database branching (Supabase, Neon, PlanetScale) gives each preview env its own DB without re-seeding.
+- **database-testing** -- Migration testing and Testcontainers patterns for the database layer specifically.
 - **ci-cd-integration** -- Database seeding and cleanup must be integrated into CI pipeline stages.

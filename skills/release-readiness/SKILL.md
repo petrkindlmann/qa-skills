@@ -495,10 +495,12 @@ Next Steps:
 | Skill | Relationship |
 |-------|-------------|
 | `test-strategy` | Release readiness is the final stage of your overall test strategy |
-| `qa-metrics` | Use metrics (error rates, test pass rates) as evidence in go/no-go decisions |
+| `qa-metrics` | Use metrics (error rates, test pass rates, DORA — change failure rate + MTTR) as evidence in go/no-go decisions |
 | `ci-cd-integration` | CI pipeline must be green as a prerequisite for release |
 | `playwright-automation` | Smoke tests are often implemented with Playwright |
-| `qa-ideas` | Browse for additional release validation tactics |
+| `testing-in-production` | Vendor-native canary analysis (LaunchDarkly Guarded Rollouts, Statsig Auto-tune, Flagger) overlaps directly with progressive rollout |
+| `ai-system-testing` | When releasing AI/LLM features, the rollout pattern is different (AI Configs, prompt versioning, kill switches) |
+| `compliance-testing` | EU AI Act / EAA / GDPR requirements may gate the release |
 | `shift-left-testing` | The earlier you catch issues, the less you rely on release-time catches |
 | `api-testing` | API contract and health checks are part of smoke test suites |
-| `bug-reporting` | Structured bug reports speed up investigation when rollbacks happen |
+| `quality-postmortem` | When a release goes wrong, the postmortem feeds back into release criteria |

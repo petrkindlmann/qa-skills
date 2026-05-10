@@ -478,11 +478,13 @@ When AI-generated tests catch real bugs, note the prompt patterns that produced 
 ## Related Skills
 
 - **`qa-project-context`** — Set up the project context file that makes AI test generation dramatically better. Always configure this first.
-- **`playwright-automation`** — Deep Playwright patterns -- POM, fixtures, CI setup. Use generated tests within this framework.
+- **`playwright-automation`** — Deep Playwright patterns -- POM, fixtures, CI setup, plus Test Agents (`init-agents --loop=claude`) and `@playwright/mcp` for the agent integration mode chosen in Q2a. Use generated tests within this framework.
 - **`unit-testing`** — Jest, Vitest, pytest patterns for unit-level AI-generated tests.
 - **`api-testing`** — API test patterns for AI-generated endpoint tests from OpenAPI specs.
 - **`test-strategy`** — Decide *what* to test and at which level before generating tests.
-- **`test-reliability`** — Ensure generated tests are reliable: flake classification, healing patterns.
+- **`test-reliability`** — Ensure generated tests are reliable: flake classification, healing patterns, agentic video receipts via `page.screencast`.
+- **`ai-system-testing`** — When the input source is an LLM feature spec, generate eval datasets here (Promptfoo, DeepEval, Ragas, Braintrust) instead of Playwright specs.
+- **`ai-qa-review`** — Mandatory Step-7 review for AI-generated tests: hallucinated locators, fabricated imports, generic test data, closed AI loops.
 - **`ai-bug-triage`** — When generated tests find bugs, use the triage pipeline to classify and report them.
 
 ---

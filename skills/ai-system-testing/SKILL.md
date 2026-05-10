@@ -507,3 +507,6 @@ The AI produces great results but each request costs $0.10 and takes 8 seconds. 
 | `test-data-management` | Golden datasets for evals need the same rigor as test data |
 | `qa-metrics` | Eval scores are QA metrics for AI features |
 | `testing-in-production` | AI features need production validation due to real-world input diversity |
+| `compliance-testing` | EU AI Act applicability (Article 50 transparency, GPAI obligations, prohibited practices) lives here |
+| `release-readiness` | AI/LLM rollout pattern (AI Configs, prompt versioning, kill switches) is a distinct release path |
+| `risk-based-testing` | AI/LLM-specific failure classes (hallucination, bias, prompt injection, privacy leak) feed risk planning |

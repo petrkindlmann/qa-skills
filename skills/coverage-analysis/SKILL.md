@@ -527,7 +527,7 @@ Coverage percentage alone is insufficient. Combine it with:
 
 ## Related Skills
 
-- **unit-testing** -- Test writing patterns, mocking strategies, and framework-specific coverage configuration.
+- **unit-testing** -- Test writing patterns, mocking strategies, framework-specific coverage configuration, and Vitest 4 `coverage.changed` for changed-files-only coverage in CI.
 - **ci-cd-integration** -- Pipeline configuration for coverage gates, artifact storage, and PR comments.
-- **qa-metrics** -- Quality KPIs including coverage trends, mutation scores, and defect escape rates.
-- **ai-qa-review** -- AI-assisted identification of coverage gaps and undertested code paths.
+- **qa-metrics** -- Quality KPIs including coverage trends, mutation scores, defect escape rates, and Test Impact Analysis as a coverage-driven CI lever.
+- **ai-qa-review** -- AI-assisted identification of coverage gaps and undertested code paths; Vitest browser mode for component coverage parity.

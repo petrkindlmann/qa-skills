@@ -459,5 +459,9 @@ This dashboard supports sprint retrospectives and planning.
 
 - **qa-project-context** -- Set up the project context file that feeds targets and baselines into metrics tracking.
 - **test-strategy** -- Define the overall testing approach; metrics measure whether the strategy is working.
-- **ci-cd-integration** -- Configure CI pipelines that generate the raw data metrics depend on.
-- **release-readiness** -- Quality gates and release criteria consume metrics to make go/no-go decisions.
+- **ci-cd-integration** -- Configure CI pipelines that generate the raw data metrics depend on; Test Impact Analysis as a CI cost lever.
+- **release-readiness** -- Quality gates and release criteria consume metrics (including DORA change failure rate + MTTR) to make go/no-go decisions.
+- **qa-dashboard** -- Surface metrics in Allure / Grafana / SaaS-native dashboards for stakeholders.
+- **coverage-analysis** -- Coverage and mutation score are inputs to the assertion-quality side of metrics.
+- **test-reliability** -- Flakiness rate is the most-watched health metric; flaky tooling (Trunk, CloudBees) directly produces this signal.
+- **quality-postmortem** -- Action-item-closure-rate (alongside escape rate) is the postmortem-side metric pair.

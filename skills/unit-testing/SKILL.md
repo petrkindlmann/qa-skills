@@ -457,7 +457,8 @@ it("B", () => {                      it("A", () => { items.push("a"); expect(ite
 
 ## Related Skills
 
-- **coverage-analysis** -- Interpreting coverage reports, identifying meaningful gaps, CI integration.
+- **coverage-analysis** -- Interpreting coverage reports, mutation testing as a first-class quality signal, identifying meaningful gaps, CI integration.
 - **ci-cd-integration** -- Test stages in pipelines, parallelization, caching, deployment gating.
 - **ai-test-generation** -- AI-assisted test generation, edge case discovery, legacy code bootstrapping.
-- **shift-left-testing** -- Pre-commit hooks, IDE integration, developer workflow optimization.
+- **ai-qa-review** -- Reviewing AI-generated tests for hallucinated APIs, fabricated imports, and closed-loop tests.
+- **shift-left-testing** -- Pre-commit hooks, IDE integration, developer workflow optimization, TDD for AI-generated implementations.

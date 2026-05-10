@@ -589,7 +589,9 @@ Building compliance tests once and never updating them. Regulations evolve (ePri
 ## Related Skills
 
 - **accessibility-testing** -- Detailed WCAG testing patterns with axe-core and Playwright for the accessibility subset of compliance.
-- **security-testing** -- Security compliance (OWASP, dependency scanning) complements privacy compliance.
+- **security-testing** -- Security compliance (OWASP Top 10:2025, dependency scanning, supply-chain attestations) complements privacy compliance.
+- **ai-system-testing** -- EU AI Act Article 50 transparency tests need AI-feature eval suites; that skill defines the eval layer.
 - **ci-cd-integration** -- Pipeline configuration for scheduled compliance audits and quality gates.
 - **test-strategy** -- Compliance testing should be a defined test type in the overall strategy.
+- **release-readiness** -- Compliance gates often block release; cross-link AI Configs / kill switches for AI-feature releases.
 - **quality-postmortem** -- When a compliance violation reaches production, the postmortem identifies root cause and prevention.

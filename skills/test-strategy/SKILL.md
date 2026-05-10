@@ -497,9 +497,11 @@ The final strategy document should follow this structure:
 
 ## Related Skills
 
-- **risk-based-testing** -- deep dive into risk assessment methodology
-- **qa-metrics** -- detailed KPI definitions, dashboards, and trend analysis
-- **release-readiness** -- go/no-go checklists and release confidence scoring
-- **test-planning** -- sprint-level test planning and estimation
-- **ci-cd-integration** -- pipeline configuration and gate implementation
+- **risk-based-testing** -- deep dive into risk assessment methodology, including AI/LLM-specific failure classes
+- **qa-metrics** -- detailed KPI definitions, DORA metrics, Test Impact Analysis, dashboards, and trend analysis
+- **release-readiness** -- go/no-go checklists, vendor-native canary analysis, and release confidence scoring
+- **test-planning** -- sprint-level test planning and estimation (including AI-assisted authoring caveats)
+- **ci-cd-integration** -- pipeline configuration, gate implementation, and smart sharding
 - **shift-left-testing** -- techniques for moving validation earlier
+- **ai-system-testing** -- when the strategy covers AI/LLM features, this skill defines the eval-suite layer
+- **compliance-testing** -- when the strategy serves a regulated audience (GDPR, EU AI Act, EAA, US state laws)

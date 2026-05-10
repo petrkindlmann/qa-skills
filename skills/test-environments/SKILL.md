@@ -461,7 +461,7 @@ For factory-based seed data patterns, see `test-data-management`.
 
 ## Related Skills
 
-- **test-data-management** -- Factory patterns, synthetic data generation, database seeding strategies.
-- **ci-cd-integration** -- Pipeline configuration, GitHub Actions services, artifact management.
+- **test-data-management** -- Factory patterns, synthetic data generation, database seeding, and Postgres-as-a-service branching (Supabase, Neon, PlanetScale) for per-PR DB copies.
+- **ci-cd-integration** -- Pipeline configuration, GitHub Actions services, artifact management, smart sharding, and Actions Runner Controller for self-hosted K8s runners.
 - **contract-testing** -- Consumer-driven contracts that validate your stubs match real APIs.
 - **service-virtualization** -- Decision framework for choosing mocks, stubs, fakes, or real services.

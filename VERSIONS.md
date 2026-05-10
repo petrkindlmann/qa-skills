@@ -1,5 +1,79 @@
 # Versions
 
+## v2.4.0 (2026-05-10)
+
+### 2026-05 currency pass — every skill refreshed
+
+Six-month staleness audit (cutoff 2025-11-10) across all 42 skills, applied in 14 commits across two rounds (must-fix + secondary). Net change: +1,201 / −181 lines. No new skills; existing skills track current tools, standards, and regulations.
+
+#### Factual fixes
+
+- `database-testing` — replaced fictitious `npx prisma migrate rollback --steps 1` with the supported pattern (forward-revert migration + `prisma migrate resolve` + hand-written `down.sql`).
+- `compliance-testing` — re-framed EAA as in force since 2025-06-28 (was treated as future).
+- `visual-testing` — added Lost Pixel deprecation warning (repo archived 2026-04-22).
+
+#### Standard / regulation updates
+
+- `security-testing` — rewritten for **OWASP Top 10:2025** ordering: A03 Software Supply Chain Failures (new), A10 Mishandling of Exceptional Conditions (new), SSRF folded under A01/A06, A07/A09 renamed.
+- `compliance-testing` — added **EU AI Act** phased timeline (Article 50 transparency, GPAI obligations live since 2025-08-02, prohibitions live since 2025-02-02), expanded US state-privacy list (~20 states), added **Global Privacy Control** (`Sec-GPC: 1`) and **Google Consent Mode v2** test patterns, updated CMP list (Cookiebot now Usercentrics; Google-certified CMP requirement).
+- `accessibility-testing` — EAA enforcement date corrected; ISO/IEC 40500:2025 added; WCAG 3 March 2026 draft note; axe-core 4.11+ RGAA filter caveat.
+
+#### Tool / version refreshes
+
+- **Playwright** — bumped baseline references to **1.59.1**; added Test Agents (1.56), `@playwright/mcp`, `page.screencast` (1.59), Test Migrator (1.55), `--debug=cli`; corrected `routeWebSocket` version to 1.48.
+- **k6** — added v2.0-rc1 migration callout (`experimental/websockets` → `websockets`, removed executors, exit code 97); added `k6/browser` module section; noted FID removal from web-vitals v5.
+- **Vitest** — bumped to 4.1.x (5.0-beta breaking changes flagged); added `coverage.changed` and Vitest 4 browser mode.
+- **Cypress** — 15.x baseline; dropped `experimentalRunAllSpecs`; Cypress AI Cloud add-on callout.
+- **Appium** — renamed to 3.x throughout (3.4.2 stable); Maestro added as cross-platform CLI option; Detox `by.type()` semantic matching.
+- **Pact-JS v16** rename: `PactV4` → `Pact`, `MatchersV3` → `Matchers`.
+- **Faker v10** ESM-only callout (silently breaks CJS users).
+- **Image bumps**: postgres 16 → 17, redis 7 → 8, node 20 → 22, wiremock 3.9.1 → 3.13.2, toxiproxy 2.9.0 → 2.12.0.
+- **GitHub Actions** v4 → v5+/Node 24 deprecation note in ci-cd-integration.
+
+#### AI-augmented QA — fully fleshed out
+
+- `ai-system-testing` — added concrete Tooling section naming **Promptfoo, DeepEval v3.9.9 (agentic metrics: TaskCompletion / ToolCorrectness / ArgumentCorrectness), Ragas, TruLens, Inspect AI, Garak, PyRIT, Braintrust** with one recipe per category.
+- `ai-test-generation` — added Q2a deciding between Playwright CLI+SKILLS, Playwright MCP, and hand-written; expanded reproducibility metadata (Opus 4.7 / Sonnet 4.6 / Haiku 4.5-20251001 model IDs).
+- `ai-bug-triage` — added Buy vs Build callout (Trunk Flaky Tests, CloudBees Smart Tests — formerly Launchable, Datadog Test Optimization, Sealights); model selection cost note.
+- `test-reliability` — wired Playwright 1.59 `page.screencast` "agentic video receipts" into Repair Evidence record fields.
+- `ai-qa-review` — added "AI-Generated Test Smells" subsection (hallucinated locators, fabricated imports, closed AI loops, project-convention drift).
+
+#### Vendor renames + acquisitions
+
+- Statsig → operating under OpenAI (Sept 2025); Split → Harness FME; Lightstep → ServiceNow Cloud Observability; Bugsnag → SmartBear Insight Hub; Tracetest Cloud EOL'd (Oct 2024, OSS still active); Launchable → CloudBees Smart Tests; Highlight.io → LaunchDarkly Observability; MailHog (unmaintained) → Mailpit; Promptfoo → joining OpenAI.
+
+#### New first-class sections
+
+- `qa-metrics` — DORA metrics (Lead Time, Deployment Frequency, Change Failure Rate, MTTR) and Test Impact Analysis as a metric/lever.
+- `qa-dashboard` — Allure 2 vs Allure 3 callout (TS rewrite, plugin system, `allurerc`, quality gates, Allure Service); SaaS-Native Test Dashboards comparison; Allure TestOps section with MCP server beta.
+- `coverage-analysis` — Mutation testing promoted from footnote to first-class section; pinned `c8@^11` / `nyc@^18` with Node 20+ baseline; coverage.py 7.13's `.coveragerc.toml`.
+- `release-readiness` — Vendor-native canary analysis (LaunchDarkly Guarded Rollouts, Statsig Auto-tune, Flagger, Harness CV); AI/LLM rollout pattern; canary-alerts-that-lie + Switchback anti-patterns.
+- `mobile-testing` — Maestro section as cross-platform YAML option.
+- `service-virtualization` — Mockoon, Hoverfly, Prism, MockServer comparison table.
+- `contract-testing` — Pactflow bi-directional contracts; Schemathesis property-based testing.
+- `test-data-management` — Database Branching (Supabase, Neon, PlanetScale).
+- `ci-cd-integration` — smarter sharding (knapsack-pro, CloudBees Smart Tests, Trunk); Actions Runner Controller for K8s self-hosted runners.
+- `observability-driven-testing` — continuous profiling (Pyroscope, Parca, Polar Signals, OTel profiling signal); zero-instrumentation eBPF (Beyla, Tetragon, Pixie, Coroot); OTel Weaver; Tracetest Cloud EOL warning; OTel sem-conv 1.41 GenAI breaking changes; OpenTracing deprecation.
+- `chaos-engineering` — AWS FIS, Steadybit, kube-monkey, Pumba; eBPF chaos (Chaos Mesh `bpfki`); GameDay-as-code subsection.
+- `exploratory-testing` — Assisted Exploration section paired with Bolton's "AI Productivity Paradox" warning; Tester Roles in Modern Teams (Tissue Testers, coach testers).
+
+#### Frontmatter / spec compliance
+
+- All three Foundation skills got `compatibility:` frontmatter per the agentskills.io spec.
+- Replaced fake colon-form trigger phrases (`qa:start` → `/qa-start`, `qa:do` → `/qa-do`) per Claude Code's plugin namespacing.
+- `qa-do` now consumes `$ARGUMENTS` for one-shot routing.
+- `qa-project-context` codebase-detection table refreshed (Bun, Turborepo, Astro, React Router 7, `.claude/`, `.claude-plugin/`, `AGENTS.md`).
+
+#### Strategy + Process refresh
+
+- `test-strategy` — Reference Frameworks block (CTAL-AT v2.0 — replaces CTFL-AT, CT-GenAI v1.1, HTSM v6.3, WQR 2025-26 with adoption stats); AI/LLM features row in Common Stack table.
+- `risk-based-testing` — AI/LLM-specific failure classes from CT-GenAI v1.1.
+- `test-planning` — AI-assisted authoring footnote with Productivity Paradox warning; test-smells review per CTAL-AT v2.0; LLM-eval row in estimation table.
+- `shift-left-testing` — AI-generated PR review checklist; AI participant in Three Amigos; TDD row for AI-generated implementation.
+- `quality-postmortem` — action-item-closure-rate; AI-assisted RCA principle.
+
+---
+
 ## v2.3.0 (2026-03-30)
 
 ### Improvements
