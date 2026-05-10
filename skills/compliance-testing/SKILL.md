@@ -26,7 +26,13 @@ Test applications for regulatory compliance, focusing on privacy regulations (GD
 
 ### Applicable Regulations
 
-1. **Which privacy regulations apply?** GDPR (EU users), CCPA/CPRA (California), ePrivacy Directive (EU cookies), LGPD (Brazil), PIPEDA (Canada). Multiple regulations may apply simultaneously if you serve users in multiple regions.
+1. **Which privacy and platform regulations apply?**
+   - **EU:** GDPR, ePrivacy Directive (cookies), Digital Services Act (DSA — applied 17 Feb 2024), EU AI Act (prohibitions + literacy from 2 Feb 2025; GPAI obligations + penalties from 2 Aug 2025; full applicability 2 Aug 2026).
+   - **US:** CCPA/CPRA (California) plus comprehensive state laws now active in ~20 states — including Texas TDPSA, Indiana CDPA (eff. 1 Jan 2026), Delaware DPDPA (eff. 1 Jan 2025), Nebraska NDPA, Minnesota CDPA, Rhode Island DTPPA. Most require honoring the Global Privacy Control (`Sec-GPC: 1`) signal.
+   - **UK:** UK GDPR/DPA, ePrivacy via PECR, Online Safety Act 2023, Data Use and Access Act (DUAA) replacing parts of UK GDPR/DPA.
+   - **Other:** LGPD (Brazil), PIPEDA (Canada), POPIA (South Africa).
+
+   Multiple regulations apply simultaneously when you serve users in multiple regions. AI features layer EU AI Act obligations on top of existing privacy law.
 
 2. **What is the legal basis for data processing?** Consent (opt-in), legitimate interest, contractual necessity? This determines whether explicit consent is required before processing.
 
@@ -34,7 +40,7 @@ Test applications for regulatory compliance, focusing on privacy regulations (GD
 
 ### Consent Management
 
-4. **What CMP is in use?** OneTrust, Cookiebot, Didomi, Usercentrics, or custom? The CMP determines consent storage format, API, and integration patterns.
+4. **What CMP is in use?** OneTrust, Cookiebot (now a Usercentrics product), Didomi, Usercentrics, Iubenda, Sourcepoint, Axeptio, or custom? The CMP determines consent storage format, API, and integration patterns. **If you serve ads in the EEA or UK, you must use a Google-certified CMP and implement Google Consent Mode v2** — uncertified CMPs block Google ad serving.
 
 5. **What consent categories exist?** Typically: Strictly Necessary (always allowed), Analytics/Performance, Functional/Preferences, Marketing/Targeting.
 
@@ -229,6 +235,120 @@ test.describe('Script Blocking', () => {
 });
 ```
 
+### Global Privacy Control (Sec-GPC)
+
+GPC is a browser/extension signal that communicates a universal opt-out. It is a required honored signal under CCPA/CPRA and most active US state laws. Sites that ignore it are non-compliant in those jurisdictions.
+
+```typescript
+test.describe('Global Privacy Control', () => {
+  test.use({
+    storageState: undefined,
+    extraHTTPHeaders: { 'Sec-GPC': '1' },
+  });
+
+  test('site honors Sec-GPC: no marketing cookies, opt-out registered', async ({ page, context }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    const cookies = await context.cookies();
+    const marketing = cookies.filter((c) =>
+      ['_fbp', '_fbc', '_gcl', '_ttp', 'IDE', 'NID'].some((n) => c.name.startsWith(n))
+    );
+    expect(marketing.map((c) => c.name), 'Marketing cookies present despite Sec-GPC: 1').toHaveLength(0);
+
+    // Site should expose the recorded opt-out (CMP-specific — adapt to your CMP API)
+    const optedOut = await page.evaluate(() => (window as any).__cmp?.gpcStatus === 'opted-out');
+    expect(optedOut, 'CMP did not register Sec-GPC opt-out').toBe(true);
+  });
+});
+```
+
+### Google Consent Mode v2
+
+Required since March 2024 for sites serving Google ads in the EEA/UK. Verify default state is "denied" and that update signals fire correctly after consent choices.
+
+```typescript
+test.describe('Google Consent Mode v2', () => {
+  test.use({ storageState: undefined });
+
+  test('default consent is denied for ad/analytics signals', async ({ page }) => {
+    const consentEvents: any[] = [];
+    await page.addInitScript(() => {
+      (window as any).dataLayer = (window as any).dataLayer || [];
+      const originalPush = (window as any).dataLayer.push.bind((window as any).dataLayer);
+      (window as any).dataLayer.push = (...args: any[]) => {
+        if (args[0]?.[0] === 'consent') (window as any).__consentEvents = [...((window as any).__consentEvents ?? []), args[0]];
+        return originalPush(...args);
+      };
+    });
+
+    await page.goto('/');
+    const events = await page.evaluate(() => (window as any).__consentEvents ?? []);
+    const defaultEvent = events.find((e: any[]) => e[1] === 'default');
+    expect(defaultEvent, 'No gtag consent default fired').toBeDefined();
+    expect(defaultEvent[2].ad_storage).toBe('denied');
+    expect(defaultEvent[2].analytics_storage).toBe('denied');
+    expect(defaultEvent[2].ad_user_data).toBe('denied');
+    expect(defaultEvent[2].ad_personalization).toBe('denied');
+  });
+
+  test('update signal fires "granted" after accepting consent', async ({ page }) => {
+    await page.goto('/');
+    await page.getByRole('dialog', { name: /consent/i }).getByRole('button', { name: /accept/i }).click();
+    await page.waitForTimeout(1000);
+
+    const events = await page.evaluate(() => (window as any).__consentEvents ?? []);
+    const updateEvent = events.find((e: any[]) => e[1] === 'update');
+    expect(updateEvent, 'No gtag consent update fired after accept').toBeDefined();
+    expect(updateEvent[2].ad_storage).toBe('granted');
+    expect(updateEvent[2].analytics_storage).toBe('granted');
+  });
+});
+```
+
+---
+
+## EU AI Act Compliance
+
+The AI Act applies in phases. Test patterns differ by AI system role and risk class.
+
+| Phase | Date | Obligation | Test approach |
+|-------|------|------------|---------------|
+| Prohibitions + AI literacy | 2 Feb 2025 (active) | No prohibited practices (social scoring, real-time biometric ID in public spaces, manipulative AI) | Document the AI features in scope; verify none fall under Article 5 |
+| GPAI obligations + governance + penalties | 2 Aug 2025 (active) | GPAI documentation, copyright policy, summary of training data | Verify model cards, data summaries, and disclosure pages exist |
+| Full applicability | 2 Aug 2026 | High-risk system requirements (risk management, data governance, transparency, human oversight) | High-risk classification check; transparency UI tests |
+| Article 50 transparency | Phased into 2026 | AI-generated content marked; deepfake disclosure; user awareness of AI interaction | Test that AI-generated text/images carry the required label or watermark |
+
+```typescript
+// Article 50 — verify AI-generated content carries disclosure
+test('AI-generated responses carry transparency disclosure', async ({ page }) => {
+  await page.goto('/chat');
+  await page.getByRole('textbox').fill('Help me draft an email');
+  await page.getByRole('button', { name: /send/i }).click();
+  const response = page.getByTestId('assistant-response');
+  await expect(response).toBeVisible();
+
+  // Disclosure must be visually associated with the response
+  const disclosure = page.getByText(/AI-generated|generated by AI|powered by/i);
+  await expect(disclosure).toBeVisible();
+});
+
+// Prohibited-practice gate — automated checks for Article 5 patterns
+test('no real-time biometric identification in public-facing UI', async ({ page }) => {
+  await page.goto('/');
+  // Examples — adapt to your stack: face-detection libraries loaded, getUserMedia for face tracking
+  const requests: string[] = [];
+  page.on('request', (req) => requests.push(req.url()));
+  await page.waitForLoadState('networkidle');
+
+  const prohibited = ['face-api', 'mediapipe/face', 'tensorflow/face-detection'];
+  const matches = requests.filter((u) => prohibited.some((p) => u.includes(p)));
+  expect(matches, `Possible Article 5 violation — biometric libs loaded: ${matches.join(', ')}`).toHaveLength(0);
+});
+```
+
+For LLM-specific evaluation (hallucination, jailbreak resistance, prompt-injection), see the `ai-system-testing` skill.
+
 ---
 
 ## Better Ads Standards
@@ -388,7 +508,7 @@ Accessibility is a legal requirement in many jurisdictions. See the `accessibili
 
 | Region | Law | Standard | Enforcement |
 |--------|-----|----------|-------------|
-| EU | European Accessibility Act (EAA) | EN 301 549 / WCAG 2.1 AA | Member state enforcement, fines (June 2025) |
+| EU | European Accessibility Act (EAA) | EN 301 549 / WCAG 2.1 AA | Applied 28 June 2025; member-state penalties active. WCAG 2.2 alignment expected in next EN 301 549 revision (ISO/IEC 40500:2025 = WCAG 2.2). |
 | USA | ADA | WCAG 2.1 AA (court precedent) | Private lawsuits |
 | USA (federal) | Section 508 | WCAG 2.0 AA | Federal procurement requirement |
 | Canada (Ontario) | AODA | WCAG 2.0 AA | Fines up to $100K/day |
@@ -457,8 +577,11 @@ Building compliance tests once and never updating them. Regulations evolve (ePri
 
 ## Done When
 
-- Applicable regulations identified for the product and geographic audience (GDPR, CCPA, ePrivacy, etc.) and documented in `.agents/qa-project-context.md`
+- Applicable regulations identified for the product and geographic audience (GDPR, ePrivacy, DSA, EU AI Act, US state laws including the relevant subset of ~20, UK OSA/DUAA, etc.) and documented in `.agents/qa-project-context.md`
 - Consent management flow tested for all user entry points: first visit, banner accept, banner reject, consent withdrawal, and cross-navigation persistence
+- Global Privacy Control (`Sec-GPC: 1`) honored: marketing cookies blocked and opt-out registered when the signal is present
+- Google Consent Mode v2 verified: default state denied for `ad_storage`/`analytics_storage`/`ad_user_data`/`ad_personalization`; update signals fire correctly after consent choices (only required for sites serving Google ads in EEA/UK)
+- EU AI Act applicability assessed: prohibited-practice check, GPAI documentation review (if applicable), and Article 50 transparency disclosures tested for any AI-generated content
 - Cookie audit completed with all cookies categorized in the typed inventory and no unknown cookies detected by the drift test
 - Privacy policy accuracy verified against actual data collection behavior (no cookies or tracking scripts present that the policy doesn't disclose)
 - Compliance test results stored as CI artifacts with 90-day retention to support audit trail requirements

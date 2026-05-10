@@ -211,3 +211,4 @@ Be honest about what you missed and why.
 - For QA metrics and what to track, see `qa-metrics`
 - For dashboard setup and stakeholder reports, see `qa-dashboard`
 - For postmortem structure and root cause analysis, see `quality-postmortem`
+- For the underlying anti-AI-writing engine, this skill composes with the global `humanizer` skill. When both apply, run `humanizer` for language-level cleanup and `qa-report-humanizer` for QA-specific section structure.

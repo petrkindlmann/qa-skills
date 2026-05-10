@@ -240,6 +240,31 @@ An alternative to infrastructure-level canary deploys:
 
 **Disadvantages:** Code complexity (branching logic), stale flags become tech debt, doesn't catch infrastructure issues.
 
+#### Tooling
+
+| Platform | Best at | Notes |
+|----------|---------|-------|
+| **LaunchDarkly** | Enterprise scale; Guarded Rollouts (auto-canary analysis); AI Configs for prompt/model rollouts; agent graphs | Acquired Highlight.io in 2025 — also offers observability tied to flags |
+| **Statsig** | Experiment-first culture; Switchback experiments (Feb 2026 update) for two-sided marketplaces; auto-tune | Joined OpenAI Sept 2025 |
+| **GrowthBook** | OSS-first; stale-flag detection with code-reference scanning; SQL-based experimentation | Strong fit when you want to self-host and avoid vendor lock-in |
+| **Unleash** | OSS, GitOps-style flag definition, environment scoping | Apache 2 license; Enterprise tier for SSO/audit |
+| **Flagsmith** | Kill switches as first-class concept; canary alerts; OSS option | Published "what is a kill switch" + "release testing" guides 2026 |
+| **Harness FME** (formerly Split) | Targeted rollouts + monitoring tied to deploy pipelines | Rebranded after Harness acquisition |
+
+Vendor-native canary analysis (LaunchDarkly Guarded Rollouts, Statsig Auto-tune, Flagger) is now common — if your platform offers it, prefer it over hand-rolled rollout-policy YAML.
+
+#### Rolling Out AI/LLM Features
+
+AI features need a distinct rollout pattern: prompt versions and model IDs are configurable separately from code, and a kill switch is mandatory.
+
+1. Pin the prompt template version and model ID in your AI Configs platform (LaunchDarkly AI Configs, custom dataset, or feature-flag JSON).
+2. Roll out the prompt/model combo behind a flag — internal first, then 1%, 10%, etc.
+3. Watch eval metrics (hallucination rate, jailbreak success rate, cost per request) per cohort, not just error rate.
+4. Cost guardrail: a budget circuit breaker that fails the feature open (graceful fallback) when a model's per-request cost spikes.
+5. Kill switch: a single flag that disables the AI path and routes to a deterministic fallback or a "feature unavailable" state — testable in staging before launch.
+
+See `ai-system-testing` for prompt-level eval test patterns and `testing-in-production` for canary metric design.
+
 ---
 
 ## Rollback Criteria and Process
@@ -273,10 +298,11 @@ These require human judgment but should have clear guidelines:
 - If manual: does the issue meet rollback criteria? If yes, proceed. Don't debate.
 
 **Step 2: Execute rollback (< 5 minutes)**
-- **Code rollback:** Revert to the previous deployment (re-deploy previous image/artifact)
-- **Feature flag rollback:** Disable the feature flag (fastest option if available)
-- **Database rollback:** Run backward migration if applicable. If migration is irreversible, skip this step and handle data separately
-- **Cache invalidation:** Clear CDN and application caches if the old version would serve stale/incorrect data
+- **Kill switch (fastest, prefer if available):** Flip the dedicated kill-switch flag for the affected feature. Distinct from a full code rollback — disables one capability without redeploy. Test the kill switch in staging before every release; an untested switch is not a switch.
+- **Feature flag rollback:** Disable the feature flag for the new code path. Slower than a kill switch when both exist (rollout flag vs kill switch are different concerns).
+- **Code rollback:** Revert to the previous deployment (re-deploy previous image/artifact). Use when the issue is not contained to a single flagged feature.
+- **Database rollback:** Run backward migration if applicable. If migration is irreversible, skip this step and handle data separately.
+- **Cache invalidation:** Clear CDN and application caches if the old version would serve stale/incorrect data.
 
 **Step 3: Verify (< 5 minutes)**
 - Run production smoke tests
@@ -401,7 +427,7 @@ You deploy and move on to the next feature. An hour later, users are experiencin
 
 You use feature flags for safe rollouts (good!) but never remove them (bad). After a year, you have 200 flags, nobody knows which are active, and flag interactions cause mysterious bugs.
 
-**Fix:** Every feature flag has an expiration date. After full rollout + 1 week of stability, remove the flag. Track flag age in your issue tracker.
+**Fix:** 2026 best practice is platform-level stale detection, not calendar reminders. Use GrowthBook stale-flag detection (code references), LaunchDarkly archive flow, or Flagsmith's flag age telemetry to surface flags whose code paths haven't been touched in N weeks. Pair with a quarterly review where flags older than the threshold are either archived or get a documented owner + reason to keep. Calendar dates rot; code-reference scans don't.
 
 ---
 

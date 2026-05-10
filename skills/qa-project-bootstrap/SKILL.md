@@ -94,6 +94,7 @@ If the correct way to write a test is harder than the wrong way, people will wri
 - [ ] Review the CI pipeline: what runs on PR, what runs nightly, what blocks merge
 - [ ] Identify the top 5 critical user flows (these will be the first testing targets)
 - [ ] Attend one Three Amigos or sprint planning session as an observer
+- [ ] **Working with the team's AI assistants:** Identify which coding agents the team uses (Claude Code, Codex, Cursor, Gemini CLI, etc.), where their context lives (`.agents/qa-project-context.md`, `CLAUDE.md`, `AGENTS.md`), which prompts/skills are house style, and which tasks the team explicitly does NOT delegate to AI. Produce a short "AI assistants we use, what they're good at, what to never let them do" doc as a Day 4 deliverable.
 
 **Day 5: First Small Win**
 - [ ] Run a single test in debug/headed mode and understand what it does
@@ -189,6 +190,10 @@ Tech Debt Inventory:
   Deprecated API usage:            _____ count (update to current API)
   Tests older than 12 months
     with no modifications:         _____ count (review for relevance)
+  AI-generated tests with no
+    human review or sign-off:      _____ count (review or delete — closed AI loop is not coverage)
+  Stale feature flags blocking
+    test scenarios:                _____ count (use platform stale-flag detection, e.g. GrowthBook code references, LaunchDarkly archive flow)
 ```
 
 #### Conventions

@@ -122,6 +122,8 @@ A structured 15-30 minute conversation between three perspectives before develop
 - **Development:** How will we build it? What are the technical constraints?
 - **QA/Testing:** How will we verify it? What could go wrong?
 
+**Optional fourth amigo (AI participant):** A coding agent can generate edge cases and counter-scenarios from the acceptance criteria mid-session. Treat AI output as a checklist to validate, not a decision — humans still own the criteria.
+
 **Session format (30 minutes max):**
 
 1. Product presents the story (5 min) -- user need, acceptance criteria
@@ -262,6 +264,7 @@ TDD is not always the right choice. Use this guide to decide.
 | Third-party integration | **Test-after** | Need to understand the API behavior first |
 | Complex data migration | **Test-after with fixtures** | Write sample data first, then test transformation |
 | Performance optimization | **Test-after with benchmarks** | Need baseline before testing improvement |
+| AI-generated implementation | **TDD (test first)** | LLMs happily produce passing-looking code; the failing test is the spec the agent must satisfy. Highest-leverage check on AI output. |
 
 ### TDD for Bugs (The Litmus Test)
 
@@ -326,6 +329,17 @@ Use this checklist when reviewing PRs for test quality and testability. Not ever
 - [ ] **Tests clean up after themselves.** Created records are deleted. Modified state is restored. No test pollution.
 - [ ] **Test names describe the scenario.** A reader unfamiliar with the code should understand what is being tested from the test name alone.
 - [ ] **No coverage-only tests.** Tests that execute code without meaningful assertions inflate coverage without providing safety.
+
+### When the Change Is AI-Generated or AI-Using
+
+Apply these additional checks when a PR contains code authored by an AI agent or introduces an AI-powered feature.
+
+- [ ] **AI provenance disclosed.** PR description names the agent, model, and what it generated (so reviewers calibrate scrutiny appropriately).
+- [ ] **Tests written first or by a human.** AI-generated implementation paired with AI-generated tests is a closed loop — at least one side of the test/implementation pair should be authored or critically reviewed by a human (see TDD decision guide row above).
+- [ ] **Prompt and model version pinned.** For AI-using features (LLM calls, prompt templates), the prompt version and model ID are checked in or referenced from the AI Configs platform — not embedded as ad-hoc strings that drift.
+- [ ] **Runtime kill switch wired.** Any AI feature ships behind a feature flag that can disable it without redeploy. Pair shift-left prevention with shift-right containment.
+- [ ] **Prompt eval test exists.** At least one regression test for the prompt's behavior on representative inputs (see `ai-system-testing`).
+- [ ] **No fabricated APIs or imports.** Reviewer verifies every imported symbol exists — LLMs invent plausible-sounding APIs.
 
 ---
 
@@ -489,6 +503,7 @@ Tracking "number of Three Amigos sessions held" instead of "defects found in pla
 - At least one Three Amigos session run for an upcoming feature, with gaps documented and acceptance criteria updated
 - Dev/QA pairing schedule established and first pairing session completed
 - Pre-merge quality gates (test pass, coverage not decreased, linting) active in CI and blocking merge
+- Runtime kill switch identified for any risky or AI-powered code path so prevention (shift-left) and containment (shift-right) ship together
 
 ## Related Skills
 

@@ -60,6 +60,16 @@ Action items that are not tracked are not completed. Use the team's existing wor
 
 After implementing action items, measure whether the problem recurred. If the postmortem identified a gap in payment testing and the action was to add integration tests, track: did another payment bug escape? If yes, the action was insufficient. If no, the postmortem worked. Without measurement, postmortems are rituals, not tools.
 
+Two metrics together — not one alone:
+- **Defect escape rate** (did similar bugs reappear?)
+- **Action-item-closure rate** (what fraction of action items shipped within their committed window?)
+
+A high closure rate with rising escape rate means the team is doing the work but doing the wrong work. A low closure rate means the postmortems are theater. Modern incident response platforms (incident.io, Rootly, FireHydrant) emit closure-rate as a built-in metric — use what's there before building dashboards.
+
+### 6. AI-Assisted RCA Drafts the Timeline; Humans Own the Judgment
+
+If your team uses AI SRE tooling (Rootly AI SRE, incident.io's AI features), let it draft the incident timeline and propose candidate root causes from logs/traces. Then a human runs the 5 Whys, picks the real root cause, and writes the action items. AI is good at correlation across noisy data; it is bad at deciding what mattered. Treat AI output as a starting deck, not the conclusion.
+
 ---
 
 ## Bug Pattern Analysis
@@ -439,7 +449,17 @@ A cathartic discussion that produces understanding but no change. If the meeting
 
 ### Action Items Without Follow-Through
 
-Generating action items that go into a backlog and are never prioritized. This is worse than no action items because it creates the illusion of improvement. If postmortem actions are not completed within 2 sprints, escalate. If they are consistently deprioritized, either the items are too ambitious or the team does not value them -- both need addressing.
+Generating action items that go into a backlog and are never prioritized. This is worse than no action items because it creates the illusion of improvement. If postmortem actions are not completed within 2 sprints, escalate. If they are consistently deprioritized, either the items are too ambitious or the team does not value them — both need addressing.
+
+Action items die for predictable reasons. Audit your closure rate against this checklist before blaming "we forgot":
+
+- **No owner.** Items assigned to a team rather than a person become nobody's job.
+- **No due date.** "Soon" is not a date. A specific date is the difference between a commitment and a wish.
+- **Scope too big.** "Refactor the test framework" cannot land in a sprint. Break it into items that each fit a single PR.
+- **No review at the start of the next retro.** Without a forced check-in, items vanish silently. Open the next retro with a closed-loop review of the previous action items.
+- **No metric attached.** If completing the item doesn't move a number you can name, you can't tell whether it worked.
+
+Counter-pattern: open every retro with a 5-minute "previous action items" review. Mark each as Done / In Progress (with current ETA) / Dropped (with reason). Items dropped silently teach the team that retros are theater.
 
 ### Postmortems Only After Incidents
 
@@ -466,6 +486,8 @@ Running quality retrospectives based on feelings and opinions rather than data. 
 - Test gap identified and mapped to a specific coverage hole (missing test type, missing scenario, or missing area)
 - Action items assigned with named owners and due dates, added to the team's work tracker with a postmortem tag
 - Findings shared with the team in a written summary — not siloed in QA or lost in a private document
+- Action-item-closure-rate tracked alongside escaped-defect rate (both metrics, not one) — modern incident platforms (incident.io, Rootly, FireHydrant) emit closure rate natively
+- If AI SRE tooling is in use, AI-drafted timeline and candidate root causes are documented as input but the human-authored 5 Whys + action items are the conclusion
 
 ## Related Skills
 
