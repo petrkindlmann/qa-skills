@@ -7,6 +7,7 @@ description: >-
   redundant questions and give context-aware recommendations. Use when: "set up QA context,"
   "configure testing," first use of any QA skill, "initialize project."
 license: MIT
+compatibility: Cross-tool. Tested with Claude Code, Codex, Cursor, Gemini CLI. Reads/writes the user's project root; no network access required. The `.agents/qa-project-context.md` location is a qaskills convention chosen so non-Claude tools can read it without depending on a Claude-specific path.
 metadata:
   author: kindlmann
   version: "1.0"
@@ -458,6 +459,15 @@ Before asking about tech stack, scan the project for common configuration files 
 | `docker-compose.*` | Docker-based environments |
 | `wrangler.*` | Cloudflare Workers |
 | `vercel.json` | Vercel hosting |
+| `bun.lock` / `bun.lockb` | Bun runtime |
+| `pnpm-workspace.yaml` | pnpm monorepo |
+| `turbo.json` | Turborepo monorepo |
+| `astro.config.*` | Astro |
+| `react-router.config.ts` | React Router 7 / Remix |
+| `src-tauri/tauri.conf.json` | Tauri desktop app |
+| `.claude/` | Project uses Claude Code skills/agents |
+| `.claude-plugin/plugin.json` | Project ships a Claude Code plugin |
+| `AGENTS.md` | Codex / multi-agent workflow conventions |
 
 Present detected values to the user for confirmation rather than asking from scratch.
 

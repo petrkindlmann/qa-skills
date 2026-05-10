@@ -3,15 +3,20 @@ name: qa-do
 description: >-
   QA diagnostic router. Describes a testing situation or problem in plain language and identifies
   the right 1-3 skills to use and in what order. Use when: "which skill", "where do I start",
-  "I'm not sure what to test", "qa:do", or any vague QA situation that doesn't map to one skill.
+  "I'm not sure what to test", "/qa-do", or any vague QA situation that doesn't map to one skill.
   Related: qa-start, qa-project-context, test-strategy.
 license: MIT
+compatibility: Cross-tool. Tested with Claude Code, Codex, Cursor, Gemini CLI. Reads the project root; no network access required.
 metadata:
   author: kindlmann
   version: "1.0"
   category: foundation
   argument-hint: "plain-language QA situation (e.g. 'our checkout flow is slow and tests are flaky')"
 ---
+
+## Input
+
+If invoked with arguments, the situation is: $ARGUMENTS. Use this directly to find the matching row in the situation table below. Otherwise, ask the user to describe their situation in a sentence or two.
 
 <objective>
 Most QA situations fit a recognizable pattern. This skill takes a plain-language description of what you're trying to do or what problem you're facing, matches it to a pattern, and tells you which 1-3 skills to use and in what order. It does not duplicate content from other skills — it just diagnoses and routes.
@@ -58,6 +63,9 @@ Example output:
 | "Tests depend on each other and break in random order" | `test-data-management` → `test-reliability` | Fix data isolation first |
 | "Our QA is only catching bugs after dev, too late" | `shift-left-testing` → `test-planning` | Process change first, then plan |
 | "We're building an AI feature and need to test it" | `ai-system-testing` | Direct |
+| "Make this test report sound human / less AI-y" | `qa-report-humanizer` | Direct |
+| "Make sure this is GDPR/EAA/AI Act compliant" | `compliance-testing` | Direct |
+| "Run chaos / failure injection on staging" | `chaos-engineering` | Direct |
 
 ---
 
