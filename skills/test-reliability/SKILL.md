@@ -272,7 +272,11 @@ Score each repair candidate on six dimensions (weighted sum, 0.0-1.0):
 
 ### Repair Evidence
 
-Every repair produces an evidence record containing: test file, test name, failure type, original locator, candidate replacements (each with confidence, evidence string, and intent-preserved flag), which candidate was selected, timestamp, approval path, and rollback trigger.
+Every repair produces an evidence record containing: test file, test name, failure type, original locator, candidate replacements (each with confidence, evidence string, and intent-preserved flag), which candidate was selected, timestamp, approval path, rollback trigger, **and a `screencast.webm` recording of the repair run** (Playwright 1.59+ `page.screencast` with `showActions` annotations — the "agentic video receipt"). Without the screencast, a Level-3/4 healed test asks reviewers to trust a JSON record; with it, the diff and the runtime are both inspectable.
+
+For Selenium / Selenide / Robot Framework suites, **Healenium** remains the dedicated self-healing layer (now on AWS Marketplace). For agent-driven self-healing in Playwright, **Playwright MCP** is the canonical path — it gives the agent live browser control to discover replacement locators when CLI+SKILLS isn't enough.
+
+For hosted alternatives that ship the same workflow, see **Trunk Flaky Tests Agents**, **CloudBees Smart Tests** (formerly Launchable), and **Datadog Test Visibility** — all three offer fingerprinting + clustering + auto-quarantine that maps onto Levels 3-4 here.
 
 ### Intent Fidelity Checking
 

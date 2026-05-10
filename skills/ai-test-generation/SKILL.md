@@ -37,6 +37,12 @@ Before generating tests, clarify:
    - **E2E:** Playwright (preferred), Cypress
    - **Unit:** Jest, Vitest, pytest
    - **API:** Playwright API testing, supertest, requests
+   - **AI/LLM features:** Promptfoo, DeepEval, Ragas, or Braintrust — generate eval datasets, not Playwright specs (cross-link `ai-system-testing`)
+
+2a. **What agent integration mode?** (Playwright projects only)
+   - **Playwright CLI + SKILLS** (recommended for Claude Code / Codex / Cursor): token-efficient, runs inside the agent's loop. `npx playwright init-agents --loop=claude` scaffolds the planner/generator/healer.
+   - **Playwright MCP** (`@playwright/mcp@latest`): higher overhead but right when the agent needs to *drive* a live browser interactively over a long-running session.
+   - **Neither** — hand-write tests using AI as a scratch-pad helper.
 
 3. **What project context is available?**
    - Existing test patterns to match?
@@ -423,7 +429,7 @@ Extract: endpoints, request/response schemas, required fields, enum values, auth
 - Generated tests reviewed by a human with intentional gaps noted in the review notes
 - At least one round of refinement applied to fix hallucinated selectors or wrong assertions
 - Tests run green in CI with no failures attributed to generation errors
-- Generation prompt and model version documented for reproducibility
+- Generation prompt and model version documented for reproducibility — capture the exact model ID (e.g. `claude-opus-4-7`, `claude-sonnet-4-6`, `claude-haiku-4-5-20251001`), input source hash, and the version of any skill / CLI / MCP server invoked
 - All seven pipeline artifacts exist: requirements document, risk & invariants, coverage matrix, scenario set, oracle definitions, test code, and review notes with KEEP/MODIFY/REJECT decisions
 
 ---

@@ -313,6 +313,20 @@ it('should format price with currency symbol', () => {
 
 ---
 
+### AI-Generated Test Smells
+
+When the test code came from a coding agent (Claude Code, Codex, Cursor, Copilot), the smell taxonomy is the same — but a few signature failures recur often enough to deserve their own pass.
+
+| Smell | Detection |
+|-------|-----------|
+| **Hallucinated locator** | Run the test against a real page once. If the locator never matches, the LLM invented a `data-testid` that doesn't exist. |
+| **Fabricated import** | Static-check every imported symbol — does the file or package actually export it? LLMs invent plausible APIs (`@testing-library/something-that-doesnt-exist`). |
+| **Generic test data** | `example.com`, `test@test.com`, `Lorem ipsum`, `John Doe` — boilerplate the agent generated because it had no project-specific factory. Replace with the project's data factory. |
+| **Closed AI loop** | Both implementation *and* tests authored by the same agent in the same session. The tests just describe what the agent produced; they don't constrain it. Pair the agent's tests with at least one human-authored boundary test, or use TDD (test-first) per `shift-left-testing`. |
+| **Project-convention drift** | Page Object, fixture, naming, or assertion style different from the rest of the suite. AI-generated code rarely matches local conventions out of the box. |
+
+For first-time test generation patterns and Step-7 review checklist, cross-link `ai-test-generation`. For AI-system *eval suites* (Promptfoo, DeepEval, Ragas), the equivalent of ESLint is each tool's CLI runner — `promptfoo eval`, `deepeval test run`, Ragas experiments — wire them as quality gates parallel to your test runner.
+
 ### Coverage Smells
 
 Problems that leave gaps in what is verified.
