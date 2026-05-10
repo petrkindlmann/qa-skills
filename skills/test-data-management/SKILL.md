@@ -73,6 +73,8 @@ Fishery is the recommended factory library for TypeScript projects. It provides 
 npm install --save-dev fishery @faker-js/faker
 ```
 
+> **Faker v10 (Aug 2025) is ESM-only.** If your project still uses CommonJS (`require('@faker-js/faker')`), v10 will silently break — pin `@faker-js/faker@^9` until you migrate to ESM, or set `"type": "module"` in `package.json` and convert imports. Faker v9 remains supported for the CJS path.
+
 ```typescript
 // tests/factories/user.factory.ts
 import { Factory } from 'fishery';

@@ -78,7 +78,7 @@ Fully containerized, created fresh for every pipeline run, destroyed after. No s
 # .github/workflows/test.yml
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     env:
       POSTGRES_DB: testdb
       POSTGRES_USER: test
@@ -90,7 +90,7 @@ services:
       --health-timeout=3s
       --health-retries=5
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     ports: ['6379:6379']
     options: >-
       --health-cmd="redis-cli ping"
@@ -192,7 +192,7 @@ services:
       retries: 10
 
   postgres:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     environment:
       POSTGRES_DB: testdb
       POSTGRES_USER: test
@@ -206,7 +206,7 @@ services:
       retries: 10
 
   redis:
-    image: redis:7-alpine
+    image: redis:8-alpine
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 3s
@@ -265,7 +265,7 @@ echo "Tests complete."
 
 ```dockerfile
 # Dockerfile
-FROM node:20-alpine AS base
+FROM node:22-alpine AS base
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --production=false
@@ -292,7 +292,7 @@ CMD ["npx", "tsx", "scripts/seed.ts"]
 | Dependency Type | Local/CI Strategy | Staging Strategy |
 |----------------|-------------------|------------------|
 | Payment (Stripe) | MSW handler returning mock responses | Stripe test mode with `sk_test_` keys |
-| Email (SendGrid) | MailHog/Mailpit capturing SMTP | SendGrid sandbox mode |
+| Email (SendGrid) | **Mailpit** (MailHog is unmaintained — last commit Feb 2024) capturing SMTP | SendGrid sandbox mode |
 | Auth (Auth0) | Local JWT issuer with test keys | Auth0 dev tenant |
 | Storage (S3) | MinIO container (S3-compatible) | Dedicated test bucket with lifecycle policy |
 | Search (Elasticsearch) | Testcontainers Elasticsearch | Dedicated test index with reset script |

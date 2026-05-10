@@ -124,12 +124,14 @@ steps:
   - run: npx playwright test --shard=${{ matrix.shard }}/4
 ```
 
+> **GitHub Actions versioning (May 2026):** the `actions/*` v4 family (`checkout`, `setup-node`, `cache`, `upload-artifact`, `download-artifact`) has rolled to v5/v6/v7/v8 on the Node 24 runner; Node 20 is deprecated on GH-hosted runners. Examples below pin v4/v5 for stability — verify the current major before adopting in new pipelines and use Dependabot to keep them current.
+
 **Caching** to avoid reinstalling on every run:
 
 ```yaml
 # Node modules: handled by setup-node's cache option
 - uses: actions/setup-node@v4
-  with: { node-version: 20, cache: npm }
+  with: { node-version: 22, cache: npm }
 
 # Playwright browsers: cache separately
 - name: Cache Playwright browsers
@@ -168,7 +170,7 @@ merge-reports:
   steps:
     - uses: actions/checkout@v4
     - uses: actions/setup-node@v4
-      with: { node-version: 20, cache: npm }
+      with: { node-version: 22, cache: npm }
     - run: npm ci
     - uses: actions/download-artifact@v4
       with: { pattern: 'test-results-*', path: all-results }
@@ -204,12 +206,12 @@ cache:
 
 lint:
   stage: validate
-  image: node:20-alpine
+  image: node:22-alpine
   script: [npm ci --prefer-offline, npm run lint, npm run type-check]
 
 unit-tests:
   stage: test
-  image: node:20-alpine
+  image: node:22-alpine
   script: [npm ci --prefer-offline, 'npm run test:ci -- --coverage']
   coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
   artifacts:
@@ -221,7 +223,7 @@ unit-tests:
 
 e2e-tests:
   stage: e2e
-  image: mcr.microsoft.com/playwright:v1.49.0-noble
+  image: mcr.microsoft.com/playwright:v1.59.1-noble
   parallel: 4  # GitLab provides CI_NODE_INDEX and CI_NODE_TOTAL automatically
   script:
     - npm ci --prefer-offline

@@ -233,7 +233,7 @@ Language-agnostic HTTP stub server. Runs as a standalone process or Docker conta
 ```yaml
 # In docker-compose.test.yml
 wiremock:
-  image: wiremock/wiremock:3.9.1
+  image: wiremock/wiremock:3.13.2
   ports:
     - "8080:8080"
   volumes:
@@ -292,13 +292,13 @@ let elasticsearch: StartedTestContainer;
 export async function startContainers() {
   // Start all containers in parallel
   [postgres, redis, elasticsearch] = await Promise.all([
-    new PostgreSqlContainer("postgres:16-alpine")
+    new PostgreSqlContainer("postgres:17-alpine")
       .withDatabase("testdb")
       .withUsername("test")
       .withPassword("test")
       .start(),
 
-    new RedisContainer("redis:7-alpine").start(),
+    new RedisContainer("redis:8-alpine").start(),
 
     new GenericContainer("elasticsearch:8.12.0")
       .withEnvironment({
@@ -335,7 +335,7 @@ Simulate network failures, latency, and bandwidth constraints. Sits between your
 ```yaml
 # In docker-compose.test.yml
 toxiproxy:
-  image: ghcr.io/shopify/toxiproxy:2.9.0
+  image: ghcr.io/shopify/toxiproxy:2.12.0
   ports:
     - "8474:8474"   # API
     - "15432:15432"  # Proxied PostgreSQL

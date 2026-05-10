@@ -61,15 +61,18 @@ npm i -D @pact-foundation/pact
 
 The consumer defines what it needs from the provider. This generates a pact file (JSON contract).
 
+> **Pact-JS v16 (Oct 2025) renamed `PactV4` → `Pact` and `MatchersV3` → `Matchers`.** The old names were removed in v16. If you copy from older blog posts/examples, update the imports. The API behavior is unchanged.
+
 ```typescript
 // consumer/tests/contract/userApi.pact.spec.ts
-import { PactV4, MatchersV3 } from "@pact-foundation/pact";
+// Requires @pact-foundation/pact >= 16
+import { Pact, Matchers } from "@pact-foundation/pact";
 import path from "path";
 import { UserApiClient } from "../../src/userApiClient";
 
-const { like, eachLike, integer, string, regex } = MatchersV3;
+const { like, eachLike, integer, string, regex } = Matchers;
 
-const provider = new PactV4({
+const provider = new Pact({
   consumer: "frontend-app",
   provider: "user-service",
   dir: path.resolve(__dirname, "../../../pacts"),
@@ -239,7 +242,7 @@ services:
         condition: service_healthy
 
   postgres:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     environment:
       POSTGRES_DB: pact
       POSTGRES_USER: pact
@@ -346,7 +349,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:16-alpine
+        image: postgres:17-alpine
         env: { POSTGRES_DB: testdb, POSTGRES_USER: test, POSTGRES_PASSWORD: test }
         ports: ['5432:5432']
         options: >-
