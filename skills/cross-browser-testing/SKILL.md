@@ -121,9 +121,15 @@ export default defineConfig({
 
     // P2: Tablets
     { name: 'ipad', use: { ...devices['iPad Pro 11'] } },
+
+    // Optional: real-Chrome rendering parity via the new Chromium headless mode (Playwright 1.49+)
+    // Closer to production Chrome (extensions, codecs, fingerprinting) than headless-shell.
+    { name: 'chromium-new-headless', use: { ...devices['Desktop Chrome'], channel: 'chromium' } },
   ],
 });
 ```
+
+**Playwright 1.59+ adds `page.screencast()`** — capture annotated video of cross-browser test runs. Useful when a matrix failure needs human review across browsers; pair with `--debug=cli` for agent-driven re-runs.
 
 ### Browser Channels
 
@@ -175,7 +181,7 @@ export default defineConfig({
         os_version: '11',
         'browserstack.username': process.env.BROWSERSTACK_USERNAME,
         'browserstack.accessKey': process.env.BROWSERSTACK_ACCESS_KEY,
-        'browserstack.playwrightVersion': '1.49.0',
+        'browserstack.playwrightVersion': '1.59.1', // keep aligned with the version in package.json
         build: `cross-browser-${process.env.CI_BUILD_NUMBER}`,
         name: 'Cross-browser test suite',
       }))}`,
@@ -245,13 +251,14 @@ Real issues that surface in cross-browser testing, with detection patterns and f
 ### CSS Grid and Flexbox
 
 ```css
-/* Issue: Safari does not support gap on flexbox in older versions */
+/* Historical: Safari < 14.1 ignored `gap` on flexbox. Universally supported now —
+   keep the fallback only if you support Safari 14 or older as a documented matrix entry. */
 .flex-container {
   display: flex;
-  gap: 16px; /* Safari < 14.1 ignores this */
+  gap: 16px;
 }
 
-/* Fix: use margin fallback */
+/* Legacy fallback for very old Safari */
 .flex-container > * + * {
   margin-left: 16px;
 }
@@ -347,6 +354,15 @@ test('copy button copies text to clipboard', async ({ page, context, browserName
   background-color: rgba(0, 0, 0, 0.5); /* Fallback */
 }
 ```
+
+### Modern Cross-Browser Gotchas (2026)
+
+The classic Safari laggard list is mostly resolved. Today's real divergences:
+
+- **Partitioned cookies / partitioned storage:** Chrome's CHIPS, Safari's ITP, and Firefox's State Partitioning each behave differently for embedded contexts. Test third-party cookies in iframes per browser, not just per "browser supports cookies."
+- **`:has()` selector edge cases:** Universal support but performance and specificity edge cases differ. Visual-regression a `:has()`-heavy page across all three engines.
+- **View Transitions API:** Chrome and Edge ship same-document and cross-document; Safari has partial support; Firefox is behind. Treat as progressive enhancement and verify the fallback path in Firefox/older Safari.
+- **WebDriver BiDi:** Production-ready in Selenium 4, partially supported in Playwright. For new cross-runner projects, BiDi is the convergence point.
 
 ### Dialog Element
 

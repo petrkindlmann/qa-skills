@@ -111,29 +111,50 @@ describe('Forward migrations', () => {
 
 ### Rollback Testing
 
+Prisma Migrate has no first-class `rollback` command. Production rollbacks happen by writing a *new* forward migration that reverts the previous one. For tests, the supported pattern is `prisma migrate resolve` to mark a migration as rolled back, plus a fresh DB reset between tests.
+
 ```typescript
+import { execSync } from 'node:child_process';
+
 describe('Migration rollback', () => {
-  it('should roll back the latest migration without data loss', async () => {
-    // Apply all migrations
+  it('the down migration cleanly reverses the latest up', async () => {
+    // Apply all migrations to a fresh DB
     execSync('npx prisma migrate deploy', { env: migrationEnv });
 
-    // Insert test data
-    await pool.query(`INSERT INTO users (id, email, name) VALUES ($1, $2, $3)`,
-      ['550e8400-e29b-41d4-a716-446655440000', 'alice@example.com', 'Alice']);
+    // Capture pre-rollback state and insert test data
+    await pool.query(
+      `INSERT INTO users (id, email, name) VALUES ($1, $2, $3)`,
+      ['550e8400-e29b-41d4-a716-446655440000', 'alice@example.com', 'Alice'],
+    );
 
-    // Roll back the latest migration
-    execSync('npx prisma migrate rollback --steps 1', { env: migrationEnv });
+    // Get the latest applied migration name (Prisma stores in _prisma_migrations)
+    const { rows } = await pool.query(
+      `SELECT migration_name FROM _prisma_migrations
+         WHERE finished_at IS NOT NULL
+         ORDER BY finished_at DESC LIMIT 1`,
+    );
+    const latest = rows[0].migration_name;
 
-    // Verify the rollback succeeded: table or column should be gone
-    // (depends on what the latest migration added)
+    // Mark the migration as rolled back in Prisma's metadata table
+    execSync(`npx prisma migrate resolve --rolled-back ${latest}`, { env: migrationEnv });
+
+    // Apply the inverse SQL (you maintain a parallel down.sql per migration, or reset)
+    // Pattern A: hand-written down.sql checked in alongside each migration directory
+    execSync(`psql $DATABASE_URL -f prisma/migrations/${latest}/down.sql`, { env: migrationEnv });
+
+    // Verify the rollback succeeded: column/table removed by the down migration is gone
   });
 
-  it('should re-apply migration after rollback', async () => {
+  it('can re-apply after rollback (idempotent up)', async () => {
     execSync('npx prisma migrate deploy', { env: migrationEnv });
-    // Verify schema is correct again
+    // Verify schema matches the expected post-up state
   });
 });
 ```
+
+For Drizzle (v1.0+): `drizzle-kit generate` + `drizzle-kit migrate`, plus `--ignore-conflicts` (SQLite) for explicit migration-conflict detection. Pin `drizzle-kit` in CI — v1.0-rc.1 (April 2026) shipped breaking changes to the `casing` API and removed RQB v1 `._query` for Postgres.
+
+For TypeORM and Sequelize: both ship native `migration:revert` commands and the rollback test pattern above translates directly — replace `prisma migrate resolve` + manual down.sql with the framework's revert command.
 
 ### Data Preservation During Migration
 
@@ -452,7 +473,27 @@ Seed realistic data volume (10K+ rows), then measure query execution time with `
 
 ## Docker-Based Test Database
 
-Use `docker-compose.test.yml` with `postgres:16-alpine`, `tmpfs` for RAM-backed storage (speed), and a healthcheck on `pg_isready`. Map to a non-default port (e.g., 5433) to avoid conflicts with local Postgres.
+**Preferred (2026): Testcontainers.** `testcontainers-node` v11.14+ (April 2026) is the lower-friction default — programmatic container lifecycle, auto-cleanup, parallel execution for distinct UIDs. Hand-rolled compose still works, but Testcontainers removes the docker-compose file and port-conflict bookkeeping:
+
+```typescript
+import { PostgreSqlContainer } from '@testcontainers/postgresql';
+
+let pg: Awaited<ReturnType<PostgreSqlContainer['start']>>;
+
+beforeAll(async () => {
+  pg = await new PostgreSqlContainer('postgres:17-alpine')
+    .withDatabase('test')
+    .withTmpFs({ '/var/lib/postgresql/data': 'rw' })
+    .start();
+  process.env.DATABASE_URL = pg.getConnectionUri();
+});
+
+afterAll(async () => {
+  await pg.stop();
+});
+```
+
+**Hand-rolled compose (still valid):** `docker-compose.test.yml` with `postgres:17-alpine`, `tmpfs` for RAM-backed storage (speed), and a healthcheck on `pg_isready`. Map to a non-default port (e.g., 5433) to avoid conflicts with local Postgres. Match the major version to production — Postgres 17 is current; bump from 16 unless production is pinned.
 
 Chain scripts in `package.json`: `test:db:up` (docker compose up), `test:db:migrate` (prisma migrate deploy), `test:db:seed` (prisma db seed), `test:db` (all three + jest), `test:db:down` (docker compose down -v).
 

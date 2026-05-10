@@ -66,8 +66,11 @@ Browser DevTools and axe-core extensions are useful for development, but they ar
 ### Setup
 
 ```bash
+# axe-core 4.11.x or later — current is 4.11.4 (Apr 2026)
 npm install --save-dev @axe-core/playwright
 ```
+
+> **axe-core 4.11+ caveat:** Several best-practice rules (`focus-order-semantics`, `region`, `skip-link`, `table-duplicate-name`) are now also tagged `RGAAv4` (the French national standard). If you filter by tag and don't intend to test against RGAA, exclude it explicitly: `withTags(['wcag2a', 'wcag2aa', 'wcag22aa']).disableRules([])` is fine, but `.withTags(['best-practice'])` will pull in RGAA-specific rules.
 
 ### Reusable Helper
 
@@ -423,12 +426,15 @@ test('form has correct accessible structure', async ({ page }) => {
 |---------------|--------|-------------------|------------|
 | **ADA** | USA | AA (court precedent) | Lawsuits (private right of action) |
 | **Section 508** | USA (federal) | WCAG 2.0 AA | Federal procurement requirement |
-| **EAA** | EU | EN 301 549 (WCAG 2.1 AA) | Member state enforcement (June 2025) |
+| **EAA** | EU | EN 301 549 (WCAG 2.1 AA) | **In force since 28 June 2025.** Member states actively enforcing; private cause of action varies by country (DE, FR, IE among the most active). EN 301 549 is expected to align with WCAG 2.2 in its next revision. |
 | **AODA** | Ontario, Canada | WCAG 2.0 AA | Fines up to $100K/day |
 | **EN 301 549** | EU | WCAG 2.1 AA | Public procurement requirement |
 | **Equality Act 2010** | UK | WCAG 2.1 AA (guidance) | Lawsuits |
+| **ISO/IEC 40500:2025** | International | Equivalent to WCAG 2.2 (Oct 2023) | Useful for procurement/RFP language; freely available from ISO |
 
-**Key takeaway:** If your product serves users in the US or EU, WCAG 2.1 AA is the practical minimum. WCAG 2.2 AA is recommended for new development.
+**Key takeaway:** If your product serves users in the US or EU, **WCAG 2.2 AA is the practical target for new development** — the EAA is in force, EN 301 549 is expected to update to 2.2, and ISO/IEC 40500:2025 codifies WCAG 2.2 as an international standard. WCAG 2.1 AA is the legacy minimum where 2.2 cannot be reached immediately.
+
+**WCAG 3 status:** W3C published updated WCAG 3 drafts in March 2026 (renamed "Foundational Requirements" → "Core Requirements," "Outcomes" → "Requirements," added a Best Practices section). Still a working draft; a final standard is years away. Plan for WCAG 2.2 today; track WCAG 3 but do not test against it yet.
 
 **Evidence to collect for audits:** Automated scan results per page, manual testing checklists with tester/date, screen reader test results with AT versions, accessibility statement, VPAT for enterprise sales, remediation plan for known issues.
 

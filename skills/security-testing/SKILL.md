@@ -48,17 +48,28 @@ Test application security systematically against known vulnerability classes wit
 
 ---
 
-## OWASP Top 10 (2021) Testing Checklist
+## OWASP Top 10 (2025) Testing Checklist
+
+The 2025 list re-orders categories and introduces two new ones. Major changes from 2021:
+
+- **A03 Software Supply Chain Failures** is new (replaces "Vulnerable and Outdated Components"; broadens to provenance, build pipeline trust, SBOM).
+- **A10 Mishandling of Exceptional Conditions** is new. SSRF is no longer standalone — its tests now sit under A01 (access control) and A06 (insecure design).
+- **A02 Security Misconfiguration** moved up from A05.
+- **A07 Authentication Failures** — name shortened (drops "Identification and").
+- **A09 Security Logging and Alerting Failures** — name updated (was "Logging and Monitoring").
+
+Source: https://owasp.org/Top10/2025/
 
 ### A01: Broken Access Control
 
-The #1 vulnerability. Users can act outside their intended permissions.
+The #1 vulnerability. Users can act outside their intended permissions. SSRF (server-side request forgery) is now treated as an access-control failure when the server is induced to access internal resources on behalf of an attacker.
 
 **What to test:**
 - Insecure Direct Object References (IDOR): change resource IDs in URLs/API calls to access other users' data
 - Missing function-level access control: access admin endpoints as a regular user
 - Path traversal: `../../etc/passwd` in file parameters
 - CORS misconfiguration: can a malicious origin make authenticated requests?
+- SSRF: user-supplied URLs reaching internal networks, cloud metadata endpoints, or `file://` schemes
 
 ```typescript
 // IDOR test: user A should not access user B's order
@@ -89,9 +100,112 @@ test('should reject cross-origin requests from untrusted origins', async ({ requ
   expect(corsHeader).not.toBe('*');
   expect(corsHeader).not.toBe('https://evil-site.example.com');
 });
+
+// SSRF: prevent internal network access via user-supplied URLs
+const ssrfPayloads = [
+  'http://169.254.169.254/latest/meta-data/',  // AWS metadata
+  'http://metadata.google.internal/',           // GCP metadata
+  'http://localhost:6379/',                     // Redis
+  'http://127.0.0.1:3000/api/admin',           // Loopback
+  'file:///etc/passwd',                         // Local file
+  'gopher://127.0.0.1:25/',                     // Protocol smuggling
+];
+
+for (const payload of ssrfPayloads) {
+  test(`should block SSRF attempt: ${new URL(payload).hostname || payload}`, async ({ request }) => {
+    const response = await request.post('/api/webhook/test', {
+      data: { callbackUrl: payload },
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    expect(response.status()).toBeOneOf([400, 403, 422]);
+  });
+}
 ```
 
-### A02: Cryptographic Failures
+### A02: Security Misconfiguration
+
+Default credentials, unnecessary features enabled, overly verbose errors. Promoted from A05 in 2021 — misconfigurations remain the easiest way for attackers to walk in.
+
+**What to test:**
+- Debug/stack traces disabled in production
+- Default credentials changed
+- Unnecessary HTTP methods disabled
+- Directory listing disabled
+- Admin panels not publicly accessible
+- Cloud storage buckets not publicly readable/writable
+
+```typescript
+test('should not expose stack traces in production errors', async ({ request }) => {
+  const response = await request.get('/api/nonexistent-endpoint');
+  const body = await response.text();
+  expect(body).not.toContain('at Object.');
+  expect(body).not.toContain('node_modules');
+  expect(body).not.toMatch(/\.ts:\d+:\d+/);
+  expect(body).not.toMatch(/\.js:\d+:\d+/);
+});
+
+test('should disable TRACE method', async ({ request }) => {
+  const response = await request.fetch('/api/health', { method: 'TRACE' });
+  expect(response.status()).toBe(405);
+});
+```
+
+### A03: Software Supply Chain Failures
+
+New in 2025. Goes beyond "outdated dependencies" to cover provenance, build pipeline integrity, and the supply chain end-to-end.
+
+**What to test:**
+- Lockfile integrity: `package-lock.json` / `pnpm-lock.yaml` / `requirements.txt` is committed and CI installs from it (`npm ci`, not `npm install`)
+- SBOM generated and stored as a build artifact (Syft, `actions/dependency-review-action`)
+- Provenance attestation produced for built artifacts (SLSA v1.0 levels 2/3, signed with `cosign` / Sigstore)
+- Dependency review on every PR (blocks new high-severity vulnerabilities entering the lockfile)
+- CI/CD pipeline secrets not exposed to forks or untrusted code paths
+- Self-hosted runners not running untrusted PR code without job-level isolation
+
+```yaml
+# GitHub Actions: dependency review + SBOM generation + provenance signing
+supply-chain:
+  runs-on: ubuntu-latest
+  permissions:
+    contents: read
+    id-token: write   # for cosign keyless signing
+    attestations: write
+  steps:
+    - uses: actions/checkout@v5
+    - uses: actions/dependency-review-action@v4
+      with:
+        fail-on-severity: high
+        comment-summary-in-pr: on-failure
+
+    - uses: anchore/sbom-action@v0
+      with:
+        format: cyclonedx-json
+        output-file: sbom.cdx.json
+
+    - uses: actions/attest-build-provenance@v2
+      with:
+        subject-path: dist/
+
+    - uses: actions/upload-artifact@v5
+      with: { name: sbom, path: sbom.cdx.json }
+```
+
+```typescript
+// Lockfile drift check (Node example)
+import { execSync } from 'node:child_process';
+test('lockfile is up to date with package.json', () => {
+  // npm ci fails when package.json and lockfile disagree — perfect for CI
+  expect(() => execSync('npm ci --dry-run', { stdio: 'pipe' })).not.toThrow();
+});
+```
+
+Tooling — pick the layer that fits:
+- **Vulnerability scanners:** OSV-Scanner, Trivy, Grype, Snyk, GitHub Dependabot
+- **SBOM generation:** Syft, CycloneDX CLI, `actions/dependency-review-action`
+- **Provenance/signing:** cosign, Sigstore, SLSA reference generators
+- **Policy:** OpenSSF Scorecard for repo hygiene; Semgrep Supply Chain Pro for transitive policy
+
+### A04: Cryptographic Failures
 
 Sensitive data exposed due to weak or missing encryption.
 
@@ -120,7 +234,7 @@ test('should include security headers', async ({ request }) => {
 });
 ```
 
-### A03: Injection
+### A05: Injection
 
 Untrusted data sent to an interpreter as part of a command or query.
 
@@ -179,52 +293,19 @@ test('should reject POST without CSRF token', async ({ request }) => {
 });
 ```
 
-### A04: Insecure Design
+### A06: Insecure Design
 
-Flawed architecture that cannot be fixed by implementation alone.
+Flawed architecture that cannot be fixed by implementation alone. Includes design-level vectors for SSRF (URL-accepting features without an allow-list), credential stuffing without rate limits, and business-logic abuse.
 
-**What to test:** Rate limiting on auth endpoints (fire 15 concurrent login attempts, expect 429), business logic abuse (negative quantities, coupon stacking), missing account lockout after failed attempts.
+**What to test:** Rate limiting on auth endpoints (fire 15 concurrent login attempts, expect 429), business logic abuse (negative quantities, coupon stacking), missing account lockout after failed attempts, allow-list architecture for any feature that fetches a user-supplied URL.
 
-### A05: Security Misconfiguration
-
-Default credentials, unnecessary features enabled, overly verbose errors.
-
-**What to test:**
-- Debug/stack traces disabled in production
-- Default credentials changed
-- Unnecessary HTTP methods disabled
-- Directory listing disabled
-- Admin panels not publicly accessible
-
-```typescript
-test('should not expose stack traces in production errors', async ({ request }) => {
-  const response = await request.get('/api/nonexistent-endpoint');
-  const body = await response.text();
-  expect(body).not.toContain('at Object.');
-  expect(body).not.toContain('node_modules');
-  expect(body).not.toMatch(/\.ts:\d+:\d+/);
-  expect(body).not.toMatch(/\.js:\d+:\d+/);
-});
-
-test('should disable TRACE method', async ({ request }) => {
-  const response = await request.fetch('/api/health', { method: 'TRACE' });
-  expect(response.status()).toBe(405);
-});
-```
-
-### A06: Vulnerable and Outdated Components
-
-Known vulnerabilities in third-party dependencies.
-
-**Automated scanning (see CI Integration section below).**
-
-### A07: Identification and Authentication Failures
+### A07: Authentication Failures
 
 Broken authentication, weak passwords, credential stuffing.
 
 **See Auth Testing Patterns section below.**
 
-### A08: Software and Data Integrity Failures
+### A08: Software or Data Integrity Failures
 
 Unsigned updates, insecure deserialization, untrusted CI/CD pipelines.
 
@@ -242,38 +323,59 @@ test('should include Content-Security-Policy', async ({ request }) => {
 });
 ```
 
-### A09: Security Logging and Monitoring Failures
+### A09: Security Logging and Alerting Failures
 
-Insufficient logging of security events.
+Insufficient logging *and* missing alerts on the events that are logged. Renamed in 2025 to emphasize that logs without alerts are evidence after the fact, not detection.
 
 **What to test:**
-- Failed login attempts are logged
-- Admin actions are audit-logged
+- Failed login attempts are logged AND trigger an alert when above threshold
+- Admin actions are audit-logged AND alert on out-of-hours admin events
 - Logs do not contain sensitive data (passwords, tokens, PII)
+- Alert pipeline is itself monitored (alerts about absent alerts)
 
-### A10: Server-Side Request Forgery (SSRF)
+### A10: Mishandling of Exceptional Conditions
 
-Server makes requests to attacker-controlled URLs.
+New in 2025. Errors and unexpected states are an attack surface — fail-open defaults, uncaught exceptions leaking internals, race conditions in error paths, and security checks that get skipped when "something went wrong."
+
+**What to test:**
+- Error responses do not leak stack traces, framework names, or DB schema
+- Auth failures fail closed (deny by default), not open
+- Timeouts and partial failures do not bypass authorization checks
+- Resource cleanup happens on every error path (locks released, transactions rolled back)
+- Fuzzing: send malformed payloads to every endpoint and verify responses stay within the documented error contract
 
 ```typescript
-// SSRF: prevent internal network access via user-supplied URLs
-const ssrfPayloads = [
-  'http://169.254.169.254/latest/meta-data/',  // AWS metadata
-  'http://localhost:6379/',                      // Redis
-  'http://127.0.0.1:3000/api/admin',            // Loopback
-  'file:///etc/passwd',                          // Local file
-];
+import { test, expect } from '@playwright/test';
 
-for (const payload of ssrfPayloads) {
-  test(`should block SSRF attempt: ${new URL(payload).hostname}`, async ({ request }) => {
-    const response = await request.post('/api/webhook/test', {
-      data: { callbackUrl: payload },
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    expect(response.status()).toBeOneOf([400, 403, 422]);
+test('error responses fail closed (no auth bypass on 500)', async ({ request }) => {
+  // Trigger a server-side error and confirm the route still requires auth
+  const response = await request.post('/api/admin/trigger-error', {
+    headers: { /* no Authorization header */ },
+    data: { causeError: true },
   });
-}
+  // Must NOT be 500 with admin-action side effects — must be 401/403
+  expect(response.status()).toBeOneOf([401, 403]);
+});
+
+test('error response does not leak internals', async ({ request }) => {
+  const response = await request.post('/api/process', { data: { invalid: '  ' } });
+  const body = await response.text();
+  for (const leak of ['Traceback', 'at Object.', 'node_modules', 'pg:', 'mysql:', 'PSQLException']) {
+    expect(body, `Leaked "${leak}" in error body`).not.toContain(leak);
+  }
+});
+
+test('partial failures do not skip authorization', async ({ request }) => {
+  // Inject a downstream failure (e.g. via a test-only header your service honors in non-prod)
+  const response = await request.post('/api/transfer', {
+    headers: { Authorization: `Bearer ${userAToken}`, 'X-Test-Inject-Downstream-Failure': 'auth-cache' },
+    data: { fromAccount: 'B-account-not-owned-by-A', amount: 1 },
+  });
+  expect(response.status()).toBe(403); // not 500 with the transfer queued
+});
 ```
+
+For broad coverage, pair manual error-path tests with property-based testing or fuzzing (`fast-check`, `schemathesis`, ZAP active scan with `-a`).
 
 ---
 
@@ -281,26 +383,30 @@ for (const payload of ssrfPayloads) {
 
 ### OWASP ZAP
 
+ZAP 2.17.0 (Dec 2025) reduced duplicate-alert noise; weekly Docker tags now follow `w2026-MM-DD`. Pin the GitHub Action to the current major or by SHA, and treat the Docker image as `ghcr.io/zaproxy/zaproxy:stable` (the default).
+
 ```yaml
 # GitHub Actions: ZAP baseline scan against staging
 security-scan:
   runs-on: ubuntu-latest
   steps:
     - name: ZAP Baseline Scan
-      uses: zaproxy/action-baseline@v0.14.0
+      uses: zaproxy/action-baseline@v0.15.0
       with:
         target: 'https://staging.example.com'
         rules_file_name: '.zap/rules.tsv'
         cmd_options: '-a'
     - name: Upload ZAP Report
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: zap-report
         path: report_html.html
 ```
 
 For API scanning, use `zap-api-scan.py` with your OpenAPI spec. For full scans, use `zap-full-scan.py` via Docker (`ghcr.io/zaproxy/zaproxy:stable`).
+
+**ZAP MCP Server (April 2026):** Lets coding agents (Claude Code, Codex, Cursor) drive scans during development — useful for "scan the diff" workflows and AI-augmented security review. Pair with `ai-qa-review` for agent-driven triage. **OWASP PTK** is now bundled with ZAP-launched browsers; PTK findings surface as ZAP alerts, giving one-tool DAST + SAST + SCA flow.
 
 ### Dependency Scanning
 
