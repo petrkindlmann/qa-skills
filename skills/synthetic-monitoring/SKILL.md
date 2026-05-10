@@ -198,11 +198,16 @@ Account requirements:
 
 | Platform | Strengths | When to Use |
 |----------|-----------|-------------|
-| Checkly | Playwright-native, code-first, Git integration | Teams already using Playwright for E2E |
+| Checkly | Playwright-native, code-first, Git integration; **Rocky** AI agent for monitor authoring/triage (Apr 2026); MCP server | Teams already using Playwright for E2E |
 | Datadog Synthetic | Deep APM integration, browser and API tests | Teams on the Datadog platform |
-| Grafana Synthetic Monitoring | Open source, integrates with Grafana dashboards | Teams using Grafana stack |
+| Grafana Synthetic Monitoring | Open source, integrates with Grafana dashboards; pairs with k6 1.0+ as a probe runtime | Teams using Grafana stack |
+| AWS CloudWatch Synthetics | Blueprints (heartbeat, API, broken-link, visual diff); Python or Node Puppeteer canaries | Teams already on AWS |
 | New Relic Synthetics | Full-stack observability integration | Teams on the New Relic platform |
-| Custom (Playwright + cron) | Full control, no vendor lock-in | Budget-constrained or custom requirements |
+| Better Stack (formerly Better Uptime) | Lightweight uptime + status pages + on-call | SMB-friendly, fast setup |
+| Uptime Kuma | OSS, self-hosted, lightweight | Self-hosting requirement, small surface area |
+| Custom (Playwright / k6 / Puppeteer + cron) | Full control, no vendor lock-in | Budget-constrained or custom requirements |
+
+> Probes can be authored in Playwright (TS/JS), Puppeteer, k6 (JS — k6 1.0+ is now first-class for synthetic), or Python (CloudWatch Synthetics, Checkly). Pick what your team already maintains. Pingdom is in maintenance mode under SolarWinds — avoid for new setups.
 
 ### Custom implementation: Playwright + GitHub Actions
 
@@ -222,7 +227,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22 # current LTS as of May 2026 — bump as Node LTS rolls forward
       - run: npm ci
       - run: npx playwright install chromium --with-deps
 
@@ -254,7 +259,9 @@ export default defineConfig({
   checks: {
     frequency: 5,          // Every 5 minutes
     locations: ['us-east-1', 'eu-west-1', 'ap-southeast-1'],
-    runtimeId: '2024.02',
+    // Use the latest stable Checkly runtime — see https://www.checklyhq.com/docs/runtimes/
+    // (e.g. 'next' for the rolling stable; pin a dated runtime for reproducibility)
+    runtimeId: '2025.04',
     browserChecks: {
       testMatch: 'probes/**/*.check.ts',
     },
@@ -476,6 +483,8 @@ Probes that only check "page loads and returns 200" miss broken functionality hi
 An alert fires at 3 AM. The on-call engineer sees "Login probe failing" but has no idea what to check first, what the probe actually does, or how to distinguish a real outage from a probe issue.
 
 **Fix:** Every probe has a linked runbook. The runbook includes: what the probe tests, what to check first (service status, recent deploys, third-party status), how to verify manually, and who to escalate to.
+
+**Emerging pattern (2026): agent-driven first response.** Tools like Checkly Rocky and Honeycomb Agent Skills (open-sourced March 2026) read probe context + linked runbook + telemetry and post a candidate diagnosis to chat. Treat this as triage assist — it shortens MTTR for routine failures, but it does not replace on-call judgment for novel incidents.
 
 ---
 

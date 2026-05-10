@@ -25,7 +25,7 @@ Production is the richest source of test design input. Every error log, every sl
 Check `.agents/qa-project-context.md` first. If it exists, use it as context and skip questions already answered there.
 
 **Observability stack:**
-- What APM/tracing tool is in place? (Datadog, New Relic, Honeycomb, Jaeger, Grafana Tempo)
+- What APM/tracing tool is in place? (Datadog, New Relic, Honeycomb, Splunk Observability/SignalFx, ServiceNow Cloud Observability — formerly Lightstep, Dash0, Jaeger, Grafana Tempo, OpenTelemetry-native)
 - Is OpenTelemetry instrumented in the application? Which services?
 - What logging infrastructure exists? (ELK, Loki, CloudWatch, Datadog Logs)
 - Are structured logs used, or free-form text?
@@ -37,7 +37,7 @@ Check `.agents/qa-project-context.md` first. If it exists, use it as context and
 - Are traces correlated with logs and metrics?
 
 **Production error tracking:**
-- What error tracking tool is used? (Sentry, Bugsnag, Rollbar, Datadog Error Tracking)
+- What error tracking tool is used? (Sentry, Bugsnag — now SmartBear Insight Hub, Rollbar, Datadog Error Tracking, LaunchDarkly Observability — incl. session replay, formerly Highlight.io)
 - How are production errors triaged? (Automated, manual, ignored)
 - Is there a process for turning production errors into test cases?
 - What was the last production error that a test should have caught?
@@ -75,15 +75,19 @@ The complete cycle: production error detected, error analyzed, test written, tes
 
 Instrument your test runner to emit traces that correlate test execution with application behavior.
 
+> **Pin `@opentelemetry/semantic-conventions`** and treat sem-conv version bumps as breaking. v1.41.0 (April 2026) shipped GenAI breaking changes and a `process.executable` entity split; `graphql.document` moved from Recommended to Opt-In. Trace assertions written against attribute names will silently drift if you don't pin.
+>
+> **Do not introduce new OpenTracing shims.** The OpenTelemetry spec deprecated OpenTracing compatibility requirements in March 2026 — new instrumentation should target native OTel APIs and OTLP.
+
 ```typescript
 // test-setup/tracing.ts
 import { NodeSDK } from '@opentelemetry/sdk-node';
 import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
-import { Resource } from '@opentelemetry/resources';
+import { resourceFromAttributes } from '@opentelemetry/resources'; // helper preferred over `new Resource(...)` on @opentelemetry/sdk-node >= 0.50
 import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
 
 const sdk = new NodeSDK({
-  resource: new Resource({
+  resource: resourceFromAttributes({
     [ATTR_SERVICE_NAME]: 'integration-tests',
     'test.suite': process.env.TEST_SUITE_NAME ?? 'unknown',
     'test.run_id': process.env.CI_RUN_ID ?? `local-${Date.now()}`,
@@ -202,6 +206,8 @@ test('checkout flow traverses expected services', async ({ request }) => {
   ], collector);
 });
 ```
+
+For declarative trace-based assertions (YAML/UI-driven instead of hand-rolled span queries), the OSS **Tracetest** project (`kubeshop/tracetest`) is still active. Note: **Tracetest's commercial Cloud offering was end-of-lifed October 2024** — only the OSS project is supported. Do not recommend or set up Tracetest Cloud; users will hit a dead product.
 
 ---
 

@@ -24,7 +24,7 @@ Production is the only environment that is production. Every other environment i
 Check `.agents/qa-project-context.md` first. If it exists, use it as context and skip questions already answered there.
 
 **Feature flag system:**
-- Do you have a feature flag platform? (LaunchDarkly, Unleash, Flagsmith, Split, custom, none)
+- Do you have a feature flag platform? (LaunchDarkly, Statsig — now part of OpenAI, GrowthBook, Unleash, Flagsmith, Harness FME — formerly Split, custom, none)
 - How are flags managed? (Dashboard, config file, environment variables)
 - Can flags target specific users, percentages, or segments?
 - How many active flags exist today? Is there a cleanup process?
@@ -150,6 +150,10 @@ for (const combo of criticalCombinations) {
 ---
 
 ## Progressive Rollout
+
+> **Vendor-native canary analysis.** Before hand-rolling the rollout-policy YAML below, check whether your platform already does it: **LaunchDarkly Guarded Rollouts** (auto-monitored progressive rollouts with metric-based auto-rollback), **Statsig Auto-tune**, **Argo Rollouts AnalysisRun**, **Flagger**, **Harness Continuous Verification**. If you have one, prefer it — the integration with your metrics and rollback mechanics is cheaper than maintaining a custom analysis loop.
+>
+> **AI feature rollout** is its own pattern: model variant + prompt as a flag value, with cost guardrails and a kill switch. **LaunchDarkly AI Configs** is the documented path for shipping LLM features behind progressive rollout. See `release-readiness` for the full pattern.
 
 ### Canary stages: 1% to 100%
 
