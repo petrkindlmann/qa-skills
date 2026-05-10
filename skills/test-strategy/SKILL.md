@@ -289,10 +289,19 @@ Beyond license fees, account for:
 | React SaaS | Vitest | Testing Library + MSW | Playwright | Supertest | Playwright screenshots |
 | Next.js | Vitest | Testing Library + MSW | Playwright | Supertest | Playwright screenshots |
 | Python API | pytest | pytest + testcontainers | pytest + requests | pytest | N/A |
-| Mobile (RN) | Jest | Detox | Detox/Appium | Supertest | Appium screenshots |
+| Mobile (RN) | Jest | Detox / Maestro | Detox/Appium 3.x | Supertest | Appium screenshots |
 | Vue SaaS | Vitest | Testing Library + MSW | Playwright | Supertest | Playwright screenshots |
+| AI/LLM features | Vitest | DeepEval / TruLens | Playwright + Promptfoo evals | Promptfoo / Ragas | N/A |
 
-These are starting points, not mandates. Document why you chose or deviated.
+These are starting points, not mandates. Document why you chose or deviated. For AI/LLM features, also add explicit risk testing for hallucinations, bias, prompt injection, and privacy — see `ai-system-testing` and `compliance-testing` (EU AI Act).
+
+#### Reference Frameworks
+
+- **CTAL-AT v2.0** (ISTQB, released 2026-05-06) — first major Advanced Agile Tester syllabus update since 2014. Directly covers test strategy and approach challenges, whole-team approach, shift-left, end-to-end testing, test smells, exploratory + assisted testing. Replaces CTFL-AT.
+- **CT-GenAI v1.1** (ISTQB, released 2026-04-27) — formalizes LLM-powered test infrastructure as a discipline. Defines AI-specific risk classes (hallucinations, reasoning errors, bias, privacy, AI regulations).
+- **CTFL v4.0** (ISTQB) — foundational vocabulary; useful when aligning across teams that come from different testing traditions.
+- **HTSM v6.3** (Bach, last updated Dec 2024) — Heuristic Test Strategy Model; emphasizes state-based testing and boundary heuristics. Lightweight alternative to ISTQB framing.
+- **World Quality Report 2025-26** (Capgemini, 17th edition, "Adapting to Emerging Worlds") — strategy data points: 43% of orgs experimenting with Gen AI in QA, 15% scaled. Useful for benchmarking your AI-adoption stage during strategy planning.
 
 ---
 

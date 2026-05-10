@@ -151,6 +151,11 @@ Estimate effort for each test type using historical data. If no historical data 
 | Exploratory session (charter) | 15 min | 45-90 min per session | N/A |
 | Visual regression test | 30-60 min | 10-30 sec | 20 min (baseline updates) |
 | Performance test (k6 script) | 2-4 hours | 5-30 min per run | 30 min |
+| Prompt regression / LLM eval | 30-60 min per case | 30 sec - 2 min (with API cost) | 20 min |
+
+> **AI-assisted authoring note.** When using an agent to author tests (Claude Code, Codex, Cursor), reduce *Write Time* by ~40-60% but add a corresponding *Review Time* line per case. The "AI Productivity Paradox" (Bolton, 2026): the apparent speed-up evaporates when the agent generates plausible-but-broken tests that pass review casually but fail in CI. Plan for review at least as carefully as authoring. See `ai-test-generation` Step 7 for the review checklist and `ai-qa-review` for AI-generated test smells.
+
+> **Test smells review.** CTAL-AT v2.0 (ISTQB, May 2026) formalizes "Test Smells" as a planning concern. Add a recurring 30-min "test-smells review" to each sprint plan — reviewers walk a sample of recent tests against the smell taxonomy in `ai-qa-review`. Cheap, finds maintenance debt before it compounds.
 
 **Sprint estimation worksheet:**
 

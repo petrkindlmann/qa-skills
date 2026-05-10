@@ -81,6 +81,11 @@ An exploratory session that finds a bug has only done half its job. The other ha
 
 SBTM gives exploratory testing a management layer: charters define intent, sessions are the unit of work, debriefs extract learnings.
 
+> **Canonical references:**
+> - SBTM PDF (Jon Bach / James Bach, satisfice.com) — https://www.satisfice.com/download/session-based-test-management
+> - *Taking Testing Seriously: The Rapid Software Testing Approach* (Bach & Bolton, Wiley 2025) — current authoritative RST/SBTM book.
+> - HTSM v6.3 (Bach, last updated Dec 2024) — emphasizes state-based testing and boundary heuristics. Pair with HICCUPS below.
+
 ### Charter Template
 
 A charter is a one-sentence mission statement following this pattern:
@@ -432,6 +437,29 @@ test('checkout requires valid email - regression for BUG-456', async ({ page }) 
 | **New feature** | Learning, requirement gaps, UX | "Explore [feature] with various roles/data to discover requirement gaps and unexpected behaviors" | 15 min orient + 40 min heuristics + 20 min boundaries/errors + 15 min document |
 | **Regression** | Changes and their side effects | "Explore [area] after [change] to discover regressions at integration points" | 10 min review diff + 20 min changed area + 20 min integrations + 15 min smoke + 15 min document |
 | **Bug investigation** | Reproducing and minimizing | "Explore [area] with [reported conditions] to discover exact reproduction steps" | 10 min read report + 15 min reproduce + 20 min minimize + 15 min related areas + 15 min document |
+
+---
+
+## Assisted Exploration (LLM as Companion, Not Replacement)
+
+CTAL-AT v2.0 (May 2026) formalizes "Assisted Testing" as a sibling to Exploratory Testing — a tester running a session with an LLM as oracle and idea-generator, while keeping critical-thinking ownership. Done well, an LLM expands your charter coverage; done badly, it replaces your judgment with confident-sounding hallucination.
+
+**How to use an LLM during a session:**
+
+- **As an idea generator before the session.** Paste the charter and ask for 10 edge cases the heuristics might miss. Pick 3 to actually try. Discard the rest — most will be generic or invented.
+- **As an oracle for "is this correct?" mid-session.** When you find unexpected behavior, ask the agent to look up the spec / API / standard. Never trust the answer without verifying against the source it cites.
+- **As a fact-checker on findings, not a writer of bug reports.** You write the bug; the LLM reviews for clarity. The reverse — LLM writes, you review — produces template-shaped reports that lose the specific details a human noticed.
+- **For coverage gap suggestions during debrief.** "Given these notes, what charter should I run next?"
+
+**The Productivity Paradox warning** (Bolton, 2026-01): AI tooling can make tester output *look* faster while quietly hollowing out the critical thinking that produced the value. If your debrief notes start sounding like an LLM wrote them, the LLM is now driving — stop and run the next session unassisted.
+
+**What never to delegate to an LLM:**
+
+- Choosing what to explore. The charter must come from your understanding of risk and stakeholder concerns.
+- Deciding whether something is a bug. "The model says it looks fine" is not a debrief.
+- Writing the testing story. Specific, situated detail is the point of exploratory testing — generic LLM prose is the opposite.
+
+For testing AI features themselves (not just using AI to test), see `ai-system-testing`.
 
 ---
 

@@ -133,6 +133,21 @@ Categorize each risk item along two axes.
 
 For each high-risk item (score >= 10), perform a detailed failure mode analysis.
 
+> **AI/LLM-specific failure classes** (from ISTQB CT-GenAI v1.1, April 2026):
+> - **Hallucination / reasoning error** — Impact: moderate to major; Probability: high without explicit prompt-eval coverage. Detection: golden-dataset evals, fact-check assertions (see `ai-system-testing`).
+> - **Bias** — Impact: catastrophic in regulated industries (finance, healthcare, hiring). Probability: dataset-dependent. Detection: counterfactual evals, demographic-parity checks.
+> - **Prompt injection / jailbreak** — Impact: major (data exfiltration, prompt extraction). Probability: high for any externally-facing LLM feature. Detection: Garak, PyRIT, Promptfoo redteam.
+> - **Privacy leak** — Impact: catastrophic under GDPR/CCPA/EU AI Act. Probability: dataset-dependent. Detection: PII scanning of training and prompts.
+> - **AI Act / regulatory non-compliance** — Impact: catastrophic (fines, ban). Probability: high for EU-facing AI features. Detection: see `compliance-testing`.
+
+For these classes, treat the existence of an automated eval suite as the mitigation, not a single test.
+
+#### Reference Frameworks
+
+- **HTSM v6.3** (Heuristic Test Strategy Model, Bach) — emphasizes state-based testing and boundary heuristics. Use as a Phase-1 lens when enumerating risks. https://www.satisfice.com/download/heuristic-test-strategy-model
+- **CT-GenAI v1.1** (ISTQB, April 2026) — codifies the AI/LLM risk classes above.
+- **WQR 2025-26** (Capgemini) — adoption-stage framing for AI risk planning.
+
 **Failure Mode Analysis Template:**
 
 ```
