@@ -358,7 +358,7 @@ test('error responses fail closed (no auth bypass on 500)', async ({ request }) 
 });
 
 test('error response does not leak internals', async ({ request }) => {
-  const response = await request.post('/api/process', { data: { invalid: '  ' } });
+  const response = await request.post('/api/process', { data: { invalid: '  ' } });
   const body = await response.text();
   for (const leak of ['Traceback', 'at Object.', 'node_modules', 'pg:', 'mysql:', 'PSQLException']) {
     expect(body, `Leaked "${leak}" in error body`).not.toContain(leak);
