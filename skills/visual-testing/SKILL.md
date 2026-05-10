@@ -124,6 +124,8 @@ export default defineConfig({
       maxDiffPixelRatio: 0.005,    // Global default: 0.5% tolerance
       animations: 'disabled',
       caret: 'hide',
+      // mode: 'cieLab',           // Playwright 1.57+: perceptual color comparison.
+                                   // Use for color-accurate diffs (HDR, P3 wide-gamut renders).
     },
     toMatchSnapshot: {
       maxDiffPixelRatio: 0.005,
@@ -269,8 +271,10 @@ npx playwright show-report
 | Tool | Best When | Integration | Key Feature |
 |------|-----------|-------------|-------------|
 | **Chromatic** | Project uses Storybook | Every story = a visual test | Review/approval UI, cross-browser |
-| **Percy** | No Storybook, need multi-browser | Any test framework via SDK | Multi-width captures, CSS overrides |
-| **Argos CI** | Open-source preference, budget-conscious | Playwright reporter | Self-hosting option, generous free tier |
+| **Percy** | No Storybook, need multi-browser | Any test framework via SDK | Multi-width captures, CSS overrides; bundled with BrowserStack Test Observability |
+| **Argos CI** | Open-source preference, budget-conscious | Playwright reporter | Self-hosted tier available; generous free tier on cloud |
+
+> **Avoid:** Lost Pixel — repo archived 22 April 2026 (read-only). Use Argos, Chromatic, or Playwright's built-in `toHaveScreenshot` instead.
 
 ### Chromatic (Storybook)
 
@@ -376,7 +380,7 @@ jobs:
   visual-tests:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.50.0-noble
+      image: mcr.microsoft.com/playwright:v1.59.1-noble # match the @playwright/test version in package.json
     steps:
       - uses: actions/checkout@v4
       - run: npm ci

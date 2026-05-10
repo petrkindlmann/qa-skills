@@ -117,7 +117,8 @@ export default defineConfig({
       runMode: 2,                    // Retries in CI (cypress run)
       openMode: 0,                   // No retries in interactive mode
     },
-    experimentalRunAllSpecs: true,   // Run all specs in a single tab (faster)
+    // experimentalRunAllSpecs is no longer needed — stabilized in Cypress 14;
+    // the "Run all specs" tab is the default in 15.x.
     setupNodeEvents(on, config) {
       // Task plugins, code coverage, etc.
       return config;
@@ -393,6 +394,10 @@ setupNodeEvents(on, config) {
 ### With Cypress Cloud
 
 Set `projectId` in `cypress.config.ts`. Run with `npx cypress run --record --key $CYPRESS_RECORD_KEY`. Cloud provides parallelization, flake detection, test replay, and analytics.
+
+**Cypress AI** (paid Cloud add-on, GA 2026) ships Auto Heal (selector self-healing), AI Test Generation, and AI Bug Triage. Overlaps directly with `test-reliability` (selector healing) and `ai-bug-triage` (failure clustering). Worth flagging during framework selection if your team is already on Cypress Cloud — buying the add-on may be cheaper than building the equivalent.
+
+> **Versions:** Current is Cypress 15.x (Node 20+ baseline). Cypress 14 dropped Node 16/18; Cypress 15 dropped Node 20 EOL paths. The `cypress-io/github-action` is at v6 (current LTS) — pin to a specific tag and verify v7 readiness before bumping.
 
 ```yaml
 # GitHub Actions -- Cloud parallelization

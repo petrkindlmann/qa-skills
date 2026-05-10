@@ -70,7 +70,16 @@ Performance does not happen by accident. It requires dedicated test infrastructu
 
 ## k6 Load Testing
 
-k6 is an open-source load testing tool that uses JavaScript/TypeScript for test scripts. It runs from the command line, integrates with CI, and outputs detailed metrics.
+k6 is an open-source load testing tool that uses JavaScript/TypeScript for test scripts. It runs from the command line, integrates with CI, and outputs detailed metrics. Current stable: 1.x. **k6 2.0-rc1** shipped April 2026 with breaking changes — see migration callout below.
+
+> **k6 v2 migration (2026-04 onward):**
+> - `k6/experimental/websockets` → `k6/websockets` (drop the `experimental/` prefix; module is now stable)
+> - `k6/experimental/redis` removed entirely (use a custom client or wait for stable replacement)
+> - `externally-controlled` executor removed
+> - `options.ext.loadimpact` removed (Grafana Cloud k6 — formerly k6 Cloud / Load Impact — uses `options.cloud` now)
+> - CLI flags removed: `--no-summary`, `--upload-only`, `k6 login`, `k6 pause` (Grafana Cloud commands now require an explicit stack)
+> - Exit code **97** is new: signals a non-threshold cloud-side abort. Wire it into your CI handling.
+> Reference: https://github.com/grafana/k6/releases/tag/v2.0.0-rc1
 
 ### Basic Load Test Script
 
@@ -272,6 +281,44 @@ module.exports = {
 ```
 
 For historical tracking, self-host an LHCI server (`lhci server --storage.storageMethod=sql`) to detect gradual degradation and correlate performance changes with commits.
+
+LHCI baseline: `@lhci/cli` 0.15.x is current. Lighthouse 12 is the current engine, with INP scoring weights updated. Project activity has slowed; LHCI remains the standard CI surface for Lighthouse but watch upstream for any deprecation signals before adopting in new projects.
+
+### k6 Browser Module
+
+The `k6/browser` module (built on Playwright) is now stable in k6 1.x. Use it to capture Core Web Vitals (LCP, INP, CLS) under load — bridges traditional protocol-level load testing with full-page performance.
+
+```javascript
+import { browser } from 'k6/browser';
+import { check } from 'k6';
+
+export const options = {
+  scenarios: {
+    ui: {
+      executor: 'shared-iterations',
+      options: { browser: { type: 'chromium' } },
+      vus: 5, iterations: 25,
+    },
+  },
+};
+
+export default async function () {
+  const page = await browser.newPage();
+  try {
+    await page.goto(__ENV.BASE_URL || 'http://localhost:3000');
+    const lcp = await page.evaluate(() => new Promise((resolve) => {
+      new PerformanceObserver((list) => resolve(list.getEntries().pop()?.startTime ?? 0)).observe({ type: 'largest-contentful-paint', buffered: true });
+    }));
+    check(lcp, { 'LCP < 2500ms': (v) => v < 2500 });
+  } finally {
+    await page.close();
+  }
+}
+```
+
+For continuous monitoring of synthetic and real-user perf, see also WebPageTest, Calibre, and SpeedCurve as alternative platforms; **Grafana Cloud k6** is the managed platform formerly known as k6 Cloud / Load Impact.
+
+> **FID is gone:** `web-vitals` v5+ removed FID entirely; INP replaced it for Lighthouse 12 and Core Web Vitals scoring. Do not assert on FID in any new code.
 
 ---
 

@@ -64,6 +64,8 @@ it("should apply discount for orders over $100", () => {
 
 ### Jest
 
+> Current is **Jest 30.x** (30.4.2, May 2026). Jest 30 introduced `--collect-tests`, `jest.config.mts` support, Temporal API support in fake timers, and `clearMocksOnScope`. If your code under test uses the Temporal API or time-zone logic, Jest 30's Temporal-aware fake timers remove a class of brittle test setup.
+
 **describe/it structure with setup/teardown:**
 
 ```typescript
@@ -130,7 +132,7 @@ it("should debounce", () => {
 
 ### Vitest
 
-Same API as Jest but Vite-native. Key differences:
+Same API as Jest but Vite-native. Current stable: **Vitest 4.1.x** (May 2026); 5.0.0-beta.2 published. Vitest 4 introduced `coverage.changed` (changed-files-only coverage), BlazeDiff replacing pixelmatch in browser mode, and `mockThrow`/`mockThrowOnce`. Vitest 5 beta removes the `sequential` option and changes locator representation — wait for stable before adopting.
 
 ```typescript
 // vitest.config.ts
@@ -139,7 +141,11 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node",
-    coverage: { provider: "v8", reporter: ["text", "html", "lcov"] },
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "html", "lcov"],
+      // changed: true,  // Vitest 4.1+: report coverage only for files in the diff — major CI win on big repos
+    },
   },
 });
 ```

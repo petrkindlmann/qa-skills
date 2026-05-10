@@ -346,7 +346,7 @@ await page.route('**/api/feature-flags', async (route) => {
 // Simulate errors
 await page.route('**/api/products*', (route) => route.fulfill({ status: 500 }));
 
-// WebSocket (v1.49+)
+// WebSocket (v1.48+)
 await page.routeWebSocket('**/ws/notifications', (ws) => {
   ws.onMessage((msg) => { ws.send(JSON.stringify({ type: 'alert', title: 'Deployed' })); });
 });
@@ -403,7 +403,7 @@ await expect(page.getByRole('navigation', { name: 'Main' })).toMatchAriaSnapshot
 
 ## New Features (2025-2026)
 
-Agents should be aware of these recent Playwright additions:
+Current latest is **Playwright 1.59.1** (April 2026). Agents should be aware of these recent additions:
 
 | Version | Feature | What it does |
 |---------|---------|-------------|
@@ -412,10 +412,36 @@ Agents should be aware of these recent Playwright additions:
 | v1.46 | `--only-changed` | Run only tests affected by changed files (git-diff-aware) |
 | v1.46 | Component testing `router` fixture | Mock Next.js/SvelteKit/etc. router in component tests |
 | v1.46 | ARIA snapshots | `toMatchAriaSnapshot()` for accessibility tree assertions |
-| v1.49 | `routeWebSocket` | First-class WebSocket interception (replaces CDP hacks) |
+| v1.48 | `routeWebSocket` | First-class WebSocket interception (replaces CDP hacks) |
 | v1.51 | `expect.configure` | Per-block timeout/soft configuration |
+| v1.55 | **Test Migrator** | Automated Cypress→Playwright and Selenium→Playwright migration via `npx playwright migrate` |
+| v1.56 | **Test Agents** | `npx playwright init-agents --loop=claude\|vscode\|opencode` ships planner/generator/healer agents that run inside the coding agent's loop |
+| v1.57 | Chrome for Testing default | Chrome for Testing replaces bundled Chromium for headed/headless on most platforms |
 | v1.57 | Speedboard in HTML reporter | Performance timeline visualization in the built-in report |
 | v1.57 | `webServer.wait` regex | Wait for a specific stdout pattern instead of just a URL |
+| v1.57 | `toHaveScreenshot mode` | Color-comparison modes (`'rgb'`, `'cieLab'`) for color-accurate diffs |
+| v1.59 | **`page.screencast()`** | Replaces `recordVideo` for agent self-verification; supports overlays and "agentic video receipts" — built so a coding agent can produce a reviewable trace |
+| v1.59 | `--debug=cli` | Pause-and-attach for AI agents to step through a test |
+
+### AI-Augmented Authoring (Test Agents + MCP)
+
+Two distinct integration paths — pick based on whether the agent runs *inside* your editor loop or *drives* a real browser remotely.
+
+**Path A — Test Agents (`npx playwright init-agents`)**: scaffolds three custom agents (planner, generator, healer) that the coding agent loads and invokes during its loop. Token-efficient — no MCP server, no inter-process traffic. Best for "Claude/VS Code/opencode write Playwright tests for me" workflows. Setup:
+
+```bash
+npx playwright init-agents --loop=claude
+# or --loop=vscode | --loop=opencode
+```
+
+**Path B — `@playwright/mcp`** (32k+ stars, weekly releases): MCP server that exposes browser actions to any MCP-aware agent. Higher overhead (process boundary, JSON marshalling) but the right choice when the agent needs to *drive* a live browser interactively rather than author tests offline.
+
+```jsonc
+// .mcp.json
+{ "mcpServers": { "playwright": { "command": "npx", "args": ["@playwright/mcp@latest"] } } }
+```
+
+For test-failure repair workflows, see `test-reliability`. For first-time test generation from PRDs/specs, see `ai-test-generation`.
 
 ---
 

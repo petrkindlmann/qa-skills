@@ -1,11 +1,11 @@
 ---
 name: mobile-testing
 description: >-
-  Test mobile applications with Appium 2.0 and Detox for React Native. Covers device
-  farm setup (BrowserStack, Sauce Labs), gesture simulation, deep link testing, push
-  notification testing, offline/poor network simulation, and permission dialog handling.
-  Use when: "mobile test," "Appium," "Detox," "iOS test," "Android test," "device farm,"
-  "React Native test."
+  Test mobile applications with Appium 3.x, Maestro, and Detox for React Native. Covers
+  device farm setup (BrowserStack, Sauce Labs), gesture simulation, deep link testing,
+  push notification testing, offline/poor network simulation, and permission dialog handling.
+  Use when: "mobile test," "Appium," "Detox," "Maestro," "iOS test," "Android test,"
+  "device farm," "React Native test."
   Related: ci-cd-integration, cross-browser-testing, performance-testing.
 license: MIT
 metadata:
@@ -24,7 +24,7 @@ Test native, React Native, and hybrid mobile applications with production-grade 
 
 ## Discovery Questions
 
-1. **App type:** Native iOS/Android, React Native, Flutter, or hybrid (Cordova/Capacitor)? This determines the framework choice -- Appium for native/hybrid, Detox for React Native, Patrol for Flutter.
+1. **App type:** Native iOS/Android, React Native, Flutter, or hybrid (Cordova/Capacitor)? This determines the framework choice — **Appium 3.x** for native/hybrid (driver-based, mature ecosystem), **Detox** for React Native (white-box, fastest feedback), **Maestro** for cross-platform YAML-based suites (lowest authoring friction, native AI commands), **Patrol** for Flutter.
 2. **Real devices or emulators?** Real devices for release validation and performance, emulators/simulators for development speed. Most teams need both.
 3. **Device farm:** BrowserStack App Automate, Sauce Labs, AWS Device Farm, or self-hosted? Check budget and CI integration requirements.
 4. **OS coverage:** Minimum iOS and Android versions? Check analytics for actual user distribution before building the device matrix.
@@ -47,19 +47,20 @@ Test native, React Native, and hybrid mobile applications with production-grade 
 
 ---
 
-## Appium 2.0
+## Appium 3.x
 
 ### Architecture
 
-Appium 2.0 uses a driver-based plugin architecture. The server is a thin shell; drivers provide platform-specific automation.
+Appium 3.x (current stable: 3.4.2, May 2026) keeps the driver-based plugin architecture introduced in 2.0 — the server is a thin shell; drivers provide platform-specific automation. Upgrade from 2.x is mostly a Node-version bump and dependency cleanup; capabilities and APIs are unchanged.
 
 ```bash
-# Install Appium 2.0 and drivers
+# Install Appium 3.x and drivers
 npm install -g appium
 appium driver install uiautomator2   # Android
 appium driver install xcuitest       # iOS
 
 # Verify installation
+appium --version       # >= 3.4.x
 appium driver list --installed
 ```
 
@@ -217,6 +218,8 @@ describe('Login Flow', () => {
 
 ### Device APIs
 
+> Detox 20.51+ added `by.type()` semantic matching — use it to relax brittle exact-class assertions. Detox 20.51 also confirms support for React Native 0.83 + iOS 26.
+
 ```javascript
 // Biometric authentication
 await device.setBiometricEnrollment(true);
@@ -258,6 +261,35 @@ detox test --configuration ios.sim.debug --workers 3
 
 ---
 
+## Maestro (Cross-Platform YAML)
+
+Maestro CLI 2.5.x (Apr 2026) is the lowest-friction option for cross-platform mobile e2e — declarative YAML flows, native AI commands (e.g. `assertVisible: 'login button'` works without selectors), works against simulators, real devices, and Maestro Cloud. Best for teams that don't want to maintain Appium's Java/JS stack or RN-only Detox tooling.
+
+```bash
+# Install
+curl -Ls "https://get.maestro.mobile.dev" | bash
+
+# Run a flow
+maestro test flows/login.yaml
+```
+
+```yaml
+# flows/login.yaml
+appId: com.example.app
+---
+- launchApp
+- tapOn: "Sign in"
+- inputText: "user@example.com"
+- tapOn: "Password"
+- inputText: "${MAESTRO_TEST_PASSWORD}"
+- tapOn: "Continue"
+- assertVisible: "Welcome back"
+```
+
+When to choose Maestro: cross-platform suite, mixed-skill team, fast iteration. When not: deep native gesture or biometric coverage (Appium/Detox win), or when you need fine-grained programmatic control.
+
+---
+
 ## Device Farm Integration
 
 ### BrowserStack App Automate
@@ -273,7 +305,7 @@ export const bsCapabilities = {
     sessionName: 'Login Flow',
     debug: true,
     networkLogs: true,
-    appiumVersion: '2.0.0',
+    appiumVersion: '3.4.2',
   },
   platformName: 'Android',
   'appium:deviceName': 'Samsung Galaxy S24',
@@ -293,7 +325,7 @@ export const sauceCapabilities = {
   'sauce:options': {
     name: 'Login Flow',
     build: `build-${process.env.CI_BUILD_NUMBER}`,
-    appiumVersion: '2.0',
+    appiumVersion: '3.4',
   },
 };
 ```

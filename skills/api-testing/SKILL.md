@@ -36,6 +36,20 @@ Test REST and GraphQL APIs with schema validation, auth flow testing, CRUD lifec
 
 ---
 
+## Exploratory vs Automated: Tooling
+
+API exploration (debugging, manual probing, OpenAPI playground) and automated API testing are different jobs. Use the right tool for each:
+
+| Tool | Best for | Why |
+|------|----------|-----|
+| **Bruno** (3.3.0+) | File-based collections, git-reviewable workflows, FOSS Postman replacement | Filesystem-first, no cloud sync required, ~43k stars, gRPC + OAuth 1.0 + GraphQL query builder |
+| **Hurl** (6.x) | Plain-text HTTP testing, CI smoke checks | One file = many requests + assertions; runs anywhere curl runs |
+| **Hoppscotch** | Web-based Postman-style exploration | Open source, runs in browser, good for quick checks |
+| **Playwright `APIRequestContext`** | Automated tests in your test runner | This skill's focus — covered below |
+| **Supertest** (Node) / **httpx** (Python) | In-process API tests against your own app | Fastest feedback when you control both sides |
+
+Skip Postman/Insomnia for new projects unless your team already has investment there — file-based tools (Bruno, Hurl) are easier to review in PRs and survive when collections drift.
+
 ## Playwright API Testing
 
 `APIRequestContext` supports standalone API tests without launching a browser and shares cookie/storage state with browser contexts.
