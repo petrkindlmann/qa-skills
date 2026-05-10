@@ -281,6 +281,30 @@ ROI             = (manual cost - automation cost) / automation cost × 100
 
 ---
 
+### Engineering Quality Metrics (DORA)
+
+DORA metrics are the lingua franca for leadership dashboards in 2025-2026. They pair naturally with defect escape rate — DORA tracks delivery throughput; QA metrics track delivery quality.
+
+| Metric | What it measures | Elite target |
+|--------|------------------|---|
+| **Lead Time for Changes** | Commit → production | < 1 day |
+| **Deployment Frequency** | How often you ship | Multiple per day |
+| **Change Failure Rate** | % of deploys that cause incidents | < 15% |
+| **Mean Time to Recovery (MTTR)** | Time to restore service after incident | < 1 hour |
+
+Source: https://dora.dev/research/. Tools that surface DORA from Git/CI data: Sleuth, Faros, LinearB, Jellyfish, Swarmia.
+
+### Test Impact Analysis (TIA) as a Lever
+
+TIA selects which tests to run based on which code changed (using coverage data). It trades test breadth for CI cost. Track:
+
+- **% of tests skipped per PR via TIA** — higher means cheaper CI; if it climbs without coverage falling, TIA is paying off.
+- **Escaped defects from skipped tests** — the safety check. If non-zero, narrow the TIA selection or expand the always-run set.
+
+Hosted: Datadog Test Optimization (TIA), CloudBees Smart Tests, NCrunch (in-IDE). Self-built: derive from coverage data + git diff. Cross-link `coverage-analysis`.
+
+---
+
 ## Setting Realistic Targets
 
 Targets should match your team's maturity. Chasing enterprise-grade metrics at a seed-stage startup wastes effort. The table below provides recommended targets by company stage.

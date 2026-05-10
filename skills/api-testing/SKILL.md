@@ -137,6 +137,8 @@ export { expect };
 
 ### Zod
 
+> **Zod 4 vs Zod 3.** Zod 4 shipped major API changes — `.parse` / `.safeParse` are unchanged, but `z.coerce` syntax changed and the error format is different. If your codebase is mixed (some packages on Zod 3, others on Zod 4), error-format consumers will silently break. Pin the version per package. For OpenAPI → Zod codegen, both **`orval`** and **`openapi-zod-client`** are now more popular than `json-schema-to-zod` for the round-trip path.
+
 ```typescript
 import { z } from 'zod';
 import { test, expect } from '@playwright/test';

@@ -396,6 +396,53 @@ Commit `.coverage-ratchet.json` to the repo (e.g., `{ "lines": 82, "branches": 7
 
 Require that new code in a PR meets a higher threshold (e.g., 90%) than the project baseline. In CI, use `git diff --numstat origin/main...HEAD` to identify changed files, then check their coverage from `coverage-summary.json`. Fail the pipeline if the average coverage of changed files falls below the threshold. This prevents coverage decay without demanding a rewrite of legacy code.
 
+**Hosted alternatives:** **Codecov**, **Coveralls**, and **Trunk Coverage** all ship first-class differential PR coverage with merge-blocking gates and inline annotations. Most teams prefer these over hand-rolled diff scripts — pick one if you don't already have a coverage host. Codecov + GitHub: `codecov/codecov-action@v5` reads `lcov.info` and posts a PR comment with diff coverage automatically.
+
+---
+
+## Mutation Testing
+
+Mutation testing measures *assertion quality*, not just code execution. With Stryker JS v9.6+ and Vitest 4.1+, the cost is low enough to make mutation score realistic on PR-changed files.
+
+### Stryker (JS/TS)
+
+```json
+// stryker.config.json
+{
+  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
+  "testRunner": "vitest",
+  "coverageAnalysis": "perTest",
+  "incremental": true,
+  "incrementalFile": ".stryker-tmp/incremental.json",
+  "mutate": ["src/**/*.ts"],
+  "thresholds": { "high": 80, "low": 60, "break": 50 }
+}
+```
+
+Run on PR-changed files only with `--mutate '$(git diff --name-only origin/main...HEAD | grep "src/.*\.ts")'`. Pair `incremental: true` with the JSON cache so consecutive runs only re-mutate touched files.
+
+### mutmut (Python)
+
+```bash
+mutmut run --paths-to-mutate=src/
+mutmut results
+```
+
+mutmut 3.x is a from-scratch rewrite (still active 2026); pin via `pip install mutmut==3.*`.
+
+### Targeting
+
+Mutation testing is expensive on whole codebases. Restrict to:
+- Pure business logic (validators, calculators, transformers)
+- Critical paths (payment, auth, data integrity)
+- Code with low confidence in test quality (look at branch-coverage > 90% but few assertion variants)
+
+Skip on UI rendering code, glue code, and generated code.
+
+### Reading the score
+
+A mutation score of 80% means 80% of mutated bugs were caught by your tests. Lower than your coverage % is normal — many mutations land in untested branches the coverage report already flagged. The interesting gap is **high coverage + low mutation score**: code is executed but assertions don't constrain it.
+
 ---
 
 ## Meaningful vs Vanity Coverage

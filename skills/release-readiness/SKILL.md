@@ -429,6 +429,18 @@ You use feature flags for safe rollouts (good!) but never remove them (bad). Aft
 
 **Fix:** 2026 best practice is platform-level stale detection, not calendar reminders. Use GrowthBook stale-flag detection (code references), LaunchDarkly archive flow, or Flagsmith's flag age telemetry to surface flags whose code paths haven't been touched in N weeks. Pair with a quarterly review where flags older than the threshold are either archived or get a documented owner + reason to keep. Calendar dates rot; code-reference scans don't.
 
+### Canary alerts that lie
+
+Auto-rollback wired to a metric that's noisy, late-arriving, or partially aggregated. The alert fires (or doesn't) at the wrong time, and the team learns to mistrust it — so when the real incident arrives, the signal is ignored.
+
+**Fix:** Treat the canary alert like any other test — it has a false-positive rate and a false-negative rate, and you measure both. Run a "shadow" period where the alert publishes its decision but doesn't actually rollback; compare its calls to ground truth for two weeks. Promote to auto-rollback only after the false-positive rate is below your tolerance. Reference: https://www.flagsmith.com/blog/when-canary-alerts-go-wrong
+
+### Switchback experiments for two-sided systems
+
+Standard A/B fails on marketplaces, ride-share, ad auctions, and other systems where the treatment group affects the control group through shared state. Splitting traffic 50/50 doesn't isolate the experiment — both sides see the same warped market.
+
+**Fix:** Use a switchback design — alternate the entire system between control and treatment over short windows (minutes to hours). Statsig's Switchback experiments (Feb 2026) automate this for the common cases. Don't block release on a corrupted A/B test result; rerun with the right design. Reference: https://www.statsig.com/updates
+
 ---
 
 ## Templates

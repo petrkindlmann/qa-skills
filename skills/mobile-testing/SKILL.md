@@ -67,28 +67,31 @@ appium driver list --installed
 ### Capabilities (W3C Format)
 
 ```typescript
-// Android capabilities
+// Android capabilities — bump to current device + OS for new matrices
 const androidCaps: Record<string, unknown> = {
   platformName: 'Android',
   'appium:automationName': 'UiAutomator2',
-  'appium:deviceName': 'Pixel 7',
-  'appium:platformVersion': '14',
+  'appium:deviceName': 'Pixel 9', // iPhone 17 / Pixel 9 / Galaxy S25 are current 2026 baselines
+  'appium:platformVersion': '15',
   'appium:app': '/path/to/app.apk',
   'appium:autoGrantPermissions': true,
   'appium:newCommandTimeout': 300,
   'appium:noReset': false,
 };
 
-// iOS capabilities
+// iOS capabilities — bump to current device + OS for new matrices
 const iosCaps: Record<string, unknown> = {
   platformName: 'iOS',
   'appium:automationName': 'XCUITest',
-  'appium:deviceName': 'iPhone 15 Pro',
-  'appium:platformVersion': '17.4',
+  'appium:deviceName': 'iPhone 17 Pro',
+  'appium:platformVersion': '19',
   'appium:app': '/path/to/app.ipa',
   'appium:autoAcceptAlerts': false,  // Handle alerts explicitly
   'appium:newCommandTimeout': 300,
 };
+
+// Older devices still belong in the matrix when analytics show the long tail —
+// e.g. iPhone 15 Pro / iOS 17, Pixel 7 / Android 14. Tier them P1/P2.
 ```
 
 ### Element Location Strategies

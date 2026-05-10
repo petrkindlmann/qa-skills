@@ -420,6 +420,22 @@ ReportPortal quality gates can be queried via API after test completion (`GET /a
 
 ---
 
+## SaaS-Native Test Dashboards
+
+If your test runner has a first-class hosted dashboard, prefer it over Allure/Grafana for the runner's native data — less plumbing, more retention, built-in PR comments. Cross-pollinate with Allure/Grafana only for cross-runner aggregation.
+
+| Platform | Test runner | Native data + PR comments |
+|----------|-------------|---------------------------|
+| **Cypress Cloud** | Cypress | Test replay, parallelization, flake detection; AI add-on (Auto Heal, Bug Triage) |
+| **Currents.dev** | Cypress, Playwright | OSS-friendly Cypress Cloud alternative; lower price point |
+| **Playwright HTML report + `--reporter=blob`** | Playwright | Free, self-hosted; combine shards with `npx playwright merge-reports` |
+| **Datadog Test Optimization** | Any (CI-side) | Flaky Test Management, TIA, native APM integration |
+| **Allure TestOps** | Any | Allure 3 quality gates, named environments, MCP server beta |
+
+Use Allure or Grafana when you need a single dashboard across multiple test runners or when the SaaS option's pricing/data-residency doesn't fit. Otherwise, the SaaS-native dashboard is usually the cheapest path to PR-level signal.
+
+---
+
 ## Stakeholder Reports
 
 **Weekly QA Summary** -- Automate via scheduled CI job. Include: pass rate + trend, new vs fixed failures, top 5 flaky tests, coverage delta, avg CI duration. Classify health: STABLE (>= 98%), NEEDS ATTENTION (>= 95%), CRITICAL (< 95%). Post to Slack automatically.

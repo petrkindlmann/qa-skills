@@ -179,6 +179,22 @@ Enable: `test: { includeSource: ["src/**/*.ts"] }` and `define: { "import.meta.v
 export default ["packages/*/vitest.config.ts"];
 ```
 
+**Browser mode** (Vitest 4+): runs component-level tests in a real browser (Playwright/WebdriverIO under the hood) instead of JSDOM. Replaces JSDOM-based component tests for many cases and overlaps with Cypress component testing. Use when JSDOM gives you false positives on layout, focus, or paint behavior.
+
+```typescript
+// vitest.config.ts (browser mode)
+import { defineConfig } from 'vitest/config';
+export default defineConfig({
+  test: {
+    browser: { enabled: true, provider: 'playwright', name: 'chromium' },
+  },
+});
+```
+
+### Bun test / Deno test
+
+For Bun-stack projects, **`bun test`** is now stable enough for greenfield use — Jest-compatible API, esbuild-fast, no separate runner config needed (`package.json` `scripts.test`). For Deno projects, **`deno test`** is the built-in option with permission flags + native TypeScript. Both are reasonable defaults if your runtime is already Bun or Deno; prefer Vitest/Jest for Node projects with deeper plugin ecosystems.
+
 ---
 
 ### pytest

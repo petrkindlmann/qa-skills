@@ -433,8 +433,33 @@ Configure Dependabot in `.github/dependabot.yml` with daily npm updates and secu
 
 ### SAST (Static Analysis)
 
+ESLint 9 flat config (default for new projects) — pick this for greenfield repos:
+
 ```javascript
-// .eslintrc.js -- security-focused plugins
+// eslint.config.js -- ESLint 9 flat config
+import securityPlugin from 'eslint-plugin-security';
+import noUnsanitized from 'eslint-plugin-no-unsanitized';
+
+export default [
+  securityPlugin.configs.recommended,
+  {
+    plugins: { 'no-unsanitized': noUnsanitized },
+    rules: {
+      'security/detect-object-injection': 'warn',
+      'security/detect-non-literal-regexp': 'warn',
+      'security/detect-unsafe-regex': 'error',
+      'security/detect-eval-with-expression': 'error',
+      'no-unsanitized/method': 'error',
+      'no-unsanitized/property': 'error',
+    },
+  },
+];
+```
+
+ESLint 8 / `.eslintrc.*` legacy config (only for existing projects still on the old config format):
+
+```javascript
+// .eslintrc.js -- legacy config
 module.exports = {
   plugins: ['security', 'no-unsanitized'],
   extends: ['plugin:security/recommended-legacy'],
@@ -449,7 +474,7 @@ module.exports = {
 };
 ```
 
-For deeper multi-language SAST, use Semgrep (`semgrep/semgrep-action@v1`) with rulesets `p/owasp-top-ten`, `p/javascript`, `p/typescript`.
+For deeper multi-language SAST, use Semgrep (`semgrep/semgrep-action@v1`) with rulesets `p/owasp-top-ten`, `p/javascript`, `p/typescript`. Re-validate the `p/owasp-top-ten` ruleset against the 2025 list before relying on it as a gate. **Semgrep MCP** (2026) exposes `semgrep_findings` for agent-driven triage — pair with `ai-qa-review` when reviewing AI-authored code.
 
 ### Secret Scanning
 
