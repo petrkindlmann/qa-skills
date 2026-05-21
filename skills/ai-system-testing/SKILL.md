@@ -1,11 +1,14 @@
 ---
 name: ai-system-testing
 description: >-
-  Test AI-powered features including LLM prompts, tool calls, nondeterministic outputs,
-  evaluation frameworks, and hallucination risk assessment. Covers prompt regression
-  testing, response quality evaluation, tool call validation, and AI safety testing.
-  Use when: "AI testing," "LLM testing," "prompt testing," "eval framework,"
-  "hallucination," "nondeterministic," "AI feature testing."
+  Test AI/LLM features that ship in your product. Covers prompt regression
+  testing, response quality evaluation, tool call validation, hallucination risk
+  assessment, nondeterministic-output strategies, and eval frameworks. Use when:
+  "test our LLM feature," "prompt regression test," "eval framework,"
+  "hallucination test," "nondeterministic output," "AI feature testing,"
+  "production AI quality." Not for: using AI to generate your own test code —
+  use `ai-test-generation`. Not for: classifying CI failures with AI — use
+  `ai-bug-triage`.
   Related: ai-test-generation, ai-qa-review, api-testing.
 license: MIT
 metadata:

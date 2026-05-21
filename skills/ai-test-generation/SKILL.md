@@ -1,11 +1,14 @@
 ---
 name: ai-test-generation
 description: >-
-  Staged pipeline for AI-assisted test generation: requirements extraction → risk
-  analysis → coverage matrix → scenario generation → oracle design → test code →
-  human review. Includes guardrails against common AI test generation failures.
-  Use when: "generate tests," "AI tests," "tests from spec," "tests from PRD,"
-  "tests from user story," "auto-generate test cases."
+  Use AI to write NEW test code from specs, PRDs, or user stories. Staged
+  pipeline: requirements extraction → risk analysis → coverage matrix → scenario
+  generation → oracle design → test code → human review. Includes guardrails
+  against common AI test generation failures. Use when: "generate tests from
+  spec," "tests from PRD," "tests from user story," "auto-generate test cases,"
+  "AI write tests for me." Not for: testing AI/LLM features in your product —
+  use `ai-system-testing`. Not for: reviewing existing test code quality — use
+  `ai-qa-review`.
   Related: playwright-automation, unit-testing, api-testing, qa-project-context.
 license: MIT
 metadata:

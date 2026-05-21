@@ -1,11 +1,15 @@
 ---
 name: playwright-automation
 description: >-
-  Production-grade Playwright in TypeScript: Page Object Model, fixtures, auto-waiting,
-  user-facing locators, parallel execution, CI integration, visual testing, accessibility.
-  Includes explicit "do not" list for AI agents and 2025-2026 feature awareness.
-  Use when: "Playwright," "browser testing," "E2E test," "end-to-end," "page object."
-  Related: visual-testing, ci-cd-integration, api-testing, test-reliability, accessibility-testing.
+  Write production-grade Playwright tests in TypeScript: Page Object Model,
+  fixtures, auto-waiting, user-facing locators, parallel execution, CI
+  integration, visual testing, accessibility. Includes explicit "do not" list
+  for AI agents and 2025-2026 feature awareness. Use when: "Playwright," "write
+  E2E test," "page object," "browser test setup," "new Playwright suite." Not
+  for: fixing individual flaky tests at runtime — use `test-reliability`. Not
+  for: bulk regenerating selectors after a UI refactor — use
+  `selector-drift-recovery`.
+  Related: visual-testing, ci-cd-integration, api-testing, test-reliability, selector-drift-recovery, accessibility-testing.
 license: MIT
 metadata:
   author: kindlmann

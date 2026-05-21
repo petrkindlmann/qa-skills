@@ -1,10 +1,13 @@
 ---
 name: testing-in-production
 description: >-
-  Validate software quality in production safely using feature flags, progressive
-  rollouts, canary analysis, guardrail metrics, production smoke tests, and synthetic
-  users. Bridges QA and SRE practices. Use when: "production testing," "feature flag
-  testing," "canary deploy," "progressive rollout," "guardrail metrics," "dark launch."
+  Safe-release techniques DURING rollout: feature flags, progressive rollouts,
+  canary analysis, guardrail metrics, production smoke tests, and synthetic
+  users. Bridges QA and SRE practices. Use when: "feature flag testing," "canary
+  deploy," "progressive rollout," "guardrail metrics," "dark launch," "safe
+  rollout." Not for: scheduled probes that run continuously after release — use
+  `synthetic-monitoring`. Not for: designing tests from prod telemetry — use
+  `observability-driven-testing`.
   Related: release-readiness, synthetic-monitoring, observability-driven-testing, qa-metrics.
 license: MIT
 metadata:

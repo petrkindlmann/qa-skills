@@ -1,11 +1,13 @@
 ---
 name: test-strategy
 description: >-
-  Create a comprehensive QA strategy document. Covers scope definition, risk-based
-  prioritization, test levels (unit/integration/E2E), test pyramid analysis, entry/exit
-  criteria, quality KPIs, tool selection rationale, and timeline planning. Produces
-  an actionable strategy document, not a shelf document. Use when: "test strategy,"
-  "QA plan," "quality strategy," "testing approach," "QA roadmap."
+  Produce a multi-quarter QA strategy document. Covers scope, risk-based
+  prioritization, test levels (unit/integration/E2E), pyramid analysis, entry/exit
+  criteria, quality KPIs, tool selection rationale, and timeline planning. Output
+  is an actionable strategy document, not a shelf document. Use when: "test
+  strategy," "QA strategy doc," "testing approach," "QA roadmap." Not for: a
+  single-sprint or single-release plan — use `test-planning`. Not for: identifying
+  which areas carry the most risk — use `risk-based-testing` first.
   Related: risk-based-testing, qa-metrics, release-readiness, test-planning.
 license: MIT
 metadata:

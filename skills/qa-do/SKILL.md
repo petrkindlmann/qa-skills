@@ -1,9 +1,12 @@
 ---
 name: qa-do
 description: >-
-  QA diagnostic router. Describes a testing situation or problem in plain language and identifies
-  the right 1-3 skills to use and in what order. Use when: "which skill", "where do I start",
-  "I'm not sure what to test", "/qa-do", or any vague QA situation that doesn't map to one skill.
+  Routing skill of last resort. Use ONLY when the user's request does not match
+  any other skill's trigger phrases. Takes a plain-language QA situation and
+  identifies the right 1-3 skills to use and in what order. Use when: "which
+  skill should I use," "where do I start," "I'm not sure what to test,"
+  "/qa-do," or any vague QA situation that doesn't map to one skill. Do NOT use
+  if the request clearly matches another skill — invoke that skill directly.
   Related: qa-start, qa-project-context, test-strategy.
 license: MIT
 compatibility: Cross-tool. Tested with Claude Code, Codex, Cursor, Gemini CLI. Reads the project root; no network access required.

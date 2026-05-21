@@ -1,11 +1,13 @@
 ---
 name: ai-qa-review
 description: >-
-  QA-focused code review for test quality. Detects test smells across readability,
-  reliability, diagnostic value, design, and coverage dimensions. Analyzes testability
-  of application code and identifies coverage gaps. Based on xUnit Test Patterns
-  and modern test smell research. Use when: "review tests," "test quality," "test code
-  review," "test smells," "testability analysis," "coverage gaps."
+  Review EXISTING test code for quality, smells, and testability issues. Detects
+  test smells across readability, reliability, diagnostic value, design, and
+  coverage dimensions. Analyzes testability of application code and identifies
+  coverage gaps. Based on xUnit Test Patterns and modern test smell research.
+  Use when: "review my tests," "test quality audit," "test smells," "testability
+  analysis," "are these tests any good." Not for: generating new tests — use
+  `ai-test-generation`. Not for: testing AI features — use `ai-system-testing`.
   Related: unit-testing, shift-left-testing, coverage-analysis, ai-test-generation.
 license: MIT
 metadata:

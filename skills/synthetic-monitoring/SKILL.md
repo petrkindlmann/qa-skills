@@ -1,11 +1,13 @@
 ---
 name: synthetic-monitoring
 description: >-
-  Implement post-deploy validation of critical flows through scheduled synthetic tests.
-  Covers the boundary between QA and SRE, probe design for critical user journeys,
-  alerting integration, SLA validation, and multi-region monitoring.
-  Use when: "synthetic monitoring," "uptime testing," "production monitoring," "scheduled
-  tests," "SLA validation," "availability monitoring."
+  Scheduled probes that run CONTINUOUSLY after release. Covers probe design for
+  critical user journeys, alerting integration, SLA validation, multi-region
+  monitoring, and the boundary between QA and SRE. Use when: "synthetic
+  monitoring," "uptime testing," "scheduled probes," "SLA validation,"
+  "availability monitoring," "post-deploy checks." Not for: safe-release
+  techniques during rollout — use `testing-in-production`. Not for: designing
+  tests from prod telemetry — use `observability-driven-testing`.
   Related: testing-in-production, release-readiness, performance-testing, qa-metrics.
 license: MIT
 metadata:

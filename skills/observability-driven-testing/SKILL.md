@@ -1,11 +1,14 @@
 ---
 name: observability-driven-testing
 description: >-
-  Use traces, logs, and telemetry as test evidence and test design input. Covers
-  OpenTelemetry integration with tests, trace-based assertions, log-informed test
-  creation, production error analysis for test gaps, and telemetry-driven test
-  prioritization. Use when: "observability testing," "trace-based testing," "log analysis,"
-  "telemetry," "production errors," "OpenTelemetry."
+  Use production telemetry as INPUT to design new tests. Covers OpenTelemetry
+  integration with tests, trace-based assertions, log-informed test creation,
+  production-error analysis for coverage gaps, and telemetry-driven test
+  prioritization. Use when: "trace-based testing," "design tests from logs,"
+  "OpenTelemetry assertions," "production errors point to test gaps,"
+  "telemetry-driven testing." Not for: safe rollout techniques — use
+  `testing-in-production`. Not for: scheduled post-deploy probes — use
+  `synthetic-monitoring`. Not for: triaging CI failures — use `ai-bug-triage`.
   Related: testing-in-production, synthetic-monitoring, qa-metrics, ai-bug-triage.
 license: MIT
 metadata:

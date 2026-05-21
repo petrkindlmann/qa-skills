@@ -1,11 +1,13 @@
 ---
 name: risk-based-testing
 description: >-
-  Identify high-risk areas via failure mode analysis, prioritize tests by business
-  impact x likelihood, generate risk heatmaps, and align test coverage to risk levels.
-  Includes stakeholder interview frameworks and continuous risk reassessment.
-  Use when: "risk assessment," "what could break," "critical paths," "risk matrix,"
-  "failure modes," "test prioritization," "where to focus testing."
+  Produce a risk matrix or heatmap that feeds into `test-strategy` and
+  `test-planning`. Identifies high-risk areas via failure mode analysis,
+  prioritizes by business impact × likelihood, and aligns test coverage to risk
+  levels. Includes stakeholder interview frameworks and continuous risk
+  reassessment. Use when: "risk assessment," "risk matrix," "risk heatmap," "what
+  could break," "critical paths," "failure modes," "where to focus testing." Run
+  this BEFORE `test-strategy` or `test-planning`.
   Related: test-strategy, test-planning, release-readiness, qa-metrics.
 license: MIT
 metadata:

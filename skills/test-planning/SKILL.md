@@ -1,11 +1,13 @@
 ---
 name: test-planning
 description: >-
-  Create sprint and release test plans. Covers feature decomposition into testable
-  scenarios, requirements-to-test coverage mapping, effort estimation by test type,
-  prioritization matrices (risk × effort), resource allocation, and scheduling with
-  buffers. Use when: "test plan," "sprint testing," "release plan," "what to test,"
-  "test estimation," "coverage mapping."
+  Build a single sprint or release test plan. Covers feature decomposition into
+  testable scenarios, requirements-to-test coverage mapping, effort estimation by
+  test type, prioritization matrices (risk × effort), resource allocation, and
+  scheduling with buffers. Use when: "sprint test plan," "release test plan,"
+  "what to test this sprint," "test estimation," "coverage mapping." Not for:
+  multi-quarter strategy — use `test-strategy`. Not for: ranking areas by risk —
+  use `risk-based-testing`.
   Related: test-strategy, risk-based-testing, release-readiness.
 license: MIT
 metadata:
