@@ -1,8 +1,10 @@
 ---
 name: qa-start
 description: >-
-  QA onboarding launcher for new projects. Chains qa-project-context → test-strategy → test-planning
-  in one guided sequence. Use when: "set up QA", "onboard QA", "new project QA", "QA from scratch", "/qa-start".
+  Launcher that bootstraps QA on a brand-new project. Chains qa-project-context →
+  test-strategy → test-planning in one guided sequence. Use when: "set up QA on a
+  new project," "QA from scratch," "no QA exists yet," "/qa-start." Not for:
+  onboarding a QA engineer to an existing codebase — use `qa-project-bootstrap`.
   Related: qa-project-context, test-strategy, test-planning, qa-project-bootstrap.
 license: MIT
 compatibility: Cross-tool. Tested with Claude Code, Codex, Cursor, Gemini CLI. Reads/writes the user's project root; no network access required.

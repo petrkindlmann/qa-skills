@@ -1,12 +1,13 @@
 ---
 name: qa-project-bootstrap
 description: >-
-  Bootstrap QA for a new project or onboard new QA engineers. Covers first-30-days
-  checklist, test architecture audit, framework walkthrough templates, codebase
-  orientation guides, and mentorship patterns. Use when: "QA onboarding," "new tester,"
-  "ramp up," "getting started," "new project QA," "test architecture audit,"
-  "QA bootstrap," "first test."
-  Related: qa-project-context, playwright-automation, shift-left-testing.
+  Onboard a new QA engineer to an existing codebase, or audit an existing test
+  architecture. Produces a 30-day ramp plan: codebase orientation, framework
+  walkthrough, test architecture audit, mentorship pairing, and first-test
+  guidance. Use when: "QA onboarding," "new tester," "ramp up," "test architecture
+  audit," "first 30 days," "QA mentorship," "joining QA team." Not for: setting up
+  QA on a brand-new project from scratch — use `qa-start`.
+  Related: qa-start, qa-project-context, shift-left-testing, ai-qa-review.
 license: MIT
 metadata:
   author: kindlmann
