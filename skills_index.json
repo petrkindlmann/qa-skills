@@ -1,6 +1,6 @@
 {
   "repository": "petrkindlmann/qa-skills",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "skills": [
     {
       "name": "qa-project-context",
@@ -253,6 +253,12 @@
       "path": "skills/qa-do",
       "category": "foundation",
       "tags": ["router", "discovery", "which-skill", "diagnostic", "qa-do"]
+    },
+    {
+      "name": "selector-drift-recovery",
+      "path": "skills/selector-drift-recovery",
+      "category": "automation",
+      "tags": ["selector-drift", "ui-refactor", "bulk-update", "redesign", "playwright", "post-refactor"]
     }
   ]
 }

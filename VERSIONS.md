@@ -1,5 +1,47 @@
 # Versions
 
+## v2.5.0 (2026-05-21)
+
+### Routing fix + new selector-drift-recovery skill
+
+Audit of the 42-skill index surfaced four overlap clusters causing wrong-skill activations: strategy/planning/risk, the AI cluster, the production trio, and the selector-maintenance gap. Fixes shipped in four tiers.
+
+#### Tier A — qa-start vs qa-project-bootstrap split
+
+- `qa-start` re-scoped to brand-new project setup only (launcher chain).
+- `qa-project-bootstrap` re-scoped to engineer onboarding to an existing codebase (30-day ramp, audit, mentorship).
+- Both descriptions carry explicit "Not for: X — use Y" anti-triggers.
+
+#### Tier B — 11 description sharpens
+
+Each affected skill now leads with what makes it distinct and names alternate skills for adjacent requests:
+
+- `test-strategy`, `test-planning`, `risk-based-testing` — scope/output clarified, run order documented (risk-based-testing runs first).
+- `ai-test-generation`, `ai-system-testing`, `ai-qa-review` — anti-triggers added to disambiguate "AI testing" requests by role: writing tests vs testing AI features vs reviewing existing tests.
+- `testing-in-production`, `synthetic-monitoring`, `observability-driven-testing` — timing-based leads (during release / continuously after / as input to new test design).
+- `playwright-automation`, `test-reliability` — cross-linked to the new `selector-drift-recovery` skill.
+- `qa-do` — repositioned as last-resort router; explicit "Do NOT use if the request clearly matches another skill."
+
+#### Tier C — New skill: `selector-drift-recovery`
+
+Bulk post-refactor selector regeneration with PR-as-output. Distinct from `test-reliability`:
+
+- `test-reliability` — runtime, one test at a time, gated heal-or-revert per attempt.
+- `selector-drift-recovery` — offline, bulk, batch, single grouped PR, event-driven by a refactor (not a flake).
+
+Six-phase workflow (snapshot old DOM → snapshot new DOM → identify broken selectors → generate role-first candidates with confidence scores → validate → ship grouped PR) plus a reference playbook with executable Playwright scripts.
+
+#### Tier D — Index updates
+
+- Added "Picking between overlapping skills" disambiguation section to AGENTS.md / CLAUDE.md.
+- Updated skill count from 42 to 43.
+- Sharpened table entries to match new frontmatter descriptions (12 entries).
+- Added `selector-drift-recovery` to the Automation section.
+
+Total: 17 file changes across 4 commits.
+
+---
+
 ## v2.4.0 (2026-05-10)
 
 ### 2026-05 currency pass — every skill refreshed

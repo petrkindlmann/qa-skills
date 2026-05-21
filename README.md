@@ -7,7 +7,7 @@ Gemini CLI, VS Code, and other agents that support the Agent Skills Standard.
 npx skills add petrkindlmann/qa-skills
 ```
 
-42 skills covering:
+43 skills covering:
 - Playwright and Cypress automation
 - API, unit, and mobile testing
 - Test strategy and risk-based planning
@@ -20,7 +20,7 @@ npx skills add petrkindlmann/qa-skills
 
 Based on patterns from QA automation work across 6+ production sites.
 
-[![Skills](https://img.shields.io/badge/Skills-42-blue.svg)](#full-skills-table)
+[![Skills](https://img.shields.io/badge/Skills-43-blue.svg)](#full-skills-table)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Agent Skills Standard](https://img.shields.io/badge/Agent_Skills-Standard-purple.svg)](https://agentskills.io)
 [![Playwright](https://img.shields.io/badge/Playwright-First-green.svg)](https://playwright.dev)
@@ -74,7 +74,7 @@ Ask your AI agent in natural language. The right skill activates automatically.
 
 ## Skill categories
 
-42 skills across 10 categories. Each skill is under 500 lines with cross-references to related skills.
+43 skills across 10 categories. Each skill is under 500 lines with cross-references to related skills.
 
 ### Foundation (1)
 `qa-project-context` — project context template that every other skill reads first
@@ -82,8 +82,8 @@ Ask your AI agent in natural language. The right skill activates automatically.
 ### Strategy (4)
 `test-strategy` · `test-planning` · `risk-based-testing` · `exploratory-testing` — QA strategy, sprint/release test plans, risk-based prioritization, session-based exploratory testing
 
-### Automation (7)
-`playwright-automation` · `cypress-automation` · `api-testing` · `unit-testing` · `mobile-testing` · `visual-testing` · `performance-testing` — Playwright E2E, Cypress component/E2E, REST/GraphQL, Jest/Vitest/pytest, Appium/Detox, visual regression, k6 load testing and Lighthouse CI
+### Automation (8)
+`playwright-automation` · `cypress-automation` · `selector-drift-recovery` · `api-testing` · `unit-testing` · `mobile-testing` · `visual-testing` · `performance-testing` — Playwright E2E, Cypress component/E2E, bulk post-refactor selector regeneration, REST/GraphQL, Jest/Vitest/pytest, Appium/Detox, visual regression, k6 load testing and Lighthouse CI
 
 ### Specialized (4)
 `accessibility-testing` · `security-testing` · `cross-browser-testing` · `database-testing` — WCAG compliance, OWASP Top 10, analytics-driven browser matrices, migration testing and schema validation
@@ -119,6 +119,7 @@ Ask your AI agent in natural language. The right skill activates automatically.
 | [`exploratory-testing`](skills/exploratory-testing) | Session-Based Test Management (SBTM), charter writing, heuristic-based exploration (HICCUPS, FEW HICCUPS), debrief templates. | Strategy |
 | [`playwright-automation`](skills/playwright-automation) | Playwright E2E testing. Page Object Model, fixtures, parallel execution, API mocking, visual comparisons, CI integration. | Automation |
 | [`cypress-automation`](skills/cypress-automation) | Cypress test suites with component testing, E2E testing, custom commands, cy.intercept, Cypress Cloud, and TypeScript support. | Automation |
+| [`selector-drift-recovery`](skills/selector-drift-recovery) | Bulk-regenerate broken test selectors after a UI refactor. Snapshot old vs new DOM, map locators with confidence scores, ship a single PR. | Automation |
 | [`api-testing`](skills/api-testing) | REST and GraphQL testing with schema validation, contract testing patterns, auth flows, and response assertions. | Automation |
 | [`unit-testing`](skills/unit-testing) | Jest, Vitest, and pytest patterns. Mocking strategies, coverage thresholds, snapshot testing, test doubles taxonomy. | Automation |
 | [`mobile-testing`](skills/mobile-testing) | Mobile testing with Appium 2.0 and Detox for React Native. Device farms, gesture simulation, deep link testing, push notifications. | Automation |
@@ -141,7 +142,7 @@ Ask your AI agent in natural language. The right skill activates automatically.
 | [`qa-dashboard`](skills/qa-dashboard) | QA dashboards with Allure Report, Grafana, and ReportPortal. Test execution visualization, trend analysis, stakeholder reports. | Metrics |
 | [`coverage-analysis`](skills/coverage-analysis) | Coverage measurement with Istanbul/V8/c8/coverage.py. Gap analysis, coverage-as-ratchet in CI, meaningful vs vanity coverage. | Metrics |
 | [`shift-left-testing`](skills/shift-left-testing) | Move quality earlier. Dev/QA pairing, Three Amigos, TDD facilitation, PR review checklists, pre-merge quality gates. | Process |
-| [`qa-project-bootstrap`](skills/qa-project-bootstrap) | Bootstrap QA for new projects or onboard QA engineers. First 30 days checklist, test architecture audit, framework walkthrough. | Process |
+| [`qa-project-bootstrap`](skills/qa-project-bootstrap) | Onboard a QA engineer to an existing codebase. First 30 days checklist, test architecture audit, framework walkthrough, mentorship patterns. | Process |
 | [`release-readiness`](skills/release-readiness) | Go/no-go checklists, smoke test suite design, rollback criteria, staged rollout validation, release sign-off. | Process |
 | [`quality-postmortem`](skills/quality-postmortem) | Blameless postmortems for escaped defects. Bug pattern analysis, 5 Whys root cause analysis, test gap identification. | Process |
 | [`compliance-testing`](skills/compliance-testing) | Regulatory compliance testing. GDPR/CMP consent verification, Better Ads Standards, cookie auditing, privacy policy validation. | Process |
@@ -163,7 +164,8 @@ Most QA skills repos stop at framework tutorials. This one also covers how AI ag
 |-------|-------------|
 | `ai-test-generation` | Generate test cases from PRDs, specs, and user stories. Builds a coverage matrix before writing code. |
 | `ai-bug-triage` | Classify bugs by severity/component/root cause, deduplicate issues, analyze CI failures |
-| `test-reliability` | Detect broken locators, score selector stability, quarantine flaky tests, classify root causes |
+| `test-reliability` | Per-test runtime healing: detect broken locators, score selector stability, quarantine flaky tests, classify root causes |
+| `selector-drift-recovery` | Bulk offline regeneration: snapshot old vs new DOM after a UI refactor, ship one PR with per-change evidence |
 | `ai-qa-review` | Test quality review. Coverage gap detection, test smell identification, testability analysis |
 
 ---

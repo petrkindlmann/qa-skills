@@ -23,28 +23,40 @@ On first skill use per session:
 
 Each skill's YAML frontmatter `description` must be specific enough to match the right skill without fuzzy boundaries. Descriptions include what the skill does, when to use it, trigger phrases, and cross-references to related skills.
 
+## Picking between overlapping skills
+
+When two skills could plausibly match a request, use these disambiguation rules. The skill descriptions also carry explicit "Not for: X — use Y" anti-triggers; treat those as authoritative.
+
+- **Strategy vs planning vs risk:** Use `risk-based-testing` first to produce the risk matrix. Use `test-strategy` for multi-quarter QA direction. Use `test-planning` for a single sprint or release.
+- **Bootstrapping vs onboarding:** Use `qa-start` when starting QA on a brand-new project (no QA exists yet). Use `qa-project-bootstrap` when onboarding a QA engineer to an existing codebase.
+- **AI cluster:** Use `ai-test-generation` when AI writes test code for you. Use `ai-system-testing` when AI/LLM features in your product are the thing being tested. Use `ai-qa-review` to review existing test code. Use `ai-bug-triage` to classify CI failures.
+- **Production trio:** Use `testing-in-production` for safe rollout techniques (flags, canary) **during** release. Use `synthetic-monitoring` for scheduled probes that run **after** release. Use `observability-driven-testing` when prod telemetry is the **input** to designing new tests.
+- **Selector maintenance:** Use `test-reliability` for runtime per-test healing when one test goes flaky. Use `selector-drift-recovery` for offline bulk regeneration after a UI refactor or redesign breaks many selectors.
+- **Last resort:** Use `qa-do` ONLY when the request doesn't match any other skill's trigger phrases. If the request clearly matches another skill, invoke that skill directly.
+
 ## Tools Integration
 
 - Skills reference tools listed in `tools/REGISTRY.md`
 - Tool-specific integration guides live in `tools/integrations/`
 - Examples: `playwright-automation` references the Playwright integration guide, `qa-metrics` references Allure/Grafana dashboards
 
-## Available Skills — 42 skills across 10 categories
+## Available Skills — 43 skills across 10 categories
 
 ### Foundation
 | `qa-project-context` | "set up QA context," "configure testing," first use of any skill |
-| `qa-start` | "set up QA for a new project," "onboard QA," "QA from scratch," "new project QA," "qa:start" |
-| `qa-do` | "which skill should I use," "where do I start," "I'm not sure what to test," "qa:do" |
+| `qa-start` | "set up QA on a new project," "QA from scratch," "no QA exists yet," "/qa-start" |
+| `qa-do` | "which skill should I use," "where do I start," "/qa-do" — last-resort router only |
 
 ### Strategy
-| `test-strategy` | "test strategy," "QA plan," "quality strategy," "testing approach" |
-| `test-planning` | "test plan," "sprint testing," "release plan," "what to test" |
-| `risk-based-testing` | "risk assessment," "what could break," "critical paths," "risk matrix" |
+| `test-strategy` | "test strategy," "multi-quarter QA direction," "QA roadmap" |
+| `test-planning` | "sprint test plan," "release test plan," "what to test this sprint" |
+| `risk-based-testing` | "risk matrix," "risk heatmap," "where to focus testing" — run BEFORE strategy/planning |
 | `exploratory-testing` | "exploratory testing," "SBTM," "manual testing," "bug hunting" |
 
 ### Automation
-| `playwright-automation` | "Playwright," "browser testing," "E2E test," "end-to-end" |
+| `playwright-automation` | "Playwright," "write E2E test," "page object," "new Playwright suite" |
 | `cypress-automation` | "Cypress," "cy.," "component test," "Cypress Cloud" |
+| `selector-drift-recovery` | "UI refactor broke tests," "redesign broke tests," "bulk update selectors," "selector drift" |
 | `api-testing` | "API test," "endpoint test," "REST test," "GraphQL test" |
 | `unit-testing` | "unit test," "Jest," "Vitest," "pytest," "mock," "coverage" |
 | `mobile-testing` | "mobile test," "Appium," "Detox," "iOS test," "Android test" |
@@ -58,10 +70,10 @@ Each skill's YAML frontmatter `description` must be specific enough to match the
 | `database-testing` | "database test," "migration test," "data integrity," "SQL test" |
 
 ### AI-Augmented QA
-| `ai-test-generation` | "generate tests," "AI tests," "tests from spec," "tests from PRD" |
+| `ai-test-generation` | "generate tests from spec/PRD/story," "AI write tests for me" |
 | `ai-bug-triage` | "bug triage," "classify bugs," "failure analysis," "CI failures" |
-| `test-reliability` | "flaky test," "self-healing," "broken locator," "test stability" |
-| `ai-qa-review` | "review tests," "test quality," "test smells," "coverage gaps" |
+| `test-reliability` | "flaky test," "self-healing locator," "broken locator recovery," "quarantine" — runtime per-test healing |
+| `ai-qa-review` | "review my tests," "test smells," "test quality audit," "testability analysis" |
 
 ### Infrastructure
 | `ci-cd-integration` | "CI/CD," "GitHub Actions," "pipeline," "test in CI" |
@@ -77,18 +89,18 @@ Each skill's YAML frontmatter `description` must be specific enough to match the
 
 ### Process
 | `shift-left-testing` | "shift left," "TDD," "dev-QA pairing," "definition of done" |
-| `qa-project-bootstrap` | "QA onboarding," "new tester," "ramp up," "test architecture audit" |
+| `qa-project-bootstrap` | "onboard new QA engineer," "ramp up to existing codebase," "test architecture audit," "first 30 days" |
 | `release-readiness` | "release ready," "go/no-go," "smoke test," "release checklist" |
 | `quality-postmortem` | "QA retro," "escaped bugs," "postmortem," "improvement" |
 | `compliance-testing` | "GDPR test," "compliance," "CMP test," "cookie consent" |
 | `qa-report-humanizer` | "humanize report," "rewrite QA summary," "fix test report," "make this sound human" |
 
 ### Production & Observability
-| `testing-in-production` | "production testing," "feature flags," "canary," "guardrails" |
-| `synthetic-monitoring` | "synthetic monitoring," "uptime," "SLA validation," "probes" |
-| `observability-driven-testing` | "observability," "trace-based testing," "telemetry" |
+| `testing-in-production` | "feature flag testing," "canary deploy," "guardrail metrics," "dark launch" — during release |
+| `synthetic-monitoring` | "synthetic monitoring," "scheduled probes," "SLA validation" — after release |
+| `observability-driven-testing` | "trace-based testing," "design tests from logs," "production errors point to test gaps" |
 
 ### Knowledge & Migration
-| `ai-system-testing` | "AI testing," "LLM testing," "prompt testing," "evals" |
+| `ai-system-testing` | "test our LLM feature," "prompt regression test," "AI feature testing" — testing AI features in your product |
 | `chaos-engineering` | "chaos engineering," "fault injection," "resilience," "game day" |
 | `test-migration` | "migrate tests," "switch framework," "Selenium to Playwright" |
