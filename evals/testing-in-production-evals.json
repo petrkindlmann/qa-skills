@@ -1,0 +1,221 @@
+{
+  "skill": "testing-in-production",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "tip-001",
+      "prompt": "Design a feature flag testing strategy for a new checkout flow that needs to be tested in production with both flag ON and OFF states",
+      "expected_patterns": [
+        "setFeatureFlag",
+        "flag enabled OR flag disabled OR flag on OR flag off",
+        "TEST_USER_ID OR synthetic account",
+        "test both paths OR dual path testing",
+        "rollback path"
+      ],
+      "anti_patterns": [
+        "only testing flag ON path",
+        "using real user data in production tests",
+        "no cleanup after test"
+      ],
+      "tags": [
+        "feature-flags",
+        "testing",
+        "safe-release"
+      ]
+    },
+    {
+      "id": "tip-002",
+      "prompt": "Document a canary rollout plan from 1% to 100% with explicit promotion criteria at each stage",
+      "expected_patterns": [
+        "1% OR canary",
+        "10% OR early adopters",
+        "50% OR partial",
+        "100% OR full rollout",
+        "hold_duration OR time window",
+        "error_rate OR latency OR crash_rate",
+        "guardrails OR conditions"
+      ],
+      "anti_patterns": [
+        "rollout without stages",
+        "no monitoring criteria mentioned",
+        "no hold times between stages"
+      ],
+      "tags": [
+        "canary-deploy",
+        "progressive-rollout",
+        "guardrails"
+      ]
+    },
+    {
+      "id": "tip-003",
+      "prompt": "Set up automatic rollback triggers for a production deployment that should revert if error rate doubles or latency triples",
+      "expected_patterns": [
+        "automatic_rollback OR rollback_to_previous",
+        "error_rate_5xx > 2x_baseline OR 2x baseline",
+        "latency_p99 > 3x_baseline OR latency condition",
+        "condition duration OR for",
+        "notify OR alert"
+      ],
+      "anti_patterns": [
+        "manual approval required for rollback",
+        "no notification configured",
+        "absolute thresholds instead of baseline comparison"
+      ],
+      "tags": [
+        "rollback",
+        "automation",
+        "guardrails"
+      ]
+    },
+    {
+      "id": "tip-004",
+      "prompt": "Write production smoke tests that verify core authentication and dashboard data loading with synthetic test accounts",
+      "expected_patterns": [
+        "SMOKE_TEST_EMAIL OR SMOKE_USER OR synthetic account",
+        "page.goto OR baseURL",
+        "getByRole OR getByLabel",
+        "expect OR assertion",
+        "health check OR /api/health",
+        "authenticate OR login"
+      ],
+      "anti_patterns": [
+        "hardcoded credentials in test",
+        "using real user accounts",
+        "no timeout configured",
+        "test modifies real user data"
+      ],
+      "tags": [
+        "smoke-tests",
+        "post-deploy",
+        "synthetic-users"
+      ]
+    },
+    {
+      "id": "tip-005",
+      "prompt": "Define guardrail metrics for a production rollout including error rate, latency, and conversion rate comparisons",
+      "expected_patterns": [
+        "error_rate OR 5xx OR exception",
+        "latency OR P95 OR P99 OR response time",
+        "conversion_rate OR business metric",
+        "vs baseline OR before/after OR control group",
+        "threshold OR tolerance"
+      ],
+      "anti_patterns": [
+        "only monitoring infrastructure metrics",
+        "no baseline comparison method",
+        "missing business metrics"
+      ],
+      "tags": [
+        "guardrail-metrics",
+        "monitoring",
+        "canary-analysis"
+      ]
+    },
+    {
+      "id": "tip-006",
+      "prompt": "Plan a stale feature flag cleanup process that runs weekly to identify and remove flags that are fully rolled out and older than 14 days",
+      "expected_patterns": [
+        "weekly OR scheduled",
+        "CI job OR automated",
+        "query flag provider OR flag platform",
+        "100% rolled out",
+        "14 days OR older than 2 weeks",
+        "remove flag OR cleanup"
+      ],
+      "anti_patterns": [
+        "manual flag cleanup process",
+        "no time window specified",
+        "removing flag without removing code"
+      ],
+      "tags": [
+        "flag-lifecycle",
+        "cleanup",
+        "technical-debt"
+      ]
+    },
+    {
+      "id": "tip-007",
+      "prompt": "Design a dark launch with traffic shadowing that validates new service responses without affecting users",
+      "expected_patterns": [
+        "shadow launch OR traffic shadowing",
+        "duplicate requests",
+        "shadow service OR production service",
+        "compare responses OR response diff",
+        "status codes OR response body",
+        "match rate OR error rate comparison"
+      ],
+      "anti_patterns": [
+        "shadow service returns response to user",
+        "no comparison metrics defined",
+        "shadow service blocks user request"
+      ],
+      "tags": [
+        "dark-launch",
+        "traffic-shadowing",
+        "migration"
+      ]
+    },
+    {
+      "id": "tip-008",
+      "prompt": "Create a non-destructive production test that creates a test document, verifies it, and cleans it up automatically",
+      "expected_patterns": [
+        "create OR write operation",
+        "verify OR assert",
+        "cleanup OR delete OR afterEach",
+        "smoke-test prefix OR SMOKE_TEST",
+        "always runs OR finally OR teardown"
+      ],
+      "anti_patterns": [
+        "test creates data and leaves it",
+        "cleanup only runs on success",
+        "real user data modified"
+      ],
+      "tags": [
+        "non-destructive",
+        "smoke-tests",
+        "cleanup"
+      ]
+    },
+    {
+      "id": "tip-009",
+      "prompt": "Document the rollback plan for a feature flag deployment including mechanism, time to rollback, and how to verify rollback succeeded",
+      "expected_patterns": [
+        "disable flag OR feature flag OR rollback mechanism",
+        "less than 5 minutes OR <5m OR fast",
+        "documented OR plan",
+        "verify OR confirm OR health check"
+      ],
+      "anti_patterns": [
+        "rollback plan is vague",
+        "no time target specified",
+        "no verification step"
+      ],
+      "tags": [
+        "rollback",
+        "safety",
+        "planning"
+      ]
+    },
+    {
+      "id": "tip-010",
+      "prompt": "Plan how to test multiple interacting feature flags (new-checkout, express-pay, discount-engine-v2) in production without exhaustive 2^N testing",
+      "expected_patterns": [
+        "critical combinations OR focus on interacting flags",
+        "flag combinations OR combo",
+        "flag area OR feature area",
+        "not all 2^N OR avoid exhaustive",
+        "identify flags that affect same flow"
+      ],
+      "anti_patterns": [
+        "testing all 2^N combinations",
+        "no selection criteria for which combinations to test",
+        "testing independent flags as combinations"
+      ],
+      "tags": [
+        "flag-combination",
+        "flag-testing",
+        "efficiency"
+      ]
+    }
+  ]
+}

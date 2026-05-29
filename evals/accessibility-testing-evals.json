@@ -1,0 +1,234 @@
+{
+  "skill": "accessibility-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "a11y-001",
+      "prompt": "Set up automated accessibility testing with axe-core in a Playwright test suite for a public marketing website",
+      "expected_patterns": [
+        "@axe-core/playwright",
+        "AxeBuilder",
+        "withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])",
+        "analyze",
+        "violations",
+        "expect(...).toHaveLength(0)"
+      ],
+      "anti_patterns": [
+        "no rule suppression justification",
+        "testing only default page state",
+        "hardcoded tag list without RGAA caveat"
+      ],
+      "tags": [
+        "automated",
+        "axe-core",
+        "wcag"
+      ]
+    },
+    {
+      "id": "a11y-002",
+      "prompt": "Write a keyboard navigation test that verifies tab order is logical and a form can be completed entirely by keyboard",
+      "expected_patterns": [
+        "page.keyboard.press('Tab')",
+        "page.keyboard.press('Enter')",
+        "page.keyboard.press('Space')",
+        "getByRole('checkbox')",
+        "toBeChecked",
+        "expect(page).toHaveURL"
+      ],
+      "anti_patterns": [
+        "mouse clicks instead of keyboard",
+        "no verification of focus visibility",
+        "testing only happy path, not error states"
+      ],
+      "tags": [
+        "keyboard",
+        "manual",
+        "form",
+        "wcag2a"
+      ]
+    },
+    {
+      "id": "a11y-003",
+      "prompt": "Configure CI/CD to run accessibility tests on every PR with axe-core and block merge if violations found",
+      "expected_patterns": [
+        "GitHub Actions OR CI workflow",
+        "npx playwright test e2e/tests/a11y/",
+        "upload-artifact",
+        "timeout-minutes",
+        "npx playwright install --with-deps chromium"
+      ],
+      "anti_patterns": [
+        "no artifact upload for review",
+        "accessibility tests run only on merge to main, not on PR",
+        "no timeout specified"
+      ],
+      "tags": [
+        "ci-cd",
+        "automation",
+        "process"
+      ]
+    },
+    {
+      "id": "a11y-004",
+      "prompt": "Write a test verifying that form inputs have proper labels, required fields are announced, and errors are associated with inputs via aria-describedby",
+      "expected_patterns": [
+        "getByLabel",
+        "aria-required",
+        "aria-invalid",
+        "aria-describedby",
+        "role='alert'",
+        "toHaveAttribute"
+      ],
+      "anti_patterns": [
+        "placeholder used as only label",
+        "error indicated only by color",
+        "no focus management on form submission failure"
+      ],
+      "tags": [
+        "form",
+        "aria",
+        "wcag2a",
+        "wcag2aa"
+      ]
+    },
+    {
+      "id": "a11y-005",
+      "prompt": "Create a reusable accessibility testing helper function that handles rule suppression with documented justification and excludes third-party widgets",
+      "expected_patterns": [
+        "async function checkAccessibility",
+        "interface A11yOptions",
+        "disableRules with comment",
+        "exclude",
+        "testInfo.attach",
+        "JSON.stringify(results)"
+      ],
+      "anti_patterns": [
+        "suppression without tracking issue OR comment",
+        "no option to exclude elements",
+        "no results attachment for audit trail"
+      ],
+      "tags": [
+        "helper",
+        "refactoring",
+        "maintainability"
+      ]
+    },
+    {
+      "id": "a11y-006",
+      "prompt": "Write a test that verifies a modal dialog follows the ARIA dialog pattern: has aria-modal, aria-labelledby, traps focus, and returns focus on close via Escape",
+      "expected_patterns": [
+        "getByRole('dialog')",
+        "aria-modal",
+        "aria-labelledby",
+        "page.keyboard.press('Escape')",
+        "toBeFocused",
+        "expect(dialog).toBeHidden"
+      ],
+      "anti_patterns": [
+        "no focus trap verification",
+        "focus not returned to trigger element",
+        "dialog not marked aria-modal OR aria-labelledby"
+      ],
+      "tags": [
+        "aria",
+        "pattern",
+        "modal",
+        "keyboard",
+        "wcag2a"
+      ]
+    },
+    {
+      "id": "a11y-007",
+      "prompt": "Write a test that verifies page landmarks are present and correct: single <main>, one <header>, one <nav>, and one <footer>",
+      "expected_patterns": [
+        "getByRole('banner')",
+        "getByRole('navigation')",
+        "getByRole('main')",
+        "getByRole('contentinfo')",
+        "toHaveCount(1)",
+        "toBeVisible"
+      ],
+      "anti_patterns": [
+        "multiple <main> elements",
+        "landmark roles on non-semantic elements without justification",
+        "no assertion of visibility"
+      ],
+      "tags": [
+        "landmark",
+        "semantic",
+        "wcag2a"
+      ]
+    },
+    {
+      "id": "a11y-008",
+      "prompt": "Use ARIA Snapshots to verify that a navigation menu and a form have the correct accessible tree structure and catch regressions when visual changes break semantics",
+      "expected_patterns": [
+        "toMatchAriaSnapshot",
+        "- navigation",
+        "- link",
+        "- form",
+        "- textbox OR combobox OR checkbox OR button"
+      ],
+      "anti_patterns": [
+        "snapshot without semantic structure",
+        "ignoring role changes in snapshots",
+        "no regression detection"
+      ],
+      "tags": [
+        "aria-snapshot",
+        "regression",
+        "semantic",
+        "wcag2a"
+      ]
+    },
+    {
+      "id": "a11y-009",
+      "prompt": "Design a comprehensive accessibility testing strategy for a product that must comply with WCAG 2.2 AA and EU EAA requirements, covering both automated and manual testing",
+      "expected_patterns": [
+        "axe-core for automated",
+        "keyboard navigation audit",
+        "screen reader testing",
+        "color contrast 4.5:1 for normal text",
+        "skip link verification",
+        "documented screen reader version OR VoiceOver OR NVDA OR JAWS",
+        "manual testing checklist"
+      ],
+      "anti_patterns": [
+        "automated testing only",
+        "ignoring screen reader testing",
+        "no keyboard testing plan",
+        "no legal compliance mapping to WCAG 2.2 AA"
+      ],
+      "tags": [
+        "strategy",
+        "planning",
+        "wcag2aa",
+        "compliance",
+        "eaa"
+      ]
+    },
+    {
+      "id": "a11y-010",
+      "prompt": "Write tests for interactive states: verify that a dropdown menu is accessible when open, a loading skeleton has aria-busy, and a toast notification with aria-live=polite is announced",
+      "expected_patterns": [
+        "getByRole('listbox' OR 'menu')",
+        "aria-busy",
+        "aria-live='polite'",
+        "toBeVisible",
+        "getByText",
+        "click to trigger state change"
+      ],
+      "anti_patterns": [
+        "testing only default state",
+        "no assertion of ARIA attributes in different states",
+        "ignoring live regions for dynamic content"
+      ],
+      "tags": [
+        "interactive",
+        "aria",
+        "dynamic",
+        "wcag2aa"
+      ]
+    }
+  ]
+}

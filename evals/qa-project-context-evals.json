@@ -1,0 +1,223 @@
+{
+  "skill": "qa-project-context",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "qac-001",
+      "prompt": "I have a Next.js SaaS project and want to set up QA project context from scratch",
+      "expected_patterns": [
+        ".agents/qa-project-context.md created",
+        "Product section with name and URLs",
+        "Tech Stack section with Next.js details",
+        "Test Stack section",
+        "CI/CD section",
+        "Quality Goals section",
+        "Risk Areas table with at least 3 entries",
+        "Team section"
+      ],
+      "anti_patterns": [
+        "[bracketed placeholders] remaining",
+        "asking all 40 questions at once",
+        "generic template without project specifics",
+        "Risk Areas section empty or missing"
+      ],
+      "tags": [
+        "setup",
+        "creation",
+        "discovery"
+      ]
+    },
+    {
+      "id": "qac-002",
+      "prompt": "Set up QA context for my project. I have Playwright and Jest already, running on GitHub Actions",
+      "expected_patterns": [
+        "playwright.config.ts detected OR ask about Playwright version",
+        "jest.config.js detected OR ask about Jest setup",
+        ".github/workflows/ detected as CI/CD platform",
+        "Test Stack section populated with Playwright and Jest",
+        "CI/CD section with GitHub Actions config location"
+      ],
+      "anti_patterns": [
+        "asking about Playwright when playwright.config.ts exists",
+        "generic CI/CD section without GitHub Actions specifics",
+        "missing config file locations"
+      ],
+      "tags": [
+        "detection",
+        "autodetect",
+        "existing-tools"
+      ]
+    },
+    {
+      "id": "qac-003",
+      "prompt": "My .agents/qa-project-context.md already exists but has some [bracketed placeholders]. Update only the empty sections",
+      "expected_patterns": [
+        "read existing file first",
+        "identify sections with placeholders",
+        "ask only about unfilled sections",
+        "preserve completed sections",
+        "remove all [brackets] from final file"
+      ],
+      "anti_patterns": [
+        "re-ask questions about already-completed sections",
+        "overwrite entire file unnecessarily",
+        "leave any [bracketed] text in output"
+      ],
+      "tags": [
+        "update",
+        "partial",
+        "existing-file"
+      ]
+    },
+    {
+      "id": "qac-004",
+      "prompt": "I need to identify critical risk areas for my e-commerce platform. What questions should you ask to fill the Risk Areas section?",
+      "expected_patterns": [
+        "Which parts cause production incidents",
+        "Flakiest integrations (payment, email, third-party APIs)",
+        "High churn + low coverage areas",
+        "Impact x Likelihood framework mentioned",
+        "Risk table with Area, Risk Level, Business Impact, Notes columns"
+      ],
+      "anti_patterns": [
+        "skipping risk assessment",
+        "vague risk entries like 'everything breaks'",
+        "Risk table with fewer than 3 entries"
+      ],
+      "tags": [
+        "risk",
+        "assessment",
+        "prioritization"
+      ]
+    },
+    {
+      "id": "qac-005",
+      "prompt": "I'm a solo developer with no QA team. How should the Team section be filled for my context?",
+      "expected_patterns": [
+        "acknowledgement of high dev/QA ratio (solo = infinity)",
+        "recommendation that developers must write tests",
+        "QA focuses on strategy not manual execution",
+        "Test Stack reflects low-barrier setup (Playwright, Vitest, etc)",
+        "Team section explicitly states actual headcount"
+      ],
+      "anti_patterns": [
+        "suggesting comprehensive regression test suites",
+        "recommending dedicated test engineers",
+        "generic team structure advice"
+      ],
+      "tags": [
+        "team",
+        "solo",
+        "constraints"
+      ]
+    },
+    {
+      "id": "qac-006",
+      "prompt": "My project is a monorepo with 3 separate frontend apps and a shared API. How should I structure the Tech Stack and Test Stack sections?",
+      "expected_patterns": [
+        "multiple frontend entries in Tech Stack section",
+        "shared backend/API entry",
+        "test directories per app OR shared test infrastructure",
+        "turbo.json OR pnpm-workspace.yaml mentioned as detection hint",
+        "separate test sharding strategy for each app if applicable"
+      ],
+      "anti_patterns": [
+        "assuming single frontend",
+        "flat Tech Stack without distinguishing components",
+        "unclear which tests run for which app"
+      ],
+      "tags": [
+        "monorepo",
+        "multi-app",
+        "structure"
+      ]
+    },
+    {
+      "id": "qac-007",
+      "prompt": "My team has Playwright E2E tests but no unit tests yet. What should the Test Stack section say, and which skill should I use next?",
+      "expected_patterns": [
+        "Test Stack: E2E Framework Playwright (with version, config, directory)",
+        "Test Stack: Unit Framework 'None selected yet' OR 'Not yet implemented'",
+        "no [brackets] or placeholder text",
+        "suggest unit-testing skill as next step",
+        "note Vitest as modern default for unit testing"
+      ],
+      "anti_patterns": [
+        "recommending tools in this skill",
+        "leaving 'TBD' or [unit framework] in Test Stack",
+        "no guidance on what to do next"
+      ],
+      "tags": [
+        "test-stack",
+        "partial-tooling",
+        "next-steps"
+      ]
+    },
+    {
+      "id": "qac-008",
+      "prompt": "Set up quality goals section for my early-stage startup. What realistic coverage and speed targets should I include?",
+      "expected_patterns": [
+        "60% unit coverage target OR similar early-stage suggestion",
+        "E2E for top 5 critical flows",
+        "<3 minute unit test duration target",
+        "<15 minute E2E suite duration target",
+        "flakiness threshold <2%",
+        "concrete measurable goals (numbers, percentages, durations)"
+      ],
+      "anti_patterns": [
+        "aspirational goals like 'we want great quality'",
+        "90%+ coverage for early-stage startup",
+        "vague targets without numbers"
+      ],
+      "tags": [
+        "quality-goals",
+        "early-stage",
+        "realistic"
+      ]
+    },
+    {
+      "id": "qac-009",
+      "prompt": "How do I fill the Conventions section for selector strategy if my team uses semantic selectors (ARIA roles)?",
+      "expected_patterns": [
+        "Selector Strategy: ARIA roles and semantic HTML mentioned",
+        "example selectors like role='button' or role='heading'",
+        "recommendation for accessibility-aware testing",
+        "note on stability vs. data-testid tradeoff",
+        "naming convention or pattern documented"
+      ],
+      "anti_patterns": [
+        "recommending data-testid as only option",
+        "no selector strategy documented",
+        "vague guidance like 'use good selectors'"
+      ],
+      "tags": [
+        "conventions",
+        "selectors",
+        "accessibility"
+      ]
+    },
+    {
+      "id": "qac-010",
+      "prompt": "When I say my context file is done, what validations should confirm it's complete and ready for other skills to use?",
+      "expected_patterns": [
+        "no [bracketed placeholders] remain",
+        "all 9 sections present (Product, Tech Stack, Test Stack, CI/CD, Environments, Quality Goals, Risk Areas, Team, Conventions)",
+        "Risk Areas table has at least 3 entries",
+        "Product section includes 5+ key user flows",
+        "Team section shows actual headcount or 'solo'",
+        "Quality Goals are concrete with numbers/percentages"
+      ],
+      "anti_patterns": [
+        "empty Risk Areas section",
+        "generic template text still present",
+        "missing URLs or environment names",
+        "vague user flows like 'user uses app'"
+      ],
+      "tags": [
+        "validation",
+        "completion",
+        "checklist"
+      ]
+    }
+  ]
+}

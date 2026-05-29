@@ -1,0 +1,222 @@
+{
+  "skill": "contract-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "ct-001",
+      "prompt": "Write a Pact.js consumer contract test for a GET /api/users/123 endpoint that expects an id, name, and email",
+      "expected_patterns": [
+        "new Pact",
+        "addInteraction",
+        "given",
+        "uponReceiving",
+        "withRequest",
+        "willRespondWith",
+        "executeTest",
+        "Matchers.integer OR Matchers.string OR Matchers.regex"
+      ],
+      "anti_patterns": [
+        "testing business logic in contract",
+        "mocking response without executeTest",
+        "hardcoded test data without matchers"
+      ],
+      "tags": [
+        "consumer",
+        "pact",
+        "basics"
+      ]
+    },
+    {
+      "id": "ct-002",
+      "prompt": "Set up provider verification with Pact to verify a contract against a real service with database seeding",
+      "expected_patterns": [
+        "new Verifier",
+        "providerBaseUrl",
+        "pactUrls OR pactBrokerUrl",
+        "stateHandlers",
+        "given",
+        "publishVerificationResult",
+        "verifyProvider"
+      ],
+      "anti_patterns": [
+        "empty stateHandlers",
+        "provider state without setup",
+        "verification without database seed"
+      ],
+      "tags": [
+        "provider",
+        "verification",
+        "state-handlers"
+      ]
+    },
+    {
+      "id": "ct-003",
+      "prompt": "Configure a Pact Broker with Docker Compose including PostgreSQL and basic auth",
+      "expected_patterns": [
+        "pactfoundation/pact-broker",
+        "postgres",
+        "PACT_BROKER_DATABASE_URL",
+        "PACT_BROKER_BASIC_AUTH_USERNAME",
+        "PACT_BROKER_BASIC_AUTH_PASSWORD",
+        "healthcheck"
+      ],
+      "anti_patterns": [
+        "hardcoded passwords in compose file",
+        "no database persistence"
+      ],
+      "tags": [
+        "broker",
+        "docker",
+        "infrastructure"
+      ]
+    },
+    {
+      "id": "ct-004",
+      "prompt": "Write a consumer CI pipeline that publishes pacts to Pact Broker and runs can-i-deploy",
+      "expected_patterns": [
+        "pact-broker publish",
+        "consumer-app-version",
+        "branch",
+        "broker-token",
+        "can-i-deploy",
+        "to-environment",
+        "github.sha OR GIT_COMMIT"
+      ],
+      "anti_patterns": [
+        "publishing from local machine",
+        "skipping can-i-deploy",
+        "can-i-deploy without environment"
+      ],
+      "tags": [
+        "ci",
+        "deployment-gate",
+        "consumer-workflow"
+      ]
+    },
+    {
+      "id": "ct-005",
+      "prompt": "Set up a provider CI pipeline that verifies contracts on push and on Pact Broker webhook trigger",
+      "expected_patterns": [
+        "repository_dispatch",
+        "pact-changed",
+        "test:contract:provider",
+        "can-i-deploy",
+        "TEST_DATABASE_URL",
+        "GIT_COMMIT OR providerVersion"
+      ],
+      "anti_patterns": [
+        "webhook without repository_dispatch",
+        "skipping can-i-deploy on main branch"
+      ],
+      "tags": [
+        "ci",
+        "webhook",
+        "provider-workflow"
+      ]
+    },
+    {
+      "id": "ct-006",
+      "prompt": "Write a Pact consumer test with multiple interactions: 200 success, 404 not found, and 400 validation error",
+      "expected_patterns": [
+        "addInteraction",
+        "given",
+        "uponReceiving",
+        "willRespondWith",
+        "executeTest",
+        "200 OR 404 OR 400"
+      ],
+      "anti_patterns": [
+        "one massive pact covering every endpoint",
+        "business logic validation in contract test"
+      ],
+      "tags": [
+        "consumer",
+        "multiple-interactions",
+        "error-handling"
+      ]
+    },
+    {
+      "id": "ct-007",
+      "prompt": "Write a provider state handler that seeds a user and then tests the consumer contract verifies against real data",
+      "expected_patterns": [
+        "stateHandlers",
+        "given",
+        "async",
+        "seedUser OR database.insert OR similar",
+        "user 123 exists"
+      ],
+      "anti_patterns": [
+        "empty stateHandlers",
+        "provider state without database setup",
+        "hardcoded values instead of parameterized states"
+      ],
+      "tags": [
+        "provider",
+        "state-handlers",
+        "database"
+      ]
+    },
+    {
+      "id": "ct-008",
+      "prompt": "Implement schema-first contract testing: validate a consumer response against an OpenAPI spec using AJV",
+      "expected_patterns": [
+        "SwaggerParser OR openapi.yaml",
+        "Ajv",
+        "ajv.compile",
+        "validate",
+        "schema",
+        "operation"
+      ],
+      "anti_patterns": [
+        "schema validation without error handling",
+        "ignoring validation errors"
+      ],
+      "tags": [
+        "schema-first",
+        "openapi",
+        "ajv"
+      ]
+    },
+    {
+      "id": "ct-009",
+      "prompt": "Record a deployment in Pact Broker after a successful consumer deploy",
+      "expected_patterns": [
+        "record-deployment",
+        "pacticipant",
+        "version",
+        "environment",
+        "production OR staging"
+      ],
+      "anti_patterns": [
+        "can-i-deploy without recording deployment",
+        "deploying without recording state"
+      ],
+      "tags": [
+        "deployment",
+        "broker",
+        "record"
+      ]
+    },
+    {
+      "id": "ct-010",
+      "prompt": "Use Pact matchers (integer, string, regex, eachLike) in a consumer contract for a paginated user list response",
+      "expected_patterns": [
+        "eachLike",
+        "integer OR string OR regex",
+        "Matchers.",
+        "pagination",
+        "data",
+        "willRespondWith"
+      ],
+      "anti_patterns": [
+        "hardcoded response data without matchers",
+        "not using eachLike for array responses"
+      ],
+      "tags": [
+        "matchers",
+        "consumer",
+        "pagination"
+      ]
+    }
+  ]
+}

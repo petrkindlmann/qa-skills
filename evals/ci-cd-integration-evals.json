@@ -1,0 +1,217 @@
+{
+  "skill": "ci-cd-integration",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "cicd-001",
+      "prompt": "Create a GitHub Actions workflow that runs lint and unit tests on every push, and integration + E2E on PR, keeping push feedback under 2 minutes",
+      "expected_patterns": [
+        "on: push OR on: [push, pull_request]",
+        "matrix OR strategy",
+        "npm run lint",
+        "npm test OR npm run test:ci",
+        "if: github.event_name == 'pull_request'"
+      ],
+      "anti_patterns": [
+        "running full E2E on every push",
+        "no conditional logic between push and PR",
+        "serial test execution without parallelism"
+      ],
+      "tags": [
+        "github-actions",
+        "pipeline-architecture",
+        "triggers"
+      ]
+    },
+    {
+      "id": "cicd-002",
+      "prompt": "Set up Playwright test sharding across 4 workers in GitHub Actions with merged HTML reports",
+      "expected_patterns": [
+        "matrix: { shard: [1, 2, 3, 4] }",
+        "npx playwright test --shard=${{ matrix.shard }}/4",
+        "merge-reports OR playwright merge-reports",
+        "actions/download-artifact",
+        "actions/upload-artifact"
+      ],
+      "anti_patterns": [
+        "serial shard execution",
+        "no report merging",
+        "manual shard counting instead of ${{ matrix.shard }}"
+      ],
+      "tags": [
+        "sharding",
+        "parallelism",
+        "playwright",
+        "reports"
+      ]
+    },
+    {
+      "id": "cicd-003",
+      "prompt": "Configure Playwright browser caching in GitHub Actions so browsers are not reinstalled on every run",
+      "expected_patterns": [
+        "actions/cache@v4",
+        "~/.cache/ms-playwright OR ~/.playwright",
+        "key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}",
+        "if: steps.playwright-cache.outputs.cache-hit != 'true'",
+        "npx playwright install --with-deps"
+      ],
+      "anti_patterns": [
+        "caching browser binaries without key hash",
+        "no restore-keys fallback",
+        "installing browsers unconditionally"
+      ],
+      "tags": [
+        "caching",
+        "performance",
+        "github-actions"
+      ]
+    },
+    {
+      "id": "cicd-004",
+      "prompt": "Write a GitHub Actions workflow that quarantines flaky tests with @flaky tag into a non-blocking job",
+      "expected_patterns": [
+        "e2e-stable: OR e2e-quarantine:",
+        "npx playwright test --grep-invert @flaky",
+        "npx playwright test --grep @flaky",
+        "continue-on-error: true",
+        "test('.*@flaky'"
+      ],
+      "anti_patterns": [
+        "retries: 3 without quarantine",
+        "no distinction between stable and flaky",
+        "flaky tests blocking merges"
+      ],
+      "tags": [
+        "flaky-tests",
+        "quarantine",
+        "test-health"
+      ]
+    },
+    {
+      "id": "cicd-005",
+      "prompt": "Create a .gitlab-ci.yml pipeline with parallel E2E sharding using CI_NODE_INDEX and coverage reports",
+      "expected_patterns": [
+        "stages: [validate, test, e2e, deploy]",
+        "parallel: 4",
+        "npx playwright test --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL",
+        "coverage_report OR junit",
+        "artifacts: { when: always, paths: [test-results/, playwright-report/] }"
+      ],
+      "anti_patterns": [
+        "hardcoded shard numbers instead of CI_NODE_INDEX",
+        "no artifact retention strategy",
+        "missing coverage report configuration"
+      ],
+      "tags": [
+        "gitlab-ci",
+        "sharding",
+        "coverage"
+      ]
+    },
+    {
+      "id": "cicd-006",
+      "prompt": "Set up conditional test execution in GitHub Actions so E2E tests only run when src/ or playwright.config.ts changes",
+      "expected_patterns": [
+        "dorny/paths-filter@v3 OR pathFilters",
+        "id: changes",
+        "if: steps.changes.outputs.frontend == 'true'",
+        "filters: | frontend: ... playwright.config.ts"
+      ],
+      "anti_patterns": [
+        "running all tests regardless of file changes",
+        "no filtering logic",
+        "hardcoded step paths"
+      ],
+      "tags": [
+        "optimization",
+        "conditional-execution",
+        "efficiency"
+      ]
+    },
+    {
+      "id": "cicd-007",
+      "prompt": "Configure GitHub Actions concurrency groups to cancel in-progress runs when a branch receives multiple pushes",
+      "expected_patterns": [
+        "concurrency:",
+        "group: tests-${{ github.ref }}",
+        "cancel-in-progress: true"
+      ],
+      "anti_patterns": [
+        "no concurrency configuration",
+        "cancel-in-progress: false",
+        "static group name without branch awareness"
+      ],
+      "tags": [
+        "concurrency",
+        "efficiency",
+        "resource-management"
+      ]
+    },
+    {
+      "id": "cicd-008",
+      "prompt": "Create a GitHub Actions quality gate for main branch that checks code coverage is above 80% and blocks merge if below threshold",
+      "expected_patterns": [
+        "npx coverage-summary OR coverage report parsing",
+        "if (( $(echo \"$COVERAGE < 80\" | bc -l) ))",
+        "echo ::error:: OR core.setFailed",
+        "exit 1",
+        "needs: [unit-tests, e2e-tests] OR requires passing tests"
+      ],
+      "anti_patterns": [
+        "no threshold enforcement",
+        "coverage check without exit code",
+        "quality gate on feature branches"
+      ],
+      "tags": [
+        "quality-gates",
+        "coverage",
+        "blocking"
+      ]
+    },
+    {
+      "id": "cicd-009",
+      "prompt": "Design a pipeline that publishes test results to a PR comment and uploads HTML reports as artifacts with 7-day retention",
+      "expected_patterns": [
+        "dorny/test-reporter@v1 OR test result publishing action",
+        "marocchino/sticky-pull-request-comment@v2 OR PR comment action",
+        "actions/upload-artifact@v4",
+        "retention-days: 7 OR expire_in: 7 days",
+        "name: Test Results OR html report"
+      ],
+      "anti_patterns": [
+        "no artifact retention set",
+        "test results not visible in PR",
+        "uploading artifacts without conditional cleanup"
+      ],
+      "tags": [
+        "artifacts",
+        "reporting",
+        "visibility"
+      ]
+    },
+    {
+      "id": "cicd-010",
+      "prompt": "Create a nightly scheduled pipeline that runs the full E2E suite, security scan (npm audit), accessibility audit (axe-core), and posts results to Slack on failure",
+      "expected_patterns": [
+        "on: schedule:",
+        "cron: '0 2 * * *'",
+        "npm audit",
+        "@axe-core/playwright OR axe-core",
+        "slackapi/slack-github-action@v2.0.0",
+        "if: failure() && github.ref == 'refs/heads/main' OR similar condition"
+      ],
+      "anti_patterns": [
+        "no scheduled runs",
+        "security and a11y scans not included in nightly",
+        "Slack notifications on all runs instead of failures only",
+        "no time trigger specification"
+      ],
+      "tags": [
+        "nightly",
+        "security",
+        "accessibility",
+        "notifications"
+      ]
+    }
+  ]
+}

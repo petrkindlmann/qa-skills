@@ -1,0 +1,230 @@
+{
+  "skill": "cypress-automation",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "cy-001",
+      "prompt": "Write a Cypress E2E test for a product listing page that waits for products to load and verifies the count",
+      "expected_patterns": [
+        "cy.get OR cy.getByTestId",
+        "cy.intercept",
+        "cy.wait",
+        "should('have.length')",
+        ".as('') for alias"
+      ],
+      "anti_patterns": [
+        "cy.wait(milliseconds) for arbitrary delay",
+        "storing return value in variable",
+        "async/await with Cypress commands",
+        "checking DOM without assertion chaining"
+      ],
+      "tags": [
+        "e2e",
+        "retry-ability",
+        "network-control"
+      ]
+    },
+    {
+      "id": "cy-002",
+      "prompt": "Create a custom Cypress command cy.login that authenticates via API and caches the session, with TypeScript declarations",
+      "expected_patterns": [
+        "Cypress.Commands.add",
+        "cy.session",
+        "cy.request",
+        "declare namespace Cypress",
+        "interface Chainable",
+        "cypress/support/commands.ts",
+        "cypress/support/index.d.ts"
+      ],
+      "anti_patterns": [
+        "UI-based login in every test",
+        "Chainable without proper TypeScript types",
+        "missing JSDoc @example"
+      ],
+      "tags": [
+        "custom-commands",
+        "typescript",
+        "auth"
+      ]
+    },
+    {
+      "id": "cy-003",
+      "prompt": "Write a Cypress test using cy.intercept to stub an API response with fixture data for an order confirmation",
+      "expected_patterns": [
+        "cy.intercept('POST', '/api/orders')",
+        "fixture: 'api-responses/...'",
+        ".as('createOrder')",
+        "cy.wait('@createOrder')",
+        "interception.request.body",
+        "expect(interception.response?.statusCode)"
+      ],
+      "anti_patterns": [
+        "waiting on real network calls",
+        "hardcoding response body inline without fixtures",
+        "not aliasing intercepts"
+      ],
+      "tags": [
+        "network-control",
+        "intercept",
+        "fixtures"
+      ]
+    },
+    {
+      "id": "cy-004",
+      "prompt": "Configure cypress.config.ts with TypeScript, Cypress Cloud integration, environment-specific baseUrl, and retries for CI",
+      "expected_patterns": [
+        "defineConfig",
+        "projectId: process.env.CYPRESS_PROJECT_ID",
+        "baseUrl: process.env.CYPRESS_BASE_URL",
+        "specPattern: 'cypress/e2e/**/*.cy.ts'",
+        "supportFile: 'cypress/support/e2e.ts'",
+        "retries: { runMode: 2, openMode: 0 }",
+        "defaultCommandTimeout",
+        "component: { devServer: { framework: ..., bundler: ... } }"
+      ],
+      "anti_patterns": [
+        "hardcoded localhost in CI environment",
+        "missing projectId for Cloud",
+        "retries enabled in openMode",
+        "no component config when component tests exist"
+      ],
+      "tags": [
+        "config",
+        "cloud",
+        "ci",
+        "typescript"
+      ]
+    },
+    {
+      "id": "cy-005",
+      "prompt": "Write a React component test for ProductCard that verifies rendering, callback invocation with cy.stub, and disabled state",
+      "expected_patterns": [
+        "cypress/component/ProductCard.cy.tsx",
+        "cy.mount(<ProductCard ... />)",
+        "cy.stub().as('addToCart')",
+        "cy.get('@addToCart').should('have.been.calledOnceWith')",
+        "should('be.disabled')",
+        "should('be.visible')"
+      ],
+      "anti_patterns": [
+        "testing full app instead of isolated component",
+        "not mocking callbacks with cy.stub()",
+        "using cy.visit in component test"
+      ],
+      "tags": [
+        "component-testing",
+        "react",
+        "stubs"
+      ]
+    },
+    {
+      "id": "cy-006",
+      "prompt": "Write a Cypress test using cy.intercept with conditional responses to test polling behavior (retrying until status changes)",
+      "expected_patterns": [
+        "cy.intercept('GET', '/api/status', (req) => { ... })",
+        "let callCount = 0",
+        "callCount <= threshold",
+        "req.reply({ statusCode: ..., body: ... })",
+        ".as('pollStatus')",
+        "cy.wait('@pollStatus')"
+      ],
+      "anti_patterns": [
+        "using hardcoded cy.wait(milliseconds)",
+        "not using aliases",
+        "mocking without controlling state transitions"
+      ],
+      "tags": [
+        "intercept",
+        "network-control",
+        "polling"
+      ]
+    },
+    {
+      "id": "cy-007",
+      "prompt": "Set up data-driven testing with fixtures: load test users from cypress/fixtures/users.json and log in as different roles",
+      "expected_patterns": [
+        "cy.fixture('users').as('users')",
+        "beforeEach(function () { ... })",
+        "this.users.find(...)",
+        "cy.login(user.email, user.password)",
+        "describe with multiple it() blocks"
+      ],
+      "anti_patterns": [
+        "hardcoding test data in test files",
+        "sharing state between tests",
+        "not isolating each it() block"
+      ],
+      "tags": [
+        "fixtures",
+        "data-driven",
+        "isolation"
+      ]
+    },
+    {
+      "id": "cy-008",
+      "prompt": "Write a Cypress test that simulates a network error with cy.intercept forceNetworkError and verifies error handling UI",
+      "expected_patterns": [
+        "cy.intercept('POST', '/api/checkout', { forceNetworkError: true })",
+        ".as('networkError')",
+        "cy.wait('@networkError')",
+        "should('be.visible') for error message",
+        "cy.contains() for assertion"
+      ],
+      "anti_patterns": [
+        "not handling intercept setup before action",
+        "using cy.wait(milliseconds) for error propagation",
+        "not verifying error message appears"
+      ],
+      "tags": [
+        "intercept",
+        "error-handling",
+        "network"
+      ]
+    },
+    {
+      "id": "cy-009",
+      "prompt": "Configure Cypress Cloud parallelization with 4 parallel containers in GitHub Actions using cypress-io/github-action@v6",
+      "expected_patterns": [
+        "strategy.matrix.containers: [1, 2, 3, 4]",
+        "uses: cypress-io/github-action@v6",
+        "record: true",
+        "parallel: true",
+        "group: 'E2E Tests'",
+        "CYPRESS_RECORD_KEY"
+      ],
+      "anti_patterns": [
+        "using outdated action version",
+        "not pinning to specific tag",
+        "missing CYPRESS_RECORD_KEY env var",
+        "fail-fast: true in matrix (should be false)"
+      ],
+      "tags": [
+        "ci",
+        "cloud",
+        "parallelization"
+      ]
+    },
+    {
+      "id": "cy-010",
+      "prompt": "Write a Cypress test demonstrating command queueing: chaining cy.get().click().then() without storing intermediate values",
+      "expected_patterns": [
+        "cy.get('[data-testid=...]').click()",
+        ".then((element) => { ... })",
+        "invoking text with .invoke('text')",
+        "chaining without variable assignment",
+        "should('be.visible') or similar assertion"
+      ],
+      "anti_patterns": [
+        "const element = cy.get(...) and using element later",
+        "async/await with Cypress commands",
+        "storing Chainable in a variable for reuse",
+        "not using .then() to access values"
+      ],
+      "tags": [
+        "command-queue",
+        "chaining",
+        "fundamentals"
+      ]
+    }
+  ]
+}

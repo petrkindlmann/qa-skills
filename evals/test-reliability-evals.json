@@ -1,0 +1,224 @@
+{
+  "skill": "test-reliability",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "tr-001",
+      "prompt": "A test is flaky in CI but passes locally. Use the classification decision tree to diagnose what might be wrong.",
+      "expected_patterns": [
+        "TIMING OR ENVIRONMENT",
+        "Timeout errors OR Connection errors OR Resource errors",
+        "CI is slower OR network latency OR resource contention",
+        "wait for condition OR mock externals OR increase resources"
+      ],
+      "anti_patterns": [
+        "assumed it's a data dependency without checking if it passes alone",
+        "blamed the test without checking backend health first",
+        "no mention of the classification decision tree"
+      ],
+      "tags": [
+        "flake-classification",
+        "ci-diagnosis",
+        "decision-tree"
+      ]
+    },
+    {
+      "id": "tr-002",
+      "prompt": "Create a multi-attribute locator that resilience combines testId, role, and accessible name instead of using fallback chains",
+      "expected_patterns": [
+        "testId OR role OR accessible name OR nearText",
+        "combines signals OR AND logic",
+        "tries combinations from most specific to least",
+        "tolerance for one signal missing OR resilience without fallback chain complexity"
+      ],
+      "anti_patterns": [
+        "fallback chain with try-A-then-B-then-C",
+        "single locator strategy",
+        "no mention of combining multiple attributes",
+        "page.locator with bare CSS selector"
+      ],
+      "tags": [
+        "locator-resilience",
+        "multi-attribute",
+        "selector-strategy"
+      ]
+    },
+    {
+      "id": "tr-003",
+      "prompt": "Audit the test suite and assign Selector Stability Scores to each locator. Which score should be the minimum target average across the suite?",
+      "expected_patterns": [
+        "3.5+ OR 3.5 average",
+        "getByTestId scores 5 OR data-testid scores 5",
+        "getByRole scores 4",
+        "bare XPath OR CSS selector scores 0 or 1",
+        "audit monthly OR prioritize fixing score-0 and score-1"
+      ],
+      "anti_patterns": [
+        "target below 3.5",
+        "no mention of audit frequency",
+        "no differentiation between locator strategies"
+      ],
+      "tags": [
+        "selector-stability",
+        "scoring",
+        "audit"
+      ]
+    },
+    {
+      "id": "tr-004",
+      "prompt": "A test fails with a 401 error during execution. The auth token expired. Design a self-healing test data fixture that regenerates the token if stale.",
+      "expected_patterns": [
+        "verify → heal → use → cleanup pattern",
+        "check if token is valid OR refresh token",
+        "testInfo.annotations for observability",
+        "fixture cleanup guaranteed even on failure",
+        "GET /api/me OR POST /refresh-token"
+      ],
+      "anti_patterns": [
+        "cleanup in afterEach instead of fixture post-use block",
+        "no verification before healing",
+        "no annotation for observability",
+        "hardcoded test data without per-test uniqueness"
+      ],
+      "tags": [
+        "data-healing",
+        "fixtures",
+        "auth-token"
+      ]
+    },
+    {
+      "id": "tr-005",
+      "prompt": "A repair candidate is found for a broken locator. Define what confidence score thresholds should apply and what approval paths they trigger.",
+      "expected_patterns": [
+        ">= 0.9 OR >= 0.9 auto-apply",
+        "0.7-0.89 OR quarantine",
+        "0.5-0.69 OR PR with evidence",
+        "< 0.5 OR manual investigation",
+        "six dimensions OR weighted sum"
+      ],
+      "anti_patterns": [
+        "no confidence thresholds",
+        "auto-apply all repairs without approval policy",
+        "single dimension scoring instead of weighted sum",
+        "no mention of intent fidelity check"
+      ],
+      "tags": [
+        "confidence-scoring",
+        "approval-policy",
+        "repair-evidence"
+      ]
+    },
+    {
+      "id": "tr-006",
+      "prompt": "Set up quarantine in playwright.config.ts so flaky tests run separately and do not block CI, with 3 retries for quarantined tests.",
+      "expected_patterns": [
+        "tag: @quarantine OR tag: ['@quarantine']",
+        "grep: /^(?!.*@quarantine)/ OR grep: /@quarantine/",
+        "projects with separate stable and quarantine",
+        "retries: 3 OR retries for quarantine",
+        "annotation with quarantine description OR ticket reference"
+      ],
+      "anti_patterns": [
+        "retries applied to main project instead of quarantine",
+        "no grep to separate stable from quarantine",
+        "quarantine tag without ticket link OR description",
+        "test.skip for flaky tests instead of quarantine"
+      ],
+      "tags": [
+        "quarantine-setup",
+        "config",
+        "ci-integration"
+      ]
+    },
+    {
+      "id": "tr-007",
+      "prompt": "A test is quarantined. What is the maximum age before it must be fixed or deleted? Walk through the quarantine lifecycle from detection to release.",
+      "expected_patterns": [
+        "14 days OR maximum quarantine age: 14 days",
+        "DETECT → TAG → ISOLATE → DIAGNOSE → FIX → VERIFY → RELEASE",
+        "every quarantine entry has a ticket link",
+        "weekly review OR check quarantine list every sprint",
+        "run 50x with --repeat-each OR zero failures required"
+      ],
+      "anti_patterns": [
+        "no maximum age specified",
+        "permanent quarantine without a removal plan",
+        "anonymous quarantine without ticket",
+        "no verification step before release"
+      ],
+      "tags": [
+        "quarantine-lifecycle",
+        "hygiene",
+        "process"
+      ]
+    },
+    {
+      "id": "tr-008",
+      "prompt": "An action fails during a test. Implement environment-aware healing that checks if the backend is healthy or if the UI actually broke.",
+      "expected_patterns": [
+        "hit /api/health OR backend health check",
+        "retry with exponential backoff OR backend_down diagnosis",
+        "2xx backend healthy → real UI failure",
+        "5xx or timeout → backend unhealthy",
+        "structured diagnosis with success boolean"
+      ],
+      "anti_patterns": [
+        "always retry without checking backend",
+        "no distinction between backend and UI failures",
+        "hardcoded timeout or baseURL without health check",
+        "count backend failures toward flaky test rate"
+      ],
+      "tags": [
+        "environment-aware",
+        "backend-health",
+        "diagnosis"
+      ]
+    },
+    {
+      "id": "tr-009",
+      "prompt": "A repair has been applied to fix a broken locator. What three conditions must be checked to verify the repair preserves the original test intent?",
+      "expected_patterns": [
+        "element type changed OR ARIA role changed OR form action changed",
+        "same tag and role → intent preserved",
+        "different tag or role → intent NOT preserved",
+        "rollback if intent fidelity drops OR rollback trigger",
+        "button → link is a rollback case"
+      ],
+      "anti_patterns": [
+        "no intent fidelity check after repair",
+        "changed ARIA role without rollback",
+        "changed element type without verifying same form action",
+        "assume repair is safe without verification"
+      ],
+      "tags": [
+        "intent-fidelity",
+        "repair-validation",
+        "rollback"
+      ]
+    },
+    {
+      "id": "tr-010",
+      "prompt": "Design an observable repair workflow. What evidence must every repair produce, and what is the 'agentic video receipt' that makes repairs reviewable?",
+      "expected_patterns": [
+        "evidence record OR evidence diff",
+        "test file and test name",
+        "original locator and candidate replacements",
+        "confidence score and approval path",
+        "screencast.webm OR page.screencast OR agentic video receipt",
+        "showActions annotations"
+      ],
+      "anti_patterns": [
+        "repair without logging or evidence",
+        "JSON record only without video inspection",
+        "no confidence scoring in evidence",
+        "no audit trail for rollback trigger",
+        "Selenium without Healenium OR Playwright without MCP"
+      ],
+      "tags": [
+        "observable-repair",
+        "evidence",
+        "screencast"
+      ]
+    }
+  ]
+}

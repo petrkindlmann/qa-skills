@@ -1,0 +1,223 @@
+{
+  "skill": "test-data-management",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "tdm-001",
+      "prompt": "Write a Fishery factory for a User entity with email, name, role, and organizationId fields. Include a trait for admin users.",
+      "expected_patterns": [
+        "Factory.define",
+        "sequence",
+        "params",
+        "faker.person OR faker.name",
+        "params.role ?? 'member'"
+      ],
+      "anti_patterns": [
+        "Math.random()",
+        "Date.now()",
+        "hardcoded id without sequence",
+        "no default values"
+      ],
+      "tags": [
+        "factories",
+        "fishery",
+        "typescript"
+      ]
+    },
+    {
+      "id": "tdm-002",
+      "prompt": "Create a FactoryBot factory for a Product entity with name, price, and category in a Rails project. Make it easy to create variants like 'out_of_stock' and 'discounted'.",
+      "expected_patterns": [
+        "FactoryBot.define",
+        "factory :product",
+        "sequence",
+        "Faker:: OR FFaker::",
+        "trait"
+      ],
+      "anti_patterns": [
+        "using fixture files instead of factory traits",
+        "hardcoded values without Faker"
+      ],
+      "tags": [
+        "factories",
+        "factorybot",
+        "ruby"
+      ]
+    },
+    {
+      "id": "tdm-003",
+      "prompt": "Write a Factory Boy factory for a Django User model with email, username, and is_active status. Create a test that builds multiple users with different is_active values.",
+      "expected_patterns": [
+        "factory.django.DjangoModelFactory",
+        "class Meta",
+        "factory.Sequence",
+        "factory.Faker",
+        "class Params",
+        "create_batch OR build_batch"
+      ],
+      "anti_patterns": [
+        "Params without Trait",
+        "using fixtures for entity data"
+      ],
+      "tags": [
+        "factories",
+        "factory-boy",
+        "python",
+        "django"
+      ]
+    },
+    {
+      "id": "tdm-004",
+      "prompt": "Set up a Playwright test fixture that creates an order via API before each test and cleans it up afterward. Use the test object for setup/teardown.",
+      "expected_patterns": [
+        "test.extend",
+        "request.post",
+        "await use",
+        "request.delete",
+        "afterEach OR cleanup"
+      ],
+      "anti_patterns": [
+        "global variable for cleanup",
+        "no teardown",
+        "manual cleanup in each test"
+      ],
+      "tags": [
+        "fixtures",
+        "playwright",
+        "api",
+        "cleanup"
+      ]
+    },
+    {
+      "id": "tdm-005",
+      "prompt": "Design an anonymization pipeline for a production user export that contains emails, phone numbers, and SSNs. Show how to ensure referential integrity across tables.",
+      "expected_patterns": [
+        "Faker",
+        "faker.seed OR deterministic",
+        "lookup table OR mapping",
+        "transaction",
+        "parent records first"
+      ],
+      "anti_patterns": [
+        "storing reversible mapping back to originals",
+        "anonymizing child records before parents",
+        "non-deterministic Faker output",
+        "no transaction protection"
+      ],
+      "tags": [
+        "anonymization",
+        "gdpr",
+        "pii",
+        "privacy"
+      ]
+    },
+    {
+      "id": "tdm-006",
+      "prompt": "Write an idempotent seed script for populating a test database with countries and currency reference data. Explain why ON CONFLICT is important.",
+      "expected_patterns": [
+        "ON CONFLICT OR upsert",
+        "DO UPDATE",
+        "INSERT",
+        "idempotent",
+        "reference data"
+      ],
+      "anti_patterns": [
+        "INSERT without conflict handling",
+        "DELETE then INSERT (not idempotent)",
+        "hardcoded values without sequence"
+      ],
+      "tags": [
+        "seeding",
+        "database",
+        "idempotent"
+      ]
+    },
+    {
+      "id": "tdm-007",
+      "prompt": "Describe when to use transaction rollback vs. truncation for test cleanup in an integration test suite. When would API-based cleanup be necessary?",
+      "expected_patterns": [
+        "transaction rollback",
+        "TRUNCATE TABLE",
+        "API-based cleanup",
+        "E2E tests",
+        "per-test OR per-suite"
+      ],
+      "anti_patterns": [
+        "using transaction rollback for E2E tests",
+        "no cleanup strategy",
+        "manual cleanup steps"
+      ],
+      "tags": [
+        "cleanup",
+        "strategy",
+        "integration"
+      ]
+    },
+    {
+      "id": "tdm-008",
+      "prompt": "Create a test that validates boundary values for a product quantity field (min=1, max=100). Use a factory to generate edge cases including empty strings, very long strings, and null characters.",
+      "expected_patterns": [
+        "edgeCaseStrings OR edge cases",
+        "boundaryValues",
+        "test.each OR parameterized",
+        "min and max",
+        "whitespace OR control characters"
+      ],
+      "anti_patterns": [
+        "hardcoded test data",
+        "no boundary testing",
+        "no edge case coverage"
+      ],
+      "tags": [
+        "synthetic-data",
+        "edge-cases",
+        "testing"
+      ]
+    },
+    {
+      "id": "tdm-009",
+      "prompt": "Explain the difference between 'Each Test Owns Its Data' and using shared pre-seeded data. Why does shared data cause tests to fail when run in parallel?",
+      "expected_patterns": [
+        "isolated data",
+        "per-test creation",
+        "parallel execution",
+        "Test A modifies shared data",
+        "Test B breaks",
+        "ordering dependencies"
+      ],
+      "anti_patterns": [
+        "recommending shared data",
+        "pre-seeded global state",
+        "no mention of parallel safety"
+      ],
+      "tags": [
+        "principles",
+        "isolation",
+        "parallel"
+      ]
+    },
+    {
+      "id": "tdm-010",
+      "prompt": "Create a composed Playwright fixture that seeds both a user and 3 associated orders in one setup step, then cleans them all up. Use factories to build the data.",
+      "expected_patterns": [
+        "test.extend",
+        "userFactory.build",
+        "orderFactory.buildList",
+        "request.post.*seed",
+        "request.post.*cleanup OR request.delete",
+        "await use"
+      ],
+      "anti_patterns": [
+        "sequential cleanup without reverse iteration",
+        "no factory usage",
+        "separate setup for user and orders"
+      ],
+      "tags": [
+        "fixtures",
+        "factories",
+        "composition",
+        "playwright"
+      ]
+    }
+  ]
+}

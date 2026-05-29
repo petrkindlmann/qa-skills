@@ -1,0 +1,219 @@
+{
+  "skill": "ai-system-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "ast-001",
+      "prompt": "Set up a regression test suite for a summarization prompt using Promptfoo",
+      "expected_patterns": [
+        "promptfooconfig.yaml OR promptfoo",
+        "providers",
+        "tests",
+        "assert OR mustContain OR contains-all",
+        "file://prompts OR prompts/"
+      ],
+      "anti_patterns": [
+        "expect(output).toBe(\"exact string\")",
+        "exact string matching",
+        "no assertions defined"
+      ],
+      "tags": [
+        "prompt-regression",
+        "promptfoo",
+        "configuration"
+      ]
+    },
+    {
+      "id": "ast-002",
+      "prompt": "Create a golden dataset for AI feature testing with 50+ test cases including edge cases",
+      "expected_patterns": [
+        "input OR golden dataset",
+        "reference output OR acceptanceCriteria",
+        "mustContain OR mustNotContain",
+        "edge cases OR multilingual OR long inputs",
+        "metadata OR category OR difficulty"
+      ],
+      "anti_patterns": [
+        "fewer than 50 cases",
+        "no acceptance criteria",
+        "no edge cases defined"
+      ],
+      "tags": [
+        "golden-dataset",
+        "eval-infrastructure",
+        "quality-baselines"
+      ]
+    },
+    {
+      "id": "ast-003",
+      "prompt": "Write a test for nondeterministic AI output using statistical assertions across 10 runs",
+      "expected_patterns": [
+        "statisticalAssert OR runs OR Promise.all",
+        "requiredPassRate OR passRate",
+        "length(runs) OR multiple iterations",
+        "assertion function"
+      ],
+      "anti_patterns": [
+        "single run",
+        "exact string match",
+        "no pass rate threshold"
+      ],
+      "tags": [
+        "nondeterminism",
+        "statistical-testing",
+        "multiple-runs"
+      ]
+    },
+    {
+      "id": "ast-004",
+      "prompt": "Set up tool-call validation using DeepEval metrics for argument correctness",
+      "expected_patterns": [
+        "deepeval OR DeepEval",
+        "ToolCorrectnessMetric OR ArgumentCorrectnessMetric OR TaskCompletionMetric",
+        "LLMTestCase OR ToolCall",
+        "expected_tools OR tools_called",
+        "evaluate"
+      ],
+      "anti_patterns": [
+        "hand-rolled assertions without DeepEval",
+        "no argument validation",
+        "skipping task completion check"
+      ],
+      "tags": [
+        "tool-validation",
+        "deepeval",
+        "function-calling"
+      ]
+    },
+    {
+      "id": "ast-005",
+      "prompt": "Write property-based assertions to verify AI classification always returns valid categories",
+      "expected_patterns": [
+        "property OR properties",
+        "validCategories OR expected values",
+        "toContain OR includes",
+        "confidence OR score",
+        "for (const input of"
+      ],
+      "anti_patterns": [
+        "exact string comparison",
+        "single test case",
+        "no validation of output bounds"
+      ],
+      "tags": [
+        "property-assertions",
+        "classification",
+        "validation"
+      ]
+    },
+    {
+      "id": "ast-006",
+      "prompt": "Create a safety test suite for prompt injection resistance with three injection vectors",
+      "expected_patterns": [
+        "prompt injection OR injection vectors",
+        "Direct extraction OR system prompt",
+        "role override OR DAN",
+        "indirect injection OR HTML comments",
+        "refusal pattern OR cannot OR won't"
+      ],
+      "anti_patterns": [
+        "only testing one injection vector",
+        "no refusal pattern matching",
+        "ignoring prompt injection entirely"
+      ],
+      "tags": [
+        "safety",
+        "security",
+        "prompt-injection",
+        "adversarial"
+      ]
+    },
+    {
+      "id": "ast-007",
+      "prompt": "Version a production summarization prompt with changelog and test it against multiple model providers",
+      "expected_patterns": [
+        "version OR changelog",
+        "template OR parameters",
+        "anthropic:claude OR openai:gpt OR providers",
+        "maxSentences OR parameters.document",
+        "SUMMARIZE_PROMPT OR prompt definition"
+      ],
+      "anti_patterns": [
+        "hardcoded prompt without version",
+        "no changelog",
+        "single provider only",
+        "undocumented parameters"
+      ],
+      "tags": [
+        "prompt-versioning",
+        "a-b-testing",
+        "multi-provider"
+      ]
+    },
+    {
+      "id": "ast-008",
+      "prompt": "Set up an eval framework with weighted metrics (relevance, completeness, safety) and minimum thresholds",
+      "expected_patterns": [
+        "weight OR weightedSum",
+        "threshold OR minimum threshold",
+        "relevance OR completeness OR safety",
+        "scoring function OR score",
+        "LLM-as-judge OR pattern-match"
+      ],
+      "anti_patterns": [
+        "unweighted metrics",
+        "no thresholds defined",
+        "safety treated as optional"
+      ],
+      "tags": [
+        "eval-framework",
+        "metrics",
+        "weighted-scoring"
+      ]
+    },
+    {
+      "id": "ast-009",
+      "prompt": "Test a RAG system for hallucination by verifying factual claims are grounded in retrieved documents",
+      "expected_patterns": [
+        "RAG OR retrieval-augmented",
+        "hallucination OR factual claims",
+        "ground OR traced back to context",
+        "claim extraction OR verify",
+        "retrieved documents OR context"
+      ],
+      "anti_patterns": [
+        "no hallucination testing",
+        "claims not verified against sources",
+        "assuming RAG prevents hallucinations automatically"
+      ],
+      "tags": [
+        "hallucination",
+        "rag",
+        "fact-checking",
+        "grounding"
+      ]
+    },
+    {
+      "id": "ast-010",
+      "prompt": "Run a red-team safety scan using Garak to test for jailbreaks and system prompt extraction before launch",
+      "expected_patterns": [
+        "garak OR Garak",
+        "model_type OR probes",
+        "goat OR system_prompt_extraction OR encoding",
+        "before launch OR deployment",
+        "adversarial OR redteam"
+      ],
+      "anti_patterns": [
+        "no adversarial testing",
+        "launching without safety validation",
+        "skipping red-team probes"
+      ],
+      "tags": [
+        "safety",
+        "red-team",
+        "garak",
+        "pre-launch"
+      ]
+    }
+  ]
+}

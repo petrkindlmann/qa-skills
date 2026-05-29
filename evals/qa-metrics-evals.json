@@ -1,0 +1,227 @@
+{
+  "skill": "qa-metrics",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "qam-001",
+      "prompt": "We ship 20 features per sprint but track almost no test metrics. Where should we start?",
+      "expected_patterns": [
+        "code coverage percentage OR line coverage",
+        "flakiness rate",
+        "defect escape rate",
+        "pick 3 metrics",
+        "baseline data OR 2 weeks"
+      ],
+      "anti_patterns": [
+        "track 15+ metrics immediately",
+        "skip baseline measurement",
+        "no owner assignment",
+        "dashboard before automation"
+      ],
+      "tags": [
+        "discovery",
+        "startup",
+        "foundation"
+      ]
+    },
+    {
+      "id": "qam-002",
+      "prompt": "Our team is spending 8 hours per release cycle on manual regression testing. How do we calculate the ROI of automating it?",
+      "expected_patterns": [
+        "Manual cost = manual time per cycle × cycles per year × hourly rate",
+        "Automation cost = write time + annual maintenance",
+        "ROI = (manual cost - automation cost) / automation cost × 100",
+        "26 releases OR annual basis",
+        "Year 1 vs Year 2"
+      ],
+      "anti_patterns": [
+        "ignore maintenance costs",
+        "measure only first-year break-even",
+        "no hourly rate assumption stated"
+      ],
+      "tags": [
+        "roi",
+        "process-metrics",
+        "business-case"
+      ]
+    },
+    {
+      "id": "qam-003",
+      "prompt": "Our code coverage is 72% but we keep finding bugs in production that the tests didn't catch. What's the problem?",
+      "expected_patterns": [
+        "coverage measures execution OR branch coverage",
+        "mutation testing OR Stryker",
+        "pair coverage with defect escape rate",
+        "assertion quality",
+        "trivial tests OR test debt"
+      ],
+      "anti_patterns": [
+        "coverage guarantees quality",
+        "dismiss the 72% number without context",
+        "no mention of assertion strength"
+      ],
+      "tags": [
+        "coverage",
+        "anti-pattern",
+        "assertion-quality"
+      ]
+    },
+    {
+      "id": "qam-004",
+      "prompt": "Our flakiness rate just spiked to 8%. What's the immediate action and how do we prevent it?",
+      "expected_patterns": [
+        "quarantine flaky tests immediately",
+        "investigate top 3 weekly",
+        "timing OR race conditions OR shared state OR external dependencies",
+        "tests flaky for 30+ days should be deleted",
+        "detection tools: Buildkite OR Datadog OR Trunk"
+      ],
+      "anti_patterns": [
+        "ignore flakiness and rerun",
+        "no quarantine process",
+        "no investigation of root cause",
+        "keep flaky tests indefinitely"
+      ],
+      "tags": [
+        "flakiness",
+        "health-metrics",
+        "action-plan"
+      ]
+    },
+    {
+      "id": "qam-005",
+      "prompt": "We found 15 production bugs in a release. Only 2 were escaped to production. What's our defect escape rate and how do we classify what happened?",
+      "expected_patterns": [
+        "Defect escape rate = (defects found in production / total defects found) × 100",
+        "13.3% OR approximately 13%",
+        "classify by layer: unit, integration, E2E, review",
+        "write retrospective test",
+        "identify if escapes cluster in specific areas"
+      ],
+      "anti_patterns": [
+        "forget to calculate percentage",
+        "no breakdown by test layer",
+        "no follow-up retrospective test"
+      ],
+      "tags": [
+        "defect-metrics",
+        "escape-rate",
+        "calculation"
+      ]
+    },
+    {
+      "id": "qam-006",
+      "prompt": "Set up quality gates for our release pipeline. What should block a production deployment?",
+      "expected_patterns": [
+        "All P0 tests pass",
+        "coverage has not decreased",
+        "no new P0/P1 bugs unresolved",
+        "flakiness rate below threshold",
+        "E2E smoke suite green",
+        "automate gate enforcement"
+      ],
+      "anti_patterns": [
+        "gates are too strict without data justification",
+        "manual approval required for every gate",
+        "no clear threshold definition"
+      ],
+      "tags": [
+        "quality-gates",
+        "release-readiness",
+        "automation"
+      ]
+    },
+    {
+      "id": "qam-007",
+      "prompt": "Our unit tests run in 45 minutes, integration tests in 30 minutes, and E2E in 25 minutes. Developers ignore the results. What's wrong and how do we fix it?",
+      "expected_patterns": [
+        "profile slowest tests OR 10% account for 50%",
+        "increase parallelism",
+        "move slow tests post-merge",
+        "check unnecessary setup/teardown",
+        "plot duration over time OR alert on step changes >20%",
+        "Target: unit <5 min, integration <10 min, E2E <15 min"
+      ],
+      "anti_patterns": [
+        "accept slow feedback loop",
+        "parallelize without measuring impact",
+        "no baseline established"
+      ],
+      "tags": [
+        "execution-metrics",
+        "performance",
+        "ci-pipeline"
+      ]
+    },
+    {
+      "id": "qam-008",
+      "prompt": "We're a Series B company with 4 engineers. What metrics should we track and what targets should we aim for?",
+      "expected_patterns": [
+        "Unit test coverage 75% OR branch coverage 60%",
+        "Flakiness rate <3%",
+        "Pass rate >95%",
+        "Defect escape rate <10%",
+        "MTTR P0 <4 hours",
+        "CI pipeline <15 minutes",
+        "8-10 metrics with dashboards",
+        "Growth stage OR Series B-C"
+      ],
+      "anti_patterns": [
+        "seed-stage targets for Series B",
+        "enterprise-grade metrics too early",
+        "more than 10 metrics tracked"
+      ],
+      "tags": [
+        "targets",
+        "company-stage",
+        "growth"
+      ]
+    },
+    {
+      "id": "qam-009",
+      "prompt": "Build a leadership dashboard view that shows if quality is improving or declining. What metrics and time window should we display?",
+      "expected_patterns": [
+        "Defect escape rate trend (3-6 month view)",
+        "MTTR by severity (monthly average)",
+        "Quality gate pass rate",
+        "Automation ROI OR cumulative savings",
+        "Severity distribution trend",
+        "Release confidence score",
+        "exclude individual test names OR CI runner details",
+        "monthly OR per-release refresh"
+      ],
+      "anti_patterns": [
+        "show raw coverage numbers without context",
+        "daily refresh cadence",
+        "include engineering-level details"
+      ],
+      "tags": [
+        "dashboard",
+        "leadership-view",
+        "reporting"
+      ]
+    },
+    {
+      "id": "qam-010",
+      "prompt": "We have 500 passing tests but also 150 skipped tests. Why is this dangerous and what action should we take?",
+      "expected_patterns": [
+        "skipped tests are invisible coverage gaps",
+        "150 / (500 + 150) = 23% gap",
+        "skipped tests older than 2 sprints: fix or delete",
+        "add CI step that fails if skipped count exceeds 5%",
+        "trend toward zero",
+        "Disabled and Skipped Test Count metric"
+      ],
+      "anti_patterns": [
+        "ignore skipped tests in counts",
+        "allow indefinite test skipping",
+        "no enforcement mechanism"
+      ],
+      "tags": [
+        "health-metrics",
+        "test-debt",
+        "enforcement"
+      ]
+    }
+  ]
+}

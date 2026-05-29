@@ -1,0 +1,231 @@
+{
+  "skill": "unit-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "ut-001",
+      "prompt": "Write a Jest test for a UserService using the Arrange-Act-Assert pattern with a mocked UserRepository",
+      "expected_patterns": [
+        "describe",
+        "it OR test",
+        "jest.mock OR jest.Mocked",
+        "mockResolvedValue OR mockImplementation",
+        "expect",
+        "Arrange",
+        "Act",
+        "Assert"
+      ],
+      "anti_patterns": [
+        "testing private methods",
+        "expect(svc._cache",
+        "no beforeEach for setup",
+        "shared mutable state at module scope"
+      ],
+      "tags": [
+        "jest",
+        "mocking",
+        "arrange-act-assert"
+      ]
+    },
+    {
+      "id": "ut-002",
+      "prompt": "Configure Jest coverage thresholds in jest.config.js with branch, line, and statement minimums",
+      "expected_patterns": [
+        "coverageThresholds",
+        "branches: 80 OR branches >= 80",
+        "lines: 80 OR lines >= 80",
+        "statements: 80 OR statements >= 80",
+        "collectCoverageFrom",
+        "coverageProvider: v8 OR provider: v8"
+      ],
+      "anti_patterns": [
+        "coverageThresholds with 100 globally",
+        "including generated code in collectCoverageFrom",
+        "coverage only on lines, not branches"
+      ],
+      "tags": [
+        "coverage",
+        "configuration",
+        "jest"
+      ]
+    },
+    {
+      "id": "ut-003",
+      "prompt": "Use Vitest to set up in-source tests for a utility function using import.meta.vitest",
+      "expected_patterns": [
+        "if (import.meta.vitest)",
+        "import.meta.vitest",
+        "const { it, expect } = import.meta.vitest",
+        "includeSource",
+        "vitest.config.ts"
+      ],
+      "anti_patterns": [
+        "separate test file for utilities",
+        "excluding vitest from production",
+        "import.meta.vitest without ifdef guard"
+      ],
+      "tags": [
+        "vitest",
+        "in-source-testing",
+        "utilities"
+      ]
+    },
+    {
+      "id": "ut-004",
+      "prompt": "Write a pytest test using fixtures for a database service with setup and teardown",
+      "expected_patterns": [
+        "@pytest.fixture",
+        "conftest.py",
+        "yield",
+        "class Test OR def test_",
+        "assert",
+        "def db()",
+        "database.close()"
+      ],
+      "anti_patterns": [
+        "no fixture isolation between tests",
+        "setUp and tearDown methods instead of fixtures",
+        "shared database state"
+      ],
+      "tags": [
+        "pytest",
+        "fixtures",
+        "database"
+      ]
+    },
+    {
+      "id": "ut-005",
+      "prompt": "Create a test double strategy document: when to use stubs vs mocks vs fakes vs spies",
+      "expected_patterns": [
+        "Stub",
+        "Mock",
+        "Spy",
+        "Fake",
+        "external boundaries OR network OR filesystem OR time",
+        "dependency injection OR collaborator",
+        "return canned data OR verify calls OR working substitute"
+      ],
+      "anti_patterns": [
+        "mocking everything including internal collaborators",
+        "using fakes for simple return values",
+        "no distinction between test doubles"
+      ],
+      "tags": [
+        "mocking",
+        "taxonomy",
+        "strategy"
+      ]
+    },
+    {
+      "id": "ut-006",
+      "prompt": "Write a Jest test using jest.useFakeTimers to verify a debounce function behavior",
+      "expected_patterns": [
+        "jest.useFakeTimers()",
+        "jest.advanceTimersByTime",
+        "jest.useRealTimers()",
+        "beforeEach",
+        "afterEach",
+        "jest.fn()",
+        "toHaveBeenCalledTimes"
+      ],
+      "anti_patterns": [
+        "waitForTimeout OR sleep in debounce tests",
+        "no restoration of real timers",
+        "testing implementation detail instead of behavior"
+      ],
+      "tags": [
+        "jest",
+        "timers",
+        "async"
+      ]
+    },
+    {
+      "id": "ut-007",
+      "prompt": "Set up Stryker mutation testing for a JavaScript project and interpret the score",
+      "expected_patterns": [
+        "stryker.config.mjs OR stryker.config.mts",
+        "testRunner: jest OR testRunner: vitest",
+        "thresholds: { high:",
+        "coverageAnalysis",
+        "mutate",
+        "90%+ OR 70-89% OR <70%",
+        "mutant survived OR equivalent mutant"
+      ],
+      "anti_patterns": [
+        "running mutation testing on entire codebase",
+        "ignoring survivor analysis",
+        "no thresholds configured"
+      ],
+      "tags": [
+        "mutation-testing",
+        "stryker",
+        "quality"
+      ]
+    },
+    {
+      "id": "ut-008",
+      "prompt": "Write a pytest parametrized test for a title_case function with multiple input-output pairs",
+      "expected_patterns": [
+        "@pytest.mark.parametrize",
+        "def test_",
+        "assert",
+        "input_val",
+        "expected",
+        "\",\" separated tuples OR list of tuples"
+      ],
+      "anti_patterns": [
+        "separate test function for each case",
+        "hardcoded values in test body",
+        "no test names for each case"
+      ],
+      "tags": [
+        "pytest",
+        "parametrize",
+        "data-driven"
+      ]
+    },
+    {
+      "id": "ut-009",
+      "prompt": "Use snapshot testing with property matchers for a user object with dynamic timestamps",
+      "expected_patterns": [
+        "toMatchSnapshot OR toMatchInlineSnapshot",
+        "expect.any(Date) OR expect.any(String)",
+        "id: expect.any",
+        "createdAt: expect.any",
+        "inline snapshot OR snapshots directory"
+      ],
+      "anti_patterns": [
+        "snapshot of large output without property matchers",
+        "snapshot fatigue from frequently changing values",
+        "no review of snapshot changes",
+        "storing implementation details in snapshot"
+      ],
+      "tags": [
+        "snapshot-testing",
+        "jest-vitest",
+        "dynamic-values"
+      ]
+    },
+    {
+      "id": "ut-010",
+      "prompt": "Write a Vitest test for an async function using await expect().resolves and rejects patterns",
+      "expected_patterns": [
+        "await expect",
+        ".resolves.toEqual OR .resolves.toBe",
+        ".rejects.toThrow",
+        "async it",
+        "mockResolvedValue OR mockRejectedValue"
+      ],
+      "anti_patterns": [
+        ".then().catch() instead of resolves/rejects",
+        "async without await in test",
+        "no error case testing"
+      ],
+      "tags": [
+        "vitest",
+        "async",
+        "promises"
+      ]
+    }
+  ]
+}

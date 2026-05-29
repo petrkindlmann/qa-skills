@@ -1,0 +1,231 @@
+{
+  "skill": "api-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "api-001",
+      "prompt": "Write a Playwright API test that verifies GET /api/users returns a list with proper schema validation using Zod",
+      "expected_patterns": [
+        "request.get",
+        "z.object OR z.array",
+        "safeParse OR .parse",
+        "expect",
+        "status() OR response.ok()",
+        "response.json()"
+      ],
+      "anti_patterns": [
+        "toHaveProperty only without schema validation",
+        "hardcoded token",
+        "waitForTimeout"
+      ],
+      "tags": [
+        "schema-validation",
+        "zod",
+        "rest",
+        "basic"
+      ]
+    },
+    {
+      "id": "api-002",
+      "prompt": "Set up an authenticated API fixture in Playwright that logs in dynamically before each test",
+      "expected_patterns": [
+        "test.extend",
+        "APIRequestContext",
+        "test as base",
+        "playwright.request.newContext",
+        "post.*login",
+        "await use(api)",
+        "await api.dispose()"
+      ],
+      "anti_patterns": [
+        "hardcoded token in header",
+        "global variable for auth",
+        "beforeEach without fixture"
+      ],
+      "tags": [
+        "fixtures",
+        "auth-flow",
+        "jwt"
+      ]
+    },
+    {
+      "id": "api-003",
+      "prompt": "Write a CRUD lifecycle test for a projects endpoint using serial tests that share state across CREATE, READ, UPDATE, DELETE operations",
+      "expected_patterns": [
+        "test.describe.serial",
+        "authedApi.post.*data.*name",
+        "authedApi.get.*projectId",
+        "authedApi.patch.*data",
+        "authedApi.delete",
+        "status() === 201 OR status() === 200 OR status() === 204",
+        "let projectId"
+      ],
+      "anti_patterns": [
+        "running tests in parallel without serial",
+        "no cleanup delete at end",
+        "expect.anything without specific assertion"
+      ],
+      "tags": [
+        "crud",
+        "lifecycle",
+        "state-sharing"
+      ]
+    },
+    {
+      "id": "api-004",
+      "prompt": "Write comprehensive error response validation tests for POST /api/users that cover 400 malformed input and 422 validation errors",
+      "expected_patterns": [
+        "request.post",
+        "status() === 400 OR status() === 422",
+        "body.details",
+        "arrayContaining",
+        "objectContaining.*field",
+        "expect(res.status()).toBe"
+      ],
+      "anti_patterns": [
+        "only testing happy path",
+        "no assertion on error details",
+        "ignoring field-level validation errors"
+      ],
+      "tags": [
+        "error-handling",
+        "validation",
+        "status-codes"
+      ]
+    },
+    {
+      "id": "api-005",
+      "prompt": "Write an authentication flow test that covers login, token refresh, expired token rejection, and permission boundaries (403)",
+      "expected_patterns": [
+        "request.post.*login",
+        "accessToken OR refreshToken",
+        "request.post.*refresh",
+        "Bearer.*accessToken",
+        "status() === 401",
+        "status() === 403",
+        "expect(res.status()).toBe"
+      ],
+      "anti_patterns": [
+        "no token refresh test",
+        "no expiration test",
+        "no permission boundary test",
+        "skipping 401 or 403 assertions"
+      ],
+      "tags": [
+        "auth-flow",
+        "jwt",
+        "permission-boundaries"
+      ]
+    },
+    {
+      "id": "api-006",
+      "prompt": "Write a GraphQL test that executes both a query and mutation with variables and validates the response structure",
+      "expected_patterns": [
+        "request.post.*graphql",
+        "query OR mutation",
+        "variables",
+        "body.errors OR body.data",
+        "expect(body.errors).toBeUndefined()",
+        "expect.any(String) OR toMatchObject"
+      ],
+      "anti_patterns": [
+        "hardcoded query string without variables",
+        "no check for errors field",
+        "using REST syntax for graphql"
+      ],
+      "tags": [
+        "graphql",
+        "mutations",
+        "variables"
+      ]
+    },
+    {
+      "id": "api-007",
+      "prompt": "Write API tests that validate pagination with assertions for page, pageSize, total, and boundary conditions like out-of-bounds pages",
+      "expected_patterns": [
+        "request.get.*page=",
+        "pageSize OR itemsPerPage",
+        "expect(body.page).toBe",
+        "expect(body.items.length).toBeLessThanOrEqual",
+        "body.total OR body.count",
+        "pageSize=0 OR page=99999"
+      ],
+      "anti_patterns": [
+        "only testing first page",
+        "no assertion on total count",
+        "not testing invalid pageSize",
+        "ignoring boundary cases"
+      ],
+      "tags": [
+        "pagination",
+        "list-endpoints",
+        "boundaries"
+      ]
+    },
+    {
+      "id": "api-008",
+      "prompt": "Write a Playwright config for API-only tests that use baseURL from environment variables",
+      "expected_patterns": [
+        "defineConfig",
+        "testDir OR test directory",
+        "use.*baseURL",
+        "process.env.API_BASE_URL",
+        "extraHTTPHeaders.*Accept.*json",
+        "?? OR default value"
+      ],
+      "anti_patterns": [
+        "hardcoded baseURL without env var",
+        "missing extraHTTPHeaders",
+        "no test directory specified"
+      ],
+      "tags": [
+        "config",
+        "environment-variables",
+        "setup"
+      ]
+    },
+    {
+      "id": "api-009",
+      "prompt": "Write a test that validates API response headers including content-type, cache control, and rate-limit info",
+      "expected_patterns": [
+        "response.headers()",
+        "toContain.*application/json",
+        "cache-control OR content-type OR retry-after",
+        "expect(headers).toBeDefined()",
+        "headers['content-type'] OR headers.get"
+      ],
+      "anti_patterns": [
+        "ignoring response headers",
+        "not validating content-type",
+        "skipping cache or rate-limit headers"
+      ],
+      "tags": [
+        "headers",
+        "caching",
+        "rate-limiting"
+      ]
+    },
+    {
+      "id": "api-010",
+      "prompt": "Write performance assertion tests that verify API response time under 500ms and payload size under 1MB",
+      "expected_patterns": [
+        "Date.now()",
+        "response.status()",
+        "expect(Date.now() - start).toBeLessThan(500)",
+        "response.body()",
+        "length / 1024",
+        "expect(body.length).toBeLessThan"
+      ],
+      "anti_patterns": [
+        "no performance threshold",
+        "ignoring payload size",
+        "arbitrary sleep before measuring"
+      ],
+      "tags": [
+        "performance",
+        "timing",
+        "load-testing"
+      ]
+    }
+  ]
+}

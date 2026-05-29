@@ -1,0 +1,221 @@
+{
+  "skill": "qa-dashboard",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "qad-001",
+      "prompt": "Set up Allure Report integration with Playwright tests in playwright.config.ts with environment variables",
+      "expected_patterns": [
+        "allure-playwright",
+        "reporter: [\"allure-playwright\"",
+        "outputFolder",
+        "environmentInfo",
+        "process.env"
+      ],
+      "anti_patterns": [
+        "hardcoded URLs",
+        "allure reporter without outputFolder"
+      ],
+      "tags": [
+        "allure",
+        "playwright",
+        "reporter"
+      ]
+    },
+    {
+      "id": "qad-002",
+      "prompt": "Add metadata annotations to a Playwright test including severity, feature, story, and tags for Allure Report",
+      "expected_patterns": [
+        "allure.severity",
+        "allure.feature",
+        "allure.story",
+        "allure.tag",
+        "await allure"
+      ],
+      "anti_patterns": [
+        "test.describe without metadata",
+        "missing severity classification"
+      ],
+      "tags": [
+        "allure",
+        "metadata",
+        "classification"
+      ]
+    },
+    {
+      "id": "qad-003",
+      "prompt": "Define custom failure categories in allure-results/categories.json to classify product bugs vs test infrastructure issues",
+      "expected_patterns": [
+        "categories.json",
+        "\"name\":",
+        "\"matchedStatuses\":",
+        "\"messageRegex\":",
+        "failed OR broken"
+      ],
+      "anti_patterns": [
+        "categories file in wrong location",
+        "no regex patterns"
+      ],
+      "tags": [
+        "allure",
+        "categories",
+        "failure-classification"
+      ]
+    },
+    {
+      "id": "qad-004",
+      "prompt": "Configure a GitHub Actions workflow to preserve Allure report history across runs and upload artifacts",
+      "expected_patterns": [
+        "download-artifact",
+        "allure-history",
+        "copy history to results",
+        "allure generate",
+        "upload-artifact",
+        "retention-days"
+      ],
+      "anti_patterns": [
+        "skipping history preservation",
+        "no artifact cleanup strategy"
+      ],
+      "tags": [
+        "allure",
+        "ci",
+        "github-actions",
+        "history"
+      ]
+    },
+    {
+      "id": "qad-005",
+      "prompt": "Push test metrics from CI to InfluxDB for Grafana visualization, including test duration, pass rate, and retry counts",
+      "expected_patterns": [
+        "InfluxDB OR @influxdata/influxdb-client",
+        "Point",
+        "tag\\(",
+        "floatField OR intField",
+        "test_execution OR test_run_summary",
+        "branch",
+        "run_id"
+      ],
+      "anti_patterns": [
+        "metrics without tags",
+        "hardcoded branch names"
+      ],
+      "tags": [
+        "grafana",
+        "influxdb",
+        "metrics",
+        "ci"
+      ]
+    },
+    {
+      "id": "qad-006",
+      "prompt": "Design Grafana panels to answer: (1) Is the main branch ready to release? (2) Which tests are flakiest? (3) Is CI getting slower?",
+      "expected_patterns": [
+        "Pass Rate Trend OR time series",
+        "Flakiness Top 10 OR retry_count",
+        "CI Duration OR performance trend",
+        "thresholds at 95% OR 99%",
+        "GROUP BY time"
+      ],
+      "anti_patterns": [
+        "dashboard without alerting thresholds",
+        "30-panel dashboard",
+        "metrics without audience"
+      ],
+      "tags": [
+        "grafana",
+        "panels",
+        "alerting",
+        "decision-driven"
+      ]
+    },
+    {
+      "id": "qad-007",
+      "prompt": "Set up ReportPortal with Playwright using @reportportal/agent-js-playwright and configure attributes for branch and build ID",
+      "expected_patterns": [
+        "@reportportal/agent-js-playwright",
+        "apiKey OR RP_API_KEY",
+        "endpoint OR RP_ENDPOINT",
+        "project:",
+        "launch:",
+        "attributes.*branch",
+        "attributes.*build"
+      ],
+      "anti_patterns": [
+        "missing endpoint configuration",
+        "no branch/build tracking"
+      ],
+      "tags": [
+        "reportportal",
+        "playwright",
+        "ai-analysis"
+      ]
+    },
+    {
+      "id": "qad-008",
+      "prompt": "Create a weekly QA summary report that includes pass rate trend, top 5 flaky tests, coverage delta, and health classification (STABLE/NEEDS ATTENTION/CRITICAL)",
+      "expected_patterns": [
+        "pass_rate",
+        "flaky tests OR retry",
+        "coverage delta",
+        "STABLE OR NEEDS ATTENTION OR CRITICAL",
+        "automated",
+        "Slack OR CI"
+      ],
+      "anti_patterns": [
+        "manual report generation",
+        "report without health classification",
+        "missing trend context"
+      ],
+      "tags": [
+        "reporting",
+        "automation",
+        "stakeholder",
+        "weekly"
+      ]
+    },
+    {
+      "id": "qad-009",
+      "prompt": "Define release quality gates that include: E2E pass rate >= 99%, unit pass rate 100%, coverage >= 80%, and generate READY/NOT READY verdict",
+      "expected_patterns": [
+        "E2E pass rate >= 99% OR >= 0.99",
+        "unit pass rate 100%",
+        "coverage >= 80%",
+        "READY OR NOT READY",
+        "per-gate breakdown"
+      ],
+      "anti_patterns": [
+        "gates without pass/fail criteria",
+        "vague verdict",
+        "missing coverage requirement"
+      ],
+      "tags": [
+        "release",
+        "quality-gates",
+        "go-no-go"
+      ]
+    },
+    {
+      "id": "qad-010",
+      "prompt": "Configure Grafana alerts to notify the team on Slack when main branch pass rate drops by more than 2 percentage points in a single day",
+      "expected_patterns": [
+        "alert rule OR alerting",
+        "pass_rate",
+        "2 OR 2%",
+        "1d OR 24h",
+        "Slack OR webhook",
+        "notification"
+      ],
+      "anti_patterns": [
+        "alert without threshold",
+        "no notification channel"
+      ],
+      "tags": [
+        "grafana",
+        "alerting",
+        "slack",
+        "regression"
+      ]
+    }
+  ]
+}

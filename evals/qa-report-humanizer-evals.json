@@ -1,0 +1,214 @@
+{
+  "skill": "qa-report-humanizer",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "qah-001",
+      "prompt": "Humanize a test execution summary that starts with 'Test execution was completed successfully for Sprint 47. A total of 342 test cases were executed across 5 test suites, achieving a 97.4% pass rate.'",
+      "expected_patterns": [
+        "failure count OR specific breakdown of what failed",
+        "where failures are located (test suite OR feature area)",
+        "whether failures are new OR known issues",
+        "Removes pass percentage obsession OR contextualizes it"
+      ],
+      "anti_patterns": [
+        "keeping template opener",
+        "leading with pass rate",
+        "burying signal with comprehensive counts",
+        "no mention of actual test failures"
+      ],
+      "tags": [
+        "test-summary",
+        "template-removal",
+        "signal-boost"
+      ]
+    },
+    {
+      "id": "qah-002",
+      "prompt": "Fix a bug report that says: 'A critical defect was identified in the authentication module that could potentially impact the user experience across multiple touchpoints, underscoring the need for immediate remediation.'",
+      "expected_patterns": [
+        "specific broken behavior (what exactly fails)",
+        "reproduction steps OR how to trigger it",
+        "who is affected OR impact scope",
+        "actual next action (fix before release OR deprioritize)"
+      ],
+      "anti_patterns": [
+        "keeping 'critical defect in the authentication module'",
+        "using 'potential impact'",
+        "category language without specifics",
+        "vague remediation language"
+      ],
+      "tags": [
+        "bug-report",
+        "impact-clarity",
+        "specificity"
+      ]
+    },
+    {
+      "id": "qah-003",
+      "prompt": "Humanize a stakeholder update that contains: 'Quality metrics continue to trend positively. The team is aligned on priorities and committed to delivering a high-quality release. Stakeholders can feel confident in the current trajectory.'",
+      "expected_patterns": [
+        "release readiness statement (yes OR no OR conditional)",
+        "specific open bugs OR blockers",
+        "actual metrics with context (e.g., '4 bugs open, all P2 or lower')",
+        "what actually works (e.g., 'smoke tests pass on staging')"
+      ],
+      "anti_patterns": [
+        "keeping 'trend positively' without context",
+        "using 'team is aligned'",
+        "keeping 'stakeholders can feel confident'",
+        "keeping 'high-quality release' without details"
+      ],
+      "tags": [
+        "stakeholder-update",
+        "vague-language",
+        "actionable-info"
+      ]
+    },
+    {
+      "id": "qah-004",
+      "prompt": "Rewrite a PR review comment from QA that says: 'Great work on this implementation! I noticed a few potential areas for improvement that might enhance the overall test coverage and robustness of the test suite.'",
+      "expected_patterns": [
+        "specific test gap OR scenario missing",
+        "actual broken edge case (e.g., API returns 429)",
+        "selector brittle pattern OR recommendation (e.g., use getByRole)",
+        "concrete example of what to test or change"
+      ],
+      "anti_patterns": [
+        "keeping 'great work'",
+        "keeping 'potential areas for improvement'",
+        "keeping 'enhance overall robustness'",
+        "no specific failing case named"
+      ],
+      "tags": [
+        "pr-comment",
+        "test-specificity",
+        "actionable"
+      ]
+    },
+    {
+      "id": "qah-005",
+      "prompt": "Humanize a test summary with synonym cycling: 'The authentication tests passed successfully. The login verification suite completed without issues. The credential validation checks returned positive results. The sign-in workflow tests executed as expected.'",
+      "expected_patterns": [
+        "auth tests passed OR all auth tests passed",
+        "list of what passed once (login OR registration OR password reset OR SSO)",
+        "one clear statement instead of four rewording"
+      ],
+      "anti_patterns": [
+        "keeping four ways to say the same thing",
+        "repeating 'passed' with synonyms (completed, returned positive, executed as expected)",
+        "redundant test suite names"
+      ],
+      "tags": [
+        "synonym-cycling",
+        "concision",
+        "dedup"
+      ]
+    },
+    {
+      "id": "qah-006",
+      "prompt": "Fix a QA report closer that says: 'Despite several challenges encountered during the testing phase, the team successfully completed all planned test activities. Moving forward, the focus will be on continuous improvement and enhanced test coverage.'",
+      "expected_patterns": [
+        "specific tests not completed OR skipped",
+        "reason why they weren't done (e.g., 'didn't get to mobile browser tests')",
+        "carry-forward plan (next sprint OR next phase)",
+        "removes 'despite challenges' framing"
+      ],
+      "anti_patterns": [
+        "keeping 'despite challenges'",
+        "keeping 'moving forward'",
+        "keeping 'continuous improvement' without substance",
+        "vague 'enhanced test coverage'"
+      ],
+      "tags": [
+        "closer-rewrite",
+        "specificity",
+        "honest-gaps"
+      ]
+    },
+    {
+      "id": "qah-007",
+      "prompt": "Humanize a pass-rate report: 'The overall pass rate increased from 94.2% to 97.1%, demonstrating significant improvement in test suite reliability and showcasing the team's commitment to quality.'",
+      "expected_patterns": [
+        "what actually changed (e.g., fixed flaky tests OR found real bugs)",
+        "specifics of which tests improved",
+        "actual bugs found (e.g., 2 real bugs in new export feature)",
+        "context that explains the improvement"
+      ],
+      "anti_patterns": [
+        "keeping pass rate as the lead metric",
+        "keeping 'demonstrating significant improvement'",
+        "keeping 'team's commitment to quality'",
+        "no explanation of what caused the change"
+      ],
+      "tags": [
+        "pass-rate",
+        "context",
+        "vanity-metrics"
+      ]
+    },
+    {
+      "id": "qah-008",
+      "prompt": "Rewrite a risk assessment: 'Several high-risk areas have been identified that require careful monitoring. The team recommends continued vigilance and proactive testing to mitigate potential issues.'",
+      "expected_patterns": [
+        "named specific area (e.g., 'payment flow' OR 'user deletion flow')",
+        "actual risk (e.g., no E2E coverage for 3D Secure)",
+        "historical context OR incident count (e.g., 'two production incidents in 6 months')",
+        "prioritization advice (do this before OR after something else)"
+      ],
+      "anti_patterns": [
+        "keeping 'high-risk areas'",
+        "keeping 'continued vigilance'",
+        "keeping 'proactive testing'",
+        "keeping 'mitigate potential issues'"
+      ],
+      "tags": [
+        "risk-language",
+        "specificity",
+        "prioritization"
+      ]
+    },
+    {
+      "id": "qah-009",
+      "prompt": "Humanize a bug report: 'While conducting comprehensive regression testing of the user management module, a significant defect was discovered that impacts the core functionality of the system. This issue has the potential to affect a substantial number of users.'",
+      "expected_patterns": [
+        "specific behavior that's broken (e.g., 'deleting a user doesn't revoke API tokens')",
+        "what still works after deletion OR what you can do",
+        "scope of who's affected (e.g., 'any user with active tokens')",
+        "actual error or evidence (error message OR test that fails)"
+      ],
+      "anti_patterns": [
+        "keeping 'comprehensive regression testing'",
+        "keeping 'significant defect in core functionality'",
+        "keeping 'potential to affect substantial users'",
+        "using passive voice 'was discovered'"
+      ],
+      "tags": [
+        "bug-padding",
+        "passive-voice",
+        "specificity"
+      ]
+    },
+    {
+      "id": "qah-010",
+      "prompt": "Fix a sprint summary: 'This sprint we improved quality, velocity, and confidence. The team demonstrated strong collaboration, technical excellence, and customer focus.'",
+      "expected_patterns": [
+        "specific improvement (e.g., 'fixed checkout flakiness')",
+        "metrics OR evidence (e.g., 'was failing 12%, now <1%')",
+        "actual work done (e.g., 'added E2E coverage for new export')",
+        "removes rule-of-three pattern (three generic virtues)"
+      ],
+      "anti_patterns": [
+        "keeping three-word virtue list (quality, velocity, confidence)",
+        "keeping 'strong collaboration'",
+        "keeping 'technical excellence'",
+        "keeping 'customer focus' without context"
+      ],
+      "tags": [
+        "sprint-summary",
+        "rule-of-three",
+        "specificity"
+      ]
+    }
+  ]
+}

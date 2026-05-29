@@ -1,0 +1,214 @@
+{
+  "skill": "compliance-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "ct-001",
+      "prompt": "Write a Playwright test to verify that a consent banner appears on first visit and does not appear after the user accepts consent",
+      "expected_patterns": [
+        "storageState: undefined OR test.use({ storageState: undefined })",
+        "getByRole('dialog'",
+        "getByRole('button', { name: /accept|agree|allow/i })",
+        "toBeVisible",
+        "toBeHidden"
+      ],
+      "anti_patterns": [
+        "waitForTimeout without specific reason",
+        "hardcoded DOM selectors OR xpath"
+      ],
+      "tags": [
+        "consent-banner",
+        "gdpr",
+        "ui-visibility"
+      ]
+    },
+    {
+      "id": "ct-002",
+      "prompt": "Test that no non-essential cookies are set before the user gives consent. Create a helper function to classify cookies as strictly necessary vs analytics.",
+      "expected_patterns": [
+        "isStrictlyNecessary OR isAnalyticsCookie",
+        "context.cookies()",
+        "filter",
+        "expect(violations).toHaveLength(0)",
+        "toHaveLength"
+      ],
+      "anti_patterns": [
+        "no cookie classification logic",
+        "trusting CMP without verifying actual cookies"
+      ],
+      "tags": [
+        "cookies",
+        "consent",
+        "verification"
+      ]
+    },
+    {
+      "id": "ct-003",
+      "prompt": "Verify that a site honors Global Privacy Control (Sec-GPC: 1) header by blocking marketing cookies and registering the opt-out",
+      "expected_patterns": [
+        "extraHTTPHeaders: { 'Sec-GPC': '1' }",
+        "context.cookies()",
+        "filter",
+        "_fbp OR _fbc OR _gcl OR marketing cookie names",
+        "gpcStatus OR __cmp"
+      ],
+      "anti_patterns": [
+        "ignoring Sec-GPC header",
+        "no marketing cookie detection"
+      ],
+      "tags": [
+        "privacy-control",
+        "gpc",
+        "us-compliance"
+      ]
+    },
+    {
+      "id": "ct-004",
+      "prompt": "Write a test to verify Google Consent Mode v2 compliance: check that default consent state is 'denied' for ad_storage, analytics_storage, ad_user_data, and ad_personalization",
+      "expected_patterns": [
+        "addInitScript",
+        "dataLayer OR gtag",
+        "consent",
+        "default",
+        "ad_storage': 'denied'",
+        "analytics_storage': 'denied'",
+        "ad_user_data': 'denied'",
+        "ad_personalization': 'denied'"
+      ],
+      "anti_patterns": [
+        "no dataLayer setup",
+        "defaulting to granted instead of denied"
+      ],
+      "tags": [
+        "google-consent-mode",
+        "gtag",
+        "ads"
+      ]
+    },
+    {
+      "id": "ct-005",
+      "prompt": "Create a test that checks for tracking scripts (Google Analytics, Facebook Pixel, TikTok Analytics) loading before consent. Use page.on('request') to monitor network requests.",
+      "expected_patterns": [
+        "page.on('request'",
+        "trackingDomains OR similar array",
+        "google-analytics.com OR googletagmanager.com OR facebook.net OR analytics.tiktok.com",
+        "violations",
+        "expect(violations).toHaveLength(0)"
+      ],
+      "anti_patterns": [
+        "no network request monitoring",
+        "checking only one tracking domain"
+      ],
+      "tags": [
+        "script-blocking",
+        "third-party",
+        "consent"
+      ]
+    },
+    {
+      "id": "ct-006",
+      "prompt": "Write a test that validates cookie attributes (Secure, HttpOnly, SameSite) match a typed cookie inventory. Define the inventory as CookieDefinition interface with name, category, maxExpiry, secure, httpOnly, sameSite.",
+      "expected_patterns": [
+        "CookieDefinition OR interface",
+        "COOKIE_INVENTORY",
+        "context.cookies()",
+        "secure OR httpOnly OR sameSite",
+        "expect(violations).toHaveLength(0)",
+        "violations.push"
+      ],
+      "anti_patterns": [
+        "no inventory definition",
+        "no attribute validation",
+        "hardcoded cookie names without category"
+      ],
+      "tags": [
+        "cookie-inventory",
+        "security",
+        "compliance"
+      ]
+    },
+    {
+      "id": "ct-007",
+      "prompt": "Create a test to detect unknown cookies that are not in the cookie inventory. This test should visit multiple pages and flag any cookies found that aren't explicitly defined.",
+      "expected_patterns": [
+        "COOKIE_INVENTORY",
+        "page.goto",
+        "for (const path of",
+        "context.cookies()",
+        "unknown OR unknown.length > 0",
+        "inventory drift OR Add to cookie-inventory"
+      ],
+      "anti_patterns": [
+        "no multi-page crawl",
+        "ignoring unknown cookies",
+        "silent failure instead of throwing"
+      ],
+      "tags": [
+        "drift-detection",
+        "inventory",
+        "monitoring"
+      ]
+    },
+    {
+      "id": "ct-008",
+      "prompt": "Test for Better Ads Standards compliance: verify that no auto-playing video ads have sound (i.e., have autoplay but lack muted attribute)",
+      "expected_patterns": [
+        "page.locator('video')",
+        "getAttribute('autoplay')",
+        "getAttribute('muted')",
+        "autoplay !== null && muted === null",
+        "throw new Error"
+      ],
+      "anti_patterns": [
+        "no video element inspection",
+        "checking only for autoplay without muted requirement"
+      ],
+      "tags": [
+        "better-ads",
+        "video",
+        "mobile"
+      ]
+    },
+    {
+      "id": "ct-009",
+      "prompt": "Write a test to measure mobile ad density (ads must not exceed 30% of viewport on mobile). Detect ad elements by class, id, or data attributes and calculate total ad height vs page height.",
+      "expected_patterns": [
+        "setViewportSize({ width: 375, height: 812 })",
+        "locator('[class*=\"ad-\"], [id*=\"ad-\"], [data-ad], iframe[src*=\"doubleclick\"]')",
+        "boundingBox()",
+        "totalAdHeight / pageHeight",
+        "toBeLessThan(0.30)"
+      ],
+      "anti_patterns": [
+        "no mobile viewport set",
+        "no ad element detection",
+        "no density calculation"
+      ],
+      "tags": [
+        "better-ads",
+        "mobile",
+        "ad-density"
+      ]
+    },
+    {
+      "id": "ct-010",
+      "prompt": "Test that AI-generated content is marked with a transparency disclosure (e.g., 'AI-generated' or 'powered by AI') as required by EU AI Act Article 50",
+      "expected_patterns": [
+        "getByRole OR getByText",
+        "getByText(/AI-generated|generated by AI|powered by/i)",
+        "toBeVisible",
+        "expect(disclosure).toBeVisible()",
+        "assistant-response OR similar test-id"
+      ],
+      "anti_patterns": [
+        "no transparency disclosure check",
+        "checking only HTML without visibility"
+      ],
+      "tags": [
+        "ai-act",
+        "article-50",
+        "disclosure"
+      ]
+    }
+  ]
+}

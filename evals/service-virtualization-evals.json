@@ -1,0 +1,245 @@
+{
+  "skill": "service-virtualization",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "sv-001",
+      "prompt": "Set up MSW handlers for a payment API that returns success, handles rate limiting (429), and simulates a timeout. Include a test that verifies retry logic on 503 errors.",
+      "expected_patterns": [
+        "setupServer",
+        "http.post OR http.get",
+        "HttpResponse.json",
+        "status: 429 OR status: 503",
+        "Retry-After OR delay",
+        "server.use",
+        "beforeAll OR beforeEach",
+        "afterEach"
+      ],
+      "anti_patterns": [
+        "hardcoded delay without using MSW delay utility",
+        "mocking SDK method instead of HTTP layer",
+        "onUnhandledRequest missing",
+        "handlers not centralized"
+      ],
+      "tags": [
+        "msw",
+        "error-scenarios",
+        "payment",
+        "rate-limiting"
+      ]
+    },
+    {
+      "id": "sv-002",
+      "prompt": "You have a Stripe API integration. Decide whether to use MSW stubs, Stripe's test mode in staging, or a contract test. Explain your decision based on test level (unit/integration/e2e) and justify which dependencies need which strategy.",
+      "expected_patterns": [
+        "MSW OR WireMock",
+        "test mode OR sandbox",
+        "contract test",
+        "unit tests OR integration tests OR e2e",
+        "external dependency",
+        "decision tree OR matching isolation level to confidence"
+      ],
+      "anti_patterns": [
+        "mocking without a contract",
+        "mocking everything in unit tests",
+        "shared mock server across jobs"
+      ],
+      "tags": [
+        "decision-making",
+        "strategy",
+        "third-party-api"
+      ]
+    },
+    {
+      "id": "sv-003",
+      "prompt": "Set up a Testcontainers integration test that starts PostgreSQL, Redis, and Elasticsearch containers in parallel, wires connection strings to environment variables, and tears down after tests.",
+      "expected_patterns": [
+        "PostgreSqlContainer",
+        "RedisContainer",
+        "GenericContainer",
+        "Promise.all",
+        "getConnectionUri OR getMappedPort",
+        "process.env.DATABASE_URL OR process.env",
+        "startContainers OR stopContainers",
+        "globalSetup OR setupFilesAfterEnv",
+        "testTimeout: 30_000 OR similar"
+      ],
+      "anti_patterns": [
+        "starting containers sequentially",
+        "hardcoded ports",
+        "not cleaning up containers",
+        "no wait strategy"
+      ],
+      "tags": [
+        "testcontainers",
+        "real-services",
+        "database",
+        "cache"
+      ]
+    },
+    {
+      "id": "sv-004",
+      "prompt": "Write a WireMock mapping file for a paginated API endpoint with response templating. The mapping should extract the page number from the request and return different data per page, plus include a priority-based error scenario for testing.",
+      "expected_patterns": [
+        "request OR urlPathPattern",
+        "response OR jsonBody",
+        "response-template OR transformers",
+        "{{request",
+        "priority",
+        "status: 200 OR status: 429",
+        "headers"
+      ],
+      "anti_patterns": [
+        "not using response templating",
+        "hardcoded response data",
+        "missing error scenario",
+        "no priority field for error variants"
+      ],
+      "tags": [
+        "wiremock",
+        "pagination",
+        "templating",
+        "error-scenarios"
+      ]
+    },
+    {
+      "id": "sv-005",
+      "prompt": "Set up Toxiproxy helpers to inject latency (500ms) into a PostgreSQL connection, verify your service handles the timeout, then sever the connection to test reconnection logic. Clean up toxics after each test.",
+      "expected_patterns": [
+        "createProxy",
+        "addLatency OR latencyMs",
+        "severeConnection OR reset_peer",
+        "removeToxics",
+        "afterEach",
+        "TOXIPROXY_API",
+        "jitter OR attributes"
+      ],
+      "anti_patterns": [
+        "not cleaning up toxics between tests",
+        "hardcoded latency values",
+        "no reconnection test"
+      ],
+      "tags": [
+        "toxiproxy",
+        "fault-injection",
+        "latency",
+        "resilience"
+      ]
+    },
+    {
+      "id": "sv-006",
+      "prompt": "You are integrating with a new third-party API and need to decide on a virtualization strategy for CI. Your team cannot modify the API, Docker is available in CI, and you want to avoid long-term maintenance of stubs. What tool do you choose and why?",
+      "expected_patterns": [
+        "WireMock OR MSW OR record-replay",
+        "contract test",
+        "test mode OR sandbox",
+        "ephemeral OR Testcontainers",
+        "no contract",
+        "do not own the API"
+      ],
+      "anti_patterns": [
+        "mocking without contract test to detect drift",
+        "shared long-lived mock server",
+        "record-replay without expiration timestamp",
+        "ignoring API reliability"
+      ],
+      "tags": [
+        "decision-making",
+        "third-party",
+        "ci-integration"
+      ]
+    },
+    {
+      "id": "sv-007",
+      "prompt": "Write MSW handlers that simulate a stateful authentication flow: create session (POST), verify token (GET), refresh token (POST), and revoke session (DELETE). Maintain session state across requests within a test.",
+      "expected_patterns": [
+        "setupServer",
+        "http.post OR http.get OR http.delete",
+        "const sessions = new Map",
+        "sessions.set OR sessions.get",
+        "HttpResponse.json",
+        "status codes match flow",
+        "Bearer token OR authorization header"
+      ],
+      "anti_patterns": [
+        "not maintaining state across requests",
+        "mock at SDK level instead of HTTP",
+        "missing error case (invalid token, expired session)"
+      ],
+      "tags": [
+        "msw",
+        "stateful",
+        "auth",
+        "session-management"
+      ]
+    },
+    {
+      "id": "sv-008",
+      "prompt": "Set up GitHub Actions CI with docker-compose.test.yml running WireMock and PostgreSQL Testcontainers, verify no real API calls escape (onUnhandledRequest enforcement), and ensure proper teardown on success or failure.",
+      "expected_patterns": [
+        "docker compose -f docker-compose.test.yml up",
+        "env OR environment variables",
+        "WIREMOCK_URL OR DATABASE_URL",
+        "docker compose down OR always()",
+        "wait-timeout",
+        "onUnhandledRequest: error"
+      ],
+      "anti_patterns": [
+        "no teardown on failure",
+        "missing wait for service health",
+        "hardcoded URLs in tests instead of env vars",
+        "real API calls in CI"
+      ],
+      "tags": [
+        "ci-integration",
+        "docker-compose",
+        "github-actions",
+        "enforcement"
+      ]
+    },
+    {
+      "id": "sv-009",
+      "prompt": "Analyze an existing test suite that mocks Stripe SDK method stripe.paymentIntents.create() and explain why this is a bad pattern. Propose the correct HTTP-layer stub approach.",
+      "expected_patterns": [
+        "stub at HTTP layer OR POST /v1/payment_intents",
+        "decouples from SDK version",
+        "works with any HTTP client",
+        "MSW OR WireMock",
+        "not SDK method mock",
+        "http.post"
+      ],
+      "anti_patterns": [
+        "continuing to mock SDK method",
+        "not explaining coupling risk",
+        "missing HTTP-layer alternative"
+      ],
+      "tags": [
+        "anti-patterns",
+        "http-layer",
+        "sdk-coupling"
+      ]
+    },
+    {
+      "id": "sv-010",
+      "prompt": "Implement a record-replay mechanism for a complex multi-step API interaction (create order → add items → apply coupon → checkout). Include a recordedAt timestamp and enforce a 30-day expiry check in the test.",
+      "expected_patterns": [
+        "recordedAt OR timestamp",
+        "30 days OR 30-day expiry",
+        "failing test when stale",
+        "multi-step OR stateful sequence",
+        "replay OR record"
+      ],
+      "anti_patterns": [
+        "no timestamp tracking",
+        "no expiry enforcement",
+        "recordings go stale without maintenance"
+      ],
+      "tags": [
+        "record-replay",
+        "multi-step",
+        "expiry",
+        "maintenance"
+      ]
+    }
+  ]
+}

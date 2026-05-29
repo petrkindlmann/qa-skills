@@ -1,0 +1,252 @@
+{
+  "skill": "performance-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "perf-001",
+      "prompt": "Write a k6 load test script that ramps up from 20 to 100 virtual users over 5 minutes, sustains that load for 10 minutes, then ramps down. Assert that p95 response time stays under 500ms and error rate below 1%.",
+      "expected_patterns": [
+        "import http from 'k6/http'",
+        "stages",
+        "{ duration",
+        "target:",
+        "thresholds",
+        "http_req_duration",
+        "p(95)<500",
+        "http_req_failed.*rate<0.01"
+      ],
+      "anti_patterns": [
+        "vus AND duration without stages",
+        "hardcoded BASE_URL without __ENV",
+        "no check() or assertions"
+      ],
+      "tags": [
+        "k6",
+        "load-testing",
+        "budgets",
+        "ramp-up"
+      ]
+    },
+    {
+      "id": "perf-002",
+      "prompt": "Set up a k6 spike test that simulates a sudden surge from 50 normal users to 500 for 30 seconds, then back to 50. Include logic to detect if the system recovers.",
+      "expected_patterns": [
+        "stages",
+        "{ duration: '1m', target: 50 }",
+        "{ duration: '30s', target: 500 }",
+        "recovery",
+        "thresholds"
+      ],
+      "anti_patterns": [
+        "constant load without spike shape",
+        "no recovery period",
+        "undefined 'recovery' term"
+      ],
+      "tags": [
+        "k6",
+        "spike-test",
+        "load-profiles",
+        "recovery"
+      ]
+    },
+    {
+      "id": "perf-003",
+      "prompt": "Create custom k6 metrics for tracking order checkout performance: count orders created, measure checkout duration with percentiles, and track checkout error rate. Tag requests appropriately.",
+      "expected_patterns": [
+        "Counter",
+        "Trend",
+        "Rate",
+        "new Counter OR new Trend OR new Rate",
+        "tags: { name:",
+        "ordersCreated.add OR checkoutDuration.add OR errorRate.add"
+      ],
+      "anti_patterns": [
+        "only built-in http_* metrics",
+        "metric without .add() call",
+        "no tags on requests"
+      ],
+      "tags": [
+        "k6",
+        "custom-metrics",
+        "checkout",
+        "trends"
+      ]
+    },
+    {
+      "id": "perf-004",
+      "prompt": "Configure a Lighthouse CI job with performance budgets: LCP under 2.5s, CLS under 0.1, INP under 200ms, and total JS size under 300KB. Enforce as hard errors in CI.",
+      "expected_patterns": [
+        "lighthouserc.js OR module.exports",
+        "largest-contentful-paint",
+        "cumulative-layout-shift",
+        "interaction-to-next-paint OR INP",
+        "2500",
+        "0.1",
+        "200",
+        "300000",
+        "'error'"
+      ],
+      "anti_patterns": [
+        "FID",
+        "web-vitals v4 FID metric",
+        "budgets as 'warn' only",
+        "no numeric values in assertions"
+      ],
+      "tags": [
+        "lighthouse",
+        "budgets",
+        "core-web-vitals",
+        "ci-gates"
+      ]
+    },
+    {
+      "id": "perf-005",
+      "prompt": "Write a Playwright test that measures LCP and CLS on a checkout page using PerformanceObserver, and asserts both are within Core Web Vitals thresholds (LCP < 2.5s, CLS < 0.1).",
+      "expected_patterns": [
+        "page.evaluate",
+        "PerformanceObserver",
+        "largest-contentful-paint",
+        "layout-shift",
+        "expect",
+        "toBeLessThan(2500)",
+        "toBeLessThan(0.1)"
+      ],
+      "anti_patterns": [
+        "measuring only load time",
+        "no PerformanceObserver",
+        "hardcoded timeout without setTimeout fallback",
+        "expect.toBeGreaterThan"
+      ],
+      "tags": [
+        "playwright",
+        "core-web-vitals",
+        "lcp",
+        "cls",
+        "lab-data"
+      ]
+    },
+    {
+      "id": "perf-006",
+      "prompt": "Set up k6 scenarios to run three concurrent user flows: 100 VUs browsing products (constant), 20 VUs checking out (ramp up), and 50 requests/sec API-heavy load. Define per-scenario thresholds.",
+      "expected_patterns": [
+        "scenarios",
+        "browse OR checkout OR api_heavy",
+        "executor",
+        "constant-vus OR ramping-vus OR constant-arrival-rate",
+        "exec",
+        "thresholds.*scenario:",
+        "vus",
+        "duration"
+      ],
+      "anti_patterns": [
+        "single scenario instead of three concurrent",
+        "no per-scenario thresholds",
+        "shared thresholds without scenario tags"
+      ],
+      "tags": [
+        "k6",
+        "scenarios",
+        "multi-flow",
+        "concurrent-load"
+      ]
+    },
+    {
+      "id": "perf-007",
+      "prompt": "You are migrating from k6 v1 to v2. Update a load test script that uses k6/experimental/websockets and options.ext.loadimpact. What are the breaking changes?",
+      "expected_patterns": [
+        "k6/websockets",
+        "drop experimental prefix",
+        "options.cloud",
+        "exit code 97",
+        "externally-controlled removed",
+        "k6/experimental/redis removed"
+      ],
+      "anti_patterns": [
+        "k6/experimental/websockets",
+        "options.ext.loadimpact without migration",
+        "no mention of exit code 97"
+      ],
+      "tags": [
+        "k6",
+        "migration",
+        "v2",
+        "breaking-changes"
+      ]
+    },
+    {
+      "id": "perf-008",
+      "prompt": "You discover that p95 response time on your checkout endpoint is 1200ms under load, but you budgeted 500ms. Walk through the bottleneck identification process: how do you identify if the issue is database, CDN caching, third-party scripts, or something else?",
+      "expected_patterns": [
+        "per-endpoint Trend metrics",
+        "EXPLAIN OR N+1",
+        "cache-control OR x-cache: HIT",
+        "blockedUrlPatterns OR third-party",
+        "correlate with server metrics",
+        "CPU OR memory OR connection pool"
+      ],
+      "anti_patterns": [
+        "guessing without profiling",
+        "optimize without identifying actual bottleneck",
+        "client-side metrics only without server context"
+      ],
+      "tags": [
+        "bottleneck-identification",
+        "debugging",
+        "methodology",
+        "profiling"
+      ]
+    },
+    {
+      "id": "perf-009",
+      "prompt": "Set up a GitHub Actions CI job that runs k6 load tests against staging on every merge to main, uploads results as an artifact, and fails the build if thresholds are breached.",
+      "expected_patterns": [
+        "schedule OR on: push",
+        "k6 run",
+        "-- out json=results.json OR json=",
+        "upload-artifact",
+        "BASE_URL OR env variable",
+        "ubuntu-latest"
+      ],
+      "anti_patterns": [
+        "testing production without warning",
+        "no artifact upload",
+        "hardcoded URL instead of env",
+        "no failure condition on threshold breach"
+      ],
+      "tags": [
+        "ci-cd",
+        "github-actions",
+        "automation",
+        "gates"
+      ]
+    },
+    {
+      "id": "perf-010",
+      "prompt": "Document the Core Web Vitals performance budgets for your product. Include thresholds for Good/Needs Improvement/Poor for LCP, INP, and CLS. Explain the difference between field data and lab data.",
+      "expected_patterns": [
+        "LCP",
+        "2.5s OR 2500ms",
+        "INP",
+        "200ms",
+        "CLS",
+        "0.1",
+        "field data",
+        "lab data",
+        "Chrome UX Report OR CrUX",
+        "real users OR synthetic"
+      ],
+      "anti_patterns": [
+        "FID instead of INP",
+        "confusing field and lab data",
+        "no thresholds",
+        "only one metric documented"
+      ],
+      "tags": [
+        "core-web-vitals",
+        "budgets",
+        "documentation",
+        "strategy"
+      ]
+    }
+  ]
+}

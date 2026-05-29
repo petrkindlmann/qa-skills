@@ -1,0 +1,184 @@
+{
+  "skill": "qa-do",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "qado-001",
+      "prompt": "We just started a new project with no tests at all. Where should we begin?",
+      "expected_patterns": [
+        "qa-project-context",
+        "test-strategy",
+        "context first OR in that order"
+      ],
+      "anti_patterns": [
+        "playwright-automation OR api-testing directly without context",
+        "skipping project setup"
+      ],
+      "tags": [
+        "routing",
+        "foundation",
+        "new-project"
+      ]
+    },
+    {
+      "id": "qado-002",
+      "prompt": "Our E2E tests keep failing in CI but pass locally. What's the problem?",
+      "expected_patterns": [
+        "test-reliability",
+        "ci-cd-integration",
+        "reliability first OR diagnose first"
+      ],
+      "anti_patterns": [
+        "suggesting test-strategy without troubleshooting",
+        "ignoring environment mismatch"
+      ],
+      "tags": [
+        "routing",
+        "flakiness",
+        "ci-environment"
+      ]
+    },
+    {
+      "id": "qado-003",
+      "prompt": "Our test suite is slow and flaky. How do we fix this?",
+      "expected_patterns": [
+        "test-reliability",
+        "qa-metrics",
+        "diagnose OR measure"
+      ],
+      "anti_patterns": [
+        "suggesting test-migration or rewrite without diagnosis",
+        "ignoring measurement/metrics"
+      ],
+      "tags": [
+        "routing",
+        "performance",
+        "flakiness"
+      ]
+    },
+    {
+      "id": "qado-004",
+      "prompt": "We got a critical bug in production last night. How do we prevent this next time?",
+      "expected_patterns": [
+        "ai-bug-triage",
+        "quality-postmortem",
+        "triage OR understand first"
+      ],
+      "anti_patterns": [
+        "immediately suggesting test-strategy without understanding root cause",
+        "skipping postmortem"
+      ],
+      "tags": [
+        "routing",
+        "incident",
+        "postmortem"
+      ]
+    },
+    {
+      "id": "qado-005",
+      "prompt": "We're shifting to a shift-left QA model and our devs are starting to write tests. What's the first step?",
+      "expected_patterns": [
+        "shift-left-testing",
+        "test-planning OR test-strategy",
+        "process change first OR cultural shift"
+      ],
+      "anti_patterns": [
+        "focusing only on tooling without process",
+        "suggesting specific frameworks without foundational process change"
+      ],
+      "tags": [
+        "routing",
+        "process",
+        "shift-left"
+      ]
+    },
+    {
+      "id": "qado-006",
+      "prompt": "What should we test in this release before we go live?",
+      "expected_patterns": [
+        "risk-based-testing",
+        "release-readiness",
+        "risk first OR prioritization before checklist"
+      ],
+      "anti_patterns": [
+        "test-strategy without risk focus",
+        "skipping release readiness check"
+      ],
+      "tags": [
+        "routing",
+        "release",
+        "risk"
+      ]
+    },
+    {
+      "id": "qado-007",
+      "prompt": "We're migrating from Selenium to Playwright. What do we need to know?",
+      "expected_patterns": [
+        "test-migration",
+        "direct OR single skill"
+      ],
+      "anti_patterns": [
+        "suggesting multiple skills when one covers it",
+        "ignoring framework differences"
+      ],
+      "tags": [
+        "routing",
+        "migration",
+        "framework"
+      ]
+    },
+    {
+      "id": "qado-008",
+      "prompt": "We have no idea what quality looks like. How do we measure and track it?",
+      "expected_patterns": [
+        "qa-metrics",
+        "qa-dashboard",
+        "define KPIs OR metrics first"
+      ],
+      "anti_patterns": [
+        "suggesting dashboard first without defining metrics",
+        "skipping foundational KPI work"
+      ],
+      "tags": [
+        "routing",
+        "metrics",
+        "visibility"
+      ]
+    },
+    {
+      "id": "qado-009",
+      "prompt": "Tests depend on each other and break randomly. Data isolation is a mess.",
+      "expected_patterns": [
+        "test-data-management",
+        "test-reliability",
+        "data isolation OR fixture design first"
+      ],
+      "anti_patterns": [
+        "suggesting general flakiness fixes without addressing data dependencies",
+        "skipping test data foundation"
+      ],
+      "tags": [
+        "routing",
+        "data",
+        "isolation"
+      ]
+    },
+    {
+      "id": "qado-010",
+      "prompt": "We need to test our API. Where do we start?",
+      "expected_patterns": [
+        "api-testing",
+        "direct OR single skill"
+      ],
+      "anti_patterns": [
+        "suggesting playwright-automation for pure API testing",
+        "over-complicating with unnecessary skills"
+      ],
+      "tags": [
+        "routing",
+        "api",
+        "direct"
+      ]
+    }
+  ]
+}

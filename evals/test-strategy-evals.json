@@ -1,0 +1,255 @@
+{
+  "skill": "test-strategy",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "ts-001",
+      "prompt": "Produce a QA strategy for a React SaaS product with 8 developers, no existing test infrastructure, continuous deployment, and monthly payment processing. We had one critical bug escape to production last quarter.",
+      "expected_patterns": [
+        "risk assessment matrix",
+        "test pyramid with target ratios (70:20:10 OR similar)",
+        "entry and exit criteria",
+        "quality gates (PR gate AND merge gate AND deploy gate)",
+        "metrics and KPIs table with targets",
+        "timeline in phases (Foundation AND Coverage Expansion AND Quality Gates)",
+        "Vitest OR Jest for unit tests",
+        "Playwright for E2E",
+        "tool selection rationale with weights OR scoring"
+      ],
+      "anti_patterns": [
+        "100% code coverage target",
+        "no mention of risk-based prioritization",
+        "strategy without quarterly review cycle",
+        "tool selection without rationale matrix",
+        "ice cream cone detection without action plan",
+        "metrics defined without tracking cadence"
+      ],
+      "tags": [
+        "foundational",
+        "saas",
+        "continuous-deployment",
+        "payment-critical"
+      ]
+    },
+    {
+      "id": "ts-002",
+      "prompt": "Assess a test suite that has 150 E2E tests, 50 integration tests, and 200 unit tests. CI takes 52 minutes. The team reports frequent flaky test failures and slow feedback loops.",
+      "expected_patterns": [
+        "ice cream cone OR inverted pyramid diagnosis",
+        "flakiness root cause analysis",
+        "action plan to rebalance (freeze E2E growth OR decompose E2E tests)",
+        "parallelization OR sharding recommendations",
+        "target CI duration under 15 minutes",
+        "conversion strategy with concrete test counts"
+      ],
+      "anti_patterns": [
+        "ignore flakiness",
+        "recommend adding more E2E tests",
+        "no specific decomposition examples",
+        "missing timeline for rebalancing"
+      ],
+      "tags": [
+        "pyramid-rebalance",
+        "flakiness",
+        "performance",
+        "diagnosis"
+      ]
+    },
+    {
+      "id": "ts-003",
+      "prompt": "Define entry and exit criteria for unit, integration, E2E, and release testing for a fintech payment platform.",
+      "expected_patterns": [
+        "unit testing entry: code compiles OR contract documented",
+        "unit testing exit: branches covered OR edge cases tested OR coverage target met",
+        "integration testing entry: unit tests pass OR stubbed dependencies",
+        "integration testing exit: service boundaries tested OR error paths validated",
+        "E2E testing entry: integration tests pass OR staging deployed",
+        "E2E testing exit: critical user journeys pass OR P0/P1 defects resolved",
+        "release entry: all test levels pass OR no CRITICAL defects",
+        "release exit: smoke tests pass OR monitoring shows no anomalies"
+      ],
+      "anti_patterns": [
+        "vague criteria like 'looks good'",
+        "missing error path validation",
+        "no monitoring expectations",
+        "entry criteria without dependencies on earlier levels"
+      ],
+      "tags": [
+        "entry-exit",
+        "fintech",
+        "quality-gates",
+        "regulatory"
+      ]
+    },
+    {
+      "id": "ts-004",
+      "prompt": "A startup has 4 developers, MVP launched 2 months ago, 5% defect escape rate to production, no QA team. Create a minimal but effective QA strategy.",
+      "expected_patterns": [
+        "team_maturity: startup",
+        "minimal test pyramid (unit + critical E2E paths only)",
+        "skip contract testing and advanced metrics initially",
+        "risk assessment focused on 3-5 highest-impact features",
+        "Phase 1 under 4 weeks",
+        "CI gate for unit tests",
+        "realistic baseline metrics for small team"
+      ],
+      "anti_patterns": [
+        "recommend full-scale strategy",
+        "assume QA team exists",
+        "ignore time constraints",
+        "metric targets that require manual work beyond team capacity"
+      ],
+      "tags": [
+        "startup",
+        "minimal",
+        "scrappy",
+        "team-maturity"
+      ]
+    },
+    {
+      "id": "ts-005",
+      "prompt": "Document tool selection rationale for a Python API service. Candidates are pytest + testcontainers for integration, requests for API testing, k6 for load testing.",
+      "expected_patterns": [
+        "decision matrix with weighted criteria",
+        "criteria include: fits tech stack (25%) OR team familiarity (20%) OR community docs (15%) OR CI integration (15%)",
+        "total cost of ownership analysis",
+        "setup time estimate",
+        "maintenance cost assessment",
+        "community support for Python ecosystem",
+        "scoring or numerical justification for each tool"
+      ],
+      "anti_patterns": [
+        "tool recommendation without scoring",
+        "missing cost of ownership analysis",
+        "criteria weights without justification",
+        "ignoring team skill level"
+      ],
+      "tags": [
+        "tool-selection",
+        "decision-matrix",
+        "python",
+        "api"
+      ]
+    },
+    {
+      "id": "ts-006",
+      "prompt": "Create a risk assessment matrix for an e-commerce platform covering: payment processing, user authentication, product search, inventory management, and customer support chat.",
+      "expected_patterns": [
+        "5x5 matrix with likelihood and impact axes",
+        "risk score calculation (likelihood × impact)",
+        "categorization: CRITICAL (15-25) OR HIGH (10-14) OR MEDIUM (5-9) OR LOW (1-4)",
+        "testing action mapped to each risk level",
+        "payment processing scored as CRITICAL",
+        "automation and monitoring recommendations per risk level"
+      ],
+      "anti_patterns": [
+        "missing risk scores",
+        "no testing action per risk level",
+        "equal weight to all features",
+        "matrix without feature-to-risk mapping"
+      ],
+      "tags": [
+        "risk-assessment",
+        "e-commerce",
+        "payment",
+        "prioritization"
+      ]
+    },
+    {
+      "id": "ts-007",
+      "prompt": "Define quality gates for a SaaS product moving from monthly releases to weekly releases. What gates should pass before PR merge? Before production deploy?",
+      "expected_patterns": [
+        "PR gate: unit tests pass AND integration tests pass AND coverage does not decrease AND linting passes AND SAST scan passes",
+        "merge gate: PR gate checks pass AND E2E smoke suite passes AND no merge conflicts",
+        "deploy gate: full E2E suite passes AND performance within SLA AND security scan passes AND rollback plan documented",
+        "specific thresholds (coverage % OR bundle size limits)",
+        "enforcement mechanism"
+      ],
+      "anti_patterns": [
+        "gates without specific pass/fail criteria",
+        "missing deployment gates",
+        "no automation mentioned",
+        "gates that block releases indefinitely"
+      ],
+      "tags": [
+        "quality-gates",
+        "saas",
+        "release-cadence",
+        "ci-cd"
+      ]
+    },
+    {
+      "id": "ts-008",
+      "prompt": "Set up a 16-week timeline and phased rollout for a testing strategy covering: CI pipeline setup, E2E test suite creation, coverage gates, and metrics dashboards.",
+      "expected_patterns": [
+        "Phase 1 (Foundation, Weeks 1-4): baseline metrics OR risk assessment OR CI setup",
+        "Phase 2 (Coverage Expansion, Weeks 5-10): integration tests OR E2E coverage OR visual regression",
+        "Phase 3 (Quality Gates, Weeks 11-14): coverage gates OR performance benchmarks OR security scanning",
+        "Phase 4 (Optimization, Weeks 15-20): flakiness reduction OR CI speed OR synthetic monitoring",
+        "exit criteria per phase",
+        "ongoing activities (quarterly review OR monthly metrics)"
+      ],
+      "anti_patterns": [
+        "all work crammed into Phase 1",
+        "no exit criteria",
+        "timeline missing concrete deliverables",
+        "no ongoing review cadence"
+      ],
+      "tags": [
+        "timeline",
+        "phased-rollout",
+        "milestones",
+        "planning"
+      ]
+    },
+    {
+      "id": "ts-009",
+      "prompt": "You have a legacy monolith with 2000 unit tests and 50 E2E tests. Code coverage is 35%. Team is growing from 6 to 12 developers. Update the strategy to support team scale without extending CI time beyond 20 minutes.",
+      "expected_patterns": [
+        "test sharding OR parallelization strategy",
+        "coverage targets scaled to 12-person team capacity",
+        "integration testing gaps likely in monolith architecture",
+        "test impact analysis to avoid running all tests on every PR",
+        "hourglass shape detection (unit-heavy, E2E-sparse)",
+        "integration test growth plan",
+        "metrics for measuring parallelization efficiency"
+      ],
+      "anti_patterns": [
+        "ignore CI performance constraints",
+        "recommend adding more E2E tests",
+        "no mention of test dependency analysis",
+        "coverage targets unchanged for larger team"
+      ],
+      "tags": [
+        "scaling",
+        "monolith",
+        "performance",
+        "team-growth"
+      ]
+    },
+    {
+      "id": "ts-010",
+      "prompt": "Document three anti-patterns you detect in a strategy document that exists but is outdated. What are the triggers for quarterly review and re-evaluation?",
+      "expected_patterns": [
+        "anti-pattern 1: 100% coverage target OR ice cream cone OR one-time document",
+        "anti-pattern 2: tool-first thinking OR no metrics OR testing in isolation",
+        "anti-pattern 3: copy-paste strategy OR automating everything OR no manual exploration",
+        "review triggers: new product area launch OR team composition change OR major incident OR defect escape",
+        "revision history section",
+        "strategy ownership (who maintains it)"
+      ],
+      "anti_patterns": [
+        "missing specific anti-patterns from SKILL.md",
+        "no review cadence defined",
+        "no triggers listed",
+        "strategy without ownership"
+      ],
+      "tags": [
+        "anti-patterns",
+        "living-document",
+        "review-cadence",
+        "governance"
+      ]
+    }
+  ]
+}

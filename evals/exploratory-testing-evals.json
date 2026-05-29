@@ -1,0 +1,233 @@
+{
+  "skill": "exploratory-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "etst-001",
+      "prompt": "Write a test charter for exploring a new checkout flow with payment method variations",
+      "expected_patterns": [
+        "Explore [target]",
+        "with [resources]",
+        "to discover [information]",
+        "payment OR card OR payment method",
+        "edge cases OR error handling OR boundary"
+      ],
+      "anti_patterns": [
+        "generic explore the app",
+        "vague resources",
+        "what to prove instead of what to learn",
+        "target not specific enough to guide 45-90 minutes"
+      ],
+      "tags": [
+        "charter",
+        "checkout",
+        "planning"
+      ]
+    },
+    {
+      "id": "etst-002",
+      "prompt": "Design a session log template for capturing observations during a 60-minute exploratory testing session",
+      "expected_patterns": [
+        "Time OR 0:XX",
+        "Action / Input",
+        "Observation",
+        "Bug? OR tagged",
+        "Follow-up",
+        "BUG OR QUESTION OR IDEA OR RISK OR NOTE"
+      ],
+      "anti_patterns": [
+        "no timestamps",
+        "untagged observations",
+        "missing follow-up column",
+        "summary after the fact instead of during session"
+      ],
+      "tags": [
+        "note-taking",
+        "session-log",
+        "documentation"
+      ]
+    },
+    {
+      "id": "etst-003",
+      "prompt": "Explain how to apply the HICCUPS heuristic to find bugs in a user profile edit page",
+      "expected_patterns": [
+        "History OR I - Image OR Comparable OR Claims OR User expectations OR Product OR Standards",
+        "past behavior OR consistency OR brand OR spec OR expectations OR standards OR WCAG",
+        "at least 4 of: H, I, C, C, U, P, S"
+      ],
+      "anti_patterns": [
+        "missing the oracle lens concept",
+        "only mentions one oracle",
+        "treats HICCUPS as a checklist to complete exhaustively",
+        "no connection to actual bugs found"
+      ],
+      "tags": [
+        "heuristics",
+        "hiccups",
+        "bug-discovery"
+      ]
+    },
+    {
+      "id": "etst-004",
+      "prompt": "Design boundary test cases for a numeric input field that accepts cart quantities",
+      "expected_patterns": [
+        "zero OR 0",
+        "one OR 1",
+        "many OR large",
+        "minimum - 1 OR minimum + 1",
+        "maximum - 1 OR maximum + 1",
+        "negative OR overflow OR decimal"
+      ],
+      "anti_patterns": [
+        "only happy path (5-10 items)",
+        "no edge cases at zero or maximum",
+        "missing minimum-1 and maximum+1",
+        "vague boundaries instead of specific values"
+      ],
+      "tags": [
+        "boundaries",
+        "numeric",
+        "edge-cases"
+      ]
+    },
+    {
+      "id": "etst-005",
+      "prompt": "Conduct a debrief after a 75-minute exploratory session on a new feature and document findings using the debrief template",
+      "expected_patterns": [
+        "Charter: OR [charter text]",
+        "Coverage: OR percentage",
+        "Findings: OR Bugs: OR Test ideas:",
+        "Observations: OR surprised OR harder",
+        "Follow-up Actions: OR [ ]"
+      ],
+      "anti_patterns": [
+        "no coverage percentage",
+        "findings not categorized (bugs vs issues vs test ideas)",
+        "no reflection on what was unexpected",
+        "no explicit follow-up actions"
+      ],
+      "tags": [
+        "debrief",
+        "session-management",
+        "findings"
+      ]
+    },
+    {
+      "id": "etst-006",
+      "prompt": "Investigate a vague bug report ('sometimes the search is slow') using exploratory testing and describe your charter, session flow, and what you would document",
+      "expected_patterns": [
+        "Explore",
+        "search OR slow",
+        "slow network OR 3G OR throttle OR large dataset OR concurrent users",
+        "Charter:",
+        "0:00 - 0:05 OR Orient",
+        "0:05 - 0:15 OR Survey OR happy path",
+        "0:15 - 0:55 OR Explore",
+        "reproduce OR vary OR screenshot OR network trace"
+      ],
+      "anti_patterns": [
+        "no structured charter",
+        "session flow not time-boxed",
+        "no mention of varying conditions",
+        "skip documentation plan",
+        "session longer than 90 minutes"
+      ],
+      "tags": [
+        "bug-investigation",
+        "charter",
+        "session-flow"
+      ]
+    },
+    {
+      "id": "etst-007",
+      "prompt": "Convert an exploratory finding (email field accepts empty on checkout) into an automated regression test",
+      "expected_patterns": [
+        "test OR it(",
+        "checkout OR email OR validation",
+        "goto OR navigate",
+        "fill('') OR fill('')",
+        "expect OR assert",
+        "Email is required OR validation error",
+        "regression OR BUG-",
+        "playwright OR test automation"
+      ],
+      "anti_patterns": [
+        "no test reference to the original bug",
+        "missing reproduction steps",
+        "no assertion on the validation error",
+        "does not verify that invalid state is prevented"
+      ],
+      "tags": [
+        "automation",
+        "regression",
+        "conversion"
+      ]
+    },
+    {
+      "id": "etst-008",
+      "prompt": "Apply FEW HICCUPS (Familiarity, Explainability, World) to explore a multi-language checkout experience for bugs",
+      "expected_patterns": [
+        "Familiarity OR first-time user OR without help",
+        "Explainability OR explain the behavior OR unclear",
+        "World OR locales OR time zones OR network OR screen sizes OR RTL",
+        "RTL OR emoji OR CJK OR Unicode OR locale-specific OR number format"
+      ],
+      "anti_patterns": [
+        "only English/single-locale testing",
+        "no mention of first-time user perspective",
+        "missing at least 2 of the 3 F-E-W lenses",
+        "no connection to how real users in different regions behave"
+      ],
+      "tags": [
+        "few-hiccups",
+        "internationalization",
+        "heuristics"
+      ]
+    },
+    {
+      "id": "etst-009",
+      "prompt": "Plan a regression exploratory session after a developer fixed a concurrency bug in real-time collaboration. Define the charter and state transition test ideas",
+      "expected_patterns": [
+        "Explore [area] after [change]",
+        "regression OR side effects OR integration points",
+        "concurrent OR two users OR race condition OR conflict resolution",
+        "State transition: OR skip a step OR go backward OR interrupt OR repeat OR timeout",
+        "Charter template"
+      ],
+      "anti_patterns": [
+        "no charter template pattern",
+        "ignores integration points",
+        "does not address state transition scenarios from the heuristic",
+        "assumes the fix is complete without testing edge cases"
+      ],
+      "tags": [
+        "regression",
+        "state-transitions",
+        "concurrency"
+      ]
+    },
+    {
+      "id": "etst-010",
+      "prompt": "Describe when to use exploratory testing vs automated testing for a new feature request, and explain the exploration-to-automation pipeline",
+      "expected_patterns": [
+        "new OR evolving OR complex OR subjective",
+        "stable OR well-defined OR regression",
+        "Explore When: OR Automate When:",
+        "exploration-to-automation pipeline",
+        "file bug report OR developer fixes OR write automated test OR prevent regression",
+        "find bugs OR confirm behavior"
+      ],
+      "anti_patterns": [
+        "treats exploration as less rigorous than automation",
+        "suggests automating first before exploration",
+        "no pipeline from finding to regression test",
+        "missing the decision framework (new vs stable)"
+      ],
+      "tags": [
+        "strategy",
+        "when-to-explore",
+        "pipeline"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "skill": "mobile-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "mt-001",
+      "prompt": "Set up Appium 3.x with UIAutomator2 driver for Android testing and configure W3C capabilities for a Pixel 9 device running Android 15",
+      "expected_patterns": [
+        "appium driver install uiautomator2",
+        "platformName: 'Android'",
+        "'appium:automationName': 'UiAutomator2'",
+        "'appium:deviceName': 'Pixel 9'",
+        "'appium:platformVersion': '15'",
+        "'appium:autoGrantPermissions': true"
+      ],
+      "anti_patterns": [
+        "hardcoded device names in test code",
+        "appium:app without path",
+        "missing automation name"
+      ],
+      "tags": [
+        "appium",
+        "setup",
+        "android",
+        "capabilities"
+      ]
+    },
+    {
+      "id": "mt-002",
+      "prompt": "Write an Appium test that navigates to a deep link when the app is not running (cold start), then verifies the correct screen loads",
+      "expected_patterns": [
+        "mobile: deepLink",
+        "terminateApp OR driver.terminateApp",
+        "package: 'com.",
+        "toBeDisplayed OR isDisplayed",
+        "~product-title OR accessibility ID"
+      ],
+      "anti_patterns": [
+        "deep link without cold start scenario",
+        "xpath selectors instead of accessibility IDs",
+        "hardcoded device names"
+      ],
+      "tags": [
+        "deeplink",
+        "coldstart",
+        "appium",
+        "navigation"
+      ]
+    },
+    {
+      "id": "mt-003",
+      "prompt": "Configure Detox for React Native with iOS simulator and Android emulator, including test runner configuration for jest",
+      "expected_patterns": [
+        ".detoxrc.js",
+        "testRunner",
+        "jest",
+        "apps",
+        "devices",
+        "configurations",
+        "type: 'ios.simulator' OR type: 'android.emulator'"
+      ],
+      "anti_patterns": [
+        "missing build command",
+        "incorrect jest config reference",
+        "hardcoded paths without derivedDataPath"
+      ],
+      "tags": [
+        "detox",
+        "react-native",
+        "config",
+        "setup"
+      ]
+    },
+    {
+      "id": "mt-004",
+      "prompt": "Write a Detox test that sends a push notification, verifies the app navigates to the correct screen, and checks payload data",
+      "expected_patterns": [
+        "device.sendUserNotification",
+        "trigger: { type: 'push' }",
+        "payload",
+        "by.id",
+        "toBeVisible",
+        "toHaveText"
+      ],
+      "anti_patterns": [
+        "using Appium syntax in Detox test",
+        "missing payload in notification",
+        "not verifying navigation after notification"
+      ],
+      "tags": [
+        "detox",
+        "push-notification",
+        "mobile-specific"
+      ]
+    },
+    {
+      "id": "mt-005",
+      "prompt": "Create a Maestro YAML flow that logs in, fills an email field, enters a password, taps continue, and asserts the welcome message is visible",
+      "expected_patterns": [
+        "appId:",
+        "launchApp",
+        "tapOn:",
+        "inputText:",
+        "assertVisible:",
+        "${MAESTRO_TEST_PASSWORD} OR environment variable"
+      ],
+      "anti_patterns": [
+        "hardcoded password in YAML",
+        "mixing Appium/Detox syntax in Maestro flow",
+        "missing appId"
+      ],
+      "tags": [
+        "maestro",
+        "yaml",
+        "cross-platform",
+        "login"
+      ]
+    },
+    {
+      "id": "mt-006",
+      "prompt": "Configure a device matrix for BrowserStack App Automate with P0, P1, and P2 devices covering both iOS and Android across multiple versions",
+      "expected_patterns": [
+        "matrix",
+        "include:",
+        "platform: android",
+        "platform: ios",
+        "device: 'Samsung Galaxy S24' OR iPhone 15 Pro",
+        "os_version",
+        "fail-fast: false"
+      ],
+      "anti_patterns": [
+        "emulator-only testing",
+        "all tests on same device",
+        "missing prioritization (P0/P1/P2)",
+        "hardcoded single OS version"
+      ],
+      "tags": [
+        "device-farm",
+        "browserstack",
+        "matrix",
+        "strategy"
+      ]
+    },
+    {
+      "id": "mt-007",
+      "prompt": "Write an Appium test that toggles airplane mode, verifies offline UI is displayed, performs an action, then re-enables network and checks sync behavior",
+      "expected_patterns": [
+        "mobile: shell",
+        "cmd connectivity airplane-mode",
+        "enable OR disable",
+        "offline-banner",
+        "sync-complete-indicator",
+        "~save-draft-button"
+      ],
+      "anti_patterns": [
+        "testing only online scenarios",
+        "using sleep() instead of explicit waits",
+        "not testing sync after network recovery",
+        "platform-specific commands without platform check"
+      ],
+      "tags": [
+        "appium",
+        "offline",
+        "network",
+        "android"
+      ]
+    },
+    {
+      "id": "mt-008",
+      "prompt": "Write an Appium test for iOS that handles a permission dialog (Allow/Don't Allow) for location access and continues with the test",
+      "expected_patterns": [
+        "mobile: alert",
+        "action: 'accept' OR action: 'dismiss'",
+        "-ios predicate string",
+        "label == 'Allow'",
+        "isDisplayed"
+      ],
+      "anti_patterns": [
+        "assuming permissions pre-granted",
+        "ignoring dialog handling",
+        "using Android-specific selectors for iOS test",
+        "not handling dialog dismissal explicitly"
+      ],
+      "tags": [
+        "appium",
+        "ios",
+        "permissions",
+        "dialogs"
+      ]
+    },
+    {
+      "id": "mt-009",
+      "prompt": "Write a Detox test that performs a biometric enrollment, then simulates successful Face ID, and verifies the authenticated user is logged in",
+      "expected_patterns": [
+        "device.setBiometricEnrollment",
+        "true",
+        "device.matchBiometric",
+        "element(by.id",
+        "toBeVisible"
+      ],
+      "anti_patterns": [
+        "not enrolling biometric before matching",
+        "using Appium methods in Detox",
+        "skipping biometric testing entirely",
+        "not verifying successful auth result"
+      ],
+      "tags": [
+        "detox",
+        "biometric",
+        "faceid",
+        "security"
+      ]
+    },
+    {
+      "id": "mt-010",
+      "prompt": "Write an Appium test that scrolls through a list using UIAutomator selector to find an element with specific text, then taps it and verifies navigation",
+      "expected_patterns": [
+        "mobile: scroll OR UiScrollable",
+        "android=new UiSelector",
+        "scrollIntoView",
+        "text('",
+        "click OR tap",
+        "toBeDisplayed OR isDisplayed"
+      ],
+      "anti_patterns": [
+        "using XPath instead of UIAutomator for Android",
+        "hardcoded scroll coordinates",
+        "not using scrollable selectors",
+        "testing only portrait orientation"
+      ],
+      "tags": [
+        "appium",
+        "android",
+        "scroll",
+        "uiselector"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,218 @@
+{
+  "skill": "ai-qa-review",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "aqr-001",
+      "prompt": "Review this Jest test file for test smells across readability, reliability, and design dimensions",
+      "expected_patterns": [
+        "sleep-based waiting OR waitForTimeout OR setTimeout",
+        "order dependency OR shared mutable state OR test isolation",
+        "over-mocking OR mock boundaries",
+        "readability smell OR obscure setup OR mystery guest",
+        "actionable feedback OR fix suggestion"
+      ],
+      "anti_patterns": [
+        "vague unmeasurable feedback like 'this test is bad'",
+        "flagging every smell without context OR dismissing necessary complexity",
+        "suggesting mocks for pure functions OR value objects",
+        "reviewing without running tests",
+        "focusing on coverage percentage instead of coverage quality"
+      ],
+      "tags": [
+        "test-smells",
+        "review",
+        "readability"
+      ]
+    },
+    {
+      "id": "aqr-002",
+      "prompt": "Audit a test suite for sleep-based waiting and provide specific fixes using explicit wait conditions",
+      "expected_patterns": [
+        "sleep OR waitForTimeout OR setTimeout identified as reliability smell",
+        "explicit wait condition OR polling OR event-based wait recommended",
+        "Playwright: await expect OR await page.locator",
+        "line number or code citation for the smell",
+        "explain why it matters before providing fix"
+      ],
+      "anti_patterns": [
+        "suggesting another sleep as a fix",
+        "rejecting sleep-based waiting without offering alternative",
+        "generic advice without framework-specific syntax"
+      ],
+      "tags": [
+        "reliability",
+        "flakiness",
+        "sleep-based-waiting"
+      ]
+    },
+    {
+      "id": "aqr-003",
+      "prompt": "Identify order dependencies in tests that pass together but fail in isolation",
+      "expected_patterns": [
+        "test isolation OR test independence OR data isolation mentioned",
+        "shared state OR external file OR database state identified",
+        "each test creates its own preconditions recommended",
+        "beforeEach OR test-specific setup as fix",
+        "example showing before and after"
+      ],
+      "anti_patterns": [
+        "accepting shared beforeAll OR shared database state",
+        "suggesting test-naming conventions as a fix for order dependency",
+        "ignoring side effects between tests"
+      ],
+      "tags": [
+        "reliability",
+        "order-dependency",
+        "test-isolation"
+      ]
+    },
+    {
+      "id": "aqr-004",
+      "prompt": "Review a test file for coverage smells using the BOUNDARY framework (boundary values, null/empty, duplicates, ordering, range limits)",
+      "expected_patterns": [
+        "happy path only OR missing error paths identified",
+        "boundary values OR 0, 1, max, max+1 mentioned",
+        "null OR empty OR edge case coverage gap identified",
+        "specific missing scenario described with priority P0/P1/P2 OR high/medium/low",
+        "test.each OR parameterized test recommended for boundary cases"
+      ],
+      "anti_patterns": [
+        "requesting coverage percentage increase without identifying missing scenarios",
+        "vague 'add more tests' without specific test cases",
+        "ignoring negative/error path coverage"
+      ],
+      "tags": [
+        "coverage",
+        "boundary-testing",
+        "edge-cases"
+      ]
+    },
+    {
+      "id": "aqr-005",
+      "prompt": "Detect and fix a test with multiple failure causes per test (handles creation, update, deletion in one test)",
+      "expected_patterns": [
+        "multiple independent behaviors OR multiple reason to fail identified",
+        "one behavior per test recommended",
+        "test splitting OR decomposition suggested",
+        "diagnostic value OR clear failure message as rationale",
+        "before/after example showing one test per behavior"
+      ],
+      "anti_patterns": [
+        "merging separate test functions to reduce lines of code",
+        "generic assertion like toBeTruthy without explaining the issue",
+        "ignoring that failure message becomes ambiguous"
+      ],
+      "tags": [
+        "diagnostic",
+        "test-design",
+        "single-responsibility"
+      ]
+    },
+    {
+      "id": "aqr-006",
+      "prompt": "Analyze application code for testability issues: dependency injection, side effect isolation, pure function extraction",
+      "expected_patterns": [
+        "dependency injection OR constructor injection OR service locator identified",
+        "hard-coded instantiation (new DatabaseClass) flagged as untestable",
+        "side effect isolation OR pure function extraction mentioned",
+        "interface segregation OR narrow interface suggested",
+        "before/after code example showing testable vs untestable"
+      ],
+      "anti_patterns": [
+        "focusing only on test code without analyzing application code testability",
+        "suggesting test workarounds instead of fixing the design",
+        "ignoring that testability often improves maintainability"
+      ],
+      "tags": [
+        "testability",
+        "application-code",
+        "dependency-injection"
+      ]
+    },
+    {
+      "id": "aqr-007",
+      "prompt": "Review AI-generated test code for signature LLM failures: hallucinated locators, fabricated imports, generic test data",
+      "expected_patterns": [
+        "hallucinated locator OR data-testid that doesn't exist identified",
+        "fabricated import OR plausible API that doesn't exist flagged",
+        "generic test data like 'test@test.com' OR 'Lorem ipsum' OR 'John Doe' noted",
+        "project data factory OR project-specific fixture recommended",
+        "run test against real page to verify locator suggested"
+      ],
+      "anti_patterns": [
+        "accepting generic placeholder data from AI generation",
+        "assuming imports are correct without verification",
+        "ignoring project naming conventions OR fixture patterns"
+      ],
+      "tags": [
+        "ai-generated-tests",
+        "hallucinated-locator",
+        "llm-failure"
+      ]
+    },
+    {
+      "id": "aqr-008",
+      "prompt": "Detect conditional test logic (if/else/switch/for loops) in test bodies and refactor to parameterized tests",
+      "expected_patterns": [
+        "conditional logic OR for loop OR if/else in test identified",
+        "parameterized test OR it.each OR test.each recommended",
+        "test.each with test data as array of arrays shown",
+        "explain that conditional logic in tests is itself untested",
+        "before/after code example with parameterized syntax"
+      ],
+      "anti_patterns": [
+        "suggesting conditional logic is acceptable if simple",
+        "recommending multiple nested describes instead of parameterization",
+        "ignoring that hidden test paths reduce debuggability"
+      ],
+      "tags": [
+        "design-smell",
+        "conditional-logic",
+        "parameterized-tests"
+      ]
+    },
+    {
+      "id": "aqr-009",
+      "prompt": "Audit test assertions for weak assertion messages and diagnostic value",
+      "expected_patterns": [
+        "assertion like expect(isValid).toBe(true) lacks diagnostic context flagged",
+        "toBeTruthy OR toBeDefined OR generic assertions identified as weak",
+        "specific assertion OR detailed error object recommended",
+        "failure message that explains the problem without reading test source shown",
+        "expect(result.errors).toEqual([]) or similar specific assertion example given"
+      ],
+      "anti_patterns": [
+        "accepting toBeDefined as sufficient assertion",
+        "suggesting only increasing number of assertions",
+        "ignoring that generic assertions hide failure root cause"
+      ],
+      "tags": [
+        "diagnostic",
+        "assertions",
+        "failure-messages"
+      ]
+    },
+    {
+      "id": "aqr-010",
+      "prompt": "Review a test suite for giant fixtures and excessive setup per test",
+      "expected_patterns": [
+        "20+ objects in beforeEach OR fixture setup identified",
+        "setup bloat OR unnecessary object creation flagged",
+        "inline setup per test OR factory pattern recommended",
+        "each test creates only what it needs principle stated",
+        "before/after showing bloated beforeEach vs test-scoped setup"
+      ],
+      "anti_patterns": [
+        "suggesting shared beforeAll as optimization for slow setup",
+        "ignoring that large fixtures mask which objects each test actually uses",
+        "recommending increasing database cleanup instead of reducing setup"
+      ],
+      "tags": [
+        "design-smell",
+        "fixtures",
+        "setup-bloat"
+      ]
+    }
+  ]
+}

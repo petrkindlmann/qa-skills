@@ -1,0 +1,239 @@
+{
+  "skill": "chaos-engineering",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "ce-001",
+      "prompt": "Write a chaos experiment hypothesis for a database failover scenario in your e-commerce platform",
+      "expected_patterns": [
+        "We believe that",
+        "if [failure X]",
+        "expected behavior Y",
+        "steady-state metrics OR baseline metrics",
+        "error rate OR latency OR throughput"
+      ],
+      "anti_patterns": [
+        "vague outcome like 'system should handle it'",
+        "no failure condition specified",
+        "no measurable expected behavior",
+        "no blast radius mentioned"
+      ],
+      "tags": [
+        "hypothesis",
+        "database",
+        "planning"
+      ]
+    },
+    {
+      "id": "ce-002",
+      "prompt": "Plan a game day for testing your microservices' resilience to API dependency failures. Define roles, communication plan, and preparation checklist",
+      "expected_patterns": [
+        "experiment owner",
+        "observers OR observer roles",
+        "scribe",
+        "dashboards OR monitoring",
+        "abort criteria OR abort conditions",
+        "2 weeks before OR 1 day before checklist",
+        "communication OR Slack OR channel"
+      ],
+      "anti_patterns": [
+        "no role assignments",
+        "no monitoring verification step",
+        "no rollback procedures",
+        "no approval or stakeholder notification"
+      ],
+      "tags": [
+        "game-day",
+        "planning",
+        "team",
+        "process"
+      ]
+    },
+    {
+      "id": "ce-003",
+      "prompt": "Set up a chaos experiment using toxiproxy to inject 500ms latency into a PostgreSQL database connection for an integration test",
+      "expected_patterns": [
+        "toxiproxy-node-client OR toxiproxy.get OR toxiproxy",
+        "proxy.disable OR toxic OR latency",
+        "duration: 200 OR attributes: {latency",
+        "finally OR try-finally OR ensure cleanup",
+        "async OR await"
+      ],
+      "anti_patterns": [
+        "latency not reversed after test",
+        "no error handling",
+        "hardcoded IP or port without parametrization",
+        "no assertion on response time"
+      ],
+      "tags": [
+        "toxiproxy",
+        "network",
+        "integration-test",
+        "latency"
+      ]
+    },
+    {
+      "id": "ce-004",
+      "prompt": "Create a Kubernetes chaos experiment using LitmusChaos to test pod deletion for your order service. Include ChaosEngine definition with duration and chaos parameters",
+      "expected_patterns": [
+        "apiVersion: litmuschaos.io",
+        "kind: ChaosEngine",
+        "pod-delete",
+        "TOTAL_CHAOS_DURATION OR CHAOS_INTERVAL",
+        "applabel OR appns",
+        "chaosServiceAccount"
+      ],
+      "anti_patterns": [
+        "missing appinfo section",
+        "no duration specified",
+        "FORCE: 'true' without justification",
+        "no grace period consideration"
+      ],
+      "tags": [
+        "litmuschaos",
+        "kubernetes",
+        "pod-delete",
+        "yaml"
+      ]
+    },
+    {
+      "id": "ce-005",
+      "prompt": "Document the results of a database latency chaos experiment, including what you observed versus expected, recovery time, and action items for findings",
+      "expected_patterns": [
+        "Hypothesis: Confirmed OR Partially confirmed OR Disproved",
+        "Expected vs actual",
+        "Recovery time",
+        "Data integrity OR data loss check",
+        "Action items WITH owner AND due date",
+        "Re-run scheduled OR next experiment date"
+      ],
+      "anti_patterns": [
+        "vague findings like 'system was slow'",
+        "no action items or all deferred",
+        "no owner assigned to fixes",
+        "no follow-up experiment planned"
+      ],
+      "tags": [
+        "analysis",
+        "documentation",
+        "findings",
+        "remediation"
+      ]
+    },
+    {
+      "id": "ce-006",
+      "prompt": "Choose the right chaos tool for your environment: you have Kubernetes, need fine-grained network control, and want eBPF-based injection. Justify your choice and explain how you would use it",
+      "expected_patterns": [
+        "Chaos Mesh OR chaos-mesh",
+        "eBPF OR fine-grained",
+        "network OR network faults",
+        "yaml OR CRD OR CustomResourceDefinition",
+        "Kubernetes native"
+      ],
+      "anti_patterns": [
+        "recommending Chaos Monkey without noting it's in maintenance mode",
+        "choosing AWS FIS for non-AWS workloads",
+        "no justification for the choice",
+        "ignoring eBPF capability"
+      ],
+      "tags": [
+        "tool-selection",
+        "kubernetes",
+        "decision-tree"
+      ]
+    },
+    {
+      "id": "ce-007",
+      "prompt": "Design a three-experiment plan for a team new to chaos engineering. For each experiment, write the hypothesis and injection method using a staging environment",
+      "expected_patterns": [
+        "slow database OR latency injection",
+        "third-party API OR 500 errors OR dependency failure",
+        "cache unavailable OR Redis",
+        "hypothesis for each",
+        "staging environment",
+        "toxiproxy OR mock OR iptables OR circuit breaker"
+      ],
+      "anti_patterns": [
+        "starting with production",
+        "experiments that are too complex",
+        "no blast radius restriction",
+        "missing hypotheses"
+      ],
+      "tags": [
+        "starter-experiments",
+        "escalation",
+        "planning"
+      ]
+    },
+    {
+      "id": "ce-008",
+      "prompt": "Identify the anti-pattern in this scenario: Your team ran a 5-minute chaos experiment injecting database latency, but the tc (traffic control) command failed midway and the latency remained for 2 hours until a manual fix. How should this have been prevented?",
+      "expected_patterns": [
+        "rollback plan OR documented rollback procedure",
+        "test the rollback OR dry run",
+        "abort criteria OR manual abort person",
+        "grace period OR --grace-period OR timeout",
+        "monitoring OR detection"
+      ],
+      "anti_patterns": [
+        "assuming 5 minutes means no rollback needed",
+        "trusting the tool won't fail",
+        "no second person",
+        "no documented recovery procedure"
+      ],
+      "tags": [
+        "anti-pattern",
+        "rollback",
+        "safety"
+      ]
+    },
+    {
+      "id": "ce-009",
+      "prompt": "You're about to run a Redis unavailability experiment in production. What approval and communication steps must you take before starting? What would be irresponsible to skip?",
+      "expected_patterns": [
+        "engineering leadership approval OR explicit approval",
+        "affected teams notification",
+        "scope and duration communicated",
+        "abort criteria shared",
+        "on-call team briefed OR support team notified",
+        "blast radius bounded"
+      ],
+      "anti_patterns": [
+        "running in production without approval",
+        "no stakeholder notification",
+        "vague scope or unbounded duration",
+        "no abort authority named"
+      ],
+      "tags": [
+        "production",
+        "governance",
+        "communication",
+        "safety"
+      ]
+    },
+    {
+      "id": "ce-010",
+      "prompt": "Your chaos experiment revealed that circuit breakers don't activate when the payment API returns 500 errors for 30 seconds. Write the follow-through action item with owner, due date, and plan for re-validation",
+      "expected_patterns": [
+        "ticket OR action item",
+        "assigned to [owner name]",
+        "due date OR target date",
+        "circuit breaker configuration OR retry logic",
+        "re-run experiment OR verify fix",
+        "specific metrics to check"
+      ],
+      "anti_patterns": [
+        "no owner assigned",
+        "no due date",
+        "item deferred indefinitely",
+        "no plan to re-run the experiment",
+        "vague fix description"
+      ],
+      "tags": [
+        "follow-through",
+        "remediation",
+        "accountability"
+      ]
+    }
+  ]
+}

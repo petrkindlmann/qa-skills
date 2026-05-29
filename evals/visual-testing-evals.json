@@ -1,0 +1,209 @@
+{
+  "skill": "visual-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "vt-001",
+      "prompt": "Write a Playwright visual test for a dashboard page with a baseline screenshot",
+      "expected_patterns": [
+        "toHaveScreenshot",
+        "expect(page)",
+        "maxDiffPixels OR maxDiffPixelRatio OR threshold",
+        "animations: 'disabled'"
+      ],
+      "anti_patterns": [
+        "page.screenshot() without expect",
+        "no wait for visibility before screenshot",
+        "waitForTimeout before capturing"
+      ],
+      "tags": [
+        "basic",
+        "screenshot",
+        "baseline"
+      ]
+    },
+    {
+      "id": "vt-002",
+      "prompt": "Set up visual regression thresholds in playwright.config.ts for full-page screenshots",
+      "expected_patterns": [
+        "expect: { toHaveScreenshot: { } }",
+        "maxDiffPixelRatio: 0.005 OR maxDiffPixels",
+        "animations: 'disabled'",
+        "caret: 'hide'"
+      ],
+      "anti_patterns": [
+        "maxDiffPixels: 0 on full page",
+        "no threshold configuration",
+        "animations not disabled"
+      ],
+      "tags": [
+        "config",
+        "thresholds",
+        "playwright-config"
+      ]
+    },
+    {
+      "id": "vt-003",
+      "prompt": "Write a visual test that masks dynamic regions like timestamps and avatars before capturing",
+      "expected_patterns": [
+        "mask: [",
+        "getByTestId OR getByRole",
+        "maskColor: OR mask: [ ... ]",
+        "toHaveScreenshot"
+      ],
+      "anti_patterns": [
+        "no masking of dynamic content",
+        "screenshot without waiting for load",
+        "timestamps captured unmasked"
+      ],
+      "tags": [
+        "masking",
+        "dynamic-content",
+        "false-positives"
+      ]
+    },
+    {
+      "id": "vt-004",
+      "prompt": "Write a visual test that freezes time and API responses to eliminate flakiness",
+      "expected_patterns": [
+        "page.clock.install OR page.clock.setFixedTime",
+        "page.route",
+        "route.fulfill",
+        "animations: 'disabled'",
+        "toHaveScreenshot"
+      ],
+      "anti_patterns": [
+        "dynamic timestamps in screenshot",
+        "no API stubbing for live data",
+        "animations not disabled"
+      ],
+      "tags": [
+        "frozen-data",
+        "time-mocking",
+        "api-stubbing",
+        "stability"
+      ]
+    },
+    {
+      "id": "vt-005",
+      "prompt": "Set up responsive visual testing across desktop, tablet, and mobile viewports",
+      "expected_patterns": [
+        "VISUAL_VIEWPORTS OR viewports array",
+        "viewport: { width, height }",
+        "isMobile:",
+        "toHaveScreenshot",
+        "fullPage: true OR animations: 'disabled'"
+      ],
+      "anti_patterns": [
+        "testing every pixel width",
+        "no viewport labeling",
+        "hardcoded viewports without comments"
+      ],
+      "tags": [
+        "responsive",
+        "viewports",
+        "multi-device"
+      ]
+    },
+    {
+      "id": "vt-006",
+      "prompt": "Write component-level visual tests for a data table in different states (empty, error, normal)",
+      "expected_patterns": [
+        "getByRole('table')",
+        "toHaveScreenshot",
+        "page.route for empty/error states",
+        "route.fulfill({ json: { } }) OR route.fulfill({ status: 500 })"
+      ],
+      "anti_patterns": [
+        "full-page screenshot instead of component",
+        "no state variations tested",
+        "no API stubbing for states"
+      ],
+      "tags": [
+        "component",
+        "states",
+        "table"
+      ]
+    },
+    {
+      "id": "vt-007",
+      "prompt": "Configure Playwright projects to run visual tests separately with specific viewport settings",
+      "expected_patterns": [
+        "projects: [",
+        "name: 'visual-desktop' OR name: 'visual-mobile'",
+        "viewport: { width, height }",
+        "testMatch: OR grep: @visual"
+      ],
+      "anti_patterns": [
+        "visual tests mixed with functional tests",
+        "no viewport specification per project",
+        "no filtering of visual test files"
+      ],
+      "tags": [
+        "config",
+        "projects",
+        "separation"
+      ]
+    },
+    {
+      "id": "vt-008",
+      "prompt": "Update baselines after an intentional design change and review diffs in PR",
+      "expected_patterns": [
+        "npx playwright test --update-snapshots",
+        "git diff --stat OR git diff",
+        "npx playwright show-report",
+        "baseline updated"
+      ],
+      "anti_patterns": [
+        "--update-snapshots without review",
+        "no visual inspection of diffs",
+        "committing baseline changes without PR review"
+      ],
+      "tags": [
+        "baseline-management",
+        "workflow",
+        "git"
+      ]
+    },
+    {
+      "id": "vt-009",
+      "prompt": "Evaluate whether to use Playwright built-in toHaveScreenshot or a dedicated tool like Chromatic/Percy/Argos CI",
+      "expected_patterns": [
+        "Storybook in project -> Chromatic OR no Storybook -> Playwright built-in",
+        "CI platform capability",
+        "team size and review workflow needs",
+        "artifact storage"
+      ],
+      "anti_patterns": [
+        "choosing tool without considering Storybook status",
+        "Lost Pixel mentioned as current option",
+        "no discussion of review workflow"
+      ],
+      "tags": [
+        "tool-selection",
+        "discovery",
+        "decision"
+      ]
+    },
+    {
+      "id": "vt-010",
+      "prompt": "Set up Git LFS for baseline snapshots to prevent repository bloat from large PNG files",
+      "expected_patterns": [
+        ".gitattributes",
+        "*.png filter=lfs OR *.png merge=lfs",
+        "snapshotPathTemplate in playwright.config.ts",
+        "platform-specific baselines"
+      ],
+      "anti_patterns": [
+        "no Git LFS configuration",
+        "baseline screenshots bloating repository",
+        "same baseline used across platforms"
+      ],
+      "tags": [
+        "git-lfs",
+        "storage",
+        "repository-size"
+      ]
+    }
+  ]
+}

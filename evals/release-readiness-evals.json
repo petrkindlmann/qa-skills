@@ -1,0 +1,228 @@
+{
+  "skill": "release-readiness",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "rr-001",
+      "prompt": "Design a go/no-go checklist for releasing a payment features update to production",
+      "expected_patterns": [
+        "Automated Checks section with CI pipelines, smoke tests, P0/P1 bugs",
+        "Manual Checks section with monitoring, rollback plan, feature flags, database migrations",
+        "Risk Assessment section with change scope, blast radius, revert complexity",
+        "Evidence-based criteria (not feeling-based)"
+      ],
+      "anti_patterns": [
+        "Vague approval like 'seems ready'",
+        "Missing rollback plan",
+        "No mention of P0/P1 bug filtering",
+        "Skipping security scan check"
+      ],
+      "tags": [
+        "checklist",
+        "process",
+        "evidence-based"
+      ]
+    },
+    {
+      "id": "rr-002",
+      "prompt": "Create a smoke test suite for an e-commerce application with 5-8 tests",
+      "expected_patterns": [
+        "Application health check (homepage loads, 200 response)",
+        "Authentication test (login with valid credentials)",
+        "Core workflow test (add to cart or purchase flow)",
+        "Data retrieval test (search or product page loads)",
+        "API health check",
+        "Target duration under 5 minutes",
+        "Avoid edge cases, visual perfection, performance benchmarks"
+      ],
+      "anti_patterns": [
+        "Testing exhaustive form validation",
+        "Checking exact copy text instead of element existence",
+        "Using sleep() or waitForTimeout",
+        "Creating test data from scratch instead of API OR test account",
+        "No mention of environment (staging vs production differences)"
+      ],
+      "tags": [
+        "smoke-test",
+        "design",
+        "critical-paths"
+      ]
+    },
+    {
+      "id": "rr-003",
+      "prompt": "Define rollback criteria and automated triggers for a production deployment",
+      "expected_patterns": [
+        "Error rate threshold (e.g., >2x baseline)",
+        "Latency threshold (e.g., P95 >3x baseline)",
+        "Time window for evaluation (e.g., 5 minutes)",
+        "Health check failures (e.g., 3 consecutive)",
+        "Manual trigger guidelines (customer issues, data integrity, security)",
+        "Thresholds defined BEFORE deployment"
+      ],
+      "anti_patterns": [
+        "Vague triggers like 'something looks wrong'",
+        "No specific metrics or thresholds",
+        "Deciding rollback criteria during the incident",
+        "Missing documented procedure"
+      ],
+      "tags": [
+        "rollback",
+        "incident-response",
+        "thresholds"
+      ]
+    },
+    {
+      "id": "rr-004",
+      "prompt": "Design a staged rollout plan for a new machine learning recommendation feature",
+      "expected_patterns": [
+        "Canary stage with 1% traffic for 15-30 minutes",
+        "Early adopters stage with 10% traffic for 1-2 hours",
+        "Partial rollout stage with 50% traffic for 2-4 hours",
+        "Full rollout stage with 100% traffic",
+        "Per-stage promotion criteria (error rate, latency, business metrics)",
+        "Monitoring between stages: error metrics, performance metrics, business metrics, infrastructure metrics"
+      ],
+      "anti_patterns": [
+        "Big-bang 100% rollout without staged approach",
+        "No promotion criteria between stages",
+        "Promoting based on gut feeling instead of metrics",
+        "Missing business metric monitoring"
+      ],
+      "tags": [
+        "staged-rollout",
+        "canary",
+        "gradual-deployment"
+      ]
+    },
+    {
+      "id": "rr-005",
+      "prompt": "You have a database migration that is irreversible. Document the rollback strategy",
+      "expected_patterns": [
+        "Forward-fix OR dual-write OR shadow migration as options",
+        "Mention of point-in-time recovery as last resort",
+        "Data consideration explicitly acknowledged",
+        "Alternative to code/feature flag rollback"
+      ],
+      "anti_patterns": [
+        "Assuming rollback is always possible",
+        "Downtime mentioned without data recovery plan",
+        "No mention of data loss implications"
+      ],
+      "tags": [
+        "rollback",
+        "database",
+        "data-migrations"
+      ]
+    },
+    {
+      "id": "rr-006",
+      "prompt": "Outline post-deployment verification steps immediately after going live",
+      "expected_patterns": [
+        "Immediate checks (0-15 min): smoke tests, error rate baseline, exception tracking, health checks",
+        "Short-term checks (15 min - 2 hours): synthetic monitoring, error trend, latency, support tickets, business metrics",
+        "Medium-term checks (2-24 hours): batch jobs, time-zone issues, third-party integrations, performance degradation",
+        "Specific commands (curl health endpoint, Sentry check, Datadog comparison)"
+      ],
+      "anti_patterns": [
+        "Deploy and ignore",
+        "Only checking error rate once",
+        "No assigned person for monitoring",
+        "Missing business metric checks"
+      ],
+      "tags": [
+        "post-deployment",
+        "monitoring",
+        "verification"
+      ]
+    },
+    {
+      "id": "rr-007",
+      "prompt": "Set up feature flag gradual rollout for a redesigned checkout flow",
+      "expected_patterns": [
+        "Deploy code with flag OFF to 100% first",
+        "Enable for internal users (dogfooding) first",
+        "Canary: 1% of users",
+        "Gradual increase: 10%, 25%, 50%, 100%",
+        "Remove flag after full rollout stable for 1 week",
+        "Mention of flag tooling (LaunchDarkly, Statsig, GrowthBook, Unleash, Flagsmith) OR custom flag system"
+      ],
+      "anti_patterns": [
+        "Flipping flag to 100% immediately",
+        "Keeping stale flags in code indefinitely",
+        "No dogfooding step",
+        "No flag removal schedule"
+      ],
+      "tags": [
+        "feature-flags",
+        "gradual-rollout",
+        "flag-management"
+      ]
+    },
+    {
+      "id": "rr-008",
+      "prompt": "You're releasing an AI feature. Design the rollout and monitoring approach",
+      "expected_patterns": [
+        "Prompt version and model ID as configurable (AI Configs, feature-flag JSON, or LaunchDarkly AI Configs)",
+        "Kill switch as mandatory (separate from feature flag)",
+        "Watch eval metrics: hallucination rate, jailbreak success, cost per request per cohort",
+        "Cost guardrail: circuit breaker on per-request cost spikes",
+        "Graceful fallback when feature disabled"
+      ],
+      "anti_patterns": [
+        "Treating AI like standard feature code rollout",
+        "No kill switch",
+        "Monitoring only error rate, ignoring eval quality metrics",
+        "No cost controls"
+      ],
+      "tags": [
+        "ai-features",
+        "llm",
+        "ai-rollout"
+      ]
+    },
+    {
+      "id": "rr-009",
+      "prompt": "Write a release communication message when rolling back a production deployment due to elevated error rates",
+      "expected_patterns": [
+        "Subject line with [Rollback] tag and version",
+        "Status field set to ROLLED BACK",
+        "Reason field with brief description of issue",
+        "Impact field: who affected and duration",
+        "Current state: running previous version",
+        "Next steps with owner and investigation plan"
+      ],
+      "anti_patterns": [
+        "Vague language like 'something went wrong'",
+        "No owner assigned to investigation",
+        "Missing impact statement",
+        "No next steps defined"
+      ],
+      "tags": [
+        "communication",
+        "rollback",
+        "incident"
+      ]
+    },
+    {
+      "id": "rr-010",
+      "prompt": "A teammate says 'we skipped smoke tests because the CI pipeline is green.' Explain why this is wrong and how to fix it",
+      "expected_patterns": [
+        "CI tests run against test data in test environments",
+        "Smoke tests verify deployed app with production configuration and infrastructure",
+        "Staging is not production",
+        "Smoke tests are non-negotiable",
+        "Fix: make smoke tests fast if they're slow, fix flakiness if they're flaky"
+      ],
+      "anti_patterns": [
+        "Accepting green CI as sufficient evidence",
+        "Skipping smoke tests for 'faster releases'",
+        "No explanation of staging vs production differences"
+      ],
+      "tags": [
+        "anti-pattern",
+        "smoke-test",
+        "pipeline"
+      ]
+    }
+  ]
+}

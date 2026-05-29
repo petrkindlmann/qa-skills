@@ -1,0 +1,227 @@
+{
+  "skill": "test-migration",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "tm-001",
+      "prompt": "Migrate a Selenium test that logs in with explicit WebDriverWait to Playwright",
+      "expected_patterns": [
+        "remove WebDriverWait OR remove Thread.sleep OR remove implicit waits",
+        "getByLabel OR getByRole OR getByTestId",
+        "fill",
+        "await expect(page).toHaveURL",
+        "async/await pattern"
+      ],
+      "anti_patterns": [
+        "waitForTimeout",
+        "send_keys",
+        "EC.visibility_of_element_located",
+        "actionTimeout in new test",
+        "find_element(By."
+      ],
+      "tags": [
+        "selenium-to-playwright",
+        "locators",
+        "waits"
+      ]
+    },
+    {
+      "id": "tm-002",
+      "prompt": "Plan an incremental migration strategy for 150 Cypress tests where 40% are flaky",
+      "expected_patterns": [
+        "audit OR categorize by priority",
+        "critical OR high-priority first",
+        "parallel run OR both suites in CI",
+        "2 sprints OR coverage parity",
+        "diagnose flakiness OR fix root cause"
+      ],
+      "anti_patterns": [
+        "big bang rewrite",
+        "ignore flaky tests",
+        "delete old tests immediately",
+        "no parallel running",
+        "migrate low-priority first"
+      ],
+      "tags": [
+        "strategy",
+        "planning",
+        "incremental"
+      ]
+    },
+    {
+      "id": "tm-003",
+      "prompt": "Convert a cy.intercept() + cy.wait() pattern to Playwright page.route() and waitForResponse()",
+      "expected_patterns": [
+        "page.route",
+        "route.fulfill",
+        "page.waitForResponse OR waitForLoadState",
+        "glob pattern OR regex",
+        "json OR fulfill"
+      ],
+      "anti_patterns": [
+        "cy.intercept",
+        "cy.wait('@')",
+        "cy.then()",
+        "implicit wait for network"
+      ],
+      "tags": [
+        "cypress-to-playwright",
+        "network-mocking",
+        "api-intercept"
+      ]
+    },
+    {
+      "id": "tm-004",
+      "prompt": "Translate a Jest test using jest.mock() and jest.spyOn() to Vitest with vi utilities",
+      "expected_patterns": [
+        "vi.mock OR vi.doMock",
+        "vi.spyOn",
+        "vi.fn",
+        "vi.advanceTimersByTime OR vi.useFakeTimers",
+        "import { vi } from 'vitest'"
+      ],
+      "anti_patterns": [
+        "jest.mock",
+        "jest.spyOn",
+        "jest.fn",
+        "@jest/globals",
+        "jest.useFakeTimers"
+      ],
+      "tags": [
+        "jest-to-vitest",
+        "mocks",
+        "spies"
+      ]
+    },
+    {
+      "id": "tm-005",
+      "prompt": "Migrate a Protractor test using element(by.model()) and browser.wait() to Playwright",
+      "expected_patterns": [
+        "getByLabel OR getByRole OR getByTestId",
+        "remove browser.waitForAngular OR remove waitForAngular",
+        "page.goto",
+        "await expect(page).toHaveURL",
+        "async/await"
+      ],
+      "anti_patterns": [
+        "browser.wait(EC.",
+        "element(by.model()",
+        "element(by.binding()",
+        "browser.get",
+        "sendKeys"
+      ],
+      "tags": [
+        "protractor-to-playwright",
+        "angular",
+        "legacy"
+      ]
+    },
+    {
+      "id": "tm-006",
+      "prompt": "Set up parallel CI execution with one job for legacy Cypress tests (non-blocking) and one for new Playwright tests",
+      "expected_patterns": [
+        "continue-on-error: true OR allowed-to-fail",
+        "cypress run",
+        "playwright test OR playwright install --with-deps",
+        "separate job OR parallel jobs",
+        "GitHub Actions OR CI config"
+      ],
+      "anti_patterns": [
+        "single job running both",
+        "blocking the new suite on old suite",
+        "no CI config shown"
+      ],
+      "tags": [
+        "ci-cd",
+        "parallel-running",
+        "github-actions"
+      ]
+    },
+    {
+      "id": "tm-007",
+      "prompt": "Create a coverage comparison spreadsheet for a partial Cypress→Playwright migration showing feature areas and parity percentages",
+      "expected_patterns": [
+        "Old Suite Tests",
+        "New Suite Tests",
+        "Parity OR coverage % OR 100%",
+        "critical OR high-priority",
+        "feature area OR module name"
+      ],
+      "anti_patterns": [
+        "no parity tracking",
+        "incomplete rows",
+        "no percentage OR no count comparison"
+      ],
+      "tags": [
+        "coverage-tracking",
+        "parity",
+        "planning"
+      ]
+    },
+    {
+      "id": "tm-008",
+      "prompt": "Migrate a Mocha test with chai assertions (to.equal, to.contain) to Vitest expecting toBe and toContain",
+      "expected_patterns": [
+        "toBe OR toEqual OR toContain",
+        "import { describe, it, expect } from 'vitest'",
+        "describe",
+        "it",
+        "expect(x).toBe"
+      ],
+      "anti_patterns": [
+        "to.equal",
+        "to.deep.equal without toEqual",
+        "to.contain without toContain",
+        "from 'chai'",
+        "sinon"
+      ],
+      "tags": [
+        "mocha-to-vitest",
+        "assertions",
+        "migration"
+      ]
+    },
+    {
+      "id": "tm-009",
+      "prompt": "Identify and document why an old Selenium test should not be migrated and verify its coverage is provided elsewhere",
+      "expected_patterns": [
+        "documented rationale OR documented reason",
+        "intentionally not migrated OR skip OR low-priority",
+        "coverage provided by OR covered by other test",
+        "verification OR review OR manual check"
+      ],
+      "anti_patterns": [
+        "deleted without documentation",
+        "coverage loss untracked",
+        "no explanation for skipped test"
+      ],
+      "tags": [
+        "coverage-decisions",
+        "intentional-skip",
+        "documentation"
+      ]
+    },
+    {
+      "id": "tm-010",
+      "prompt": "Rewrite a Cypress cy.get().should() assertion as a modernized Playwright await expect() with auto-retrying",
+      "expected_patterns": [
+        "await expect(locator)",
+        "toHaveText OR toContainText OR toBeVisible OR toHaveCount",
+        "remove cy.should",
+        "remove cy.get",
+        "getByRole OR getByTestId"
+      ],
+      "anti_patterns": [
+        "cy.get().should",
+        "page.$$ OR page.$",
+        "waitForTimeout before assertion",
+        "manual polling"
+      ],
+      "tags": [
+        "cypress-to-playwright",
+        "assertions",
+        "modernization"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,245 @@
+{
+  "skill": "qa-project-bootstrap",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "qapb-001",
+      "prompt": "A new QA engineer just joined our team. Help us create a 30-day onboarding plan for them.",
+      "expected_patterns": [
+        "Week 1 checklist includes: repository clone OR environment setup OR local application running",
+        "Week 2 includes: first small win OR first real test",
+        "Week 3 includes: sprint contribution OR acceptance criteria",
+        "Week 4 includes: independence milestones OR multi-step E2E test",
+        "progressive complexity OR progressive responsibility"
+      ],
+      "anti_patterns": [
+        "sink or swim",
+        "tutorial only OR toy exercises only",
+        "no pairing OR pair programming not mentioned",
+        "no mention of documentation OR tribal knowledge",
+        "framework selection as day 1 task for existing project"
+      ],
+      "tags": [
+        "onboarding",
+        "planning",
+        "structure"
+      ]
+    },
+    {
+      "id": "qapb-002",
+      "prompt": "We need to conduct a test architecture audit for our existing Playwright suite. What should we assess and how do we report findings?",
+      "expected_patterns": [
+        "test counts OR pyramid shape OR coverage distribution",
+        "flakiness OR flaky test rate OR quarantine",
+        "CI pipeline OR pipeline duration",
+        "technical debt OR skipped tests OR hardcoded data OR deprecated API",
+        "page objects OR fixture-based setup OR data factories OR conventions",
+        "strengths OR gaps OR risks OR quick wins OR strategic work"
+      ],
+      "anti_patterns": [
+        "focus only on coverage numbers without pyramid shape",
+        "ignore flakiness assessment",
+        "no technical debt inventory",
+        "no categorization of findings",
+        "one-size-fits-all audit without team_maturity consideration"
+      ],
+      "tags": [
+        "audit",
+        "assessment",
+        "health-check"
+      ]
+    },
+    {
+      "id": "qapb-003",
+      "prompt": "Create a Framework Walkthrough document for a Playwright project. What sections should it include and what level of detail?",
+      "expected_patterns": [
+        "architecture overview OR framework version OR test runner",
+        "directory structure OR tests/ organization OR pages/ OR fixtures/ OR helpers/",
+        "how to run tests section OR command examples OR npm playwright test",
+        "step by step guide OR new test template OR arrange-act-assert",
+        "how to debug failures OR TimeoutError OR CI vs local patterns",
+        "patterns and conventions OR page objects OR authentication OR test data OR selectors",
+        "where to find help section"
+      ],
+      "anti_patterns": [
+        "framework syntax documentation only",
+        "no example test template",
+        "generic instructions without project specifics",
+        "no debugging guidance",
+        "copy-paste encouragement without understanding",
+        "only document successful paths, ignore failures"
+      ],
+      "tags": [
+        "documentation",
+        "walkthrough",
+        "framework"
+      ]
+    },
+    {
+      "id": "qapb-004",
+      "prompt": "What questions should we ask before starting QA onboarding to understand the context?",
+      "expected_patterns": [
+        "new QA engineer OR developer contributing to tests OR experience level",
+        "solo QA OR joining existing team",
+        "existing test framework OR framework health",
+        "qa-project-context.md OR existing documentation",
+        "local environment setup OR setup duration",
+        "accounts and permissions OR repository access OR CI dashboard"
+      ],
+      "anti_patterns": [
+        "skip discovery and jump to planning",
+        "assume everyone has same framework experience",
+        "ignore team structure (solo vs team)",
+        "no assessment of documentation baseline",
+        "ignore setup time constraints"
+      ],
+      "tags": [
+        "discovery",
+        "context",
+        "assessment"
+      ]
+    },
+    {
+      "id": "qapb-005",
+      "prompt": "Describe the pairing strategy for the first three tests a new QA engineer writes. What is the progression?",
+      "expected_patterns": [
+        "test 1 OR first test: navigator OR driver OR experienced person explains",
+        "test 2 OR second test: co-pilots OR equal contribution",
+        "test 3 OR third test: observer OR new person drives OR feedback only",
+        "understand the workflow OR build confidence OR independence",
+        "pair on first 3 tests OR 2-week review cycle"
+      ],
+      "anti_patterns": [
+        "same pairing pattern for all three tests",
+        "solo on day 1",
+        "experienced person drives all three",
+        "no feedback after test 1",
+        "observer role for test 1 instead of test 3"
+      ],
+      "tags": [
+        "mentorship",
+        "pairing",
+        "learning"
+      ]
+    },
+    {
+      "id": "qapb-006",
+      "prompt": "Our new tester is stuck on their first test PR. What should code review focus on during the first two weeks?",
+      "expected_patterns": [
+        "pattern adherence OR page object usage",
+        "selector strategy OR stable locators",
+        "assertion quality OR specific assertions",
+        "test isolation OR shared state",
+        "naming OR test name describes behavior",
+        "educational comments OR explain the why",
+        "supportive review, not just LGTM"
+      ],
+      "anti_patterns": [
+        "style nits block PR",
+        "perfectionism OR blocking on advanced patterns",
+        "generic LGTM without feedback",
+        "focus only on syntax, not understanding",
+        "treat first PRs same as experienced team member PRs"
+      ],
+      "tags": [
+        "code-review",
+        "feedback",
+        "mentorship"
+      ]
+    },
+    {
+      "id": "qapb-007",
+      "prompt": "Our project has no qa-project-context.md file. Why is this important for onboarding and what should it contain?",
+      "expected_patterns": [
+        "documents framework OR critical paths OR team structure",
+        "tribal knowledge capture OR answers questions",
+        "new person writes it OR benefits entire team",
+        "blocking item OR high-priority task",
+        "team_maturity setting OR startup OR growing OR established",
+        "forces documentation of what was learned"
+      ],
+      "anti_patterns": [
+        "optional OR nice to have",
+        "only created after onboarding complete",
+        "created by team member, not new person",
+        "high-level overview only, no specifics",
+        "ignore calibration to team maturity"
+      ],
+      "tags": [
+        "documentation",
+        "context",
+        "knowledge-capture"
+      ]
+    },
+    {
+      "id": "qapb-008",
+      "prompt": "What is the most important metric for measuring onboarding success? Why?",
+      "expected_patterns": [
+        "time to first merged test OR first real test",
+        "within two weeks OR first 14 days",
+        "real test in main branch OR CI passes",
+        "not a tutorial exercise OR not local only",
+        "reduces time to productive"
+      ],
+      "anti_patterns": [
+        "number of tests written",
+        "onboarding completion date",
+        "passing all framework tutorials",
+        "time to understand all patterns",
+        "percentage of codebase reviewed"
+      ],
+      "tags": [
+        "metrics",
+        "success",
+        "objective"
+      ]
+    },
+    {
+      "id": "qapb-009",
+      "prompt": "Identify the anti-patterns that indicate failed QA onboarding. What should we avoid?",
+      "expected_patterns": [
+        "sink or swim OR no structure",
+        "tutorial-only OR no real tests early",
+        "no documentation OR all tribal knowledge",
+        "perfectionism paralysis OR blocking first PR",
+        "ignoring feedback OR no solicitation of experience",
+        "copy-paste without understanding OR code review doesn't explain why"
+      ],
+      "anti_patterns": [
+        "all anti-patterns listed as isolated issues",
+        "no explanation of why these are problems",
+        "guidance without the anti-pattern context"
+      ],
+      "tags": [
+        "anti-patterns",
+        "pitfalls",
+        "lessons-learned"
+      ]
+    },
+    {
+      "id": "qapb-010",
+      "prompt": "How should we structure the Codebase Orientation Guide session? What areas should we cover?",
+      "expected_patterns": [
+        "60-90 minute session OR walk-through duration",
+        "test directory structure OR organization by feature",
+        "page objects tour OR naming conventions OR base page class",
+        "shared utilities inventory OR auth fixture OR data factory OR API client",
+        "CI pipeline walk-through OR stages OR triggers OR artifacts",
+        "why tests organized this way OR where to find things"
+      ],
+      "anti_patterns": [
+        "reading documentation instead of walking through",
+        "focus only on code structure, not purpose",
+        "skip CI pipeline explanation",
+        "more than 2 hours duration",
+        "one-way presentation without questions",
+        "no table OR utilities not explained"
+      ],
+      "tags": [
+        "orientation",
+        "mentorship",
+        "walkthrough"
+      ]
+    }
+  ]
+}

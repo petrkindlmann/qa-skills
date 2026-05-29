@@ -1,0 +1,217 @@
+{
+  "skill": "test-planning",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "tp-001",
+      "prompt": "I have a 2-week sprint with 3 new features: payment checkout redesign, user profile edit, and dark mode toggle. Resources: 1 SDET, 1 QA engineer, 2 developers who can test. Create a test plan outline.",
+      "expected_patterns": [
+        "feature decomposition OR testable scenarios",
+        "risk x effort OR prioritization matrix",
+        "coverage matrix OR requirements mapping",
+        "resource allocation OR assignment",
+        "effort estimate OR hours estimate"
+      ],
+      "anti_patterns": [
+        "equal effort for all features",
+        "no buffer OR 100% utilization",
+        "no risk assessment",
+        "missing entry/exit criteria"
+      ],
+      "tags": [
+        "sprint",
+        "planning",
+        "prioritization"
+      ]
+    },
+    {
+      "id": "tp-002",
+      "prompt": "Break down 'User can edit profile' feature from PROJ-1234 into specific testable scenarios with pass/fail criteria.",
+      "expected_patterns": [
+        "happy path",
+        "validation OR required field",
+        "error condition OR edge case",
+        "concurrent OR simultaneous",
+        "expected outcome"
+      ],
+      "anti_patterns": [
+        "vague scenarios like 'test the feature'",
+        "missing pass/fail criteria",
+        "single scenario only"
+      ],
+      "tags": [
+        "decomposition",
+        "scenarios",
+        "feature-analysis"
+      ]
+    },
+    {
+      "id": "tp-003",
+      "prompt": "Create a requirements-to-test coverage matrix for a payment API integration. Requirements: API accepts valid card, validates card format, rejects expired cards, handles network timeout, logs all transactions.",
+      "expected_patterns": [
+        "requirement ID OR row per requirement",
+        "test type OR automated/manual",
+        "test location OR test ID",
+        "covered OR gap OR planned",
+        "100% mapping"
+      ],
+      "anti_patterns": [
+        "missing requirements",
+        "no status column",
+        "no test location or test ID"
+      ],
+      "tags": [
+        "coverage",
+        "traceability",
+        "requirements"
+      ]
+    },
+    {
+      "id": "tp-004",
+      "prompt": "Estimate effort for this sprint: 4 new E2E tests, 6 unit tests, 2 exploratory sessions, 1 accessibility review. You have 30 hours available. What do you allocate?",
+      "expected_patterns": [
+        "reference estimate OR hours per test",
+        "E2E 2-3 hours",
+        "unit 0.5 hours",
+        "exploratory 1.5 hours",
+        "buffer OR 20-30%"
+      ],
+      "anti_patterns": [
+        "no reference data",
+        "100% allocation without buffer",
+        "guessing effort"
+      ],
+      "tags": [
+        "estimation",
+        "effort",
+        "capacity"
+      ]
+    },
+    {
+      "id": "tp-005",
+      "prompt": "Plot these on a risk x effort matrix: (High risk, 1h effort), (Medium risk, 6h effort), (Low risk, 0.5h effort), (High risk, 8h effort). You have 12 hours. What is your testing priority order?",
+      "expected_patterns": [
+        "high risk low effort first OR do first",
+        "high risk high effort second OR do second",
+        "medium risk deferred",
+        "low risk deferred OR skip",
+        "prioritization matrix OR work order"
+      ],
+      "anti_patterns": [
+        "alphabetical order",
+        "all items included",
+        "no risk consideration"
+      ],
+      "tags": [
+        "prioritization",
+        "risk-matrix",
+        "capacity-planning"
+      ]
+    },
+    {
+      "id": "tp-006",
+      "prompt": "Assign testing work to 3 people: Alice (SDET, 20h available), Bob (Junior QA, 16h available), Carol (QA lead, 12h available). You have: 8h E2E work, 6h unit work, 4h exploratory, 4h accessibility, 4h buffer. How do you allocate?",
+      "expected_patterns": [
+        "SDET gets E2E OR unit",
+        "exploratory goes to best feature knowledge",
+        "accessibility separated OR assigned",
+        "buffer distributed",
+        "70-80% utilization OR capacity"
+      ],
+      "anti_patterns": [
+        "equal split",
+        "all critical work to one person",
+        "overallocation > 100%"
+      ],
+      "tags": [
+        "allocation",
+        "resources",
+        "skills"
+      ]
+    },
+    {
+      "id": "tp-007",
+      "prompt": "Outline the testing schedule for a 2-week sprint: when does environment setup happen, when do automated tests get written, when does manual testing start, when does bug verification occur?",
+      "expected_patterns": [
+        "day 1-2 OR week 1 setup",
+        "environment OR test data OR staging",
+        "automated tests written OR day 3-4",
+        "manual testing OR day 5",
+        "week 2 regression",
+        "last day confirmation OR sign-off"
+      ],
+      "anti_patterns": [
+        "testing starts day 1 without environment setup",
+        "all testing at sprint end",
+        "no continuous bug verification"
+      ],
+      "tags": [
+        "scheduling",
+        "timeline",
+        "sprint-flow"
+      ]
+    },
+    {
+      "id": "tp-008",
+      "prompt": "Your sprint test plan estimated 40 hours of testing work but you only have 30 hours available. The plan includes: 4 E2E tests (8h), 8 unit tests (4h), 2 exploratory sessions (3h), coverage matrix gap review (5h), bug buffer (8h), re-test buffer (2h). What do you cut and why?",
+      "expected_patterns": [
+        "prioritization matrix OR risk-effort",
+        "defer OR skip low-risk items",
+        "keep critical path OR high-risk",
+        "justification OR rationale",
+        "gap acceptance OR explicit decision"
+      ],
+      "anti_patterns": [
+        "cut the buffer arbitrarily",
+        "defer everything equally",
+        "no risk-based decision"
+      ],
+      "tags": [
+        "capacity-planning",
+        "trade-offs",
+        "prioritization"
+      ]
+    },
+    {
+      "id": "tp-009",
+      "prompt": "Track daily test status for Day 3 of a 2-week sprint: completed E2E login test, unit discount stacking tests done, but staging is down so integration tests blocked. Found 2 bugs (P1 and P2). What do you report and what's next?",
+      "expected_patterns": [
+        "completed OR ✓",
+        "blocked OR ✗",
+        "bug found with priority",
+        "next day plan OR tomorrow",
+        "coverage percentage OR scenarios complete",
+        "buffer consumed OR buffer status"
+      ],
+      "anti_patterns": [
+        "no action for blockers",
+        "gap in tracking"
+      ],
+      "tags": [
+        "tracking",
+        "progress",
+        "daily-status"
+      ]
+    },
+    {
+      "id": "tp-010",
+      "prompt": "After a sprint, you estimated 40 hours but spent 52 hours. Bug verification took 10 hours instead of 4. What retrospective input do you capture for next sprint's planning?",
+      "expected_patterns": [
+        "estimation accuracy OR variance",
+        "cause OR root cause",
+        "buffer too low OR increase buffer",
+        "actual vs estimated by test type",
+        "lessons learned"
+      ],
+      "anti_patterns": [
+        "no data on cause",
+        "no forward-looking adjustment"
+      ],
+      "tags": [
+        "retrospective",
+        "calibration",
+        "lessons"
+      ]
+    }
+  ]
+}

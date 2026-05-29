@@ -1,0 +1,222 @@
+{
+  "skill": "database-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "dbt-001",
+      "prompt": "Write a test to verify that a Prisma migration applies forward to an empty database and creates the expected tables",
+      "expected_patterns": [
+        "prisma migrate deploy",
+        "DROP DATABASE IF EXISTS OR CREATE DATABASE",
+        "information_schema.tables",
+        "expect.*toContain",
+        "table_name"
+      ],
+      "anti_patterns": [
+        "prisma db push",
+        "synchronize: true",
+        "typeorm synchronize",
+        "hardcoded database name without env override"
+      ],
+      "tags": [
+        "migration",
+        "forward",
+        "schema"
+      ]
+    },
+    {
+      "id": "dbt-002",
+      "prompt": "Write tests to verify NOT NULL, UNIQUE, FOREIGN KEY, and CHECK constraints are enforced by the database",
+      "expected_patterns": [
+        "INSERT INTO",
+        "rejects.toThrow OR expect.*toThrow",
+        "null value in column OR unique constraint OR foreign key constraint OR check constraint",
+        "Pool.query OR pool.query"
+      ],
+      "anti_patterns": [
+        "testing constraints at the ORM level only",
+        "relying on application validation",
+        "no error message assertion"
+      ],
+      "tags": [
+        "constraints",
+        "data-integrity",
+        "validation"
+      ]
+    },
+    {
+      "id": "dbt-003",
+      "prompt": "Create a factory pattern for seed data that produces deterministic test records with fixed IDs and stable timestamps",
+      "expected_patterns": [
+        "buildUser OR buildOrder OR build*",
+        "overrides: Partial",
+        "userCounter OR counter",
+        "new Date OR fixed timestamp",
+        "export async function create*"
+      ],
+      "anti_patterns": [
+        "faker.random()",
+        "Math.random()",
+        "uuid()",
+        "now() OR Date.now()",
+        "no fixed seed"
+      ],
+      "tags": [
+        "factories",
+        "seed-data",
+        "deterministic"
+      ]
+    },
+    {
+      "id": "dbt-004",
+      "prompt": "Set up test isolation using transaction rollback so each test case starts with a clean database state",
+      "expected_patterns": [
+        "BEGIN",
+        "ROLLBACK",
+        "beforeEach OR beforeAll",
+        "afterEach OR afterAll",
+        "PoolClient OR pool.connect"
+      ],
+      "anti_patterns": [
+        "DELETE OR truncate without rollback",
+        "shared database state between tests",
+        "cleanup in afterEach without explicit ROLLBACK"
+      ],
+      "tags": [
+        "isolation",
+        "transaction",
+        "cleanup"
+      ]
+    },
+    {
+      "id": "dbt-005",
+      "prompt": "Write a test to verify that rolling back a migration cleanly reverts schema changes and supports re-applying the migration",
+      "expected_patterns": [
+        "prisma migrate resolve --rolled-back OR migration:revert",
+        "down.sql OR undoLastMigration",
+        "captured pre-rollback state",
+        "verify rollback succeeded",
+        "re-apply after rollback"
+      ],
+      "anti_patterns": [
+        "skip rollback testing",
+        "only test forward migration",
+        "assume rollback is possible without testing",
+        "use sync instead of migrate"
+      ],
+      "tags": [
+        "rollback",
+        "migration",
+        "recovery"
+      ]
+    },
+    {
+      "id": "dbt-006",
+      "prompt": "Write a query performance test using EXPLAIN ANALYZE to verify that a user lookup by email uses an index and completes under 10ms",
+      "expected_patterns": [
+        "EXPLAIN (ANALYZE, FORMAT JSON)",
+        "Execution Time OR plan.Plan",
+        "Index",
+        "toBeLessThan OR expect.*<",
+        "Node Type"
+      ],
+      "anti_patterns": [
+        "waitForTimeout instead of real timing",
+        "no execution time assertion",
+        "sequential scan without assertion",
+        "no index validation"
+      ],
+      "tags": [
+        "performance",
+        "index",
+        "explain"
+      ]
+    },
+    {
+      "id": "dbt-007",
+      "prompt": "Write a Prisma seed script that uses upsert with fixed IDs for idempotent seeding across test, staging, and demo environments",
+      "expected_patterns": [
+        "prisma.*upsert",
+        "where: { OR email OR id }",
+        "seed-* OR fixed ID",
+        "SEED_ENV OR process.env",
+        "finally.*disconnect"
+      ],
+      "anti_patterns": [
+        "create without upsert",
+        "uuid() in seed data",
+        "random IDs",
+        "no idempotency guarantee"
+      ],
+      "tags": [
+        "seed",
+        "upsert",
+        "environment"
+      ]
+    },
+    {
+      "id": "dbt-008",
+      "prompt": "Test that existing data is preserved when a migration adds a nullable column with a default value",
+      "expected_patterns": [
+        "prisma migrate deploy --to",
+        "INSERT INTO.*before the migration",
+        "SELECT.*FROM after migration",
+        "expect.*toBe OR toBeNull",
+        "data survived"
+      ],
+      "anti_patterns": [
+        "no data inserted before migration",
+        "only test new rows",
+        "no assertion on preserved data"
+      ],
+      "tags": [
+        "migration",
+        "data-preservation",
+        "schema-evolution"
+      ]
+    },
+    {
+      "id": "dbt-009",
+      "prompt": "Use Testcontainers to set up a PostgreSQL test database with automatic cleanup and verify the connection URI is correct",
+      "expected_patterns": [
+        "PostgreSqlContainer OR testcontainers",
+        "withDatabase OR start",
+        "getConnectionUri OR connection string",
+        "beforeAll OR afterAll",
+        "process.env.DATABASE_URL"
+      ],
+      "anti_patterns": [
+        "hand-rolled docker-compose without cleanup",
+        "hardcoded port numbers",
+        "no stop() call",
+        "tmpfs not used"
+      ],
+      "tags": [
+        "docker",
+        "testcontainers",
+        "setup"
+      ]
+    },
+    {
+      "id": "dbt-010",
+      "prompt": "Write a test to detect orphan records (e.g., orders with no corresponding user) using a LEFT JOIN query",
+      "expected_patterns": [
+        "LEFT JOIN",
+        "WHERE u.id IS NULL OR o.user_id IS NULL",
+        "orphan* OR referential integrity",
+        "expect.*toHaveLength(0)",
+        "pool.query"
+      ],
+      "anti_patterns": [
+        "no NULL check in WHERE clause",
+        "only test the happy path",
+        "assume referential integrity without verification"
+      ],
+      "tags": [
+        "referential-integrity",
+        "data-quality",
+        "orphans"
+      ]
+    }
+  ]
+}

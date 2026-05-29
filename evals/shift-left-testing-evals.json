@@ -1,0 +1,239 @@
+{
+  "skill": "shift-left-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "slt-001",
+      "prompt": "Walk me through how to introduce QA into sprint planning for a team that currently has QA testing only after development is complete",
+      "expected_patterns": [
+        "testable acceptance criteria",
+        "edge cases OR negative scenarios",
+        "integration risks",
+        "QA effort estimation",
+        "test approach per story",
+        "clarifying questions"
+      ],
+      "anti_patterns": [
+        "QA should only test after code is written",
+        "vague acceptance criteria like 'user-friendly'",
+        "no mention of identifying gaps before development"
+      ],
+      "tags": [
+        "sprint-planning",
+        "embedded-qa",
+        "level-1-to-2"
+      ]
+    },
+    {
+      "id": "slt-002",
+      "prompt": "Design a Three Amigos session for a payment feature that touches auth, database, and a third-party payment processor",
+      "expected_patterns": [
+        "product perspective OR user need",
+        "development perspective OR technical constraints",
+        "QA perspective OR testing questions",
+        "15-30 minutes OR 30 minutes max",
+        "edge cases OR error states",
+        "agreement on test approach"
+      ],
+      "anti_patterns": [
+        "only two amigos",
+        "session without documented gaps",
+        "no test approach defined",
+        "product only OR dev only without cross-functional discussion"
+      ],
+      "tags": [
+        "three-amigos",
+        "medium-risk",
+        "collaboration"
+      ]
+    },
+    {
+      "id": "slt-003",
+      "prompt": "Create a Definition of Done template for a team moving from test-after to shift-left practices",
+      "expected_patterns": [
+        "unit tests OR business logic tests",
+        "integration tests OR API tests",
+        "E2E test OR user-facing changes",
+        "edge cases AND error states",
+        "CI pipeline OR quality gates",
+        "coverage OR coverage not decreased",
+        "manual exploratory testing"
+      ],
+      "anti_patterns": [
+        "no test requirements in DoD",
+        "coverage threshold mentioned without baseline context",
+        "no enforcement mechanism mentioned",
+        "DoD items without clear pass/fail criteria"
+      ],
+      "tags": [
+        "definition-of-done",
+        "quality-gates",
+        "enforcement"
+      ]
+    },
+    {
+      "id": "slt-004",
+      "prompt": "A developer wrote a PR that fixes a bug with no test. How should QA review this using the shift-left PR checklist?",
+      "expected_patterns": [
+        "regression test OR failing test first",
+        "test that reproduces the bug",
+        "proof the fix works",
+        "prevents bug from returning",
+        "TDD for bugs OR test-first",
+        "test quality check OR meaningful assertions"
+      ],
+      "anti_patterns": [
+        "approve the PR without a test",
+        "test-after is acceptable for bugs",
+        "no reproduction test needed",
+        "coverage-only tests mentioned as acceptable"
+      ],
+      "tags": [
+        "bug-fix",
+        "tdd",
+        "pr-review"
+      ]
+    },
+    {
+      "id": "slt-005",
+      "prompt": "Explain when to use TDD vs. test-after using the decision guide. Give three scenarios where each approach is best.",
+      "expected_patterns": [
+        "TDD for pure business logic OR validators OR calculators",
+        "TDD for bug fix with known reproduction",
+        "TDD for API endpoints with clear contract",
+        "test-after for exploratory UI OR prototyping",
+        "test-after for third-party integration",
+        "test-after for performance optimization",
+        "clear inputs/outputs OR fast feedback"
+      ],
+      "anti_patterns": [
+        "TDD everywhere",
+        "test-after for all bugs",
+        "no explanation of why each scenario fits its approach",
+        "TDD for exploratory work"
+      ],
+      "tags": [
+        "tdd",
+        "decision-guide",
+        "context-aware"
+      ]
+    },
+    {
+      "id": "slt-006",
+      "prompt": "Design a dev/QA pairing session to create test cases for a coupon feature before any code is written",
+      "expected_patterns": [
+        "QA describes scenarios",
+        "test signatures OR test function names",
+        "unit tests AND integration tests AND e2e tests",
+        "happy path AND edge cases",
+        "20-30 minutes OR collaborative design",
+        "agreed test targets for developer"
+      ],
+      "anti_patterns": [
+        "developer writes code first then QA tests",
+        "only unit tests discussed",
+        "no edge cases mentioned",
+        "test names describe implementation not behavior"
+      ],
+      "tags": [
+        "dev-qa-pairing",
+        "test-first-design",
+        "collaboration"
+      ]
+    },
+    {
+      "id": "slt-007",
+      "prompt": "Assess a team using the shift-left maturity model. They have QA reviews on high-risk PRs, some automated tests, and a DoD that mentions testing. What level are they at, and what's the next step?",
+      "expected_patterns": [
+        "Level 2 OR Gate level",
+        "Three Amigos OR QA in sprint planning",
+        "next step is upstream involvement",
+        "measurement metric OR defects found earlier",
+        "test-after mentioned as current state",
+        "QA as checkpoint not collaborator"
+      ],
+      "anti_patterns": [
+        "Level 1 (no PR reviews exist)",
+        "Level 3 (Three Amigos already running)",
+        "no measurement or success metric suggested",
+        "next step is more of the same"
+      ],
+      "tags": [
+        "maturity-model",
+        "assessment",
+        "roadmap"
+      ]
+    },
+    {
+      "id": "slt-008",
+      "prompt": "A team wants to implement shift-left quickly by forcing TDD on all code and making Three Amigos mandatory for every story. What risks or anti-patterns does this approach have?",
+      "expected_patterns": [
+        "All TDD All the Time OR anti-pattern",
+        "ceremony without substance OR anti-pattern",
+        "quality gates without buy-in OR anti-pattern",
+        "overwhelm OR start small prove value",
+        "exploratory work OR uncertain domains",
+        "team ownership OR imposed gates",
+        "activities vs outcomes"
+      ],
+      "anti_patterns": [
+        "this approach is fine",
+        "teams should do all practices at once",
+        "no mention of team resistance or sustainability"
+      ],
+      "tags": [
+        "anti-patterns",
+        "cultural-change",
+        "implementation"
+      ]
+    },
+    {
+      "id": "slt-009",
+      "prompt": "Write test cases for a password validator using Red-Green-Refactor. Show the first RED test, GREEN implementation, then REFACTOR",
+      "expected_patterns": [
+        "test fails first OR RED",
+        "minimum code to pass OR GREEN",
+        "no extra features",
+        "refactor improves structure",
+        "behavior unchanged after refactor",
+        "all tests pass after refactor",
+        "clear test names"
+      ],
+      "anti_patterns": [
+        "test passes on first run",
+        "over-engineering in GREEN phase",
+        "refactor changes behavior",
+        "tests are implementation-focused not behavior-focused"
+      ],
+      "tags": [
+        "tdd",
+        "red-green-refactor",
+        "kata"
+      ]
+    },
+    {
+      "id": "slt-010",
+      "prompt": "Review this PR checklist item for an AI-generated feature. What additional checks are needed beyond standard testability?",
+      "expected_patterns": [
+        "AI provenance disclosed OR agent/model named",
+        "tests written first OR by human",
+        "prompt and model version pinned OR AI Configs",
+        "feature flag OR runtime kill switch",
+        "prompt eval test OR regression test",
+        "no fabricated APIs OR imports verified",
+        "shift-left prevention AND shift-right containment"
+      ],
+      "anti_patterns": [
+        "no special handling for AI-generated code",
+        "tests are AI-generated without human review",
+        "prompt embedded as ad-hoc string",
+        "no kill switch for AI feature"
+      ],
+      "tags": [
+        "ai-generated-code",
+        "pr-review",
+        "safety"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,220 @@
+{
+  "skill": "security-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "sec-001",
+      "prompt": "Write a Playwright test to detect IDOR (Insecure Direct Object Reference) vulnerabilities where user A should not access user B's data",
+      "expected_patterns": [
+        "request.get OR page.request.get",
+        "Authorization OR Bearer",
+        "response.status() OR status()",
+        "expect(response.status()).toBe(403)",
+        "/api/orders OR /api/users OR similar resource ID parameter"
+      ],
+      "anti_patterns": [
+        "no authorization header in test",
+        "expect success status for cross-user access",
+        "hardcoded credentials instead of token"
+      ],
+      "tags": [
+        "OWASP-A01",
+        "access-control",
+        "IDOR"
+      ]
+    },
+    {
+      "id": "sec-002",
+      "prompt": "Configure a GitHub Actions workflow to run npm audit with high severity threshold as a build gate",
+      "expected_patterns": [
+        "npm audit OR npm ci",
+        "--audit-level=high",
+        "continue-on-error OR exit 1",
+        "actions/checkout",
+        "name: npm audit OR dependency-check"
+      ],
+      "anti_patterns": [
+        "npm install instead of npm ci",
+        "audit with --audit-level=moderate or below",
+        "no failure on high vulnerabilities"
+      ],
+      "tags": [
+        "CI/CD",
+        "OWASP-A03",
+        "dependency-scanning"
+      ]
+    },
+    {
+      "id": "sec-003",
+      "prompt": "Write a Playwright test that validates secure cookie flags (Secure, HttpOnly, SameSite) on a login response",
+      "expected_patterns": [
+        "response.headers() OR headers()",
+        "set-cookie",
+        "toContain('Secure')",
+        "toContain('HttpOnly')",
+        "toMatch(/SameSite=(Strict|Lax)/)"
+      ],
+      "anti_patterns": [
+        "SameSite=None in production",
+        "missing HttpOnly flag",
+        "missing Secure flag on HTTPS",
+        "ignoring set-cookie header"
+      ],
+      "tags": [
+        "OWASP-A04",
+        "cryptography",
+        "cookies"
+      ]
+    },
+    {
+      "id": "sec-004",
+      "prompt": "Write a test that validates CSRF protection by rejecting POST requests without a valid CSRF token",
+      "expected_patterns": [
+        "request.post OR page.request.post",
+        "Cookie OR session",
+        "expect(response.status()).toBeOneOf([403, 422])",
+        "state-changing operation OR /api/account OR /api/change",
+        "deliberately omitting token OR no csrf-token header"
+      ],
+      "anti_patterns": [
+        "test passes without token",
+        "POST succeeds without CSRF validation",
+        "token hardcoded instead of extracted from response"
+      ],
+      "tags": [
+        "OWASP-A05",
+        "injection",
+        "CSRF"
+      ]
+    },
+    {
+      "id": "sec-005",
+      "prompt": "Write a test that checks for XSS vulnerabilities by verifying user input is escaped in stored content",
+      "expected_patterns": [
+        "onerror OR onerror= OR <img src=x",
+        "request.put OR page.request.put",
+        "displayName OR innerHTML OR textContent",
+        "expect(nameText).not.toContain('<img')",
+        "expect(nameText).not.toContain('onerror')"
+      ],
+      "anti_patterns": [
+        "storing raw HTML from user input",
+        "innerHTML assignment without sanitization",
+        "no assertion on escaped content"
+      ],
+      "tags": [
+        "OWASP-A05",
+        "injection",
+        "XSS"
+      ]
+    },
+    {
+      "id": "sec-006",
+      "prompt": "Write a test to detect SQL injection vulnerabilities with payloads like ' OR '1'='1 and verify error handling doesn't leak internals",
+      "expected_patterns": [
+        "sqlPayloads OR injectionPayloads",
+        "' OR '1'='1 OR DROP TABLE OR UNION SELECT",
+        "response.status().not.toBe(500)",
+        "expect(body).not.toContain('SQL')",
+        "expect(body).not.toContain('syntax error')"
+      ],
+      "anti_patterns": [
+        "test passes with 500 error",
+        "error response contains database name or schema",
+        "no input encoding in URL"
+      ],
+      "tags": [
+        "OWASP-A05",
+        "injection",
+        "SQLi"
+      ]
+    },
+    {
+      "id": "sec-007",
+      "prompt": "Write a test to verify SSRF (Server-Side Request Forgery) prevention by testing internal network payloads like 169.254.169.254 and localhost:6379",
+      "expected_patterns": [
+        "169.254.169.254 OR metadata.google.internal OR localhost:6379 OR file:///",
+        "ssrfPayloads OR payloads",
+        "callbackUrl OR user-supplied URL",
+        "expect(response.status()).toBeOneOf([400, 403, 422])",
+        "for...of loop OR forEach"
+      ],
+      "anti_patterns": [
+        "test accepts internal metadata endpoints",
+        "localhost or 127.0.0.1 requests succeed",
+        "no validation of user-supplied URLs"
+      ],
+      "tags": [
+        "OWASP-A01",
+        "access-control",
+        "SSRF"
+      ]
+    },
+    {
+      "id": "sec-008",
+      "prompt": "Configure ESLint with security plugins and rules to detect unsafe patterns in code (eval, object injection, unsafe regex)",
+      "expected_patterns": [
+        "eslint-plugin-security OR eslint-plugin-no-unsanitized",
+        "configs.recommended",
+        "security/detect-eval-with-expression OR detect-object-injection OR detect-unsafe-regex",
+        "error OR warn",
+        "eslint.config.js OR .eslintrc.js"
+      ],
+      "anti_patterns": [
+        "no security plugin configured",
+        "security rules set to off",
+        "only using default ESLint rules",
+        "unsafe-inline allowed in CSP"
+      ],
+      "tags": [
+        "SAST",
+        "OWASP-A05",
+        "code-quality"
+      ]
+    },
+    {
+      "id": "sec-009",
+      "prompt": "Write a test to validate that JWT tokens with the none algorithm or expired tokens are rejected",
+      "expected_patterns": [
+        "jose.SignJWT OR JWT library",
+        "alg: 'none' OR setExpirationTime('-1h')",
+        "Authorization: Bearer",
+        "expect(response.status()).toBe(401)",
+        "noneToken OR expiredToken"
+      ],
+      "anti_patterns": [
+        "accepting alg:none tokens",
+        "accepting expired tokens",
+        "no JWT validation in test",
+        "token not extracted from header"
+      ],
+      "tags": [
+        "OWASP-A07",
+        "auth",
+        "JWT"
+      ]
+    },
+    {
+      "id": "sec-010",
+      "prompt": "Write a test that verifies session invalidation on logout and that old session cookies are rejected",
+      "expected_patterns": [
+        "request.post.*logout",
+        "sessionCookie OR set-cookie",
+        "response.status().toBe(401) OR toBe(403)",
+        "expect after logout",
+        "/api/user/profile OR /api/auth"
+      ],
+      "anti_patterns": [
+        "old session still works after logout",
+        "no verification that session cookie is cleared",
+        "login not called before logout test",
+        "hardcoded session value"
+      ],
+      "tags": [
+        "OWASP-A07",
+        "auth",
+        "session-management"
+      ]
+    }
+  ]
+}

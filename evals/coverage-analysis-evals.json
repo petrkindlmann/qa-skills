@@ -1,0 +1,240 @@
+{
+  "skill": "coverage-analysis",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "cov-001",
+      "prompt": "Set up V8/c8 coverage tracking for a Vitest project with branch coverage gating at 80% globally and 90% for the payments module",
+      "expected_patterns": [
+        "vitest.config.ts OR vitest.config.ts with coverage",
+        "coverage: { provider: 'v8'",
+        "thresholds",
+        "lines: 80 OR lines: 80 (global threshold)",
+        "src/payments/**.*: { lines: 90, branches: 90 } OR per-directory threshold for payments",
+        "reporter: [.*text.*lcov.*json-summary] OR reporter array with text, lcov, json-summary"
+      ],
+      "anti_patterns": [
+        "provider: istanbul (use v8 instead)",
+        "100% coverage threshold",
+        "no per-directory thresholds for critical paths",
+        "exclude entire payment module from coverage"
+      ],
+      "tags": [
+        "v8",
+        "vitest",
+        "thresholds",
+        "critical-paths"
+      ]
+    },
+    {
+      "id": "cov-002",
+      "prompt": "Configure Istanbul/nyc with .nycrc.json to enforce 80% branch coverage and prevent coverage regression in CI",
+      "expected_patterns": [
+        ".nycrc.json",
+        "check-coverage: true",
+        "branches: 80",
+        "include: [.*src.*]",
+        "watermarks OR branches threshold",
+        "reporter: [.*text.*html.*lcov] OR reporter array"
+      ],
+      "anti_patterns": [
+        "check-coverage: false",
+        "no branches threshold",
+        "only line coverage, ignoring branches",
+        "no reporter array"
+      ],
+      "tags": [
+        "istanbul",
+        "nyc",
+        "regression",
+        "ci-gate"
+      ]
+    },
+    {
+      "id": "cov-003",
+      "prompt": "Write a coverage ratchet script that prevents coverage regression by comparing current coverage to .coverage-ratchet.json and fails the build if metrics decrease",
+      "expected_patterns": [
+        "coverage-summary.json OR JSON parsing",
+        ".coverage-ratchet.json",
+        "current[metric].pct OR currentPct < ratchetPct",
+        "process.exit(1) OR console.error.*FAIL",
+        "metrics: [.*lines.*branches.*functions.*statements]",
+        "Math.floor OR flooring the pct"
+      ],
+      "anti_patterns": [
+        "allowing coverage to decrease without failing",
+        "no per-metric tracking",
+        "hardcoded threshold instead of reading from ratchet file",
+        "not updating ratchet file on success"
+      ],
+      "tags": [
+        "ratchet",
+        "ci-automation",
+        "regression-prevention"
+      ]
+    },
+    {
+      "id": "cov-004",
+      "prompt": "Analyze coverage gaps in a project by parsing coverage-summary.json, sorting files by uncovered line count, and identifying which gaps are critical vs low-risk",
+      "expected_patterns": [
+        "coverage-summary.json",
+        "uncovered OR (total - covered)",
+        "sort OR descending",
+        "payment OR auth OR validation (critical paths)",
+        "utility OR ui formatting (lower risk)",
+        "risk OR priority mapping"
+      ],
+      "anti_patterns": [
+        "all gaps treated as equal priority",
+        "not parsing the JSON report",
+        "no distinction between critical and low-risk code",
+        "ignoring branch coverage in the analysis"
+      ],
+      "tags": [
+        "gap-analysis",
+        "risk-assessment",
+        "json-parsing"
+      ]
+    },
+    {
+      "id": "cov-005",
+      "prompt": "Explain why a function with 100% line coverage but 50% branch coverage is not fully tested, and how to fix it",
+      "expected_patterns": [
+        "ternary OR condition ? a : b",
+        "branch coverage",
+        "one branch only OR isPremium = true only",
+        "expect both true and false paths OR expect(discount(100, false))",
+        "line coverage does not guarantee branch coverage",
+        "execute does not equal tested"
+      ],
+      "anti_patterns": [
+        "assuming line coverage = full testing",
+        "not testing both branches of a conditional",
+        "ignoring edge cases",
+        "relying only on coverage % without branch awareness"
+      ],
+      "tags": [
+        "branch-coverage",
+        "meaningful-coverage",
+        "core-principle"
+      ]
+    },
+    {
+      "id": "cov-006",
+      "prompt": "Configure Python test coverage with pytest-cov and coverage.py using pyproject.toml, setting branch=true and fail_under=80, and excluding TYPE_CHECKING and test files",
+      "expected_patterns": [
+        "pyproject.toml OR .coveragerc.toml",
+        "[tool.coverage.run]",
+        "branch = true",
+        "fail_under = 80",
+        "exclude_lines = [.*TYPE_CHECKING.*if __name__]",
+        "pytest --cov=src --cov-fail-under=80"
+      ],
+      "anti_patterns": [
+        "branch = false",
+        "coverage.py < 7.13.0 (use current 7.13.x)",
+        "not excluding TYPE_CHECKING",
+        "no fail_under threshold"
+      ],
+      "tags": [
+        "python",
+        "coverage.py",
+        "pytest",
+        "pyproject.toml"
+      ]
+    },
+    {
+      "id": "cov-007",
+      "prompt": "Identify files to exclude from coverage calculations (barrel exports, generated code, type definitions) and justify why they should not count toward the project's coverage percentage",
+      "expected_patterns": [
+        "*.d.ts OR type definitions",
+        "index.ts OR barrel exports",
+        "generated/** OR GraphQL OR Prisma",
+        "*.stories.ts OR Storybook",
+        "does not add test value OR inflates denominator",
+        "re-exports only OR type-only"
+      ],
+      "anti_patterns": [
+        "excluding error handlers to inflate coverage",
+        "excluding auth code because it is hard to test",
+        "no justification for exclusions",
+        "excluding any business logic from coverage"
+      ],
+      "tags": [
+        "exclusions",
+        "vanity-coverage",
+        "meaningful-coverage"
+      ]
+    },
+    {
+      "id": "cov-008",
+      "prompt": "Set up a GitHub Actions workflow that runs coverage on every PR, posts a coverage diff comment showing changed files, and fails the build if coverage drops below the ratchet threshold",
+      "expected_patterns": [
+        "npm run test:coverage OR vitest run --coverage",
+        "coverage-summary.json",
+        "davelosert/vitest-coverage-report-action OR marocchino/sticky-pull-request-comment",
+        "git diff --name-only origin/main...HEAD",
+        "coverage ratchet script",
+        "if: github.event_name == 'pull_request'"
+      ],
+      "anti_patterns": [
+        "no PR-specific coverage check",
+        "hardcoded coverage threshold in CI without ratchet",
+        "not showing diff coverage to reviewers",
+        "only running coverage on main branch"
+      ],
+      "tags": [
+        "ci",
+        "pr-coverage",
+        "github-actions",
+        "diff-coverage"
+      ]
+    },
+    {
+      "id": "cov-009",
+      "prompt": "Explain the difference between code coverage and mutation testing, and describe when mutation testing should be used (focusing on which code is worth mutating)",
+      "expected_patterns": [
+        "mutation testing OR Stryker OR mutmut",
+        "assertion quality OR testing quality",
+        "pure business logic OR validators OR calculators",
+        "critical paths OR payment OR auth",
+        "expensive OR incremental",
+        "skip UI OR glue code"
+      ],
+      "anti_patterns": [
+        "treating coverage % as assertion quality",
+        "running mutation testing on entire codebase",
+        "mutating generated code",
+        "no mention of incremental or targeting"
+      ],
+      "tags": [
+        "mutation-testing",
+        "assertion-quality",
+        "advanced"
+      ]
+    },
+    {
+      "id": "cov-010",
+      "prompt": "Justify why 100% coverage is usually wrong, and define a meaningful coverage target for a project with payment processing and utility functions",
+      "expected_patterns": [
+        "error handling for impossible states",
+        "defensive checks OR default cases",
+        "diminishing returns",
+        "75-85% OR sweet spot",
+        "90%+ OR critical paths (payments, auth)",
+        "effort vs value"
+      ],
+      "anti_patterns": [
+        "100% coverage as a goal",
+        "treating all code equally",
+        "no risk-based differentiation",
+        "ignoring test quality behind the %"
+      ],
+      "tags": [
+        "meaningful-coverage",
+        "vanity-coverage",
+        "risk-based-strategy"
+      ]
+    }
+  ]
+}

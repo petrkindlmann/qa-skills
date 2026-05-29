@@ -1,0 +1,237 @@
+{
+  "skill": "ai-bug-triage",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "abt-001",
+      "prompt": "Write a normalization function to prepare CI logs for fingerprinting, stripping timestamps, UUIDs, process IDs, and port numbers",
+      "expected_patterns": [
+        "\\x1b\\[[0-9;]*m OR ANSI",
+        "\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2} OR timestamp regex",
+        "[0-9a-f]{8}-[0-9a-f]{4} OR UUID regex",
+        "pid[=: ]\\d+ OR process ID regex",
+        ":\\d{4,5}(?=[\\s/]) OR port regex",
+        "strip OR replace OR substitute"
+      ],
+      "anti_patterns": [
+        "does not normalize raw logs",
+        "fingerprints raw unstripped logs",
+        "ignores ANSI codes",
+        "skips UUID or PID stripping"
+      ],
+      "tags": [
+        "normalization",
+        "fingerprinting",
+        "log-parsing"
+      ]
+    },
+    {
+      "id": "abt-002",
+      "prompt": "Extract stable anchors from a CI failure log (exception type, top 3 stack frames, test name, error message template) and explain why they are stable",
+      "expected_patterns": [
+        "exception type OR Exception type",
+        "stack frame",
+        "test name OR test file",
+        "error message template OR message pattern",
+        "stability OR stable",
+        "high OR very high"
+      ],
+      "anti_patterns": [
+        "includes line numbers in anchors",
+        "includes timestamps in anchors",
+        "includes process IDs or ports in anchors",
+        "treats dynamic values as stable"
+      ],
+      "tags": [
+        "anchor-extraction",
+        "stability",
+        "pattern-matching"
+      ]
+    },
+    {
+      "id": "abt-003",
+      "prompt": "Create a deterministic fingerprint hash from these anchors: exception_type='TypeError', message='Cannot read property X', frames='processOrder|groupByVendor|checkout', test_name='checkout.spec.ts > multi-vendor'",
+      "expected_patterns": [
+        "sort OR alphabetical",
+        "concatenate OR join",
+        "SHA-256 OR sha256",
+        "canonical OR canonical form",
+        "first 16 OR hex characters"
+      ],
+      "anti_patterns": [
+        "uses random generation",
+        "non-deterministic hash",
+        "floating point or timestamp in hash",
+        "full hash instead of 16 chars"
+      ],
+      "tags": [
+        "fingerprinting",
+        "hashing",
+        "deduplication"
+      ]
+    },
+    {
+      "id": "abt-004",
+      "prompt": "Design a clustering algorithm to detect near-duplicate failures using similarity scoring. Include exception type, error message, stack frames, component, and test name with weights",
+      "expected_patterns": [
+        "0.30 OR exception.*weight",
+        "0.25 OR message.*weight",
+        "0.25 OR frame.*weight OR stack.*weight",
+        "Levenshtein OR edit distance",
+        "Jaccard similarity",
+        "0.75 OR threshold",
+        "similarity score"
+      ],
+      "anti_patterns": [
+        "no weighting of dimensions",
+        "uses LLM for deduplication",
+        "no threshold defined",
+        "ignores exception type or stack frames"
+      ],
+      "tags": [
+        "clustering",
+        "deduplication",
+        "similarity"
+      ]
+    },
+    {
+      "id": "abt-005",
+      "prompt": "Write an LLM prompt to classify a normalized CI failure into category (test bug | application bug | environment issue | flaky test | build failure), severity, and suspected root cause, including confidence level",
+      "expected_patterns": [
+        "failure category OR Failure category",
+        "severity OR Severity",
+        "confidence OR Confidence",
+        "application bug OR test bug OR environment issue OR flaky test OR build failure",
+        "critical OR major OR minor OR trivial",
+        "high OR medium OR low"
+      ],
+      "anti_patterns": [
+        "no confidence level requested",
+        "uses deterministic deduplication in prompt",
+        "asks for duplicate detection",
+        "no explanation of categories"
+      ],
+      "tags": [
+        "classification",
+        "llm-prompt",
+        "severity"
+      ]
+    },
+    {
+      "id": "abt-006",
+      "prompt": "Generate a bug ticket from a classified failure with title, description, steps to reproduce, evidence, labels, and suggested assignee following the provided template",
+      "expected_patterns": [
+        "title OR Title",
+        "description OR Description",
+        "Steps to Reproduce OR steps",
+        "evidence OR Evidence",
+        "labels OR Labels",
+        "assignee OR Suggested assignee",
+        "component OR Component",
+        "severity OR Severity",
+        "fingerprint"
+      ],
+      "anti_patterns": [
+        "raw unformatted logs in description",
+        "no component specified",
+        "no severity or priority assigned",
+        "no evidence section"
+      ],
+      "tags": [
+        "ticket-generation",
+        "template",
+        "formatting"
+      ]
+    },
+    {
+      "id": "abt-007",
+      "prompt": "Outline an approval workflow for the triage pipeline that requires human review before creating, merging, or closing tickets. Include decision types and when each applies",
+      "expected_patterns": [
+        "Create ticket",
+        "Merge into existing OR merge duplicate",
+        "Quarantine test",
+        "Retry and monitor OR retry",
+        "Dismiss",
+        "human approval OR review",
+        "human confirmation OR requires review"
+      ],
+      "anti_patterns": [
+        "auto-closes duplicates without review",
+        "auto-creates all tickets",
+        "no human approval step",
+        "destructive action without confirmation"
+      ],
+      "tags": [
+        "workflow",
+        "approval",
+        "safety"
+      ]
+    },
+    {
+      "id": "abt-008",
+      "prompt": "Use the severity × priority decision matrix to assign P0 to a critical bug affecting all users, P1 to a major bug affecting a segment, and P2 to a minor bug affecting few users. Explain the logic",
+      "expected_patterns": [
+        "Severity.*Priority OR Priority.*Severity",
+        "affects all users OR affects segment OR affects few users",
+        "P0 OR P1 OR P2",
+        "SLA OR urgency",
+        "impact OR user impact"
+      ],
+      "anti_patterns": [
+        "maps wrong severity to priority",
+        "ignores scope of affected users",
+        "treats all bugs as P0",
+        "no reference to matrix"
+      ],
+      "tags": [
+        "severity-priority",
+        "decision-matrix",
+        "routing"
+      ]
+    },
+    {
+      "id": "abt-009",
+      "prompt": "Identify and explain a deduplication pattern: exact duplicate (same fingerprint), near-duplicate (similarity > 0.75), regression of fixed bug, and flaky recurrence. What action should each trigger?",
+      "expected_patterns": [
+        "exact duplicate OR fingerprint match",
+        "near-duplicate OR similarity",
+        "regression OR reopen",
+        "flaky OR intermittent OR quarantine",
+        "merge OR link OR reopen OR quarantine"
+      ],
+      "anti_patterns": [
+        "no distinction between exact and near-duplicate",
+        "treats regression as new bug",
+        "ignores flaky test recurrence",
+        "uses LLM to determine duplicates"
+      ],
+      "tags": [
+        "deduplication-patterns",
+        "regression-detection",
+        "flaky-tests"
+      ]
+    },
+    {
+      "id": "abt-010",
+      "prompt": "Explain why normalizing logs before fingerprinting is mandatory and what happens if you fingerprint raw logs. Provide an example with timestamps, PIDs, and ports",
+      "expected_patterns": [
+        "normalize before fingerprinting OR normalization is mandatory",
+        "timestamps OR ports OR process IDs OR PID",
+        "unstable OR changes every run OR non-deterministic",
+        "identical failure.*different fingerprint",
+        "noise OR ephemeral"
+      ],
+      "anti_patterns": [
+        "suggests fingerprinting raw logs is acceptable",
+        "skips normalization step",
+        "no example provided",
+        "claims fingerprint will be stable without normalization"
+      ],
+      "tags": [
+        "normalization",
+        "fingerprinting",
+        "anti-patterns"
+      ]
+    }
+  ]
+}

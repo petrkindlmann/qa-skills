@@ -1,0 +1,218 @@
+{
+  "skill": "synthetic-monitoring",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "synth-001",
+      "prompt": "Design a synthetic probe to validate that your login flow works in production, covering authentication and dashboard access",
+      "expected_patterns": [
+        "PROD_URL OR production endpoint",
+        "SYNTHETIC_USER_EMAIL OR SYNTHETIC_USER_PASSWORD OR env credentials",
+        "page.goto",
+        "dashboard OR authenticated state",
+        "timeout under 30 seconds OR timeout: 15_000"
+      ],
+      "anti_patterns": [
+        "real user account OR personal credentials",
+        "page.pause",
+        "waitForTimeout without justification",
+        "probe longer than 30 seconds"
+      ],
+      "tags": [
+        "probe-design",
+        "auth",
+        "critical-journey"
+      ]
+    },
+    {
+      "id": "synth-002",
+      "prompt": "Write an API health check probe that validates database and cache connectivity without mutating data",
+      "expected_patterns": [
+        "request.get OR request.post",
+        "health endpoint OR /health",
+        "database connection",
+        "cache connection",
+        "expect(response.ok()) OR expect(body.status).toBe"
+      ],
+      "anti_patterns": [
+        "data mutation OR create OR write",
+        "DELETE OR truncate in probe",
+        "hardcoded credentials in code"
+      ],
+      "tags": [
+        "api-health",
+        "non-destructive",
+        "dependencies"
+      ]
+    },
+    {
+      "id": "synth-003",
+      "prompt": "Set up alerting rules for synthetic probes that avoid alert fatigue while catching real outages",
+      "expected_patterns": [
+        "consecutive failures OR 2 consecutive OR 3 consecutive",
+        "multi-region OR 2+ regions",
+        "severity: critical OR severity: warning",
+        "threshold OR latency > baseline"
+      ],
+      "anti_patterns": [
+        "single failure triggers alert",
+        "alert on every transient blip",
+        "no severity differentiation"
+      ],
+      "tags": [
+        "alerting",
+        "threshold",
+        "on-call"
+      ]
+    },
+    {
+      "id": "synth-004",
+      "prompt": "Design a multi-region monitoring strategy for a global application with probes in three regions",
+      "expected_patterns": [
+        "us-east-1 OR us-west OR equivalent primary region",
+        "eu-west-1 OR eu-central OR equivalent EMEA region",
+        "ap-southeast-1 OR ap-northeast OR equivalent APAC region",
+        "regional latency dashboard OR track by region",
+        "P50 OR P95 OR percentiles"
+      ],
+      "anti_patterns": [
+        "single region only",
+        "average latency without percentiles",
+        "no regional latency tracking"
+      ],
+      "tags": [
+        "multi-region",
+        "global",
+        "latency-sla"
+      ]
+    },
+    {
+      "id": "synth-005",
+      "prompt": "Create a dedicated synthetic test account setup with proper isolation and cleanup requirements",
+      "expected_patterns": [
+        "is_synthetic flag OR synthetic=true OR _synthetic in identifier",
+        "excluded from analytics OR excluded from billing",
+        "email contains synthetic OR monitor",
+        "secrets manager OR process.env",
+        "cleanup OR delete immediately OR non-destructive"
+      ],
+      "anti_patterns": [
+        "shared user account across probes",
+        "real user account in probe",
+        "data left behind after probe",
+        "credentials in code"
+      ],
+      "tags": [
+        "test-account",
+        "isolation",
+        "data-safety"
+      ]
+    },
+    {
+      "id": "synth-006",
+      "prompt": "Calculate availability and error budget for a service with 99.9% SLA, showing monthly downtime allowance and budget consumption",
+      "expected_patterns": [
+        "99.9% OR 0.1%",
+        "43 minutes OR 43min 50s downtime per month",
+        "error budget calculation",
+        "availability = (total_minutes - downtime_minutes) / total_minutes",
+        "error budget consumed OR remaining"
+      ],
+      "anti_patterns": [
+        "99% or 99.99% without context",
+        "downtime in seconds without monthly context",
+        "no budget consumption tracking"
+      ],
+      "tags": [
+        "sla",
+        "availability",
+        "error-budget"
+      ]
+    },
+    {
+      "id": "synth-007",
+      "prompt": "Set up synthetic monitoring using Playwright and GitHub Actions with scheduled probe execution every 5 minutes",
+      "expected_patterns": [
+        "cron: '*/5 * * * *' OR schedule",
+        "npx playwright test probes/ OR playwright test",
+        "workflow_dispatch OR manual trigger",
+        "secrets.PRODUCTION_URL OR env variable",
+        "results.json OR reporter"
+      ],
+      "anti_patterns": [
+        "hardcoded URL",
+        "node-version < 20",
+        "no test isolation"
+      ],
+      "tags": [
+        "implementation",
+        "github-actions",
+        "scheduling"
+      ]
+    },
+    {
+      "id": "synth-008",
+      "prompt": "Write a probe that validates search functionality with a latency budget and ensures it completes within SLA thresholds",
+      "expected_patterns": [
+        "request.get OR page.fill and page.click for search",
+        "Date.now() OR performance.mark OR latency measurement",
+        "threshold OR 2000 OR latency budget",
+        "expect(duration).toBeLessThan OR expect response time",
+        "query OR search term OR result validation"
+      ],
+      "anti_patterns": [
+        "no timing measurement",
+        "timeout longer than necessary",
+        "assert only on status, not on results"
+      ],
+      "tags": [
+        "latency-sla",
+        "critical-journey",
+        "performance"
+      ]
+    },
+    {
+      "id": "synth-009",
+      "prompt": "Configure environment-aware probes that can run against staging and production without code changes",
+      "expected_patterns": [
+        "PROBE_ENVIRONMENT OR process.env.ENV",
+        "baseUrl OR PROD_URL or STAGING_URL",
+        "getProbeConfig() OR config per environment",
+        "staging threshold different from production",
+        "credentials per environment"
+      ],
+      "anti_patterns": [
+        "hardcoded URLs",
+        "same thresholds for staging and production",
+        "no environment abstraction"
+      ],
+      "tags": [
+        "config",
+        "environment-aware",
+        "reusability"
+      ]
+    },
+    {
+      "id": "synth-010",
+      "prompt": "Create a probe runbook linking failure triage, first-response diagnosis, and escalation paths for a payment integration probe",
+      "expected_patterns": [
+        "what the probe tests OR probe definition",
+        "first check OR investigate first",
+        "recent deploys OR third-party status",
+        "manual verification OR reproduce",
+        "escalation OR who to contact",
+        "dashboard link OR telemetry link"
+      ],
+      "anti_patterns": [
+        "runbook is empty",
+        "no manual verification steps",
+        "no escalation path defined"
+      ],
+      "tags": [
+        "runbook",
+        "incident-response",
+        "troubleshooting"
+      ]
+    }
+  ]
+}

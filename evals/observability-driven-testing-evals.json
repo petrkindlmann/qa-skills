@@ -1,0 +1,222 @@
+{
+  "skill": "observability-driven-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "odt-001",
+      "prompt": "Set up OpenTelemetry tracing for a test suite that will emit spans to a collector endpoint",
+      "expected_patterns": [
+        "NodeSDK",
+        "OTLPTraceExporter",
+        "resourceFromAttributes",
+        "ATTR_SERVICE_NAME",
+        "process.on('beforeExit'",
+        "sdk.start() OR sdk.shutdown()"
+      ],
+      "anti_patterns": [
+        "new Resource( directly without resourceFromAttributes",
+        "OpenTracing shim OR opentracing package",
+        "hardcoded trace endpoint without env variable"
+      ],
+      "tags": [
+        "setup",
+        "instrumentation",
+        "otel"
+      ]
+    },
+    {
+      "id": "odt-002",
+      "prompt": "Write a trace-based assertion that verifies a request hits specific services in order and includes latency checks",
+      "expected_patterns": [
+        "TraceCollector OR waitForTrace",
+        "trace.spans",
+        "service.name OR resource['service.name']",
+        "span.attributes OR attributes[",
+        "durationMs OR duration",
+        "toBeLessThan OR expect.*<"
+      ],
+      "anti_patterns": [
+        "only checking HTTP status",
+        "expect(response.ok()) as sole assertion",
+        "ignoring span structure"
+      ],
+      "tags": [
+        "assertions",
+        "distributed-tracing",
+        "validation"
+      ]
+    },
+    {
+      "id": "odt-003",
+      "prompt": "Implement the error categorization workflow: analyze production errors and identify which ones are uncovered by tests",
+      "expected_patterns": [
+        "ProductionError interface",
+        "testCoverage OR coverage map",
+        "coveredByTest boolean",
+        "suggestedTestType OR test layer",
+        "priority critical OR high OR medium OR low"
+      ],
+      "anti_patterns": [
+        "treating all errors as same priority",
+        "no distinction between unit/integration/e2e",
+        "ignoring error frequency or recency"
+      ],
+      "tags": [
+        "analysis",
+        "error-tracking",
+        "prioritization"
+      ]
+    },
+    {
+      "id": "odt-004",
+      "prompt": "Create a test from a production error: a null reference on POST /api/orders when user has no shipping address",
+      "expected_patterns": [
+        "production error comment OR reference to Sentry OR error tracker",
+        "test name includes missing OR null address context",
+        "expect(response.status).toBe(400 OR 422)",
+        "expect.*error.*MISSING OR REQUIRED",
+        "test at correct layer: unit OR integration OR e2e"
+      ],
+      "anti_patterns": [
+        "test that only checks response.ok() without error structure",
+        "no reference to the production error source",
+        "testing unrelated happy path"
+      ],
+      "tags": [
+        "error-to-test",
+        "production",
+        "bug-fix"
+      ]
+    },
+    {
+      "id": "odt-005",
+      "prompt": "Build a telemetry-driven test prioritization scoring function that ranks endpoints by frequency, error rate, and test coverage",
+      "expected_patterns": [
+        "requests_per_day OR traffic",
+        "error_rate OR error frequency",
+        "test_count OR test coverage",
+        "priority score OR gap score",
+        "formula OR calculation with multiplication OR division"
+      ],
+      "anti_patterns": [
+        "hardcoded test priority",
+        "ignoring real usage data",
+        "treating all endpoints equally"
+      ],
+      "tags": [
+        "metrics",
+        "prioritization",
+        "hot-path"
+      ]
+    },
+    {
+      "id": "odt-006",
+      "prompt": "Set up a trace assertion helper that validates distributed trace structure across microservices with expected spans in order",
+      "expected_patterns": [
+        "ExpectedSpan interface OR type",
+        "service and operation fields",
+        "attributes optional parameter",
+        "maxDuration OR latency check",
+        "async function OR helper",
+        "for loop OR forEach over expected spans"
+      ],
+      "anti_patterns": [
+        "only checking presence of one span",
+        "ignoring span ordering",
+        "no latency or duration validation"
+      ],
+      "tags": [
+        "microservices",
+        "trace-structure",
+        "helpers"
+      ]
+    },
+    {
+      "id": "odt-007",
+      "prompt": "Create an end-to-end diagnosis workflow: given a trace ID from a failing test, walk the span tree and identify the root cause",
+      "expected_patterns": [
+        "trace ID extraction",
+        "open trace in APM OR query APM",
+        "root span OR parent span",
+        "child spans OR service calls",
+        "error spans OR span status",
+        "correlate with logs OR filter logs by trace ID"
+      ],
+      "anti_patterns": [
+        "assuming error is in first span without walking tree",
+        "ignoring log correlation",
+        "no mention of APM tool or trace query"
+      ],
+      "tags": [
+        "diagnosis",
+        "debugging",
+        "workflow"
+      ]
+    },
+    {
+      "id": "odt-008",
+      "prompt": "Write a script to analyze hot paths: extract top endpoints by request volume and identify coverage gaps for each service boundary",
+      "expected_patterns": [
+        "top endpoints OR top 20 OR request volume",
+        "code path OR service-level span",
+        "trace through services OR span tree",
+        "coverage percentage OR test coverage data",
+        "identify gap OR low coverage service"
+      ],
+      "anti_patterns": [
+        "ignoring request volume",
+        "checking only endpoint-level coverage without service breakdown",
+        "no action items for gaps"
+      ],
+      "tags": [
+        "hot-path",
+        "analysis",
+        "coverage-mapping"
+      ]
+    },
+    {
+      "id": "odt-009",
+      "prompt": "Pin OpenTelemetry semantic conventions version and explain why version bumps are breaking for trace assertions",
+      "expected_patterns": [
+        "@opentelemetry/semantic-conventions pinned version",
+        "sem-conv v1.41.0 OR April 2026",
+        "breaking changes OR attribute names drift",
+        "graphql.document OR GenAI changes",
+        "reason: trace assertions written against attribute names"
+      ],
+      "anti_patterns": [
+        "upgrading sem-conv freely without pinning",
+        "no acknowledgment of breaking changes",
+        "ignoring attribute naming stability"
+      ],
+      "tags": [
+        "dependencies",
+        "semver",
+        "stability"
+      ]
+    },
+    {
+      "id": "odt-010",
+      "prompt": "Establish a production-error-to-test feedback loop for your team: weekly error review with assigned owners and tests created before incident close",
+      "expected_patterns": [
+        "weekly OR recurring review cadence",
+        "top 10 errors OR high-frequency errors",
+        "assigned owner",
+        "test created OR test gap identified",
+        "incident postmortem includes test question",
+        "error resolved OR marked acceptable"
+      ],
+      "anti_patterns": [
+        "error tracker ignored OR growing unresolved errors",
+        "no process for error triage",
+        "tests created separately from incident resolution",
+        "no feedback mechanism"
+      ],
+      "tags": [
+        "process",
+        "incident",
+        "feedback-loop"
+      ]
+    }
+  ]
+}

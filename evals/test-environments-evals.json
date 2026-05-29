@@ -1,0 +1,244 @@
+{
+  "skill": "test-environments",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "te-001",
+      "prompt": "Design a Docker Compose configuration for local testing that includes PostgreSQL, Redis, and a seeding service",
+      "expected_patterns": [
+        "docker-compose.test.yml OR docker-compose.yml",
+        "services:",
+        "postgres: AND image:",
+        "redis: AND image:",
+        "healthcheck:",
+        "depends_on:",
+        "volumes:",
+        "environment: OR env_file:"
+      ],
+      "anti_patterns": [
+        "no healthchecks on services",
+        "depends_on without condition: service_healthy",
+        "POSTGRES_PASSWORD as plain text without noting it's test-only",
+        "no database setup in environment section"
+      ],
+      "tags": [
+        "docker-compose",
+        "local-dev",
+        "infrastructure"
+      ]
+    },
+    {
+      "id": "te-002",
+      "prompt": "Explain how to achieve environment parity between your CI and production environments, identifying potential red flags",
+      "expected_patterns": [
+        "Same engine AND version OR database-engine",
+        "migration pipeline OR db:migrate",
+        "seed data OR factories",
+        "infrastructure match OR container orchestration",
+        "hardcoded OR undocumented OR manual setup",
+        "red flag OR anti-pattern"
+      ],
+      "anti_patterns": [
+        "ignoring database engine differences",
+        "no mention of config management",
+        "no discussion of auth matching",
+        "leaving manual setup steps undocumented"
+      ],
+      "tags": [
+        "parity",
+        "production-like",
+        "checklist"
+      ]
+    },
+    {
+      "id": "te-003",
+      "prompt": "Set up MSW (Mock Service Worker) to stub third-party API calls for Stripe, SendGrid, and a geocoding service in tests",
+      "expected_patterns": [
+        "http.post OR http.get",
+        "handlers",
+        "HttpResponse.json",
+        "setupServer",
+        "beforeAll OR beforeEach",
+        "afterEach OR afterAll",
+        "msw/node OR setupServer"
+      ],
+      "anti_patterns": [
+        "no setup or teardown",
+        "onUnhandledRequest: 'ignore'",
+        "stubbing internal modules instead of HTTP boundary",
+        "hardcoded API responses without request handling"
+      ],
+      "tags": [
+        "mocking",
+        "external-deps",
+        "msw"
+      ]
+    },
+    {
+      "id": "te-004",
+      "prompt": "Design a preview environment strategy for per-PR deployments that auto-creates and tears down environments on GitHub Actions",
+      "expected_patterns": [
+        "PR OR pull_request",
+        "docker compose OR Vercel OR Cloudflare Pages OR Railway",
+        "preview-url OR PREVIEW_URL",
+        "namespace OR pr-number",
+        "github.event.number",
+        "docker compose down OR cleanup on close",
+        "if: github.event.action == 'closed'"
+      ],
+      "anti_patterns": [
+        "Long-lived preview environments without teardown",
+        "no automated cleanup",
+        "hardcoded URLs instead of generated namespace",
+        "no isolation between PR environments"
+      ],
+      "tags": [
+        "preview",
+        "ci-cd",
+        "ephemeral"
+      ]
+    },
+    {
+      "id": "te-005",
+      "prompt": "Write a shell script that resets a staging database, runs migrations, and seeds test data in an idempotent way",
+      "expected_patterns": [
+        "set -euo pipefail",
+        "DROP SCHEMA OR DROP TABLE",
+        "db:migrate OR migrations",
+        "db:seed OR seed",
+        "--env staging",
+        "curl.*health OR health check",
+        "echo"
+      ],
+      "anti_patterns": [
+        "no error handling or set flags",
+        "no idempotency (running twice causes failure)",
+        "manual SQL steps not scripted",
+        "no health verification after reset",
+        "production data copy instead of seeded data"
+      ],
+      "tags": [
+        "staging",
+        "seed-data",
+        "scripting"
+      ]
+    },
+    {
+      "id": "te-006",
+      "prompt": "Design a multi-stage Dockerfile that includes separate targets for development, testing, and production. Explain why this pattern supports test environments",
+      "expected_patterns": [
+        "FROM node OR FROM.*base",
+        "AS test OR AS development OR AS seed",
+        "FROM.*AS production",
+        "COPY OR COPY package*",
+        "RUN npm ci OR npm install",
+        "EXPOSE",
+        "CMD"
+      ],
+      "anti_patterns": [
+        "single monolithic stage without separation",
+        "no test-specific stage",
+        "copying production secrets or configs into test stage",
+        "test dependencies in production image"
+      ],
+      "tags": [
+        "dockerfile",
+        "build-strategy",
+        "test-stage"
+      ]
+    },
+    {
+      "id": "te-007",
+      "prompt": "Describe how to use MinIO as an S3 substitute in Docker Compose for local testing and configure an S3 client to point to it",
+      "expected_patterns": [
+        "minio/minio OR minio:latest",
+        "docker-compose.test.yml",
+        "S3Client OR AWS SDK",
+        "endpoint: process.env.S3_ENDPOINT OR http://localhost:9000",
+        "forcePathStyle: true",
+        "healthcheck"
+      ],
+      "anti_patterns": [
+        "no healthcheck on MinIO service",
+        "no configuration of endpoint in code",
+        "forcing real AWS S3 in local tests",
+        "hardcoded credentials without using env vars"
+      ],
+      "tags": [
+        "minio",
+        "s3",
+        "object-storage"
+      ]
+    },
+    {
+      "id": "te-008",
+      "prompt": "Create an integration test script that spins up Docker Compose, runs tests, and cleans up properly on exit using a trap",
+      "expected_patterns": [
+        "docker compose up -d OR docker compose -f.*up",
+        "cleanup() OR cleanup_function",
+        "trap cleanup EXIT",
+        "docker compose down -v OR down --remove-orphans",
+        "DATABASE_URL OR REDIS_URL",
+        "vitest OR jest OR npm test"
+      ],
+      "anti_patterns": [
+        "no cleanup or manual cleanup step",
+        "no trap for cleanup on failure",
+        "dangling containers left after test exit",
+        "hard-coded URLs instead of env vars"
+      ],
+      "tags": [
+        "integration-tests",
+        "scripting",
+        "cleanup"
+      ]
+    },
+    {
+      "id": "te-009",
+      "prompt": "Explain the difference between local dev, CI, preview, staging, and production environments. For each, describe the data strategy and lifecycle",
+      "expected_patterns": [
+        "local dev: seeded fixtures OR minimal OR fast",
+        "CI: ephemeral OR per-run OR destroyed",
+        "preview: PR OR per-request OR auto-teardown",
+        "staging: long-lived OR production-like OR reset",
+        "production: permanent OR real data",
+        "factory OR seed OR snapshot"
+      ],
+      "anti_patterns": [
+        "blurring boundaries between environments",
+        "production data copies in test/staging",
+        "no mention of data lifecycle or management",
+        "same data strategy for all environments"
+      ],
+      "tags": [
+        "environment-tiers",
+        "architecture",
+        "strategy"
+      ]
+    },
+    {
+      "id": "te-010",
+      "prompt": "Design a strategy for stubbing external dependencies (payment, email, auth, storage) across local, CI, and staging. Explain when to use MSW vs. sandbox credentials vs. containers",
+      "expected_patterns": [
+        "MSW OR Mock Service Worker",
+        "sandbox OR test mode OR sk_test_",
+        "Mailpit OR MailHog OR smtp",
+        "MinIO OR testcontainers",
+        "contract testing OR verification",
+        "HTTP boundary OR stub at boundary"
+      ],
+      "anti_patterns": [
+        "stubbing internal modules instead of HTTP boundary",
+        "no contract testing to verify stub accuracy",
+        "using real API credentials in non-prod",
+        "no differentiation between local/CI/staging strategies",
+        "long-lived stubs that drift from real API"
+      ],
+      "tags": [
+        "external-deps",
+        "stubbing",
+        "strategy"
+      ]
+    }
+  ]
+}

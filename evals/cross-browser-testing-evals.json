@@ -1,0 +1,223 @@
+{
+  "skill": "cross-browser-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "cbt-001",
+      "prompt": "Our site has 34% Chrome traffic, 12% Safari on macOS, 15% Chrome on Android, and 14% Safari on iOS. Design a browser matrix with tier assignments based on traffic share.",
+      "expected_patterns": [
+        "P0 OR Tier 1",
+        ">10% traffic",
+        "Chrome OR chromium",
+        "Safari OR webkit",
+        "mobile-chrome OR mobile-safari OR Android OR iOS",
+        "quarterly OR 90 days",
+        "analytics"
+      ],
+      "anti_patterns": [
+        "test every minor version",
+        "test beta OR canary releases",
+        "equal coverage for <1% traffic browsers",
+        "no justification by traffic share"
+      ],
+      "tags": [
+        "matrix-design",
+        "analytics",
+        "tier-system"
+      ]
+    },
+    {
+      "id": "cbt-002",
+      "prompt": "Configure playwright.config.ts with P0 and P1 browsers: Chrome and Safari desktop, Chrome and Safari mobile, Firefox desktop.",
+      "expected_patterns": [
+        "defineConfig",
+        "projects",
+        "devices['Desktop Chrome'] OR devices['Desktop Safari']",
+        "devices['Pixel 7'] OR devices['iPhone 15']",
+        "devices['Desktop Firefox']",
+        "name: OR { name"
+      ],
+      "anti_patterns": [
+        "hardcoded viewport sizes instead of devices",
+        "testing every browser version",
+        "mixing cloud platform config with local devices without clear intent"
+      ],
+      "tags": [
+        "playwright-config",
+        "local-browsers",
+        "devices"
+      ]
+    },
+    {
+      "id": "cbt-003",
+      "prompt": "Set up a BrowserStack Playwright config to test Chrome and Safari on Windows 11.",
+      "expected_patterns": [
+        "connectOptions",
+        "wsEndpoint",
+        "browserstack.com",
+        "BROWSERSTACK_USERNAME OR BROWSERSTACK_ACCESS_KEY",
+        "browser_version OR browserVersion",
+        "os: Windows OR platformName",
+        "playwrightVersion"
+      ],
+      "anti_patterns": [
+        "missing encodeURIComponent",
+        "hardcoded credentials instead of env variables",
+        "mismatched playwrightVersion with package.json"
+      ],
+      "tags": [
+        "cloud-platform",
+        "browserstack",
+        "config"
+      ]
+    },
+    {
+      "id": "cbt-004",
+      "prompt": "Write a cross-browser test for a product grid layout that uses flexbox gap. Verify the grid displays 3 columns and has consistent spacing across Chrome, Safari, and Firefox.",
+      "expected_patterns": [
+        "page.goto",
+        "getByTestId OR getByRole",
+        "boundingBox",
+        "expect",
+        "toHaveCount",
+        "layout OR grid OR spacing"
+      ],
+      "anti_patterns": [
+        "hard-coded pixel assertions without tolerance",
+        "testing CSS internal properties instead of layout outcome",
+        "browserName check for flexbox gap (not needed in 2026)"
+      ],
+      "tags": [
+        "layout-testing",
+        "flexbox",
+        "css"
+      ]
+    },
+    {
+      "id": "cbt-005",
+      "prompt": "Write a test for a date input field that works across browsers. Handle the fact that Safari renders it differently than Chrome and Firefox.",
+      "expected_patterns": [
+        "browserName === 'webkit' OR if.*webkit",
+        "dateInput.fill",
+        "expect",
+        "getByLabel",
+        "visible OR toBeVisible"
+      ],
+      "anti_patterns": [
+        "assuming <input type='date'> renders identically",
+        "branching for every browser version",
+        "testing browser UI instead of functionality"
+      ],
+      "tags": [
+        "date-input",
+        "browser-specific-logic",
+        "form-testing"
+      ]
+    },
+    {
+      "id": "cbt-006",
+      "prompt": "Write a test that verifies a copy-to-clipboard button works across Chromium, Firefox, and WebKit. Handle clipboard permission differences.",
+      "expected_patterns": [
+        "context.grantPermissions",
+        "clipboard-read OR clipboard-write",
+        "browserName === 'chromium'",
+        "expect",
+        "toBeVisible OR getByText('Copied')"
+      ],
+      "anti_patterns": [
+        "assuming clipboard API works identically",
+        "no permission handling for different browsers",
+        "reading clipboard directly instead of verifying UI feedback"
+      ],
+      "tags": [
+        "clipboard",
+        "permissions",
+        "browser-api"
+      ]
+    },
+    {
+      "id": "cbt-007",
+      "prompt": "Run the test suite on only P0 browsers (Chrome and Safari) for a PR check, and all browsers nightly. Show the CLI commands.",
+      "expected_patterns": [
+        "npx playwright test",
+        "--project",
+        "chromium OR webkit",
+        "mobile-chrome OR mobile-safari",
+        "CI OR cron OR nightly"
+      ],
+      "anti_patterns": [
+        "running all browsers on every PR",
+        "no differentiation between PR and nightly CI"
+      ],
+      "tags": [
+        "ci-matrix",
+        "playwright-cli",
+        "project-selection"
+      ]
+    },
+    {
+      "id": "cbt-008",
+      "prompt": "Document three known cross-browser issues in your test suite: (1) scroll-behavior: smooth differences, (2) backdrop-filter not supported in older Firefox, (3) View Transitions API in Chrome vs Firefox.",
+      "expected_patterns": [
+        "scroll-behavior OR anchor navigation",
+        "backdrop-filter OR -webkit-backdrop-filter",
+        "View Transitions OR cross-document",
+        "affected browser",
+        "workaround OR fallback OR ticket",
+        "test verifies functional outcome not CSS"
+      ],
+      "anti_patterns": [
+        "no reproduction steps",
+        "no documented workaround or fallback",
+        "testing pixel rendering instead of user task"
+      ],
+      "tags": [
+        "known-issues",
+        "documentation",
+        "compatibility"
+      ]
+    },
+    {
+      "id": "cbt-009",
+      "prompt": "Set up a visual regression test for a homepage that generates browser-specific baselines across Chrome, Safari, and Firefox. Use Playwright screenshot comparison with pixel tolerance.",
+      "expected_patterns": [
+        "toHaveScreenshot",
+        "maxDiffPixelRatio OR maxDiffPixels",
+        "expect",
+        "homepage-chromium.png OR [browser name in baseline]",
+        "page.goto"
+      ],
+      "anti_patterns": [
+        "0% pixel tolerance across all browsers",
+        "single baseline for all browsers",
+        "no maxDiffPixelRatio specified"
+      ],
+      "tags": [
+        "visual-regression",
+        "screenshot",
+        "baseline"
+      ]
+    },
+    {
+      "id": "cbt-010",
+      "prompt": "Test progressive enhancement: verify a contact form submits successfully even with JavaScript disabled in Chromium. Show the route interception.",
+      "expected_patterns": [
+        "page.context().route OR page.route",
+        "resourceType === 'script'",
+        "route.abort",
+        "browserName === 'chromium'",
+        "toHaveURL OR toContainText",
+        "expect"
+      ],
+      "anti_patterns": [
+        "testing JS-disabled on non-Chromium browsers (not supported)",
+        "assuming form works without testing the outcome"
+      ],
+      "tags": [
+        "progressive-enhancement",
+        "javascript-disabled",
+        "form-testing"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "skill": "qa-start",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "qa-001",
+      "prompt": "We have a brand new project with no QA setup. Where do we start?",
+      "expected_patterns": [
+        "qa-project-context",
+        "test-strategy",
+        "test-planning",
+        "sequence OR order OR step",
+        ".agents/qa-project-context.md"
+      ],
+      "anti_patterns": [
+        "start writing tests immediately",
+        "skip strategy",
+        "jump to Playwright OR Cypress without context"
+      ],
+      "tags": [
+        "launcher",
+        "foundation",
+        "new-project"
+      ]
+    },
+    {
+      "id": "qa-002",
+      "prompt": "Set up QA from scratch on my new project. Walk me through the process.",
+      "expected_patterns": [
+        "Step 1",
+        "Step 2",
+        "Step 3",
+        "qa-project-context",
+        "test-strategy",
+        "test-planning"
+      ],
+      "anti_patterns": [
+        "skip any step",
+        "reorder the steps",
+        "implement tests before strategy"
+      ],
+      "tags": [
+        "launcher",
+        "workflow",
+        "guidance"
+      ]
+    },
+    {
+      "id": "qa-003",
+      "prompt": "I already have a project context file. How do I proceed with qa-start?",
+      "expected_patterns": [
+        "skip Step 1",
+        "invoke test-strategy",
+        "Step 2",
+        ".agents/qa-project-context.md exists"
+      ],
+      "anti_patterns": [
+        "re-run qa-project-context",
+        "ignore the context file"
+      ],
+      "tags": [
+        "skip-ahead",
+        "optimization",
+        "conditional"
+      ]
+    },
+    {
+      "id": "qa-004",
+      "prompt": "I'm joining an existing codebase with no QA. What should I do first?",
+      "expected_patterns": [
+        "qa-start",
+        "qa-project-context",
+        "capture project context",
+        "discover",
+        "tech stack OR test frameworks OR CI/CD"
+      ],
+      "anti_patterns": [
+        "qa-project-bootstrap",
+        "skip context discovery"
+      ],
+      "tags": [
+        "onboarding",
+        "existing-codebase",
+        "discovery"
+      ]
+    },
+    {
+      "id": "qa-005",
+      "prompt": "Invoke qa-start to bootstrap QA on my new React web app.",
+      "expected_patterns": [
+        "invoke qa-project-context",
+        "invoke test-strategy",
+        "invoke test-planning",
+        ".agents/qa-project-context.md",
+        "automated questions OR discovery"
+      ],
+      "anti_patterns": [
+        "manual file creation without qa-project-context",
+        "skip test-strategy"
+      ],
+      "tags": [
+        "execution",
+        "bootstrap",
+        "react"
+      ]
+    },
+    {
+      "id": "qa-006",
+      "prompt": "Our tests were deleted and QA coverage collapsed. How do we restart?",
+      "expected_patterns": [
+        "qa-start",
+        "rebooting QA",
+        "qa-project-context",
+        "test-strategy",
+        "test-planning"
+      ],
+      "anti_patterns": [
+        "just rewrite old tests",
+        "skip strategy redefinition"
+      ],
+      "tags": [
+        "recovery",
+        "reboot",
+        "strategy"
+      ]
+    },
+    {
+      "id": "qa-007",
+      "prompt": "What output artifacts should qa-start produce by the time all three steps are done?",
+      "expected_patterns": [
+        ".agents/qa-project-context.md",
+        "strategy document OR strategy.md",
+        "test plan OR plan.md",
+        "features mapped to test cases",
+        "quality gates"
+      ],
+      "anti_patterns": [
+        "no written artifacts",
+        "just a conversation"
+      ],
+      "tags": [
+        "deliverables",
+        "artifacts",
+        "documentation"
+      ]
+    },
+    {
+      "id": "qa-008",
+      "prompt": "I already have both a context file and a test strategy. Can I skip to just the test planning step?",
+      "expected_patterns": [
+        "invoke test-planning",
+        "skip Steps 1 and 2",
+        "context file exists",
+        "strategy exists"
+      ],
+      "anti_patterns": [
+        "re-run qa-project-context",
+        "re-run test-strategy"
+      ],
+      "tags": [
+        "skip-ahead",
+        "efficiency",
+        "partial-execution"
+      ]
+    },
+    {
+      "id": "qa-009",
+      "prompt": "What's the difference between qa-start and qa-project-bootstrap?",
+      "expected_patterns": [
+        "qa-start: new projects OR no setup",
+        "qa-project-bootstrap: existing team OR deeper onboarding",
+        "qa-start: foundation OR first plan",
+        "qa-project-bootstrap: 30-day OR processes"
+      ],
+      "anti_patterns": [
+        "qa-start and qa-project-bootstrap are the same",
+        "use qa-project-bootstrap for brand new projects"
+      ],
+      "tags": [
+        "comparison",
+        "skill-selection",
+        "decision"
+      ]
+    },
+    {
+      "id": "qa-010",
+      "prompt": "After qa-start completes all three steps, what should my team do next?",
+      "expected_patterns": [
+        "playwright-automation OR cypress-automation",
+        "ci-cd-integration",
+        "qa-metrics",
+        "write E2E tests",
+        "highest-risk flows"
+      ],
+      "anti_patterns": [
+        "qa-start is the final step",
+        "no direction for next work"
+      ],
+      "tags": [
+        "next-steps",
+        "follow-up",
+        "roadmap"
+      ]
+    }
+  ]
+}
