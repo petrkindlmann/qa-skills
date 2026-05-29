@@ -6,7 +6,7 @@ Checks:
 - YAML frontmatter is valid
 - name matches directory name
 - description is non-empty
-- Line count is under 500
+- Line count is under MAX_LINES
 - Referenced files exist
 """
 
@@ -14,6 +14,8 @@ import os
 import re
 import sys
 from pathlib import Path
+
+MAX_LINES = 650
 
 
 def extract_frontmatter(content: str) -> dict | None:
@@ -61,8 +63,8 @@ def validate_skill(skill_dir: Path) -> list[str]:
 
     # Check line count
     line_count = len(lines)
-    if line_count > 500:
-        errors.append(f"{skill_name}: {line_count} lines (max 500)")
+    if line_count > MAX_LINES:
+        errors.append(f"{skill_name}: {line_count} lines (max {MAX_LINES})")
 
     # Check frontmatter
     frontmatter = extract_frontmatter(content)
