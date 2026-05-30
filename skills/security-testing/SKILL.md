@@ -60,6 +60,8 @@ The 2025 list re-orders categories and introduces two new ones. Major changes fr
 
 Source: https://owasp.org/Top10/2025/
 
+For runnable test code per category, see `references/owasp-tests.md`.
+
 ### A01: Broken Access Control
 
 The #1 vulnerability. Users can act outside their intended permissions. SSRF (server-side request forgery) is now treated as an access-control failure when the server is induced to access internal resources on behalf of an attacker.
@@ -70,57 +72,6 @@ The #1 vulnerability. Users can act outside their intended permissions. SSRF (se
 - Path traversal: `../../etc/passwd` in file parameters
 - CORS misconfiguration: can a malicious origin make authenticated requests?
 - SSRF: user-supplied URLs reaching internal networks, cloud metadata endpoints, or `file://` schemes
-
-```typescript
-// IDOR test: user A should not access user B's order
-test('should reject access to another user\'s order', async ({ request }) => {
-  const response = await request.get('/api/orders/order-belonging-to-user-b', {
-    headers: { Authorization: `Bearer ${userAToken}` },
-  });
-  expect(response.status()).toBe(403);
-});
-
-// Vertical privilege escalation: regular user hits admin endpoint
-test('should reject non-admin from admin endpoints', async ({ request }) => {
-  const response = await request.delete('/api/admin/users/some-user-id', {
-    headers: { Authorization: `Bearer ${regularUserToken}` },
-  });
-  expect(response.status()).toBe(403);
-});
-
-// CORS: verify only allowed origins
-test('should reject cross-origin requests from untrusted origins', async ({ request }) => {
-  const response = await request.get('/api/user/profile', {
-    headers: {
-      Origin: 'https://evil-site.example.com',
-      Authorization: `Bearer ${validToken}`,
-    },
-  });
-  const corsHeader = response.headers()['access-control-allow-origin'];
-  expect(corsHeader).not.toBe('*');
-  expect(corsHeader).not.toBe('https://evil-site.example.com');
-});
-
-// SSRF: prevent internal network access via user-supplied URLs
-const ssrfPayloads = [
-  'http://169.254.169.254/latest/meta-data/',  // AWS metadata
-  'http://metadata.google.internal/',           // GCP metadata
-  'http://localhost:6379/',                     // Redis
-  'http://127.0.0.1:3000/api/admin',           // Loopback
-  'file:///etc/passwd',                         // Local file
-  'gopher://127.0.0.1:25/',                     // Protocol smuggling
-];
-
-for (const payload of ssrfPayloads) {
-  test(`should block SSRF attempt: ${new URL(payload).hostname || payload}`, async ({ request }) => {
-    const response = await request.post('/api/webhook/test', {
-      data: { callbackUrl: payload },
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    expect(response.status()).toBeOneOf([400, 403, 422]);
-  });
-}
-```
 
 ### A02: Security Misconfiguration
 
@@ -134,22 +85,6 @@ Default credentials, unnecessary features enabled, overly verbose errors. Promot
 - Admin panels not publicly accessible
 - Cloud storage buckets not publicly readable/writable
 
-```typescript
-test('should not expose stack traces in production errors', async ({ request }) => {
-  const response = await request.get('/api/nonexistent-endpoint');
-  const body = await response.text();
-  expect(body).not.toContain('at Object.');
-  expect(body).not.toContain('node_modules');
-  expect(body).not.toMatch(/\.ts:\d+:\d+/);
-  expect(body).not.toMatch(/\.js:\d+:\d+/);
-});
-
-test('should disable TRACE method', async ({ request }) => {
-  const response = await request.fetch('/api/health', { method: 'TRACE' });
-  expect(response.status()).toBe(405);
-});
-```
-
 ### A03: Software Supply Chain Failures
 
 New in 2025. Goes beyond "outdated dependencies" to cover provenance, build pipeline integrity, and the supply chain end-to-end.
@@ -162,48 +97,7 @@ New in 2025. Goes beyond "outdated dependencies" to cover provenance, build pipe
 - CI/CD pipeline secrets not exposed to forks or untrusted code paths
 - Self-hosted runners not running untrusted PR code without job-level isolation
 
-```yaml
-# GitHub Actions: dependency review + SBOM generation + provenance signing
-supply-chain:
-  runs-on: ubuntu-latest
-  permissions:
-    contents: read
-    id-token: write   # for cosign keyless signing
-    attestations: write
-  steps:
-    - uses: actions/checkout@v5
-    - uses: actions/dependency-review-action@v4
-      with:
-        fail-on-severity: high
-        comment-summary-in-pr: on-failure
-
-    - uses: anchore/sbom-action@v0
-      with:
-        format: cyclonedx-json
-        output-file: sbom.cdx.json
-
-    - uses: actions/attest-build-provenance@v2
-      with:
-        subject-path: dist/
-
-    - uses: actions/upload-artifact@v5
-      with: { name: sbom, path: sbom.cdx.json }
-```
-
-```typescript
-// Lockfile drift check (Node example)
-import { execSync } from 'node:child_process';
-test('lockfile is up to date with package.json', () => {
-  // npm ci fails when package.json and lockfile disagree — perfect for CI
-  expect(() => execSync('npm ci --dry-run', { stdio: 'pipe' })).not.toThrow();
-});
-```
-
-Tooling — pick the layer that fits:
-- **Vulnerability scanners:** OSV-Scanner, Trivy, Grype, Snyk, GitHub Dependabot
-- **SBOM generation:** Syft, CycloneDX CLI, `actions/dependency-review-action`
-- **Provenance/signing:** cosign, Sigstore, SLSA reference generators
-- **Policy:** OpenSSF Scorecard for repo hygiene; Semgrep Supply Chain Pro for transitive policy
+See `references/owasp-tests.md` for the dependency-review/SBOM/provenance workflow and lockfile-drift check.
 
 ### A04: Cryptographic Failures
 
@@ -215,25 +109,6 @@ Sensitive data exposed due to weak or missing encryption.
 - Sensitive data in URLs, logs, or error messages
 - Cookies missing `Secure`, `HttpOnly`, `SameSite` flags
 
-```typescript
-test('should set secure cookie flags on session', async ({ request }) => {
-  const response = await request.post('/api/auth/login', {
-    data: { email: 'test@example.com', password: 'validPassword1!' },
-  });
-  const setCookie = response.headers()['set-cookie'] ?? '';
-  expect(setCookie).toContain('Secure');
-  expect(setCookie).toContain('HttpOnly');
-  expect(setCookie).toMatch(/SameSite=(Strict|Lax)/);
-});
-
-test('should include security headers', async ({ request }) => {
-  const response = await request.get('/');
-  expect(response.headers()['strict-transport-security']).toBeDefined();
-  expect(response.headers()['x-content-type-options']).toBe('nosniff');
-  expect(response.headers()['x-frame-options']).toMatch(/DENY|SAMEORIGIN/);
-});
-```
-
 ### A05: Injection
 
 Untrusted data sent to an interpreter as part of a command or query.
@@ -244,55 +119,6 @@ Untrusted data sent to an interpreter as part of a command or query.
 - CSRF on state-changing operations
 - Command injection in file names, search queries, webhook URLs
 
-```typescript
-// SQL injection patterns
-const sqlPayloads = [
-  "' OR '1'='1",
-  "'; DROP TABLE users; --",
-  "1 UNION SELECT null, username, password FROM users --",
-  "admin'--",
-];
-
-for (const payload of sqlPayloads) {
-  test(`should reject SQL injection: ${payload.slice(0, 30)}`, async ({ request }) => {
-    const response = await request.get(`/api/search?q=${encodeURIComponent(payload)}`);
-    expect(response.status()).not.toBe(500); // Server error = likely vulnerable
-    const body = await response.text();
-    expect(body).not.toContain('SQL');
-    expect(body).not.toContain('syntax error');
-    expect(body).not.toContain('mysql');
-  });
-}
-
-// XSS via stored user input
-test('should sanitize stored XSS in user profile', async ({ page }) => {
-  const xssPayload = '<img src=x onerror=alert(document.cookie)>';
-  // Store malicious input via API
-  await page.request.put('/api/profile', {
-    data: { displayName: xssPayload },
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  // Load page that renders the profile
-  await page.goto('/profile');
-  // Verify the script did not execute (no alert dialog)
-  // and the content is either escaped or stripped
-  const nameElement = page.getByTestId('display-name');
-  const nameText = await nameElement.innerHTML();
-  expect(nameText).not.toContain('<img');
-  expect(nameText).not.toContain('onerror');
-});
-
-// CSRF: state-changing requests require valid token
-test('should reject POST without CSRF token', async ({ request }) => {
-  const response = await request.post('/api/account/change-email', {
-    data: { email: 'attacker@example.com' },
-    headers: { Cookie: `session=${validSessionCookie}` },
-    // Deliberately omitting CSRF token
-  });
-  expect(response.status()).toBe(403);
-});
-```
-
 ### A06: Insecure Design
 
 Flawed architecture that cannot be fixed by implementation alone. Includes design-level vectors for SSRF (URL-accepting features without an allow-list), credential stuffing without rate limits, and business-logic abuse.
@@ -301,9 +127,7 @@ Flawed architecture that cannot be fixed by implementation alone. Includes desig
 
 ### A07: Authentication Failures
 
-Broken authentication, weak passwords, credential stuffing.
-
-**See Auth Testing Patterns section below.**
+Broken authentication, weak passwords, credential stuffing. See `references/auth-tests.md`.
 
 ### A08: Software or Data Integrity Failures
 
@@ -312,16 +136,6 @@ Unsigned updates, insecure deserialization, untrusted CI/CD pipelines.
 **What to test:**
 - Subresource Integrity (SRI) on CDN scripts
 - Content Security Policy headers
-
-```typescript
-test('should include Content-Security-Policy', async ({ request }) => {
-  const response = await request.get('/');
-  const csp = response.headers()['content-security-policy'];
-  expect(csp).toBeDefined();
-  expect(csp).not.toContain("'unsafe-inline'");
-  expect(csp).not.toContain("'unsafe-eval'");
-});
-```
 
 ### A09: Security Logging and Alerting Failures
 
@@ -344,229 +158,22 @@ New in 2025. Errors and unexpected states are an attack surface — fail-open de
 - Resource cleanup happens on every error path (locks released, transactions rolled back)
 - Fuzzing: send malformed payloads to every endpoint and verify responses stay within the documented error contract
 
-```typescript
-import { test, expect } from '@playwright/test';
-
-test('error responses fail closed (no auth bypass on 500)', async ({ request }) => {
-  // Trigger a server-side error and confirm the route still requires auth
-  const response = await request.post('/api/admin/trigger-error', {
-    headers: { /* no Authorization header */ },
-    data: { causeError: true },
-  });
-  // Must NOT be 500 with admin-action side effects — must be 401/403
-  expect(response.status()).toBeOneOf([401, 403]);
-});
-
-test('error response does not leak internals', async ({ request }) => {
-  const response = await request.post('/api/process', { data: { invalid: '  ' } });
-  const body = await response.text();
-  for (const leak of ['Traceback', 'at Object.', 'node_modules', 'pg:', 'mysql:', 'PSQLException']) {
-    expect(body, `Leaked "${leak}" in error body`).not.toContain(leak);
-  }
-});
-
-test('partial failures do not skip authorization', async ({ request }) => {
-  // Inject a downstream failure (e.g. via a test-only header your service honors in non-prod)
-  const response = await request.post('/api/transfer', {
-    headers: { Authorization: `Bearer ${userAToken}`, 'X-Test-Inject-Downstream-Failure': 'auth-cache' },
-    data: { fromAccount: 'B-account-not-owned-by-A', amount: 1 },
-  });
-  expect(response.status()).toBe(403); // not 500 with the transfer queued
-});
-```
-
-For broad coverage, pair manual error-path tests with property-based testing or fuzzing (`fast-check`, `schemathesis`, ZAP active scan with `-a`).
-
 ---
 
 ## Automated Security Scanning
 
-### OWASP ZAP
+A complete pipeline layers DAST, dependency scanning, SAST, and secret scanning. Tooling config and CI workflows are in `references/scanning-and-ci.md`.
 
-ZAP 2.17.0 (Dec 2025) reduced duplicate-alert noise; weekly Docker tags now follow `w2026-MM-DD`. Pin the GitHub Action to the current major or by SHA, and treat the Docker image as `ghcr.io/zaproxy/zaproxy:stable` (the default).
-
-```yaml
-# GitHub Actions: ZAP baseline scan against staging
-security-scan:
-  runs-on: ubuntu-latest
-  steps:
-    - name: ZAP Baseline Scan
-      uses: zaproxy/action-baseline@v0.15.0
-      with:
-        target: 'https://staging.example.com'
-        rules_file_name: '.zap/rules.tsv'
-        cmd_options: '-a'
-    - name: Upload ZAP Report
-      if: always()
-      uses: actions/upload-artifact@v5
-      with:
-        name: zap-report
-        path: report_html.html
-```
-
-For API scanning, use `zap-api-scan.py` with your OpenAPI spec. For full scans, use `zap-full-scan.py` via Docker (`ghcr.io/zaproxy/zaproxy:stable`).
-
-**ZAP MCP Server (April 2026):** Lets coding agents (Claude Code, Codex, Cursor) drive scans during development — useful for "scan the diff" workflows and AI-augmented security review. Pair with `ai-qa-review` for agent-driven triage. **OWASP PTK** is now bundled with ZAP-launched browsers; PTK findings surface as ZAP alerts, giving one-tool DAST + SAST + SCA flow.
-
-### Dependency Scanning
-
-```yaml
-# GitHub Actions: npm audit + Snyk
-dependency-check:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v4
-    - run: npm ci
-    - name: npm audit
-      run: npm audit --audit-level=high
-      continue-on-error: true
-
-    - name: Snyk test
-      uses: snyk/actions/node@master
-      env:
-        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
-      with:
-        args: --severity-threshold=high
-```
-
-Configure Dependabot in `.github/dependabot.yml` with daily npm updates and security team reviewers.
-
-### SAST (Static Analysis)
-
-ESLint 9 flat config (default for new projects) — pick this for greenfield repos:
-
-```javascript
-// eslint.config.js -- ESLint 9 flat config
-import securityPlugin from 'eslint-plugin-security';
-import noUnsanitized from 'eslint-plugin-no-unsanitized';
-
-export default [
-  securityPlugin.configs.recommended,
-  {
-    plugins: { 'no-unsanitized': noUnsanitized },
-    rules: {
-      'security/detect-object-injection': 'warn',
-      'security/detect-non-literal-regexp': 'warn',
-      'security/detect-unsafe-regex': 'error',
-      'security/detect-eval-with-expression': 'error',
-      'no-unsanitized/method': 'error',
-      'no-unsanitized/property': 'error',
-    },
-  },
-];
-```
-
-ESLint 8 / `.eslintrc.*` legacy config (only for existing projects still on the old config format):
-
-```javascript
-// .eslintrc.js -- legacy config
-module.exports = {
-  plugins: ['security', 'no-unsanitized'],
-  extends: ['plugin:security/recommended-legacy'],
-  rules: {
-    'security/detect-object-injection': 'warn',
-    'security/detect-non-literal-regexp': 'warn',
-    'security/detect-unsafe-regex': 'error',
-    'security/detect-eval-with-expression': 'error',
-    'no-unsanitized/method': 'error',
-    'no-unsanitized/property': 'error',
-  },
-};
-```
-
-For deeper multi-language SAST, use Semgrep (`semgrep/semgrep-action@v1`) with rulesets `p/owasp-top-ten`, `p/javascript`, `p/typescript`. Re-validate the `p/owasp-top-ten` ruleset against the 2025 list before relying on it as a gate. **Semgrep MCP** (2026) exposes `semgrep_findings` for agent-driven triage — pair with `ai-qa-review` when reviewing AI-authored code.
-
-### Secret Scanning
-
-Use TruffleHog (`trufflesecurity/trufflehog@main`) in CI with `--only-verified` and full git history (`fetch-depth: 0`). For pre-commit prevention, use `git-secrets` with `git secrets --install && git secrets --register-aws`.
+- **OWASP ZAP (DAST):** baseline scan against staging on every PR; `zap-api-scan.py` for APIs. ZAP MCP Server (2026) lets coding agents drive "scan the diff" workflows.
+- **Dependency scanning:** `npm audit --audit-level=high` + Snyk + Dependabot.
+- **SAST:** `eslint-plugin-security` + `eslint-plugin-no-unsanitized`; Semgrep for deeper multi-language analysis (`p/owasp-top-ten`).
+- **Secret scanning:** TruffleHog with `--only-verified` in CI; `git-secrets` pre-commit.
 
 ---
 
 ## Auth Testing Patterns
 
-### Session Management
-
-```typescript
-test('should invalidate session on logout', async ({ request, context }) => {
-  // Login and get session
-  const loginResponse = await request.post('/api/auth/login', {
-    data: { email: 'test@example.com', password: 'validPassword1!' },
-  });
-  const sessionCookie = loginResponse.headers()['set-cookie'];
-
-  // Logout
-  await request.post('/api/auth/logout');
-
-  // Attempt to use old session
-  const response = await request.get('/api/user/profile', {
-    headers: { Cookie: sessionCookie },
-  });
-  expect(response.status()).toBe(401);
-});
-
-```
-
-### JWT Testing
-
-```typescript
-import * as jose from 'jose';
-
-test('should reject expired JWT', async ({ request }) => {
-  const expiredToken = await new jose.SignJWT({ sub: 'user-1' })
-    .setProtectedHeader({ alg: 'HS256' })
-    .setExpirationTime('-1h') // Expired 1 hour ago
-    .sign(new TextEncoder().encode('test-secret'));
-
-  const response = await request.get('/api/user/profile', {
-    headers: { Authorization: `Bearer ${expiredToken}` },
-  });
-  expect(response.status()).toBe(401);
-});
-
-test('should reject JWT with "none" algorithm', async ({ request }) => {
-  // Algorithm confusion attack: forged token with alg: none
-  const header = Buffer.from(JSON.stringify({ alg: 'none', typ: 'JWT' })).toString('base64url');
-  const payload = Buffer.from(JSON.stringify({ sub: 'admin', role: 'admin' })).toString('base64url');
-  const noneToken = `${header}.${payload}.`;
-
-  const response = await request.get('/api/admin/dashboard', {
-    headers: { Authorization: `Bearer ${noneToken}` },
-  });
-  expect(response.status()).toBe(401);
-});
-
-```
-
-### RBAC Testing
-
-```typescript
-const endpoints = [
-  { method: 'GET', path: '/api/admin/users', allowedRoles: ['admin'] },
-  { method: 'DELETE', path: '/api/admin/users/u-1', allowedRoles: ['admin'] },
-  { method: 'GET', path: '/api/reports', allowedRoles: ['admin', 'manager'] },
-  { method: 'GET', path: '/api/profile', allowedRoles: ['admin', 'manager', 'user'] },
-];
-
-for (const endpoint of endpoints) {
-  for (const role of ['admin', 'manager', 'user', 'guest']) {
-    const shouldAllow = endpoint.allowedRoles.includes(role);
-    test(`${role} ${shouldAllow ? 'can' : 'cannot'} ${endpoint.method} ${endpoint.path}`, async ({ request }) => {
-      const token = await getTokenForRole(role);
-      const response = await request.fetch(endpoint.path, {
-        method: endpoint.method,
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      });
-      if (shouldAllow) {
-        expect(response.status()).not.toBeOneOf([401, 403]);
-      } else {
-        expect(response.status()).toBeOneOf([401, 403]);
-      }
-    });
-  }
-}
-```
-
-Also test: session rotation after login (prevent session fixation), JWT signed with wrong key, and OAuth state parameter tampering.
+Session management, JWT (expiry, `alg: none` confusion), and RBAC matrix tests. Full code in `references/auth-tests.md`. Also test session rotation after login, JWT signed with the wrong key, and OAuth state-parameter tampering.
 
 ---
 
@@ -582,7 +189,7 @@ A complete security pipeline has five layers, each as a CI step:
 
 ### Security as PR Gate
 
-Block merges when `npm audit --json` reports high/critical vulnerabilities. Parse the JSON output and fail the step with `exit 1` if count > 0.
+Block merges when `npm audit --json` reports high/critical vulnerabilities. Parse the JSON output and fail the step with `exit 1` if count > 0. See `references/scanning-and-ci.md` for the full pipeline.
 
 ---
 
@@ -600,7 +207,7 @@ Block merges when `npm audit --json` reports high/critical vulnerabilities. Pars
 
 **Skipping SSRF testing.** Any feature that accepts a URL (webhooks, image uploads, imports) is an SSRF vector. Test with internal network addresses.
 
-**Testing only known payloads.** The XSS and SQLi payloads above are examples, not an exhaustive list. Use tools like ZAP that maintain current payload databases.
+**Testing only known payloads.** The XSS and SQLi payloads in the references are examples, not an exhaustive list. Use tools like ZAP that maintain current payload databases.
 
 ---
 
@@ -611,6 +218,12 @@ Block merges when `npm audit --json` reports high/critical vulnerabilities. Pars
 - Dependency scanning enabled on the repository via Snyk or Dependabot, with high/critical vulnerabilities treated as build failures.
 - SAST lint rules (ESLint security plugin or Semgrep) enabled in CI and producing zero unresolved errors on the main branch.
 - Auth and session edge cases explicitly tested: CSRF protection, token expiry rejection, session invalidation on logout, and role escalation prevention.
+
+## Reference Files (in `references/`)
+
+- **owasp-tests.md** — Runnable test code for OWASP A01–A10 (IDOR, SSRF, injection, crypto, supply chain, exceptional conditions).
+- **scanning-and-ci.md** — ZAP, dependency, SAST, secret-scanning tooling config and the five-layer CI pipeline.
+- **auth-tests.md** — Session, JWT, and RBAC test patterns for A07.
 
 ## Related Skills
 
