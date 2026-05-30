@@ -136,54 +136,15 @@ Diagnose the current shape of the test suite and define the target state.
 
 #### Shapes and What They Mean
 
-```
-HEALTHY PYRAMID         ICE CREAM CONE         DIAMOND              HOURGLASS
+The suite takes one of four shapes — healthy pyramid (many unit, few E2E), ice cream cone (inverted), diamond (integration-heavy), or hourglass (missing middle layer). Each signals a different feedback/maintenance trade-off. See `references/diagrams-and-worksheets.md` for the side-by-side ASCII diagram of all four shapes and what each one means.
 
-    /  E2E  \           +-----------+                                 /  E2E  \
-   /  ~5-10% \          | E2E ~60%  |            / Int \             / ~30%    \
-  /           \         |           |           / ~50%  \           +----------+
- / Integration \        +-----------+          /         \          | Int ~10% |
-/   ~15-20%     \       | Int ~20%  |         +-----------+         +----------+
-+---------------+       +-----------+         | Unit ~30% |        /  Unit     \
-|   Unit ~70%   |       | Unit ~20% |         +-----------+       /   ~60%      \
-+---------------+       +-----------+                             +--------------+
+#### Current State Assessment
 
-Fast feedback,          Slow, brittle,        Heavy on mocks,      Missing middle
-high confidence,        expensive to run,     integration gaps      layer, gaps in
-cheap to maintain       hard to maintain      still possible        service boundaries
-```
-
-#### Current State Assessment Worksheet
-
-Fill in these values from the codebase:
-
-```
-Current Test Distribution:
-  Unit tests:        _____ count  →  _____ %
-  Integration tests: _____ count  →  _____ %
-  E2E tests:         _____ count  →  _____ %
-  Manual test cases:  _____ count  (not in pyramid, but track)
-
-Current Shape: [ ] Pyramid  [ ] Ice Cream Cone  [ ] Diamond  [ ] Hourglass  [ ] No Shape
-
-CI Pipeline Duration: _____ minutes
-Flaky Test Rate:      _____ %
-Test Suite Pass Rate: _____ %
-```
+Count the current tests at each level, compute the percentage split, and identify the shape. Then capture CI duration, flaky rate, and pass rate. See `references/diagrams-and-worksheets.md` for the fill-in Current State Assessment Worksheet.
 
 #### Target State
 
-Define the target ratios and the timeline to get there:
-
-```
-Target Test Distribution:
-  Unit:        70-80%  → target count: _____
-  Integration: 15-20%  → target count: _____
-  E2E:          5-10%  → target count: _____
-
-Target CI Duration: < _____ minutes
-Target Flaky Rate:  < _____ %
-```
+Define target ratios (70-80% unit, 15-20% integration, 5-10% E2E) with concrete counts, plus target CI duration and flaky rate. See `references/diagrams-and-worksheets.md` for the Target State Worksheet.
 
 #### Action Plan to Shift Toward Healthy Pyramid
 
@@ -206,16 +167,7 @@ Map features to risk levels. This directly determines testing depth.
 
 #### 5x5 Risk Matrix
 
-```
-LIKELIHOOD →     Rare      Unlikely    Possible    Likely    Almost Certain
-IMPACT ↓          1           2           3          4            5
-
-Catastrophic (5)  5-MED      10-HIGH    15-CRIT    20-CRIT      25-CRIT
-Major (4)         4-LOW       8-MED     12-HIGH    16-CRIT      20-CRIT
-Moderate (3)      3-LOW       6-MED      9-MED     12-HIGH      15-CRIT
-Minor (2)         2-LOW       4-LOW      6-MED      8-MED       10-HIGH
-Negligible (1)    1-LOW       2-LOW      3-LOW      4-LOW        5-MED
-```
+Score each feature as Impact (1 Negligible → 5 Catastrophic) × Likelihood (1 Rare → 5 Almost Certain); the product (1-25) maps to LOW/MED/HIGH/CRIT bands. See `references/diagrams-and-worksheets.md` for the full 5x5 matrix with every cell labeled.
 
 #### Risk-to-Testing Action Map
 
@@ -466,26 +418,7 @@ Manual exploratory testing has enormous value, especially early in a product's l
 
 ## Output Format
 
-The final strategy document should follow this structure:
-
-```markdown
-# QA Strategy: [Product Name]
-## Version [X.Y] | Last Updated: [Date] | Owner: [Name]
-
-### 1. Executive Summary (1 paragraph)
-### 2. Scope & Objectives
-### 3. Test Levels & Types (table)
-### 4. Test Pyramid Analysis (current → target)
-### 5. Risk Assessment (matrix + feature mapping)
-### 6. Environment Strategy (table)
-### 7. Tool Selection (decisions + rationale)
-### 8. Entry/Exit Criteria (per level)
-### 9. Quality Gates (per stage)
-### 10. Metrics & KPIs (table with targets)
-### 11. Timeline & Milestones (phased)
-### 12. Risks to the Strategy Itself
-### 13. Revision History
-```
+The final strategy document follows a 13-section structure: Executive Summary, Scope & Objectives, Test Levels & Types, Test Pyramid Analysis, Risk Assessment, Environment Strategy, Tool Selection, Entry/Exit Criteria, Quality Gates, Metrics & KPIs, Timeline & Milestones, Risks to the Strategy Itself, and Revision History. See `references/diagrams-and-worksheets.md` for the copy-paste markdown skeleton, and `references/strategy-templates.md` for four fully worked examples (SaaS, e-commerce, API-first, media).
 
 ---
 
@@ -496,6 +429,11 @@ The final strategy document should follow this structure:
 - Entry and exit criteria are written for each test level (unit, integration, E2E, release)
 - Tool selection decisions are documented with a scored rationale matrix, not just tool names
 - Quality gates are defined for all four stages (PR, merge, deploy, nightly) with specific pass/fail thresholds
+
+## Reference Files (in `references/`)
+
+- **diagrams-and-worksheets.md** — Test pyramid shape diagrams, current/target state worksheets, the full 5x5 risk matrix, and the 13-section strategy document output skeleton.
+- **strategy-templates.md** — Four fully worked strategy documents (SaaS, e-commerce, API-first, media), plus a step-by-step pyramid analysis worksheet and a risk-matrix feature-inventory template.
 
 ## Related Skills
 

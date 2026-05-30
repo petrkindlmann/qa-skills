@@ -49,108 +49,15 @@ Validate database integrity, test migrations safely, verify constraints, and det
 
 ## Migration Testing
 
+For runnable migration test code, see `references/migration-tests.md`.
+
 ### Forward Migration Validation
 
-```typescript
-// test/migrations/forward.test.ts
-import { execSync } from 'child_process';
-import { Pool } from 'pg';
-
-describe('Forward migrations', () => {
-  let pool: Pool;
-
-  beforeAll(async () => {
-    // Create a fresh database for migration testing
-    const adminPool = new Pool({ database: 'postgres' });
-    await adminPool.query('DROP DATABASE IF EXISTS test_migrations');
-    await adminPool.query('CREATE DATABASE test_migrations');
-    await adminPool.end();
-
-    pool = new Pool({ database: 'test_migrations' });
-  });
-
-  afterAll(async () => {
-    await pool.end();
-  });
-
-  it('should apply all migrations from empty database', () => {
-    // Run all migrations against empty database
-    execSync('npx prisma migrate deploy', {
-      env: { ...process.env, DATABASE_URL: 'postgresql://localhost/test_migrations' },
-    });
-  });
-
-  it('should have correct schema after all migrations', async () => {
-    // Verify expected tables exist
-    const tables = await pool.query(`
-      SELECT table_name FROM information_schema.tables
-      WHERE table_schema = 'public' ORDER BY table_name
-    `);
-    const tableNames = tables.rows.map((r) => r.table_name);
-    expect(tableNames).toContain('users');
-    expect(tableNames).toContain('orders');
-    expect(tableNames).toContain('products');
-  });
-
-  it('should have correct columns on users table', async () => {
-    const columns = await pool.query(`
-      SELECT column_name, data_type, is_nullable, column_default
-      FROM information_schema.columns
-      WHERE table_name = 'users' ORDER BY ordinal_position
-    `);
-    const colMap = Object.fromEntries(
-      columns.rows.map((r) => [r.column_name, r])
-    );
-
-    expect(colMap.id.data_type).toBe('uuid');
-    expect(colMap.email.is_nullable).toBe('NO');
-    expect(colMap.created_at.column_default).toContain('now()');
-  });
-});
-```
+Spin up a fresh, empty database, run all migrations with `prisma migrate deploy`, then assert against `information_schema` that the expected tables and columns exist with the right types, nullability, and defaults. See `references/migration-tests.md` for the full forward-migration suite.
 
 ### Rollback Testing
 
-Prisma Migrate has no first-class `rollback` command. Production rollbacks happen by writing a *new* forward migration that reverts the previous one. For tests, the supported pattern is `prisma migrate resolve` to mark a migration as rolled back, plus a fresh DB reset between tests.
-
-```typescript
-import { execSync } from 'node:child_process';
-
-describe('Migration rollback', () => {
-  it('the down migration cleanly reverses the latest up', async () => {
-    // Apply all migrations to a fresh DB
-    execSync('npx prisma migrate deploy', { env: migrationEnv });
-
-    // Capture pre-rollback state and insert test data
-    await pool.query(
-      `INSERT INTO users (id, email, name) VALUES ($1, $2, $3)`,
-      ['550e8400-e29b-41d4-a716-446655440000', 'alice@example.com', 'Alice'],
-    );
-
-    // Get the latest applied migration name (Prisma stores in _prisma_migrations)
-    const { rows } = await pool.query(
-      `SELECT migration_name FROM _prisma_migrations
-         WHERE finished_at IS NOT NULL
-         ORDER BY finished_at DESC LIMIT 1`,
-    );
-    const latest = rows[0].migration_name;
-
-    // Mark the migration as rolled back in Prisma's metadata table
-    execSync(`npx prisma migrate resolve --rolled-back ${latest}`, { env: migrationEnv });
-
-    // Apply the inverse SQL (you maintain a parallel down.sql per migration, or reset)
-    // Pattern A: hand-written down.sql checked in alongside each migration directory
-    execSync(`psql $DATABASE_URL -f prisma/migrations/${latest}/down.sql`, { env: migrationEnv });
-
-    // Verify the rollback succeeded: column/table removed by the down migration is gone
-  });
-
-  it('can re-apply after rollback (idempotent up)', async () => {
-    execSync('npx prisma migrate deploy', { env: migrationEnv });
-    // Verify schema matches the expected post-up state
-  });
-});
-```
+Prisma Migrate has no first-class `rollback` command. Production rollbacks happen by writing a *new* forward migration that reverts the previous one. For tests, the supported pattern is `prisma migrate resolve` to mark a migration as rolled back, plus a fresh DB reset between tests. See `references/migration-tests.md` for the rollback and idempotent re-apply tests.
 
 For Drizzle (v1.0+): `drizzle-kit generate` + `drizzle-kit migrate`, plus `--ignore-conflicts` (SQLite) for explicit migration-conflict detection. Pin `drizzle-kit` in CI — v1.0-rc.1 (April 2026) shipped breaking changes to the `casing` API and removed RQB v1 `._query` for Postgres.
 
@@ -158,50 +65,11 @@ For TypeORM and Sequelize: both ship native `migration:revert` commands and the 
 
 ### Data Preservation During Migration
 
-```typescript
-it('should preserve existing data when adding a column', async () => {
-  // Setup: apply migrations up to N-1
-  execSync('npx prisma migrate deploy --to 20260101000000_add_users', { env: migrationEnv });
-
-  // Insert data before the migration under test
-  await pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`,
-    ['550e8400-e29b-41d4-a716-446655440000', 'alice@example.com']);
-
-  // Apply the migration under test (adds 'display_name' column)
-  execSync('npx prisma migrate deploy', { env: migrationEnv });
-
-  // Verify existing data survived
-  const result = await pool.query('SELECT email, display_name FROM users WHERE id = $1',
-    ['550e8400-e29b-41d4-a716-446655440000']);
-  expect(result.rows[0].email).toBe('alice@example.com');
-  // New column should have default value or null
-  expect(result.rows[0].display_name).toBeNull();
-});
-```
+Apply migrations up to N-1, insert data, then apply the migration under test and assert the existing rows survived (and that any new column carries its default or null). See `references/migration-tests.md` for the data-preservation test.
 
 ### Schema Snapshot Comparison
 
-```typescript
-// Compare schema before and after migration to detect unintended changes
-import { execSync } from 'child_process';
-
-function getSchemaSnapshot(dbUrl: string): string {
-  return execSync(`pg_dump --schema-only --no-owner --no-privileges ${dbUrl}`, {
-    encoding: 'utf-8',
-  });
-}
-
-it('should only change the expected tables', () => {
-  const before = getSchemaSnapshot(testDbUrl);
-  execSync('npx prisma migrate deploy', { env: migrationEnv });
-  const after = getSchemaSnapshot(testDbUrl);
-
-  // Parse both schemas and compare table-by-table
-  // Only 'orders' table should have changed
-  const changedTables = diffSchemas(before, after);
-  expect(changedTables).toEqual(['orders']);
-});
-```
+Capture a `pg_dump --schema-only` snapshot before and after the migration and diff table-by-table so only the intended tables changed. See `references/migration-tests.md` for the snapshot-comparison test.
 
 ### Other ORMs
 
@@ -213,81 +81,15 @@ it('should only change the expected tables', () => {
 
 ## Data Integrity Testing
 
+For runnable constraint and referential-integrity test code, see `references/integrity-and-seed.md`.
+
 ### Constraint Testing
 
-```typescript
-describe('Database constraints', () => {
-  // NOT NULL
-  it('should reject user without email', async () => {
-    await expect(
-      pool.query(`INSERT INTO users (id, name) VALUES ($1, $2)`,
-        ['550e8400-e29b-41d4-a716-446655440001', 'Bob'])
-    ).rejects.toThrow(/null value in column "email"/);
-  });
-
-  // UNIQUE
-  it('should reject duplicate email', async () => {
-    await pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`,
-      ['550e8400-e29b-41d4-a716-446655440001', 'alice@example.com']);
-    await expect(
-      pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`,
-        ['550e8400-e29b-41d4-a716-446655440002', 'alice@example.com'])
-    ).rejects.toThrow(/unique constraint/i);
-  });
-
-  // FOREIGN KEY
-  it('should reject order with nonexistent user', async () => {
-    await expect(
-      pool.query(`INSERT INTO orders (id, user_id, total) VALUES ($1, $2, $3)`,
-        ['ord-1', 'nonexistent-user-id', 100])
-    ).rejects.toThrow(/foreign key constraint/i);
-  });
-
-  // CHECK constraint
-  it('should reject negative order total', async () => {
-    await expect(
-      pool.query(`INSERT INTO orders (id, user_id, total) VALUES ($1, $2, $3)`,
-        ['ord-1', existingUserId, -50])
-    ).rejects.toThrow(/check constraint/i);
-  });
-
-  // CASCADE behavior
-  it('should cascade delete orders when user is deleted', async () => {
-    await pool.query(`INSERT INTO users (id, email) VALUES ($1, $2)`,
-      ['user-cascade', 'cascade@example.com']);
-    await pool.query(`INSERT INTO orders (id, user_id, total) VALUES ($1, $2, $3)`,
-      ['ord-cascade', 'user-cascade', 100]);
-
-    await pool.query('DELETE FROM users WHERE id = $1', ['user-cascade']);
-
-    const orders = await pool.query('SELECT * FROM orders WHERE user_id = $1', ['user-cascade']);
-    expect(orders.rows).toHaveLength(0);
-  });
-});
-```
+Assert that each constraint rejects invalid data: `NOT NULL` rejects missing required columns, `UNIQUE` rejects duplicates, `FOREIGN KEY` rejects dangling references, `CHECK` rejects out-of-range values, and `ON DELETE CASCADE` removes dependent rows. See `references/integrity-and-seed.md` for the full constraint suite.
 
 ### Referential Integrity
 
-```typescript
-it('should not create orphan records', async () => {
-  // Check for orders referencing nonexistent users
-  const orphans = await pool.query(`
-    SELECT o.id FROM orders o
-    LEFT JOIN users u ON o.user_id = u.id
-    WHERE u.id IS NULL
-  `);
-  expect(orphans.rows).toHaveLength(0);
-});
-
-it('should not create orphan line items', async () => {
-  const orphans = await pool.query(`
-    SELECT li.id FROM line_items li
-    LEFT JOIN orders o ON li.order_id = o.id
-    WHERE o.id IS NULL
-  `);
-  expect(orphans.rows).toHaveLength(0);
-});
-```
+Run anti-join queries (`LEFT JOIN ... WHERE parent.id IS NULL`) to assert there are no orphan records pointing at deleted parents. See `references/integrity-and-seed.md` for the orphan-detection tests.
 
 ### Data Type Validation
 
@@ -297,63 +99,15 @@ Test: monetary values stored with correct precision (no float loss), VARCHAR len
 
 ## Seed Data Management
 
+For runnable factory, seed-script, and isolation code, see `references/integrity-and-seed.md`.
+
 ### Factory Pattern (TypeScript)
 
-```typescript
-// test/factories/user.factory.ts
-let userCounter = 0;
-
-export function buildUser(overrides: Partial<User> = {}): User {
-  userCounter++;
-  return {
-    id: overrides.id ?? `user-${userCounter.toString().padStart(4, '0')}`,
-    email: overrides.email ?? `user${userCounter}@example.com`,
-    name: overrides.name ?? `Test User ${userCounter}`,
-    role: overrides.role ?? 'user',
-    createdAt: overrides.createdAt ?? new Date('2026-01-01T00:00:00Z'),
-  };
-}
-
-export async function createUser(pool: Pool, overrides: Partial<User> = {}) {
-  const user = buildUser(overrides);
-  await pool.query(
-    `INSERT INTO users (id, email, name, role, created_at) VALUES ($1, $2, $3, $4, $5)`,
-    [user.id, user.email, user.name, user.role, user.createdAt]
-  );
-  return user;
-}
-// Usage: const admin = await createUser(pool, { role: 'admin' });
-```
+Build records from a `buildUser(overrides)` factory that increments a counter for stable, deterministic IDs and emails, with a `createUser(pool, overrides)` helper that inserts and returns the record. See `references/integrity-and-seed.md` for the factory implementation.
 
 ### Prisma Seed Script
 
-```typescript
-// prisma/seed.ts -- use upsert for idempotency, fixed IDs for stability
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
-
-async function seed() {
-  await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
-    update: {},
-    create: { id: 'seed-admin-001', email: 'admin@example.com', name: 'Admin User', role: 'ADMIN' },
-  });
-  await prisma.user.upsert({
-    where: { email: 'testuser@example.com' },
-    update: {},
-    create: { id: 'seed-user-001', email: 'testuser@example.com', name: 'Test User', role: 'USER' },
-  });
-  for (const p of [
-    { id: 'seed-prod-001', name: 'Widget', price: 29.99, stock: 100 },
-    { id: 'seed-prod-002', name: 'Gadget', price: 49.99, stock: 50 },
-    { id: 'seed-prod-003', name: 'Doohickey', price: 9.99, stock: 0 },
-  ]) {
-    await prisma.product.upsert({ where: { id: p.id }, update: {}, create: p });
-  }
-}
-
-seed().catch((e) => { console.error(e); process.exit(1); }).finally(() => prisma.$disconnect());
-```
+Use `upsert` with fixed IDs so the seed is idempotent and re-runnable. See `references/integrity-and-seed.md` for the `prisma/seed.ts` script.
 
 ### Environment-Specific Seeds
 
@@ -361,107 +115,21 @@ Use `SEED_ENV` to select seed profiles: `test` (minimal, fast), `staging` (reali
 
 ### Test Isolation with Transaction Rollback
 
-```typescript
-// test/helpers/db.ts
-import { Pool, PoolClient } from 'pg';
-
-let pool: Pool;
-let client: PoolClient;
-
-export async function setupTestTransaction() {
-  pool = new Pool({ database: 'test_db' });
-  client = await pool.connect();
-  await client.query('BEGIN');
-  return client;
-}
-
-export async function rollbackTestTransaction() {
-  await client.query('ROLLBACK');
-  client.release();
-}
-
-// In tests:
-describe('OrderService', () => {
-  let db: PoolClient;
-
-  beforeEach(async () => { db = await setupTestTransaction(); });
-  afterEach(async () => { await rollbackTestTransaction(); });
-
-  it('should create order and decrement stock', async () => {
-    // This runs inside a transaction that rolls back after the test
-    await db.query(`INSERT INTO products (id, name, stock) VALUES ($1, $2, $3)`,
-      ['prod-1', 'Widget', 10]);
-
-    const service = new OrderService(db);
-    await service.createOrder({ productId: 'prod-1', quantity: 2 });
-
-    const result = await db.query('SELECT stock FROM products WHERE id = $1', ['prod-1']);
-    expect(result.rows[0].stock).toBe(8);
-    // Transaction rolls back -- no persistent state
-  });
-});
-```
+Wrap each test in `BEGIN`/`ROLLBACK` so inserts never persist between tests, eliminating order-dependence and cleanup. See `references/integrity-and-seed.md` for the `setupTestTransaction`/`rollbackTestTransaction` helpers and example.
 
 ---
 
 ## Query Performance Testing
 
+For runnable EXPLAIN ANALYZE and index-validation code, see `references/performance-and-docker.md`.
+
 ### EXPLAIN ANALYZE Patterns
 
-```typescript
-describe('Query performance', () => {
-  it('should use index for user lookup by email', async () => {
-    const explain = await pool.query(
-      'EXPLAIN (ANALYZE, FORMAT JSON) SELECT * FROM users WHERE email = $1',
-      ['alice@example.com']
-    );
-    const plan = explain.rows[0]['QUERY PLAN'][0];
-
-    // Verify index scan, not sequential scan
-    expect(plan.Plan['Node Type']).toMatch(/Index/);
-    // Execution time under threshold
-    expect(plan['Execution Time']).toBeLessThan(10); // ms
-  });
-
-  it('should use index for order date range queries', async () => {
-    const explain = await pool.query(
-      `EXPLAIN (ANALYZE, FORMAT JSON)
-       SELECT * FROM orders WHERE created_at BETWEEN $1 AND $2`,
-      ['2026-01-01', '2026-01-31']
-    );
-    const plan = explain.rows[0]['QUERY PLAN'][0];
-    expect(plan.Plan['Node Type']).not.toBe('Seq Scan');
-  });
-});
-```
+Run `EXPLAIN (ANALYZE, FORMAT JSON)` on critical queries and assert the plan uses an index scan (not `Seq Scan`) and that execution time is under threshold. See `references/performance-and-docker.md` for the query-plan assertions.
 
 ### Index Validation
 
-```typescript
-it('should have indexes on frequently queried columns', async () => {
-  const indexes = await pool.query(`
-    SELECT indexname, tablename, indexdef
-    FROM pg_indexes
-    WHERE schemaname = 'public'
-    ORDER BY tablename, indexname
-  `);
-
-  const indexMap = new Map<string, string[]>();
-  for (const row of indexes.rows) {
-    const key = row.tablename;
-    if (!indexMap.has(key)) indexMap.set(key, []);
-    indexMap.get(key)!.push(row.indexdef);
-  }
-
-  // Verify critical indexes exist
-  const userIndexes = indexMap.get('users')?.join(' ') ?? '';
-  expect(userIndexes).toContain('email');
-
-  const orderIndexes = indexMap.get('orders')?.join(' ') ?? '';
-  expect(orderIndexes).toContain('user_id');
-  expect(orderIndexes).toContain('created_at');
-});
-```
+Query `pg_indexes` and assert that the columns you rely on for lookups and range scans (e.g. `users.email`, `orders.user_id`, `orders.created_at`) are actually indexed. See `references/performance-and-docker.md` for the index-validation test.
 
 ### Slow Query Detection
 
@@ -473,25 +141,7 @@ Seed realistic data volume (10K+ rows), then measure query execution time with `
 
 ## Docker-Based Test Database
 
-**Preferred (2026): Testcontainers.** `testcontainers-node` v11.14+ (April 2026) is the lower-friction default — programmatic container lifecycle, auto-cleanup, parallel execution for distinct UIDs. Hand-rolled compose still works, but Testcontainers removes the docker-compose file and port-conflict bookkeeping:
-
-```typescript
-import { PostgreSqlContainer } from '@testcontainers/postgresql';
-
-let pg: Awaited<ReturnType<PostgreSqlContainer['start']>>;
-
-beforeAll(async () => {
-  pg = await new PostgreSqlContainer('postgres:17-alpine')
-    .withDatabase('test')
-    .withTmpFs({ '/var/lib/postgresql/data': 'rw' })
-    .start();
-  process.env.DATABASE_URL = pg.getConnectionUri();
-});
-
-afterAll(async () => {
-  await pg.stop();
-});
-```
+**Preferred (2026): Testcontainers.** `testcontainers-node` v11.14+ (April 2026) is the lower-friction default — programmatic container lifecycle, auto-cleanup, parallel execution for distinct UIDs. Hand-rolled compose still works, but Testcontainers removes the docker-compose file and port-conflict bookkeeping. See `references/performance-and-docker.md` for the `PostgreSqlContainer` setup.
 
 **Hand-rolled compose (still valid):** `docker-compose.test.yml` with `postgres:17-alpine`, `tmpfs` for RAM-backed storage (speed), and a healthcheck on `pg_isready`. Map to a non-default port (e.g., 5433) to avoid conflicts with local Postgres. Match the major version to production — Postgres 17 is current; bump from 16 unless production is pinned.
 
@@ -524,6 +174,12 @@ Chain scripts in `package.json`: `test:db:up` (docker compose up), `test:db:migr
 - Seed data covers all test scenarios (admin user, regular user, edge-case records, empty states) without requiring manual database setup.
 - Query performance assertions in place for known slow queries (e.g., dashboard aggregations, date range filters), with explicit execution time thresholds.
 - Migration rollback tested in the staging environment before each production deploy, confirming the application runs correctly after reverting.
+
+## Reference Files (in `references/`)
+
+- **migration-tests.md** — Forward migration validation, rollback, data preservation, and schema snapshot comparison code.
+- **integrity-and-seed.md** — Constraint and referential-integrity tests, factory pattern, Prisma seed script, and transaction-rollback isolation helpers.
+- **performance-and-docker.md** — EXPLAIN ANALYZE plan assertions, index validation, and Testcontainers test-database setup.
 
 ## Related Skills
 

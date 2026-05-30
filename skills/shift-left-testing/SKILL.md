@@ -147,36 +147,7 @@ QA and developer collaborate on test cases before implementation. This is not fu
 4. Together they identify which tests are unit, integration, and E2E
 5. Developer implements the feature with these tests as the target
 
-**Example output from a pairing session:**
-
-```typescript
-// Agreed test cases for: coupon code feature
-// Unit tests (developer writes)
-describe('CouponValidator', () => {
-  test('accepts valid percentage coupon and returns discount amount');
-  test('accepts valid fixed-amount coupon and returns discount amount');
-  test('rejects expired coupon with COUPON_EXPIRED error');
-  test('rejects already-redeemed single-use coupon with ALREADY_USED error');
-  test('rejects coupon below minimum order amount with MIN_ORDER_NOT_MET error');
-  test('caps percentage discount at product price (no negative totals)');
-  test('handles currency rounding to 2 decimal places');
-});
-
-// Integration tests (developer or QA writes)
-describe('POST /api/checkout/apply-coupon', () => {
-  test('returns 200 with updated total when valid coupon applied');
-  test('returns 400 with error code when coupon is expired');
-  test('returns 409 when coupon already redeemed by this user');
-  test('marks single-use coupon as redeemed after successful checkout');
-});
-
-// E2E tests (QA writes)
-describe('Checkout coupon flow', () => {
-  test('user applies valid coupon and sees discounted total');
-  test('user sees clear error message for invalid coupon code');
-  test('coupon discount persists through checkout to confirmation page');
-});
-```
+**Example output from a pairing session:** a set of agreed test signatures spanning unit, integration, and E2E levels, written before implementation. See `references/tdd-examples.md` for the full coupon-feature pairing output.
 
 ### QA Reviewing PRs
 
@@ -217,39 +188,7 @@ TDD follows a strict three-step cycle. Each step has a clear purpose and a clear
 └──────────────────────────────────────────────────────┘
 ```
 
-**Example: TDD for a password strength validator**
-
-```typescript
-// RED — write the first failing test
-test('rejects passwords shorter than 8 characters', () => {
-  expect(validatePassword('short')).toEqual({
-    valid: false, errors: ['Password must be at least 8 characters'],
-  });
-});
-// Run → FAIL (validatePassword does not exist yet)
-
-// GREEN — write minimum code to pass
-function validatePassword(password: string) {
-  const errors: string[] = [];
-  if (password.length < 8) errors.push('Password must be at least 8 characters');
-  return { valid: errors.length === 0, errors };
-}
-// Run → PASS. Now RED again: add test for uppercase, then GREEN, repeat.
-
-// REFACTOR — after several RED-GREEN cycles, extract pattern
-const PASSWORD_RULES = [
-  { test: (p: string) => p.length >= 8, message: 'Password must be at least 8 characters' },
-  { test: (p: string) => /[A-Z]/.test(p), message: 'Must contain uppercase letter' },
-  { test: (p: string) => /[0-9]/.test(p), message: 'Must contain a number' },
-  { test: (p: string) => /[!@#$%^&*]/.test(p), message: 'Must contain special character' },
-];
-
-function validatePassword(password: string) {
-  const errors = PASSWORD_RULES.filter((r) => !r.test(password)).map((r) => r.message);
-  return { valid: errors.length === 0, errors };
-}
-// Run → ALL PASS (behavior unchanged, structure improved)
-```
+**Example: TDD for a password strength validator** — first failing test, minimum passing code, then a behavior-preserving refactor into a rules array. See `references/tdd-examples.md` for the full Red-Green-Refactor walk-through.
 
 ### When TDD vs. Test-After: Decision Guide
 
@@ -274,20 +213,7 @@ Every bug fix should start with a failing test that reproduces the bug. This pra
 2. **The fix actually works.** The test turns green when the fix is applied.
 3. **The bug never returns.** The test stays in the suite as a regression guard.
 
-```typescript
-// BUG-4521: Discount rounds incorrectly for JPY (zero-decimal currency)
-test('rounds JPY discount to whole number (no decimals)', () => {
-  // JPY has no minor units — 1000 JPY is 1000, not 10.00
-  const result = calculateDiscount({ amount: 1000, currency: 'JPY', percent: 15 });
-  expect(result.discount).toBe(150);   // not 150.00
-  expect(result.total).toBe(850);      // not 849.99
-});
-// RED: fails because current code returns 150.00
-
-// Fix: check currency decimal places
-// GREEN: passes after fix
-// Commit with message: "fix(checkout): round JPY discounts to whole numbers (BUG-4521)"
-```
+See `references/tdd-examples.md` for a worked failing-test-first example (a JPY zero-decimal rounding bug).
 
 ### Kata Exercises for Teams Learning TDD
 
@@ -349,39 +275,7 @@ The Definition of Done (DoD) is the team's shared agreement on what "done" means
 
 ### Recommended DoD with Quality Gates
 
-```
-Definition of Done
-═══════════════════════════════════════════════════════
-
-Code Complete
-  [ ] Feature implemented per acceptance criteria
-  [ ] Code peer-reviewed and approved
-  [ ] No TODO/FIXME comments without a linked ticket
-
-Tested
-  [ ] Unit tests written for business logic (coverage not decreased)
-  [ ] Integration tests written for API/service changes
-  [ ] E2E test added/updated for user-facing changes to critical paths
-  [ ] Edge cases and error states tested
-  [ ] Manual exploratory testing completed for medium/high risk changes
-
-Quality Gates Pass
-  [ ] CI pipeline green (all tests pass)
-  [ ] No new linting or type errors
-  [ ] No new security vulnerabilities (SAST scan)
-  [ ] Code coverage not decreased from baseline
-
-Documentation
-  [ ] API changes documented (OpenAPI spec, changelog)
-  [ ] Breaking changes noted in PR description
-  [ ] Runbook updated if operational behavior changed
-
-Deployment Ready
-  [ ] Feature flag configured (if applicable)
-  [ ] Database migration tested on staging
-  [ ] Monitoring/alerting configured for new endpoints
-  [ ] Rollback plan identified
-```
+A complete DoD groups its checks under Code Complete, Tested, Quality Gates Pass, Documentation, and Deployment Ready. See `references/templates.md` for the full copy-paste checklist.
 
 ### Enforcing the DoD
 
@@ -439,32 +333,7 @@ Assess where your team currently sits and identify the concrete next step to imp
 
 ### Self-Assessment Worksheet
 
-```
-Shift-Left Maturity Assessment
-Date: ___________  Team: ___________
-
-For each practice, check the column that best describes your current state:
-
-Practice                          Never  Sometimes  Usually  Always
-──────────────────────────────────────────────────────────────────────
-QA in sprint planning               [ ]     [ ]       [ ]     [ ]
-Three Amigos before dev              [ ]     [ ]       [ ]     [ ]
-QA reviews PRs                       [ ]     [ ]       [ ]     [ ]
-Tests written during development     [ ]     [ ]       [ ]     [ ]
-Bug fixes start with failing test    [ ]     [ ]       [ ]     [ ]
-TDD for business logic               [ ]     [ ]       [ ]     [ ]
-DoD enforced with quality gates      [ ]     [ ]       [ ]     [ ]
-Quality metrics reviewed regularly   [ ]     [ ]       [ ]     [ ]
-
-Scoring: Never=0, Sometimes=1, Usually=2, Always=3
-Total: _____ / 24
-
- 0-6:  Level 1 (Reactive)
- 7-11: Level 2 (Gate)
-12-16: Level 3 (Embedded)
-17-20: Level 4 (Collaborative)
-21-24: Level 5 (Preventive)
-```
+Score eight practices (QA in planning, Three Amigos, PR review, tests-during-dev, failing-test-first bug fixes, TDD for business logic, enforced DoD, metrics review) on a Never/Sometimes/Usually/Always scale to place the team on Levels 1–5. See `references/templates.md` for the printable worksheet with scoring bands.
 
 ---
 
@@ -504,6 +373,11 @@ Tracking "number of Three Amigos sessions held" instead of "defects found in pla
 - Dev/QA pairing schedule established and first pairing session completed
 - Pre-merge quality gates (test pass, coverage not decreased, linting) active in CI and blocking merge
 - Runtime kill switch identified for any risky or AI-powered code path so prevention (shift-left) and containment (shift-right) ship together
+
+## Reference Files (in `references/`)
+
+- **tdd-examples.md** — Runnable code for dev/QA pairing test-first design, the Red-Green-Refactor password-validator walk-through, and the failing-test-first bug example.
+- **templates.md** — Copy-paste Definition of Done with quality gates and the shift-left maturity self-assessment worksheet.
 
 ## Related Skills
 

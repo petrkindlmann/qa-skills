@@ -135,79 +135,15 @@ When joining an existing project, assess the health of the test suite before wri
 
 ### What to Assess
 
-#### Coverage and Distribution
+Assess five dimensions, each with a fill-in worksheet:
 
-```
-Audit Worksheet: Test Suite Health
-═══════════════════════════════════
+- **Coverage and Distribution** — test counts by layer, pyramid shape, code coverage and trend.
+- **Reliability** — flaky test rate, top flakiest tests, quarantine count and age.
+- **CI Health** — full suite and per-stage duration, parallelism, pass rate, retry rate.
+- **Technical Debt** — skipped tests, `waitForTimeout`/`force: true` usage, hardcoded data, assertionless tests, deprecated APIs, stale AI-generated tests, stale feature flags.
+- **Conventions** — page objects, fixtures, factories, naming, shared utilities, tagging.
 
-Test Counts:
-  Unit tests:         _____ passing / _____ total (_____ skipped)
-  Integration tests:  _____ passing / _____ total (_____ skipped)
-  E2E tests:          _____ passing / _____ total (_____ skipped)
-
-Pyramid Shape: [ ] Healthy  [ ] Ice cream cone  [ ] Diamond  [ ] Hourglass
-  (See test-strategy skill for shape definitions)
-
-Code Coverage: _____ % lines / _____ % branches
-  Critical paths coverage: _____ %
-  Coverage trend (last 3 months): [ ] Increasing  [ ] Stable  [ ] Declining
-```
-
-#### Reliability
-
-```
-Flakiness:
-  Flaky test rate (last 30 days): _____ %
-  Top 3 flakiest tests:
-    1. _____________________
-    2. _____________________
-    3. _____________________
-  Quarantined tests: _____ count
-  Quarantine age (oldest): _____ days
-```
-
-#### CI Health
-
-```
-CI Pipeline:
-  Full suite duration: _____ minutes
-  Unit test stage:     _____ minutes
-  E2E test stage:      _____ minutes
-  Parallelism:         _____ workers/shards
-  Pass rate (7-day):   _____ %
-  Flaky retries needed: _____ % of runs
-```
-
-#### Technical Debt
-
-```
-Tech Debt Inventory:
-  Skipped/disabled tests:          _____ count (review each — fix or delete)
-  Tests with waitForTimeout:       _____ count (replace with proper waits)
-  Tests with force: true:          _____ count (investigate why)
-  Hardcoded test data:             _____ count (move to fixtures/factories)
-  Tests without assertions:        _____ count (add assertions or delete)
-  Deprecated API usage:            _____ count (update to current API)
-  Tests older than 12 months
-    with no modifications:         _____ count (review for relevance)
-  AI-generated tests with no
-    human review or sign-off:      _____ count (review or delete — closed AI loop is not coverage)
-  Stale feature flags blocking
-    test scenarios:                _____ count (use platform stale-flag detection, e.g. GrowthBook code references, LaunchDarkly archive flow)
-```
-
-#### Conventions
-
-```
-Patterns in Use:
-  Page objects:          [ ] Yes  [ ] Partial  [ ] No
-  Fixture-based setup:   [ ] Yes  [ ] Partial  [ ] No
-  Data factories:        [ ] Yes  [ ] Partial  [ ] No
-  Consistent naming:     [ ] Yes  [ ] Partial  [ ] No
-  Shared utilities:      [ ] Yes  [ ] Partial  [ ] No
-  Test tagging/grouping: [ ] Yes  [ ] Partial  [ ] No
-```
+See `references/audit-worksheets.md` for the copy-and-fill worksheets covering all five dimensions.
 
 ### Audit Output
 
@@ -223,159 +159,16 @@ Produce a short document (1-2 pages) summarizing findings, categorized as:
 
 ## Framework Walkthrough Template
 
-Create this document for your project. It is the primary reference for anyone writing tests.
+Create this document for your project. It is the primary reference for anyone writing tests. It has six sections:
 
-### 1. Architecture Overview
+1. **Architecture Overview** — framework, language, config location, and the annotated directory tree.
+2. **How to Run Tests** — the full set of run commands (all tests, single file, grep, headed, debug, UI mode, per-browser, report).
+3. **How to Write a New Test (Step by Step)** — the six-step location/reuse/write/run/PR flow plus the Arrange-Act-Assert test template.
+4. **How to Debug Failures** — local vs CI failure playbooks and common failure-pattern decoder.
+5. **Common Patterns and Conventions** — project-specific examples for auth fixtures, data factories, assertion specificity, and selector priority.
+6. **Where to Find Help** — the routing table for questions about patterns, failures, product behavior, and docs.
 
-```
-Test Architecture: [Project Name]
-══════════════════════════════════
-
-Framework:     [Playwright 1.x / Cypress / pytest / etc.]
-Language:      [TypeScript / JavaScript / Python]
-Config:        [path to config file]
-Test runner:   [built-in / Jest / Vitest / pytest]
-
-Directory Structure:
-  tests/
-  ├── e2e/
-  │   ├── fixtures/         → Test fixtures (authentication, data setup, page objects)
-  │   ├── pages/            → Page objects organized by feature
-  │   │   ├── base.page.ts  → Abstract base page (goto, waitForReady)
-  │   │   └── [feature]/    → Feature-specific page objects
-  │   ├── tests/            → Test files organized by feature
-  │   │   └── [feature]/    → One directory per feature area
-  │   └── helpers/          → Utilities (API client, test data, assertions)
-  ├── unit/                 → Unit tests (co-located or separate)
-  └── integration/          → Integration/API tests
-```
-
-### 2. How to Run Tests
-
-```bash
-# Run all E2E tests
-npx playwright test
-
-# Run a specific test file
-npx playwright test tests/e2e/tests/checkout/apply-coupon.spec.ts
-
-# Run tests matching a pattern
-npx playwright test --grep "checkout"
-
-# Run in headed mode (see the browser)
-npx playwright test --headed
-
-# Run in debug mode (step through)
-npx playwright test --debug
-
-# Run with UI mode (interactive)
-npx playwright test --ui
-
-# Run specific project (browser)
-npx playwright test --project=chromium
-
-# View last test report
-npx playwright show-report
-```
-
-### 3. How to Write a New Test (Step by Step)
-
-```
-Step 1: Identify the test location
-  └─ tests/e2e/tests/[feature]/[behavior].spec.ts
-
-Step 2: Check for existing page objects
-  └─ tests/e2e/pages/[feature].page.ts — reuse if exists
-
-Step 3: Check for existing fixtures
-  └─ tests/e2e/fixtures/ — reuse auth, data setup, etc.
-
-Step 4: Write the test
-  └─ Follow the template below
-
-Step 5: Run locally (3 times to check for flakiness)
-  └─ npx playwright test [your-file] --repeat-each=3
-
-Step 6: Open a PR
-  └─ CI will run the test; check results before requesting review
-```
-
-**New test template:**
-
-```typescript
-import { test, expect } from '../../fixtures/base.fixture';
-
-test.describe('Feature: [feature name]', () => {
-  test('should [expected behavior] when [condition]', async ({ page }) => {
-    // Arrange — navigate and set up preconditions
-    await page.goto('/target-page');
-
-    // Act — perform the user action
-    await page.getByRole('button', { name: 'Action' }).click();
-
-    // Assert — verify the expected outcome
-    await expect(page.getByRole('alert')).toHaveText('Success');
-  });
-});
-```
-
-### 4. How to Debug Failures
-
-```
-Test failed locally:
-  1. Run with --debug flag to step through
-  2. Check trace file in test-results/ directory
-  3. Open trace: npx playwright show-trace test-results/[test]/trace.zip
-
-Test failed in CI but passes locally:
-  1. Download CI artifacts (trace, screenshot)
-  2. Check for timing issues — CI runners are slower
-  3. Check for data dependencies — CI uses fresh state
-  4. Check for viewport differences — CI may use different screen size
-  5. Run with --repeat-each=20 locally to reproduce intermittent failures
-
-Common failure patterns:
-  - TimeoutError: Element not found → wrong selector or element not rendered
-  - TimeoutError: Navigation → page did not load, check baseURL and server
-  - Strict mode violation → selector matches multiple elements, be more specific
-  - Test isolation failure → shared state from another test, check fixtures
-```
-
-### 5. Common Patterns and Conventions
-
-Document project-specific patterns. Examples:
-
-```typescript
-// Authentication: always use the fixture, never login manually in tests
-test('admin can delete users', async ({ adminPage }) => {
-  // adminPage fixture provides an authenticated admin session
-  await adminPage.goto('/admin/users');
-});
-
-// Test data: use factories, never hardcode IDs
-const user = await createTestUser({ role: 'editor', plan: 'pro' });
-// Factory handles creation and returns cleanup function
-
-// Assertions: use specific assertions, not toBeVisible alone
-await expect(page.getByRole('heading')).toHaveText('Dashboard');  // GOOD
-await expect(page.getByText('Dashboard')).toBeVisible();          // OK but less specific
-
-// Selectors: priority order for this project
-// 1. getByRole (buttons, links, headings, textboxes)
-// 2. getByLabel (form inputs)
-// 3. getByTestId (custom data-testid attributes)
-// 4. getByText (static text elements — last resort)
-```
-
-### 6. Where to Find Help
-
-```
-Questions about test patterns:    → #qa-engineering channel
-Questions about test failures:    → Check CI logs first, then ask in PR comments
-Questions about product behavior: → Product spec in [wiki/notion/confluence link]
-Framework documentation:          → https://playwright.dev/docs/intro
-Project-specific docs:            → .agents/qa-project-context.md
-```
+See `references/framework-walkthrough.md` for the full template with all code blocks, directory trees, and command lists to copy and adapt.
 
 ---
 
@@ -496,6 +289,11 @@ The new person copies an existing test, changes the locators and URL, and calls 
 - `.agents/qa-project-context.md` created and populated with framework, critical paths, team structure, and risk areas
 - Test framework selected with rationale documented (evaluated alternatives, decision recorded)
 - At least one working test merged to the repo and passing in CI, proving the local and pipeline setup end-to-end
+
+## Reference Files (in `references/`)
+
+- **framework-walkthrough.md** — The full framework walkthrough template: architecture overview, run commands, new-test step-by-step and template, debug playbooks, conventions, and help routing.
+- **audit-worksheets.md** — Copy-and-fill worksheets for the test architecture audit (coverage, reliability, CI health, technical debt, conventions).
 
 ## Related Skills
 

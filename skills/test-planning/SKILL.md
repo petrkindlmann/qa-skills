@@ -83,54 +83,17 @@ Developers need to know what gets tested to write testable code. Product manager
 
 ## Workflow
 
+The six workflow steps each have a fill-in-the-blank scaffold. The decision prose stays here; the copy-paste templates (decomposition, coverage matrix, estimation worksheet, prioritization matrix, allocation table, schedule) live in `references/workflow-templates.md`.
+
 ### Step 1: Feature Analysis and Decomposition
 
 Break each in-scope feature into testable units. A "testable unit" is a specific behavior that can be verified with a clear pass/fail outcome.
 
-**Decomposition template:**
-
-```
-Feature: [Feature Name]
-Source: [User story / PRD / Ticket ID]
-
-Testable Scenarios:
-  1. [User action] → [Expected outcome]
-  2. [User action with edge case input] → [Expected outcome]
-  3. [Error condition] → [Expected error handling]
-  4. [Integration point] → [Expected behavior across boundary]
-  5. [Performance expectation] → [Response time / throughput target]
-```
-
-**Example -- User profile edit:**
-
-```
-Feature: User Profile Edit
-Source: PROJ-1234
-
-Testable Scenarios:
-  1. User updates display name → Name appears updated across all pages
-  2. User updates email → Verification email sent, old email works until verified
-  3. User uploads avatar > 5MB → Error message shown, upload rejected
-  4. User uploads avatar in unsupported format → Error message with supported formats listed
-  5. User clears required field and saves → Validation error, field highlighted
-  6. Two users edit same profile simultaneously → Last write wins, no data corruption
-  7. Profile edit with slow connection → Loading state shown, no duplicate submissions
-```
+See `references/workflow-templates.md` for the decomposition template and a worked "User Profile Edit" example.
 
 ### Step 2: Requirements-to-Test Coverage Mapping
 
-Create a traceability matrix that maps every requirement to its test cases.
-
-**Coverage matrix template:**
-
-```
-| Req ID   | Requirement Description          | Test Type  | Test ID(s)     | Status     |
-|----------|----------------------------------|------------|----------------|------------|
-| REQ-101  | User can update display name     | Automated  | TC-201, TC-202 | Covered    |
-| REQ-102  | Email change requires verification| Automated  | TC-210         | Covered    |
-| REQ-103  | Avatar upload size limit 5MB     | Manual     | TC-215         | Planned    |
-| REQ-104  | Profile changes audit logged     | None       | --             | GAP        |
-```
+Create a traceability matrix that maps every requirement to its test cases. See `references/workflow-templates.md` for the coverage matrix template.
 
 Rules for the coverage matrix:
 - Every requirement must appear in the matrix
@@ -159,55 +122,13 @@ Estimate effort for each test type using historical data. If no historical data 
 
 > **Test smells review.** CTAL-AT v2.0 (ISTQB, May 2026) formalizes "Test Smells" as a planning concern. Add a recurring 30-min "test-smells review" to each sprint plan — reviewers walk a sample of recent tests against the smell taxonomy in `ai-qa-review`. Cheap, finds maintenance debt before it compounds.
 
-**Sprint estimation worksheet:**
-
-```
-Sprint Test Plan Estimation:
-
-New automated tests to write:
-  Unit:        ___ tests × 0.5 hrs = ___ hrs
-  Integration: ___ tests × 1.0 hrs = ___ hrs
-  E2E:         ___ tests × 2.0 hrs = ___ hrs
-
-Manual testing:
-  Test cases to execute: ___ × 0.25 hrs = ___ hrs
-  Exploratory sessions:  ___ × 1.5 hrs  = ___ hrs
-
-Bug verification buffer (20%):     ___ hrs
-Re-test after fixes buffer (10%):  ___ hrs
-
-Total estimated effort:            ___ hrs
-Available tester hours this sprint: ___ hrs
-Capacity utilization:              ___%  (target: 70-80%)
-```
+Use the sprint estimation worksheet in `references/workflow-templates.md` to roll per-case estimates up to a capacity-utilization figure (target: 70-80%).
 
 ### Step 4: Prioritization Matrix (Risk x Effort)
 
-When the estimated effort exceeds available capacity (it usually does), use this matrix to decide what to cut.
+When the estimated effort exceeds available capacity (it usually does), use the risk x effort matrix to decide what to cut. See `references/workflow-templates.md` for the full matrix grid.
 
-```
-                    EFFORT
-                    Low             Medium          High
-                   (< 1 hr)        (1-4 hrs)       (> 4 hrs)
-                 +---------------+---------------+---------------+
-  High           | DO FIRST      | DO SECOND     | DO THIRD      |
-  (CRIT/HIGH     | Quick wins    | Core coverage | Invest if     |
-   risk score)   | on critical   | for critical  | time allows   |
-                 | features      | features      |               |
-R                +---------------+---------------+---------------+
-I Medium         | DO SECOND     | DO THIRD      | DEFER         |
-S (MED risk      | Quick wins    | If capacity   | Move to next  |
-K score)         | on moderate   | allows        | sprint        |
-                 | features      |               |               |
-                 +---------------+---------------+---------------+
-  Low            | DO IF TIME    | DEFER         | SKIP          |
-  (LOW risk      | Minimal       | Not worth     | Automate      |
-   score)        | effort, why   | the effort    | later or      |
-                 | not           | this sprint   | never         |
-                 +---------------+---------------+---------------+
-```
-
-For each test case, plot it on the matrix using the risk score from `risk-based-testing` and the effort estimate from Step 3. Work through the matrix in priority order until capacity is consumed.
+For each test case, plot it on the matrix using the risk score from `risk-based-testing` and the effort estimate from Step 3. Work through the matrix in priority order (DO FIRST → DO SECOND → DO THIRD → DEFER → SKIP) until capacity is consumed.
 
 ### Step 5: Resource Allocation
 
@@ -219,44 +140,11 @@ Assign testing work based on skill match and availability.
 - New feature testing benefits from fresh eyes -- assign someone who did not build it
 - Critical path testing should not have a single point of failure -- two people should be able to cover it
 
-**Allocation table:**
-
-```
-| Tester    | Available Hours | Assigned Work                    | Hours | Utilization |
-|-----------|----------------|----------------------------------|-------|-------------|
-| Alice     | 20             | E2E: checkout flow (8h)          | 16    | 80%         |
-|           |                | Exploratory: payment (4h)        |       |             |
-|           |                | Bug verification buffer (4h)     |       |             |
-| Bob       | 16             | Unit: discount calc (4h)         | 12    | 75%         |
-|           |                | Integration: payment API (6h)    |       |             |
-|           |                | Buffer (2h)                      |       |             |
-| Carol     | 12             | Manual: accessibility (4h)       | 10    | 83%         |
-|           |                | Exploratory: profile edit (4h)   |       |             |
-|           |                | Buffer (2h)                      |       |             |
-```
+See `references/workflow-templates.md` for the allocation table format.
 
 ### Step 6: Schedule with Buffers
 
-Map testing activities to the sprint timeline. Testing should not be back-loaded to the last two days.
-
-**Schedule template (2-week sprint):**
-
-```
-Week 1:
-  Day 1-2: Test plan finalized, test data prepared, environments verified
-  Day 3-4: Automated tests written for features delivered early
-  Day 5:   First round of manual/exploratory testing on available features
-
-Week 2:
-  Day 1-2: Remaining automated tests written, first round regression
-  Day 3:   Full regression run, bug verification
-  Day 4:   Re-test fixes, exploratory testing on integrated features
-  Day 5:   Final regression, sign-off, release readiness assessment
-
-Buffer allocation:
-  20% of total hours reserved for unplanned work (bugs, re-tests, blockers)
-  Bug triage happens daily at standup -- do not wait until Day 5
-```
+Map testing activities to the sprint timeline. Testing should not be back-loaded to the last two days. See `references/workflow-templates.md` for the 2-week sprint schedule template.
 
 **Key scheduling rules:**
 - Testing starts as soon as features are code-complete, not at sprint end
@@ -268,192 +156,21 @@ Buffer allocation:
 
 ## Templates
 
-### Sprint Test Plan (1-Page)
+Full copy-paste plan documents live in `references/plan-documents.md`:
 
-```markdown
-# Sprint [N] Test Plan
-**Sprint dates:** [start] - [end]
-**Features in scope:** [list with ticket IDs]
-**Test lead:** [name]
-**Last updated:** [date]
-
-## Scope
-| Feature | Risk | Test Types | Owner | Status |
-|---------|------|-----------|-------|--------|
-| [name]  | HIGH | E2E, Unit, Exploratory | [name] | Not Started |
-| [name]  | MED  | Unit, Manual | [name] | In Progress |
-
-## Coverage Summary
-- Requirements mapped: __ / __ (target: 100%)
-- Automated coverage: __ / __ test cases
-- Manual coverage: __ / __ test cases
-- Gaps identified: __ (with justification)
-
-## Effort Budget
-- Total available: __ hours
-- Allocated: __ hours (target: 70-80% utilization)
-- Buffer: __ hours (20-30%)
-
-## Environment & Data
-- Staging URL: [url]
-- Test accounts: [location/reference]
-- Test data setup: [script/manual steps]
-
-## Entry Criteria
-- [ ] Features code-complete and deployed to staging
-- [ ] Test data seeded
-- [ ] Automated suite passing (existing tests)
-
-## Exit Criteria
-- [ ] All HIGH-risk features tested
-- [ ] No open P0/P1 defects
-- [ ] Coverage matrix shows no unaccepted gaps
-- [ ] Regression suite green
-
-## Risks to the Plan
-| Risk | Mitigation |
-|------|-----------|
-| Feature X not code-complete by Day 3 | Test Feature Y first, shift X to Week 2 |
-| Staging environment unstable | Run E2E locally against dev server |
-```
-
-### Release Test Plan
-
-A release test plan aggregates sprint test plans and adds release-specific concerns.
-
-```markdown
-# Release [version] Test Plan
-**Release date:** [date]
-**Release manager:** [name]
-**QA lead:** [name]
-
-## Release Contents
-| Sprint | Features | Test Status |
-|--------|----------|------------|
-| Sprint N | [features] | Complete |
-| Sprint N+1 | [features] | In Progress |
-
-## Release-Specific Testing
-| Activity | Owner | Schedule | Status |
-|----------|-------|----------|--------|
-| Full regression on release candidate | [name] | Day -3 | Planned |
-| Cross-browser verification (Chrome, Firefox, Safari) | [name] | Day -2 | Planned |
-| Performance benchmark vs. previous release | [name] | Day -2 | Planned |
-| Security scan on release branch | CI | Day -1 | Planned |
-| Smoke test on production after deploy | [name] | Day 0 | Planned |
-
-## Go/No-Go Criteria
-See `release-readiness` for the full checklist.
-
-- [ ] All sprint exit criteria met
-- [ ] No P0/P1 defects open
-- [ ] Performance within 10% of previous release
-- [ ] Security scan clean
-- [ ] Rollback plan tested
-```
-
-### Feature Coverage Matrix
-
-```markdown
-# Coverage Matrix: [Feature Name]
-
-| ID | Scenario | Priority | Test Type | Test Location | Status |
-|----|----------|----------|-----------|---------------|--------|
-| S1 | Happy path: user completes flow | P0 | E2E | e2e/tests/feature/happy.spec.ts | Automated |
-| S2 | Validation: required fields empty | P0 | Unit | src/feature/__tests__/validate.test.ts | Automated |
-| S3 | Error: server returns 500 | P1 | E2E | e2e/tests/feature/errors.spec.ts | Automated |
-| S4 | Edge: unicode in text fields | P2 | Manual | -- | Planned |
-| S5 | Perf: page loads under 2s | P1 | Perf | perf/feature-load.js | Automated |
-| S6 | A11y: keyboard navigation | P1 | Manual | -- | GAP |
-```
-
-### Test Estimation Worksheet
-
-```markdown
-# Estimation: [Feature/Sprint Name]
-
-## New Test Development
-| Test | Type | Complexity | Estimate | Actual | Notes |
-|------|------|-----------|----------|--------|-------|
-| Checkout E2E | E2E | High | 3h | -- | Multi-step form |
-| Discount calc | Unit | Medium | 1h | -- | 8 combinations |
-| Payment API | Integration | High | 2h | -- | Mock gateway |
-
-## Existing Test Execution
-| Suite | Count | Est. Duration | Flaky? |
-|-------|-------|--------------|--------|
-| Unit suite | 342 | 45s | No |
-| Integration suite | 87 | 3m | 2 flaky |
-| E2E regression | 54 | 12m | 5 flaky |
-
-## Manual Testing
-| Activity | Sessions | Duration Each | Total |
-|----------|----------|--------------|-------|
-| Exploratory: new feature | 2 | 60 min | 2h |
-| Cross-browser check | 1 | 45 min | 45m |
-| Accessibility review | 1 | 30 min | 30m |
-
-## Summary
-| Category | Hours |
-|----------|-------|
-| New test development | __ |
-| Manual testing | __ |
-| Bug verification (20% buffer) | __ |
-| **Total** | **__** |
-| Available capacity | __ |
-| **Delta** | **__** |
-```
+- **Sprint Test Plan (1-Page)** — scope, coverage summary, effort budget, entry/exit criteria, plan risks. Keep a sprint plan to one page.
+- **Release Test Plan** — aggregates sprint plans and adds release-specific concerns (full regression, cross-browser, perf benchmark, security scan, smoke test) plus go/no-go criteria. For the full go/no-go checklist, see `release-readiness`.
+- **Feature Coverage Matrix** — per-feature scenario list with priority, test type, location, and status.
+- **Test Estimation Worksheet** — new-test development, existing-suite execution, manual testing, and a summary delta vs. available capacity.
 
 ---
 
 ## Tracking Progress During the Sprint
 
-A test plan is useless if nobody checks it after Day 1. Track progress daily.
+A test plan is useless if nobody checks it after Day 1. Track progress daily, and feed the results back into future planning at sprint end.
 
-### Daily Test Status Format
-
-```
-Test Status - [Date]
-
-Completed today:
-  ✓ E2E: checkout happy path (TC-201)
-  ✓ Unit: discount stacking (TC-305, TC-306)
-
-Blocked:
-  ✗ Integration: payment API -- staging env down since 2pm
-    Action: DevOps notified, ETA unknown
-
-Found today:
-  BUG-789: Discount applies twice on retry (P1, assigned to Dev)
-  BUG-790: Avatar upload spinner never stops on timeout (P2, backlog)
-
-Tomorrow:
-  - E2E: checkout error paths (TC-202, TC-203)
-  - Exploratory: payment flow edge cases (1h session)
-
-Coverage: 14/22 scenarios complete (64%)
-Blockers: 1 (staging environment)
-Buffer consumed: 2h of 8h (25%)
-```
-
-### Sprint Retrospective Inputs
-
-After each sprint, feed these data points back into future planning:
-
-```
-Estimation accuracy: Estimated 40h | Actual 46h | Variance +15%
-  Cause: Bug verification took 6h more than buffered
-
-Coverage: Planned 22 scenarios | Tested 20 | Skipped 2 (low risk, time pressure)
-  Gap: accessibility review deferred
-
-Bugs: Total 7 | P0: 0 | P1: 2 | P2: 3 | P3: 2 | Escaped: 0
-
-Lessons:
-  - Buffer was too low for this complexity (increase to 30%)
-  - E2E estimation accurate; unit test estimation too low
-  - Start testing Day 2 instead of Day 3
-```
+- **Daily test status** — completed, blocked, bugs found, tomorrow's plan, coverage percentage, and buffer consumed. See the format in `references/tracking-formats.md`.
+- **Sprint retrospective inputs** — estimation accuracy, coverage delta, bug counts by severity, and lessons. See the format in `references/tracking-formats.md`; feed these data points into the next sprint's estimates.
 
 ---
 
@@ -496,6 +213,12 @@ A single tester covering all critical-path work is a failure point. Ensure at le
 - Each scenario is estimated and plotted on the risk x effort prioritization matrix, with deferred items explicitly noted
 - A requirements-to-test coverage matrix exists with no unexplained GAP entries
 - Test data requirements, environment details, and resource allocation are documented in the plan
+
+## Reference Files (in `references/`)
+
+- **workflow-templates.md** — Fill-in scaffolds for the six workflow steps: decomposition template + example, coverage matrix, sprint estimation worksheet, risk×effort matrix grid, allocation table, and 2-week schedule.
+- **plan-documents.md** — Full copy-paste documents: 1-page sprint test plan, release test plan, feature coverage matrix, and estimation worksheet.
+- **tracking-formats.md** — Daily test status format and sprint retrospective inputs format.
 
 ## Related Skills
 

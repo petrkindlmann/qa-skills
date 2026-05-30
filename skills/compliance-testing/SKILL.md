@@ -75,236 +75,16 @@ Do not rely solely on the CMP. Verify at multiple layers: CMP configuration, CSP
 
 ## GDPR/CMP Testing with Playwright
 
-### Consent Banner and Dark Pattern Checks
+Consent-flow compliance is tested across five distinct areas. Full runnable code for each is in `references/gdpr-cmp-tests.md`.
 
-```typescript
-import { test, expect } from '@playwright/test';
+- **Consent banner and dark patterns** — banner appears on first visit, accept/reject have equal prominence (reject is not a tiny link), and a privacy-policy link is present.
+- **Cookie state before/after consent** — the critical test: no non-essential cookies before consent; analytics cookies appear only after accepting; nothing non-essential after rejecting. Maintain `isStrictlyNecessary` / `isAnalyticsCookie` classifiers against your cookie inventory.
+- **Consent persistence and withdrawal** — consent persists across navigations, and the user can withdraw it via privacy settings (which must then clear the relevant cookies).
+- **Third-party script blocking** — tracking scripts (`google-analytics.com`, `googletagmanager.com`, `facebook.net`, etc.) must not load before consent and should load after acceptance. This is the most critical check.
+- **Global Privacy Control (`Sec-GPC: 1`)** — a required honored signal under CCPA/CPRA and most active US state laws. With the header set, marketing cookies must be absent and the CMP must register the opt-out.
+- **Google Consent Mode v2** — required since March 2024 for Google ads in the EEA/UK. Default state must be `denied` for `ad_storage`/`analytics_storage`/`ad_user_data`/`ad_personalization`; an `update` signal must fire `granted` after acceptance.
 
-test.describe('GDPR Consent Banner', () => {
-  test.use({ storageState: undefined }); // Fresh context — first visit
-
-  test('consent banner appears on first visit', async ({ page }) => {
-    await page.goto('/');
-    const banner = page.getByRole('dialog', { name: /cookie|consent|privacy/i });
-    await expect(banner).toBeVisible({ timeout: 5000 });
-  });
-
-  test('banner provides accept and reject with equal prominence', async ({ page }) => {
-    await page.goto('/');
-    const banner = page.getByRole('dialog', { name: /cookie|consent|privacy/i });
-    const acceptBtn = banner.getByRole('button', { name: /accept|agree|allow/i });
-    const rejectBtn = banner.getByRole('button', { name: /reject|decline|deny/i });
-
-    await expect(acceptBtn).toBeVisible();
-    await expect(rejectBtn).toBeVisible();
-
-    // Dark pattern check: reject button must be reasonably sized, not a tiny link
-    const rejectBox = await rejectBtn.boundingBox();
-    expect(rejectBox).not.toBeNull();
-    expect(rejectBox!.width).toBeGreaterThan(60);
-    expect(rejectBox!.height).toBeGreaterThan(30);
-  });
-
-  test('banner links to privacy policy', async ({ page }) => {
-    await page.goto('/');
-    const banner = page.getByRole('dialog', { name: /cookie|consent|privacy/i });
-    const policyLink = banner.getByRole('link', { name: /privacy policy|learn more/i });
-    await expect(policyLink).toBeVisible();
-    await expect(policyLink).toHaveAttribute('href', /privacy/);
-  });
-});
-```
-
-### Cookie State Before and After Consent
-
-The critical test: no non-essential cookies may be set before the user gives consent.
-
-```typescript
-// Cookie classification helpers — maintain based on your cookie inventory
-function isStrictlyNecessary(name: string): boolean {
-  const necessary = ['__Host-session', 'csrf_token', '__cf_bm', 'consent_status'];
-  return necessary.some((n) => name.startsWith(n));
-}
-
-function isAnalyticsCookie(name: string): boolean {
-  return ['_ga', '_gid', '_gat', '_gtag', 'analytics_'].some((p) => name.startsWith(p));
-}
-
-test.describe('Cookie Consent Compliance', () => {
-  test.use({ storageState: undefined });
-
-  test('no non-essential cookies before consent', async ({ page, context }) => {
-    await page.goto('/');
-    await expect(page.getByRole('dialog', { name: /cookie|consent/i })).toBeVisible();
-
-    const cookies = await context.cookies();
-    const violations = cookies.filter((c) => !isStrictlyNecessary(c.name));
-    expect(violations.map((c) => c.name), 'Non-essential cookies set before consent').toHaveLength(0);
-  });
-
-  test('analytics cookies appear after accepting consent', async ({ page, context }) => {
-    await page.goto('/');
-    const banner = page.getByRole('dialog', { name: /cookie|consent/i });
-    await banner.getByRole('button', { name: /accept|agree/i }).click();
-    await page.waitForTimeout(1000); // Allow async cookie setting
-
-    const cookies = await context.cookies();
-    expect(cookies.filter((c) => isAnalyticsCookie(c.name)).length).toBeGreaterThan(0);
-  });
-
-  test('no non-essential cookies after rejecting consent', async ({ page, context }) => {
-    await page.goto('/');
-    const banner = page.getByRole('dialog', { name: /cookie|consent/i });
-    await banner.getByRole('button', { name: /reject|decline|deny/i }).click();
-    await page.waitForTimeout(1000);
-
-    const cookies = await context.cookies();
-    const violations = cookies.filter((c) => !isStrictlyNecessary(c.name));
-    expect(violations.map((c) => c.name), 'Non-essential cookies after rejection').toHaveLength(0);
-  });
-});
-```
-
-### Consent Persistence and Withdrawal
-
-```typescript
-test.describe('Consent Persistence', () => {
-  test.use({ storageState: undefined });
-
-  test('consent persists across navigations', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('dialog', { name: /consent/i }).getByRole('button', { name: /accept/i }).click();
-    await page.goto('/about');
-    await expect(page.getByRole('dialog', { name: /consent/i })).toBeHidden({ timeout: 3000 });
-  });
-
-  test('user can withdraw consent via privacy settings', async ({ page, context }) => {
-    await page.goto('/');
-    await page.getByRole('dialog', { name: /consent/i }).getByRole('button', { name: /accept/i }).click();
-
-    await page.goto('/privacy-settings');
-    const analyticsToggle = page.getByRole('checkbox', { name: /analytics/i });
-    if (await analyticsToggle.isChecked()) await analyticsToggle.uncheck();
-    await page.getByRole('button', { name: /save/i }).click();
-
-    await page.waitForTimeout(1000);
-    const cookies = await context.cookies();
-    expect(cookies.filter((c) => isAnalyticsCookie(c.name))).toHaveLength(0);
-  });
-});
-```
-
-### Third-Party Script Blocking Before Consent
-
-The most critical compliance check: tracking scripts must not load before consent.
-
-```typescript
-test.describe('Script Blocking', () => {
-  test.use({ storageState: undefined });
-
-  test('no tracking scripts load before consent', async ({ page }) => {
-    const trackingDomains = [
-      'google-analytics.com', 'googletagmanager.com', 'facebook.net',
-      'connect.facebook.net', 'analytics.tiktok.com', 'bat.bing.com',
-    ];
-    const violations: string[] = [];
-
-    page.on('request', (req) => {
-      const url = req.url();
-      if (trackingDomains.some((d) => url.includes(d))) violations.push(url);
-    });
-
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-
-    expect(violations, `Tracking scripts before consent:\n${violations.join('\n')}`).toHaveLength(0);
-  });
-
-  test('tracking scripts load after consent acceptance', async ({ page }) => {
-    const trackerLoaded: string[] = [];
-    page.on('request', (req) => {
-      if (/google-analytics|googletagmanager/.test(req.url())) trackerLoaded.push(req.url());
-    });
-
-    await page.goto('/');
-    await page.getByRole('dialog', { name: /consent/i }).getByRole('button', { name: /accept/i }).click();
-    await page.waitForTimeout(3000);
-
-    expect(trackerLoaded.length, 'Analytics should load after consent').toBeGreaterThan(0);
-  });
-});
-```
-
-### Global Privacy Control (Sec-GPC)
-
-GPC is a browser/extension signal that communicates a universal opt-out. It is a required honored signal under CCPA/CPRA and most active US state laws. Sites that ignore it are non-compliant in those jurisdictions.
-
-```typescript
-test.describe('Global Privacy Control', () => {
-  test.use({
-    storageState: undefined,
-    extraHTTPHeaders: { 'Sec-GPC': '1' },
-  });
-
-  test('site honors Sec-GPC: no marketing cookies, opt-out registered', async ({ page, context }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-
-    const cookies = await context.cookies();
-    const marketing = cookies.filter((c) =>
-      ['_fbp', '_fbc', '_gcl', '_ttp', 'IDE', 'NID'].some((n) => c.name.startsWith(n))
-    );
-    expect(marketing.map((c) => c.name), 'Marketing cookies present despite Sec-GPC: 1').toHaveLength(0);
-
-    // Site should expose the recorded opt-out (CMP-specific — adapt to your CMP API)
-    const optedOut = await page.evaluate(() => (window as any).__cmp?.gpcStatus === 'opted-out');
-    expect(optedOut, 'CMP did not register Sec-GPC opt-out').toBe(true);
-  });
-});
-```
-
-### Google Consent Mode v2
-
-Required since March 2024 for sites serving Google ads in the EEA/UK. Verify default state is "denied" and that update signals fire correctly after consent choices.
-
-```typescript
-test.describe('Google Consent Mode v2', () => {
-  test.use({ storageState: undefined });
-
-  test('default consent is denied for ad/analytics signals', async ({ page }) => {
-    const consentEvents: any[] = [];
-    await page.addInitScript(() => {
-      (window as any).dataLayer = (window as any).dataLayer || [];
-      const originalPush = (window as any).dataLayer.push.bind((window as any).dataLayer);
-      (window as any).dataLayer.push = (...args: any[]) => {
-        if (args[0]?.[0] === 'consent') (window as any).__consentEvents = [...((window as any).__consentEvents ?? []), args[0]];
-        return originalPush(...args);
-      };
-    });
-
-    await page.goto('/');
-    const events = await page.evaluate(() => (window as any).__consentEvents ?? []);
-    const defaultEvent = events.find((e: any[]) => e[1] === 'default');
-    expect(defaultEvent, 'No gtag consent default fired').toBeDefined();
-    expect(defaultEvent[2].ad_storage).toBe('denied');
-    expect(defaultEvent[2].analytics_storage).toBe('denied');
-    expect(defaultEvent[2].ad_user_data).toBe('denied');
-    expect(defaultEvent[2].ad_personalization).toBe('denied');
-  });
-
-  test('update signal fires "granted" after accepting consent', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('dialog', { name: /consent/i }).getByRole('button', { name: /accept/i }).click();
-    await page.waitForTimeout(1000);
-
-    const events = await page.evaluate(() => (window as any).__consentEvents ?? []);
-    const updateEvent = events.find((e: any[]) => e[1] === 'update');
-    expect(updateEvent, 'No gtag consent update fired after accept').toBeDefined();
-    expect(updateEvent[2].ad_storage).toBe('granted');
-    expect(updateEvent[2].analytics_storage).toBe('granted');
-  });
-});
-```
+See `references/gdpr-cmp-tests.md` for all of the above.
 
 ---
 
@@ -319,33 +99,7 @@ The AI Act applies in phases. Test patterns differ by AI system role and risk cl
 | Full applicability | 2 Aug 2026 | High-risk system requirements (risk management, data governance, transparency, human oversight) | High-risk classification check; transparency UI tests |
 | Article 50 transparency | Phased into 2026 | AI-generated content marked; deepfake disclosure; user awareness of AI interaction | Test that AI-generated text/images carry the required label or watermark |
 
-```typescript
-// Article 50 — verify AI-generated content carries disclosure
-test('AI-generated responses carry transparency disclosure', async ({ page }) => {
-  await page.goto('/chat');
-  await page.getByRole('textbox').fill('Help me draft an email');
-  await page.getByRole('button', { name: /send/i }).click();
-  const response = page.getByTestId('assistant-response');
-  await expect(response).toBeVisible();
-
-  // Disclosure must be visually associated with the response
-  const disclosure = page.getByText(/AI-generated|generated by AI|powered by/i);
-  await expect(disclosure).toBeVisible();
-});
-
-// Prohibited-practice gate — automated checks for Article 5 patterns
-test('no real-time biometric identification in public-facing UI', async ({ page }) => {
-  await page.goto('/');
-  // Examples — adapt to your stack: face-detection libraries loaded, getUserMedia for face tracking
-  const requests: string[] = [];
-  page.on('request', (req) => requests.push(req.url()));
-  await page.waitForLoadState('networkidle');
-
-  const prohibited = ['face-api', 'mediapipe/face', 'tensorflow/face-detection'];
-  const matches = requests.filter((u) => prohibited.some((p) => u.includes(p)));
-  expect(matches, `Possible Article 5 violation — biometric libs loaded: ${matches.join(', ')}`).toHaveLength(0);
-});
-```
+See `references/eu-ai-act-tests.md` for the Article 50 transparency-disclosure test and the Article 5 prohibited-practice (biometric library) gate.
 
 For LLM-specific evaluation (hallucination, jailbreak resistance, prompt-injection), see the `ai-system-testing` skill.
 
@@ -366,139 +120,19 @@ The Coalition for Better Ads defines ad formats that trigger browser-level ad bl
 | Ad density >30% | No | Yes | Calculate total ad area vs content area |
 | Flashing animated ads | No | Yes | Monitor animation frame rate (>3 flashes/second) |
 
-### Automated Better Ads Checks
-
-```typescript
-test.describe('Better Ads Compliance', () => {
-  test('no auto-playing video ads with sound', async ({ page }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
-
-    const videos = page.locator('video');
-    for (let i = 0; i < await videos.count(); i++) {
-      const video = videos.nth(i);
-      const autoplay = await video.getAttribute('autoplay');
-      const muted = await video.getAttribute('muted');
-      if (autoplay !== null && muted === null) {
-        throw new Error(`Auto-playing unmuted video: ${await video.evaluate((el) => el.outerHTML.slice(0, 200))}`);
-      }
-    }
-  });
-
-  test('mobile: ad density below 30%', async ({ page }) => {
-    await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto('/article/sample-article');
-    await page.waitForLoadState('networkidle');
-
-    const banner = page.getByRole('dialog', { name: /consent/i });
-    if (await banner.isVisible()) await banner.getByRole('button', { name: /accept/i }).click();
-    await page.waitForTimeout(3000);
-
-    const adElements = page.locator('[class*="ad-"], [id*="ad-"], [data-ad], iframe[src*="doubleclick"]');
-    let totalAdHeight = 0;
-    for (let i = 0; i < await adElements.count(); i++) {
-      const box = await adElements.nth(i).boundingBox();
-      if (box) totalAdHeight += box.height;
-    }
-
-    const pageHeight = await page.evaluate(() => document.documentElement.scrollHeight);
-    expect(totalAdHeight / pageHeight, `Ad density: ${Math.round(totalAdHeight / pageHeight * 100)}%`).toBeLessThan(0.30);
-  });
-});
-```
+See `references/better-ads-tests.md` for automated checks covering auto-playing unmuted video and mobile ad-density measurement.
 
 ---
 
 ## Cookie Compliance
 
-### Cookie Inventory
+Maintain a typed cookie inventory as the source of truth, then assert that actual cookies match it on three axes:
 
-Maintain a typed cookie inventory as the source of truth. Test that actual cookies match the inventory.
+- **Inventory** — a `CookieDefinition[]` capturing name, category, purpose, max expiry, and the `Secure`/`HttpOnly`/`SameSite` attributes each cookie must carry.
+- **Attribute validation** — every observed cookie must match its inventory definition's flags and must not exceed its declared max expiry.
+- **Drift detection** — fail the suite when a cookie appears that is not in the inventory, forcing the inventory to stay current as new scripts are added.
 
-```typescript
-// cookie-inventory.ts
-interface CookieDefinition {
-  name: string;
-  category: 'necessary' | 'analytics' | 'functional' | 'marketing';
-  purpose: string;
-  maxExpiry: number;     // Maximum days
-  secure: boolean;
-  httpOnly: boolean;
-  sameSite: 'Strict' | 'Lax' | 'None';
-}
-
-export const COOKIE_INVENTORY: CookieDefinition[] = [
-  { name: '__Host-session', category: 'necessary', purpose: 'Session ID',
-    maxExpiry: 1, secure: true, httpOnly: true, sameSite: 'Lax' },
-  { name: 'csrf_token', category: 'necessary', purpose: 'CSRF protection',
-    maxExpiry: 1, secure: true, httpOnly: true, sameSite: 'Strict' },
-  { name: 'consent_status', category: 'necessary', purpose: 'Consent choice',
-    maxExpiry: 365, secure: true, httpOnly: false, sameSite: 'Lax' },
-  { name: '_ga', category: 'analytics', purpose: 'GA client ID',
-    maxExpiry: 730, secure: true, httpOnly: false, sameSite: 'Lax' },
-  { name: '_fbp', category: 'marketing', purpose: 'Facebook Pixel',
-    maxExpiry: 90, secure: true, httpOnly: false, sameSite: 'Lax' },
-];
-```
-
-### Cookie Attribute Validation
-
-```typescript
-test('all cookies match inventory attributes', async ({ page, context }) => {
-  await page.goto('/');
-  const banner = page.getByRole('dialog', { name: /consent/i });
-  if (await banner.isVisible()) await banner.getByRole('button', { name: /accept/i }).click();
-  await page.goto('/dashboard');
-  await page.waitForTimeout(2000);
-
-  const cookies = await context.cookies();
-  const violations: string[] = [];
-
-  for (const cookie of cookies) {
-    const def = COOKIE_INVENTORY.find((d) => cookie.name === d.name || cookie.name.startsWith(d.name));
-    if (!def) { violations.push(`Unknown cookie: "${cookie.name}" (${cookie.domain})`); continue; }
-
-    if (def.secure && !cookie.secure) violations.push(`${cookie.name}: missing Secure flag`);
-    if (def.httpOnly && !cookie.httpOnly) violations.push(`${cookie.name}: missing HttpOnly flag`);
-    if (cookie.sameSite !== def.sameSite) violations.push(`${cookie.name}: SameSite "${cookie.sameSite}" != "${def.sameSite}"`);
-
-    if (cookie.expires > 0) {
-      const days = (cookie.expires - Date.now() / 1000) / 86400;
-      if (days > def.maxExpiry) violations.push(`${cookie.name}: expires in ${Math.round(days)}d, max ${def.maxExpiry}d`);
-    }
-  }
-
-  expect(violations, violations.join('\n')).toHaveLength(0);
-});
-```
-
-### Cookie Inventory Drift Detection
-
-Detect when new cookies appear that are not in the inventory:
-
-```typescript
-test('no unknown cookies', { tag: ['@compliance'] }, async ({ page, context }) => {
-  await page.goto('/');
-  const banner = page.getByRole('dialog', { name: /consent/i });
-  if (await banner.isVisible()) await banner.getByRole('button', { name: /accept/i }).click();
-
-  for (const path of ['/', '/dashboard', '/settings', '/pricing']) {
-    await page.goto(path);
-    await page.waitForLoadState('networkidle');
-  }
-
-  const cookies = await context.cookies();
-  const known = COOKIE_INVENTORY.map((d) => d.name);
-  const unknown = cookies.filter((c) => !known.some((n) => c.name === n || c.name.startsWith(n)));
-
-  if (unknown.length > 0) {
-    throw new Error(
-      `${unknown.length} unknown cookie(s). Add to cookie-inventory.ts:\n` +
-      unknown.map((c) => `  - ${c.name} (${c.domain})`).join('\n')
-    );
-  }
-});
-```
+See `references/cookie-compliance.md` for the typed inventory and both test implementations.
 
 ---
 
@@ -522,34 +156,7 @@ Accessibility is a legal requirement in many jurisdictions. See the `accessibili
 
 ### Scheduled Compliance Audits
 
-Run compliance tests weekly to catch configuration drift, not just on PR.
-
-```yaml
-# .github/workflows/compliance-audit.yml
-name: Weekly Compliance Audit
-on:
-  schedule:
-    - cron: '0 6 * * 1'  # Every Monday at 06:00 UTC
-  workflow_dispatch: {}
-jobs:
-  compliance:
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
-      - run: npm ci && npx playwright install --with-deps chromium
-      - run: npm run build && npm start &
-      - run: npx wait-on http://localhost:3000 --timeout 60000
-      - run: npx playwright test --project=chromium --grep @compliance
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: compliance-report-${{ github.run_number }}
-          path: test-results/
-          retention-days: 90  # Keep compliance evidence longer
-```
+Run compliance tests weekly (not just on PR) to catch configuration drift, and retain the results as long-lived CI artifacts for the audit trail. See `references/ci-automation.md` for the scheduled GitHub Actions workflow with 90-day artifact retention.
 
 ---
 
@@ -585,6 +192,14 @@ Building compliance tests once and never updating them. Regulations evolve (ePri
 - Cookie audit completed with all cookies categorized in the typed inventory and no unknown cookies detected by the drift test
 - Privacy policy accuracy verified against actual data collection behavior (no cookies or tracking scripts present that the policy doesn't disclose)
 - Compliance test results stored as CI artifacts with 90-day retention to support audit trail requirements
+
+## Reference Files (in `references/`)
+
+- **gdpr-cmp-tests.md** — Playwright code for consent banners/dark patterns, cookie state before/after consent, persistence and withdrawal, third-party script blocking, Global Privacy Control, and Google Consent Mode v2.
+- **eu-ai-act-tests.md** — Article 50 transparency-disclosure test and the Article 5 prohibited-practice (biometric library) gate.
+- **better-ads-tests.md** — Coalition for Better Ads checks: auto-playing unmuted video and mobile ad-density measurement.
+- **cookie-compliance.md** — Typed cookie inventory, attribute validation, and inventory drift detection.
+- **ci-automation.md** — Scheduled weekly compliance-audit GitHub Actions workflow with 90-day artifact retention.
 
 ## Related Skills
 

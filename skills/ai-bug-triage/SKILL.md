@@ -211,29 +211,7 @@ Exact fingerprint matching catches identical failures. Similarity scoring catche
 
 ### Step 5: LLM Classify
 
-After deterministic fingerprinting and clustering, use LLM to classify the failure.
-
-**LLM classification prompt:**
-
-```
-Given this normalized failure:
-
-Exception: [TYPE]
-Message: [MESSAGE]
-Stack trace (top 5 frames): [FRAMES]
-Test name: [TEST]
-CI context: [branch, commit, runner OS]
-
-Classify this failure:
-
-1. **Failure category:** test bug | application bug | environment issue | flaky test | build failure
-2. **Severity:** critical | major | minor | trivial (see severity matrix below)
-3. **Component:** [infer from stack trace and file paths]
-4. **Suspected root cause:** [1-2 sentence hypothesis]
-5. **Confidence:** high | medium | low
-
-If confidence is low, explain what additional information would help.
-```
+After deterministic fingerprinting and clustering, use LLM to classify the failure. See `references/pipeline-prompts-and-integration.md` for the full LLM classification prompt (exception, message, stack frames, test name, CI context in; failure category, severity, component, root cause, confidence out).
 
 **Failure categories (see references/ci-failure-analysis.md for detail):**
 
@@ -247,36 +225,7 @@ If confidence is low, explain what additional information would help.
 
 ### Step 6: LLM Generate Ticket
 
-Once classified, use LLM to generate a human-quality bug ticket.
-
-**Ticket generation prompt:**
-
-```
-Generate a bug ticket from this classified failure:
-
-Failure category: [CATEGORY]
-Severity: [SEVERITY]
-Component: [COMPONENT]
-Fingerprint: [HASH]
-Suspected root cause: [HYPOTHESIS]
-
-Normalized error:
-[NORMALIZED ERROR WITH CONTEXT]
-
-Original log excerpt (last 30 lines before failure):
-[LOG EXCERPT]
-
-Related failures (same cluster):
-[LIST OF SIMILAR FINGERPRINTS WITH DATES]
-
-Generate:
-1. **Title:** concise, searchable, includes component name (under 80 chars)
-2. **Description:** what happened, in plain language
-3. **Steps to reproduce:** derived from test name and log context
-4. **Evidence:** relevant log lines, assertion diffs, screenshots if available
-5. **Suggested labels:** [component, severity, failure-category]
-6. **Suggested assignee:** based on component ownership (if known)
-```
+Once classified, use LLM to generate a human-quality bug ticket. See `references/pipeline-prompts-and-integration.md` for the full ticket-generation prompt (takes the classification plus normalized error, log excerpt, and related cluster fingerprints; produces title, description, repro steps, evidence, labels, and suggested assignee).
 
 ### Step 7: Human Approval
 
@@ -326,51 +275,7 @@ Severity measures impact. Priority measures urgency. They are independent dimens
 
 ## Bug Report Template
 
-Use this template for any bug report, whether auto-generated or human-written.
-
-```markdown
-## [Component] Brief description of the defect
-
-**Severity:** Critical | Major | Minor | Trivial
-**Priority:** P0 | P1 | P2 | P3
-**Component:** [module/service/page]
-**Environment:** [OS, browser, deploy environment]
-**Fingerprint:** [if auto-generated: hash ID]
-**Reporter:** [person or "auto-triage pipeline"]
-
-### Description
-[1-3 sentences: what is broken, who is affected, what is the business impact]
-
-### Steps to Reproduce
-1. [Precondition: user role, data state]
-2. [Navigate to / call endpoint]
-3. [Perform action]
-4. [Observe failure]
-
-### Expected Behavior
-[What should happen]
-
-### Actual Behavior
-[What actually happens — include error messages verbatim]
-
-### Evidence
-- **Error log:** [relevant lines]
-- **Screenshot:** [if applicable]
-- **Assertion diff:** [expected vs actual values]
-- **Trace/request ID:** [for distributed tracing]
-
-### Frequency
-- [Always | Intermittent (N/M runs) | Once observed]
-- First seen: [date/commit]
-- Last seen: [date/commit]
-
-### Suggested Root Cause
-[Hypothesis based on evidence — helps developer investigation]
-
-### Related Issues
-- [Links to similar/duplicate tickets]
-- [Links to related PRs or deployments]
-```
+Use the same template for any bug report, whether auto-generated or human-written. It carries the defect heading, severity/priority/component/environment/fingerprint/reporter metadata, then Description, Steps to Reproduce, Expected/Actual Behavior, Evidence, Frequency, Suggested Root Cause, and Related Issues. See `references/pipeline-prompts-and-integration.md` for the full copy-paste Markdown template.
 
 ---
 
@@ -394,37 +299,7 @@ See `references/ci-failure-analysis.md` for comprehensive patterns. Key decision
 
 ## Integration Patterns
 
-### GitHub Issues
-
-```bash
-# Create issue with labels from pipeline output
-gh issue create \
-  --title "[Checkout] Payment fails for multi-vendor carts" \
-  --body "$(cat ticket-body.md)" \
-  --label "bug,severity:critical,component:checkout" \
-  --assignee "@me"
-
-# Check for duplicate by fingerprint
-gh issue list --label "fingerprint:a3f8b2c1" --state all
-```
-
-### CI Pipeline Integration
-
-```yaml
-# GitHub Actions: run triage on test failure
-- name: Triage failures
-  if: failure()
-  run: |
-    node scripts/extract-failures.js test-results/
-    node scripts/triage-pipeline.js --input failures.json --output tickets/
-    for ticket in tickets/*.json; do
-      gh issue create --title "$(jq -r .title $ticket)" \
-        --body "$(jq -r .body $ticket)" \
-        --label "$(jq -r '.labels | join(",")' $ticket)"
-    done
-```
-
-For Jira, Linear, and Azure DevOps integration, use their respective REST/GraphQL APIs with the same ticket data generated by Step 6. The pipeline output is tracker-agnostic -- it produces title, description, labels, severity, and component that map to any tracker's fields.
+The pipeline output is tracker-agnostic: Step 6 produces title, description, labels, severity, and component that map to any tracker's fields. See `references/pipeline-prompts-and-integration.md` for the `gh issue create` / fingerprint-dedup commands, the GitHub Actions "triage on failure" workflow, and notes on Jira/Linear/Azure DevOps REST/GraphQL integration.
 
 ### Buy vs Build
 
@@ -501,7 +376,8 @@ Classification without routing is useless. Maintain a component-to-team mapping 
 
 ---
 
-## References
+## Reference Files (in `references/`)
 
-- `references/classification-taxonomy.md` — Bug categories, severity definitions, component mapping rules, and root cause categories.
-- `references/ci-failure-analysis.md` — CI log parsing patterns, failure category decision tree, fingerprinting algorithm detail.
+- **pipeline-prompts-and-integration.md** — LLM classification + ticket-generation prompts (Steps 5-6), the full bug report Markdown template, and tracker integration code (GitHub Issues, CI workflow, Jira/Linear notes).
+- **classification-taxonomy.md** — Bug categories, severity definitions, component mapping rules, and root cause categories.
+- **ci-failure-analysis.md** — CI log parsing patterns, failure category decision tree, fingerprinting algorithm detail.

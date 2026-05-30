@@ -97,263 +97,27 @@ Step 5: Review quarterly
 
 ## Playwright Browser Configuration
 
-### Built-in Browsers
+Playwright ships three browser engines (Chromium, Firefox, WebKit) — no cloud platform needed for basic cross-browser coverage. Define one project per matrix entry, map mobile devices via `devices[...]`, and drive locally installed branded browsers with the `channel` option.
 
-Playwright ships three browser engines. No cloud platform needed for basic cross-browser coverage.
+See `references/playwright-and-cloud-config.md` for the full `playwright.config.ts` project list, branded-channel snippets, and `--project` run commands.
 
-```typescript
-// playwright.config.ts
-import { defineConfig, devices } from '@playwright/test';
-
-export default defineConfig({
-  projects: [
-    // P0: Desktop
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
-    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
-
-    // P0: Mobile
-    { name: 'mobile-chrome', use: { ...devices['Pixel 7'] } },
-    { name: 'mobile-safari', use: { ...devices['iPhone 15'] } },
-
-    // P1: Desktop
-    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
-    { name: 'edge', use: { channel: 'msedge' } },
-
-    // P2: Tablets
-    { name: 'ipad', use: { ...devices['iPad Pro 11'] } },
-
-    // Optional: real-Chrome rendering parity via the new Chromium headless mode (Playwright 1.49+)
-    // Closer to production Chrome (extensions, codecs, fingerprinting) than headless-shell.
-    { name: 'chromium-new-headless', use: { ...devices['Desktop Chrome'], channel: 'chromium' } },
-  ],
-});
-```
+**When to use channels:** When you need to test browser-specific behavior that differs between Chromium and Chrome (extensions support, enterprise policies, codec support). WebKit and Firefox are always Playwright's bundled versions (no channel option).
 
 **Playwright 1.59+ adds `page.screencast()`** — capture annotated video of cross-browser test runs. Useful when a matrix failure needs human review across browsers; pair with `--debug=cli` for agent-driven re-runs.
-
-### Browser Channels
-
-Playwright can drive locally installed branded browsers instead of its bundled engines.
-
-```typescript
-// Use installed Chrome instead of bundled Chromium
-{ name: 'chrome', use: { channel: 'chrome' } },
-
-// Use installed Edge
-{ name: 'edge', use: { channel: 'msedge' } },
-
-// WebKit is always Playwright's bundled version (no channel option)
-// Firefox is always Playwright's bundled version
-```
-
-**When to use channels:** When you need to test browser-specific behavior that differs between Chromium and Chrome (extensions support, enterprise policies, codec support).
-
-### Running Specific Projects
-
-```bash
-# Run only Safari tests
-npx playwright test --project=webkit
-
-# Run only mobile tests
-npx playwright test --project=mobile-chrome --project=mobile-safari
-
-# Run P0 browsers in CI, all browsers nightly
-npx playwright test --project=chromium --project=webkit --project=mobile-chrome --project=mobile-safari
-```
 
 ---
 
 ## Cloud Platform Setup
 
-### BrowserStack
+Cloud platforms (BrowserStack, Sauce Labs) provide real browser/OS instances Playwright connects to over a CDP/Playwright WebSocket endpoint. Pass credentials and capabilities via environment variables, and keep the platform's `playwrightVersion` aligned with `package.json`.
 
-```typescript
-// browserstack.config.ts
-import { defineConfig } from '@playwright/test';
-
-export default defineConfig({
-  use: {
-    connectOptions: {
-      wsEndpoint: `wss://cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
-        browser: 'chrome',
-        browser_version: 'latest',
-        os: 'Windows',
-        os_version: '11',
-        'browserstack.username': process.env.BROWSERSTACK_USERNAME,
-        'browserstack.accessKey': process.env.BROWSERSTACK_ACCESS_KEY,
-        'browserstack.playwrightVersion': '1.59.1', // keep aligned with the version in package.json
-        build: `cross-browser-${process.env.CI_BUILD_NUMBER}`,
-        name: 'Cross-browser test suite',
-      }))}`,
-    },
-  },
-});
-```
-
-### Sauce Labs
-
-```typescript
-// sauce.config.ts
-export default defineConfig({
-  use: {
-    connectOptions: {
-      wsEndpoint: `wss://ondemand.saucelabs.com/playwright?sauce:options=${encodeURIComponent(JSON.stringify({
-        username: process.env.SAUCE_USERNAME,
-        accessKey: process.env.SAUCE_ACCESS_KEY,
-        browserName: 'chromium',
-        browserVersion: 'latest',
-        platformName: 'Windows 11',
-        'sauce:build': `build-${process.env.CI_BUILD_NUMBER}`,
-      }))}`,
-    },
-  },
-});
-```
-
-### CI Matrix with Cloud Platforms
-
-```yaml
-# GitHub Actions: parallel cross-browser on BrowserStack
-cross-browser:
-  runs-on: ubuntu-latest
-  strategy:
-    fail-fast: false
-    matrix:
-      include:
-        - browser: chrome
-          os: Windows
-          os_version: "11"
-        - browser: safari
-          os: OS X
-          os_version: Sonoma
-        - browser: firefox
-          os: Windows
-          os_version: "11"
-        - browser: edge
-          os: Windows
-          os_version: "11"
-  steps:
-    - uses: actions/checkout@v4
-    - run: npm ci
-    - run: npx playwright test
-      env:
-        BROWSER: ${{ matrix.browser }}
-        BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
-        BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
-```
+See `references/playwright-and-cloud-config.md` for the BrowserStack config, Sauce Labs config, and the GitHub Actions parallel matrix that fans out across cloud browsers.
 
 ---
 
 ## Common Cross-Browser Issues
 
-Real issues that surface in cross-browser testing, with detection patterns and fixes.
-
-### CSS Grid and Flexbox
-
-```css
-/* Historical: Safari < 14.1 ignored `gap` on flexbox. Universally supported now —
-   keep the fallback only if you support Safari 14 or older as a documented matrix entry. */
-.flex-container {
-  display: flex;
-  gap: 16px;
-}
-
-/* Legacy fallback for very old Safari */
-.flex-container > * + * {
-  margin-left: 16px;
-}
-@supports (gap: 16px) {
-  .flex-container > * + * {
-    margin-left: 0;
-  }
-}
-```
-
-```typescript
-// Test: verify layout spacing is correct across browsers
-test('product grid has consistent spacing', async ({ page }) => {
-  await page.goto('/products');
-  const cards = page.getByTestId('product-card');
-  await expect(cards).toHaveCount(6);
-
-  // Verify cards are laid out in a grid (not stacked vertically)
-  const firstBox = await cards.nth(0).boundingBox();
-  const secondBox = await cards.nth(1).boundingBox();
-  expect(firstBox).not.toBeNull();
-  expect(secondBox).not.toBeNull();
-  // Cards should be side by side, not stacked
-  expect(secondBox!.x).toBeGreaterThan(firstBox!.x);
-});
-```
-
-### Scroll Behavior
-
-```css
-/* Issue: scroll-behavior: smooth is inconsistent across browsers */
-html {
-  scroll-behavior: smooth; /* Firefox/Chrome: works. Safari: partial. */
-}
-```
-
-```typescript
-// Test: verify anchor navigation works (regardless of smooth scroll support)
-test('clicking anchor scrolls to section', async ({ page }) => {
-  await page.goto('/docs');
-  await page.getByRole('link', { name: 'Installation' }).click();
-  // Check that the section is visible, not the scroll animation
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeInViewport();
-});
-```
-
-### Date Input
-
-```typescript
-// Issue: <input type="date"> renders differently across browsers
-// Firefox: native date picker. Safari: text input (older versions). Chrome: native picker.
-test('date picker accepts valid date', async ({ page, browserName }) => {
-  await page.goto('/booking');
-  const dateInput = page.getByLabel('Check-in date');
-
-  if (browserName === 'webkit') {
-    // Safari may render as text input -- type the date
-    await dateInput.fill('2026-06-15');
-  } else {
-    await dateInput.fill('2026-06-15');
-  }
-
-  await page.getByRole('button', { name: 'Search' }).click();
-  await expect(page.getByText('June 15, 2026')).toBeVisible();
-});
-```
-
-### Clipboard API
-
-```typescript
-// Issue: navigator.clipboard requires focus and permissions; behavior differs by browser
-test('copy button copies text to clipboard', async ({ page, context, browserName }) => {
-  // Grant clipboard permission (Chromium only -- Firefox/WebKit handle differently)
-  if (browserName === 'chromium') {
-    await context.grantPermissions(['clipboard-read', 'clipboard-write']);
-  }
-
-  await page.goto('/share');
-  await page.getByRole('button', { name: 'Copy link' }).click();
-
-  // Verify via UI feedback rather than clipboard API (more reliable cross-browser)
-  await expect(page.getByText('Copied!')).toBeVisible();
-});
-```
-
-### Backdrop Filter
-
-```css
-/* Issue: backdrop-filter not supported in older Firefox */
-.modal-overlay {
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px); /* Safari */
-  background-color: rgba(0, 0, 0, 0.5); /* Fallback */
-}
-```
+Real issues that surface in cross-browser testing, with detection patterns and fixes. The CSS workarounds and Playwright tests for each are in `references/common-browser-issues.md`, covering: CSS Grid/Flexbox `gap`, `scroll-behavior`, `<input type="date">`, the Clipboard API, `backdrop-filter`, the `<dialog>` element, and Web Animations timing.
 
 ### Modern Cross-Browser Gotchas (2026)
 
@@ -364,120 +128,18 @@ The classic Safari laggard list is mostly resolved. Today's real divergences:
 - **View Transitions API:** Chrome and Edge ship same-document and cross-document; Safari has partial support; Firefox is behind. Treat as progressive enhancement and verify the fallback path in Firefox/older Safari.
 - **WebDriver BiDi:** Production-ready in Selenium 4, partially supported in Playwright. For new cross-runner projects, BiDi is the convergence point.
 
-### Dialog Element
-
-```typescript
-// Issue: <dialog> element behavior varies. Safari had bugs with ::backdrop and form[method=dialog].
-test('modal dialog opens and closes', async ({ page }) => {
-  await page.goto('/settings');
-  await page.getByRole('button', { name: 'Delete account' }).click();
-
-  const dialog = page.getByRole('dialog', { name: 'Confirm deletion' });
-  await expect(dialog).toBeVisible();
-
-  await page.getByRole('button', { name: 'Cancel' }).click();
-  await expect(dialog).not.toBeVisible();
-});
-```
-
-### Web Animations API
-
-```typescript
-// Issue: animation timing and composite modes differ across engines
-test('loading spinner is visible during fetch', async ({ page }) => {
-  // Slow down the API response to catch the loading state
-  await page.route('**/api/data', async (route) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    await route.fulfill({ json: { items: [] } });
-  });
-
-  await page.goto('/dashboard');
-  await expect(page.getByRole('progressbar')).toBeVisible();
-  await expect(page.getByRole('progressbar')).not.toBeVisible({ timeout: 5000 });
-});
-```
-
 ---
 
 ## Testing Patterns
 
-### Same Test, Multiple Browsers
+The four core patterns and the rules that govern them:
 
-The default pattern. Write once, configure projects.
+- **Same test, multiple browsers** — the default. Write the test once; configure projects to run it everywhere. Never duplicate test logic per browser.
+- **Browser-specific test logic** — branch on `browserName` only when behavior genuinely differs. **Rule:** this should be rare. Many browser branches signal application compatibility bugs to fix, not work around.
+- **Visual cross-browser comparison** — use `toHaveScreenshot` with a `maxDiffPixelRatio` tolerance; each browser project generates its own baseline.
+- **Progressive enhancement validation** — abort script requests (Chromium only) and verify core functionality still works via native HTML.
 
-```typescript
-// This test runs on every configured browser project automatically
-test('user can complete checkout', async ({ page }) => {
-  await page.goto('/cart');
-  await page.getByRole('button', { name: 'Checkout' }).click();
-  await page.getByLabel('Card number').fill('4242424242424242');
-  await page.getByLabel('Expiry').fill('12/28');
-  await page.getByLabel('CVC').fill('123');
-  await page.getByRole('button', { name: 'Pay' }).click();
-  await expect(page.getByRole('heading', { name: 'Order confirmed' })).toBeVisible();
-});
-```
-
-### Browser-Specific Test Logic
-
-When browser behavior genuinely differs, use `browserName` to branch.
-
-```typescript
-test('file upload works', async ({ page, browserName }) => {
-  await page.goto('/upload');
-  const fileInput = page.locator('input[type="file"]');
-
-  // WebKit does not support directory upload
-  if (browserName === 'webkit') {
-    await fileInput.setInputFiles('/path/to/file.pdf');
-  } else {
-    await fileInput.setInputFiles(['/path/to/file1.pdf', '/path/to/file2.pdf']);
-  }
-
-  await expect(page.getByText('Upload complete')).toBeVisible();
-});
-```
-
-**Rule:** Browser-specific logic in tests should be rare. If you have many browser branches, the application likely has compatibility bugs to fix.
-
-### Visual Cross-Browser Comparison
-
-Use Playwright's screenshot comparison to catch rendering differences.
-
-```typescript
-test('homepage renders correctly', async ({ page }) => {
-  await page.goto('/');
-  await expect(page).toHaveScreenshot('homepage.png', {
-    maxDiffPixelRatio: 0.01, // Allow 1% pixel difference
-  });
-  // Each browser project generates its own baseline:
-  // homepage-chromium.png, homepage-webkit.png, homepage-firefox.png
-});
-```
-
-### Progressive Enhancement Validation
-
-```typescript
-test('form works without JavaScript', async ({ page, browserName }) => {
-  // Disable JavaScript to test progressive enhancement
-  // Note: only works with Chromium
-  if (browserName === 'chromium') {
-    await page.context().route('**/*', (route) => {
-      if (route.request().resourceType() === 'script') {
-        return route.abort();
-      }
-      return route.continue();
-    });
-  }
-
-  await page.goto('/contact');
-  // Core form submission should work via native HTML form action
-  await page.getByLabel('Message').fill('Hello');
-  await page.getByRole('button', { name: 'Send' }).click();
-  // Even without JS, the form should submit and show confirmation
-  await expect(page).toHaveURL(/.*thank-you/);
-});
-```
+See `references/testing-patterns.md` for the runnable code for all four patterns.
 
 ---
 
@@ -506,6 +168,12 @@ test('form works without JavaScript', async ({ page, browserName }) => {
 - Known browser-specific bugs documented with the affected browser, reproduction steps, and either a workaround or a linked open ticket.
 - Rendering issues checklist (flexbox gaps, scroll behavior, date inputs, clipboard API, dialog element) run against all P0 and P1 target browsers.
 - Browser matrix reviewed and signed off by the team, with a calendar reminder set for quarterly refresh against updated analytics data.
+
+## Reference Files (in `references/`)
+
+- **playwright-and-cloud-config.md** — `playwright.config.ts` project list, branded channels, `--project` run commands, and BrowserStack/Sauce Labs/CI matrix configs.
+- **common-browser-issues.md** — CSS workarounds and Playwright tests for flexbox `gap`, scroll behavior, date inputs, clipboard, backdrop-filter, `<dialog>`, and Web Animations.
+- **testing-patterns.md** — Same-test-multiple-browsers, `browserName` branching, visual comparison, and progressive-enhancement code.
 
 ## Related Skills
 

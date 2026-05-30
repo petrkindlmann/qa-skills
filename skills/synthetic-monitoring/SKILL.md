@@ -91,78 +91,9 @@ Design probes around critical user journeys, not around infrastructure component
 | Checkout (if applicable) | Payment integration (sandbox mode), cart, order creation | 10 min | 25s |
 | Third-party integrations | OAuth providers, email delivery, file storage | 10 min | 15s |
 
-### Probe implementation: Playwright example
+### Probe implementations
 
-```typescript
-// probes/login-flow.ts
-import { test, expect } from '@playwright/test';
-
-const PROD_URL = process.env.PRODUCTION_URL!;
-const SYNTH_EMAIL = process.env.SYNTHETIC_USER_EMAIL!;
-const SYNTH_PASS = process.env.SYNTHETIC_USER_PASSWORD!;
-
-test.describe('Synthetic: Login Flow', () => {
-  test.describe.configure({ timeout: 15_000, retries: 0 });
-
-  test('user can authenticate and reach dashboard', async ({ page }) => {
-    // Step 1: Load login page
-    const loginResponse = await page.goto(`${PROD_URL}/login`);
-    expect(loginResponse?.status()).toBeLessThan(400);
-
-    // Step 2: Authenticate
-    await page.getByLabel('Email').fill(SYNTH_EMAIL);
-    await page.getByLabel('Password').fill(SYNTH_PASS);
-    await page.getByRole('button', { name: 'Sign in' }).click();
-
-    // Step 3: Verify dashboard loads with data
-    await expect(page).toHaveURL(/dashboard/, { timeout: 10_000 });
-    await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
-  });
-});
-```
-
-### Probe implementation: API health check
-
-```typescript
-// probes/api-health.ts
-import { test, expect } from '@playwright/test';
-
-const API_URL = process.env.API_BASE_URL!;
-const API_KEY = process.env.SYNTHETIC_API_KEY!;
-
-test.describe('Synthetic: API Health', () => {
-  test.describe.configure({ timeout: 5_000, retries: 0 });
-
-  test('health endpoint returns healthy status', async ({ request }) => {
-    const response = await request.get(`${API_URL}/health`);
-    expect(response.ok()).toBeTruthy();
-    const body = await response.json();
-    expect(body.status).toBe('healthy');
-    expect(body.database).toBe('connected');
-    expect(body.cache).toBe('connected');
-  });
-
-  test('authenticated API returns valid response', async ({ request }) => {
-    const response = await request.get(`${API_URL}/v1/me`, {
-      headers: { Authorization: `Bearer ${API_KEY}` },
-    });
-    expect(response.ok()).toBeTruthy();
-    const body = await response.json();
-    expect(body.id).toBeDefined();
-    expect(body.email).toContain('synthetic');
-  });
-
-  test('core endpoint responds within latency budget', async ({ request }) => {
-    const start = Date.now();
-    const response = await request.get(`${API_URL}/v1/items?limit=10`, {
-      headers: { Authorization: `Bearer ${API_KEY}` },
-    });
-    const duration = Date.now() - start;
-    expect(response.ok()).toBeTruthy();
-    expect(duration).toBeLessThan(2000); // 2 second latency budget
-  });
-});
-```
+A login-flow probe (Playwright, browser) and an API health-check probe (status + auth + latency budget) cover the two probe shapes. Keep each probe to one critical path, a tight timeout, and `retries: 0`. See `references/probe-implementations.md` for the full runnable login-flow and API-health probes.
 
 ### Non-destructive probe patterns
 
@@ -211,100 +142,9 @@ Account requirements:
 
 > Probes can be authored in Playwright (TS/JS), Puppeteer, k6 (JS — k6 1.0+ is now first-class for synthetic), or Python (CloudWatch Synthetics, Checkly). Pick what your team already maintains. Pingdom is in maintenance mode under SolarWinds — avoid for new setups.
 
-### Custom implementation: Playwright + GitHub Actions
+### Custom and managed implementations
 
-```yaml
-# .github/workflows/synthetic-monitoring.yml
-name: Synthetic Monitoring
-on:
-  schedule:
-    - cron: '*/5 * * * *'  # Every 5 minutes
-  workflow_dispatch: {}
-
-jobs:
-  synthetic-probes:
-    runs-on: ubuntu-latest
-    timeout-minutes: 3
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22 # current LTS as of May 2026 — bump as Node LTS rolls forward
-      - run: npm ci
-      - run: npx playwright install chromium --with-deps
-
-      - name: Run synthetic probes
-        env:
-          PRODUCTION_URL: ${{ secrets.PRODUCTION_URL }}
-          SYNTHETIC_USER_EMAIL: ${{ secrets.SYNTHETIC_USER_EMAIL }}
-          SYNTHETIC_USER_PASSWORD: ${{ secrets.SYNTHETIC_USER_PASSWORD }}
-          SYNTHETIC_API_KEY: ${{ secrets.SYNTHETIC_API_KEY }}
-        run: npx playwright test probes/ --reporter=json --reporter=list
-
-      - name: Report results to monitoring
-        if: always()
-        run: |
-          node scripts/report-synthetic-results.js \
-            --results=test-results/results.json \
-            --webhook=${{ secrets.MONITORING_WEBHOOK }}
-```
-
-### Checkly-based implementation
-
-```typescript
-// checkly.config.ts
-import { defineConfig } from 'checkly';
-
-export default defineConfig({
-  projectName: 'Production Monitoring',
-  logicalId: 'prod-monitoring',
-  checks: {
-    frequency: 5,          // Every 5 minutes
-    locations: ['us-east-1', 'eu-west-1', 'ap-southeast-1'],
-    // Use the latest stable Checkly runtime — see https://www.checklyhq.com/docs/runtimes/
-    // (e.g. 'next' for the rolling stable; pin a dated runtime for reproducibility)
-    runtimeId: '2025.04',
-    browserChecks: {
-      testMatch: 'probes/**/*.check.ts',
-    },
-  },
-  cli: {
-    runLocation: 'us-east-1',
-  },
-});
-```
-
-### Environment-aware probes
-
-Probes should adapt to the environment they run against without code changes.
-
-```typescript
-// probes/config.ts
-interface ProbeConfig {
-  baseUrl: string;
-  credentials: { email: string; password: string };
-  thresholds: { pageLoad: number; apiResponse: number };
-}
-
-function getProbeConfig(): ProbeConfig {
-  const env = process.env.PROBE_ENVIRONMENT ?? 'production';
-
-  const configs: Record<string, ProbeConfig> = {
-    staging: {
-      baseUrl: 'https://staging.example.com',
-      credentials: { email: 'synthetic@staging.example.com', password: process.env.STAGING_PASS! },
-      thresholds: { pageLoad: 5000, apiResponse: 3000 },
-    },
-    production: {
-      baseUrl: 'https://www.example.com',
-      credentials: { email: 'synthetic@example.com', password: process.env.PROD_PASS! },
-      thresholds: { pageLoad: 3000, apiResponse: 1000 },
-    },
-  };
-
-  return configs[env];
-}
-```
+Self-managed: schedule Playwright probes with a GitHub Actions `schedule` cron (every 5 minutes), inject prod credentials via secrets, and report results to a monitoring webhook. Managed: Checkly is Playwright-native and runs from multiple locations on a fixed frequency. Either way, make probes environment-aware so the same code runs against staging and production with different base URLs and thresholds. See `references/platforms-and-ci.md` for the GitHub Actions workflow, the Checkly config, and the environment-aware probe config.
 
 ---
 
@@ -326,26 +166,7 @@ Alerting rules:
 
 ### Alert routing
 
-```yaml
-# alerting-rules.yaml
-routes:
-  - match:
-      severity: critical
-      probe: [login, checkout, api-health]
-    receivers: [pagerduty-oncall, slack-incidents]
-    repeat_interval: 5m
-
-  - match:
-      severity: warning
-      probe: [search, third-party]
-    receivers: [slack-monitoring]
-    repeat_interval: 30m
-
-  - match:
-      severity: info
-    receivers: [slack-monitoring]
-    repeat_interval: 4h
-```
+Route by severity and probe: critical failures on revenue paths (login, checkout, api-health) page on-call (PagerDuty + Slack incidents) with a short repeat interval; warnings on secondary probes go to a Slack monitoring channel; info-level events use a long repeat interval. See `references/platforms-and-ci.md` for the full `alerting-rules.yaml`.
 
 ### Alert message format
 
@@ -499,6 +320,11 @@ An alert fires at 3 AM. The on-call engineer sees "Login probe failing" but has 
 - SLA tracking dashboard is configured and shows current availability and error budget consumption
 - Probe failures trigger on-call notification within the response time defined in the SLA (verified with a test alert)
 - Monitoring results are reviewed in a regular health check cadence (weekly or per-sprint)
+
+## Reference Files (in `references/`)
+
+- **probe-implementations.md** — Runnable login-flow and API-health probes, plus the environment-aware probe config.
+- **platforms-and-ci.md** — GitHub Actions scheduling workflow, Checkly config, and the alert-routing rules file.
 
 ## Related Skills
 

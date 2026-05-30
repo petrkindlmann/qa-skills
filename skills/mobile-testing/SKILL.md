@@ -47,220 +47,34 @@ Test native, React Native, and hybrid mobile applications with production-grade 
 
 ---
 
-## Appium 3.x
+## Framework Decision
 
-### Architecture
+| App type | Primary choice | Why |
+| --- | --- | --- |
+| Native iOS/Android, hybrid | **Appium 3.x** | Driver-based, mature ecosystem, deepest native + gesture coverage |
+| React Native | **Detox** | Gray-box, synchronizes with the RN bridge, fastest feedback, least flake |
+| Cross-platform, mixed-skill team | **Maestro** | Declarative YAML, native AI commands, lowest authoring friction |
+| Flutter | **Patrol** | Flutter-native integration testing |
+
+---
+
+## Appium 3.x
 
 Appium 3.x (current stable: 3.4.2, May 2026) keeps the driver-based plugin architecture introduced in 2.0 — the server is a thin shell; drivers provide platform-specific automation. Upgrade from 2.x is mostly a Node-version bump and dependency cleanup; capabilities and APIs are unchanged.
 
-```bash
-# Install Appium 3.x and drivers
-npm install -g appium
-appium driver install uiautomator2   # Android
-appium driver install xcuitest       # iOS
+**Selector priority:** Accessibility ID > platform-specific selector (iOS class chain / Android UIAutomator) > XPath (last resort — slow, brittle).
 
-# Verify installation
-appium --version       # >= 3.4.x
-appium driver list --installed
-```
-
-### Capabilities (W3C Format)
-
-```typescript
-// Android capabilities — bump to current device + OS for new matrices
-const androidCaps: Record<string, unknown> = {
-  platformName: 'Android',
-  'appium:automationName': 'UiAutomator2',
-  'appium:deviceName': 'Pixel 9', // iPhone 17 / Pixel 9 / Galaxy S25 are current 2026 baselines
-  'appium:platformVersion': '15',
-  'appium:app': '/path/to/app.apk',
-  'appium:autoGrantPermissions': true,
-  'appium:newCommandTimeout': 300,
-  'appium:noReset': false,
-};
-
-// iOS capabilities — bump to current device + OS for new matrices
-const iosCaps: Record<string, unknown> = {
-  platformName: 'iOS',
-  'appium:automationName': 'XCUITest',
-  'appium:deviceName': 'iPhone 17 Pro',
-  'appium:platformVersion': '19',
-  'appium:app': '/path/to/app.ipa',
-  'appium:autoAcceptAlerts': false,  // Handle alerts explicitly
-  'appium:newCommandTimeout': 300,
-};
-
-// Older devices still belong in the matrix when analytics show the long tail —
-// e.g. iPhone 15 Pro / iOS 17, Pixel 7 / Android 14. Tier them P1/P2.
-```
-
-### Element Location Strategies
-
-```typescript
-// Accessibility ID (preferred -- cross-platform, stable)
-const loginButton = await driver.$('~login-button');
-
-// iOS class chain (iOS-specific, fast)
-const cell = await driver.$('-ios class chain:**/XCUIElementTypeCell[`name == "Settings"`]');
-
-// Android UIAutomator (Android-specific, powerful)
-const scrollTarget = await driver.$(
-  'android=new UiScrollable(new UiSelector().scrollable(true)).scrollIntoView(new UiSelector().text("Terms"))'
-);
-
-// XPath (last resort -- slow, brittle)
-// Avoid unless no other strategy works
-```
-
-**Priority:** Accessibility ID > platform-specific selector > XPath.
-
-### Gesture Simulation
-
-```typescript
-// Scroll down
-await driver.execute('mobile: scroll', { direction: 'down' });
-
-// Swipe from point A to point B
-await driver.execute('mobile: swipeGesture', {
-  left: 100, top: 500, width: 200, height: 400,
-  direction: 'up', percent: 0.75,
-});
-
-// Pinch to zoom (iOS)
-await driver.execute('mobile: pinch', {
-  elementId: mapElement.elementId,
-  scale: 2.0,
-  velocity: 1.5,
-});
-
-// Long press
-await driver.execute('mobile: longClickGesture', {
-  elementId: menuItem.elementId,
-  duration: 1500,
-});
-
-// Double tap
-await driver.execute('mobile: doubleClickGesture', {
-  elementId: imageElement.elementId,
-});
-```
+See `references/appium-patterns.md` for install/driver commands, W3C Android/iOS capabilities, the four element-location strategies, and the full gesture set (scroll, swipe, pinch, long-press, double-tap).
 
 ---
 
 ## Detox for React Native
 
-### Architecture
-
 Detox is a gray-box testing framework. It synchronizes with the React Native bridge, waiting for animations, network requests, and timers to settle before acting. This eliminates most flakiness caused by timing.
-
-### Setup
-
-```javascript
-// .detoxrc.js
-module.exports = {
-  testRunner: {
-    args: { $0: 'jest', config: 'e2e/jest.config.js' },
-    jest: { setupTimeout: 120000 },
-  },
-  apps: {
-    'ios.debug': {
-      type: 'ios.app',
-      binaryPath: 'ios/build/Build/Products/Debug-iphonesimulator/MyApp.app',
-      build: 'xcodebuild -workspace ios/MyApp.xcworkspace -scheme MyApp -configuration Debug -sdk iphonesimulator -derivedDataPath ios/build',
-    },
-    'android.debug': {
-      type: 'android.apk',
-      binaryPath: 'android/app/build/outputs/apk/debug/app-debug.apk',
-      build: 'cd android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug',
-      reversePorts: [8081],
-    },
-  },
-  devices: {
-    simulator: { type: 'ios.simulator', device: { type: 'iPhone 15 Pro' } },
-    emulator: { type: 'android.emulator', device: { avdName: 'Pixel_7_API_34' } },
-  },
-  configurations: {
-    'ios.sim.debug': { device: 'simulator', app: 'ios.debug' },
-    'android.emu.debug': { device: 'emulator', app: 'android.debug' },
-  },
-};
-```
-
-### Test Patterns
-
-```javascript
-describe('Login Flow', () => {
-  beforeAll(async () => {
-    await device.launchApp({ newInstance: true });
-  });
-
-  beforeEach(async () => {
-    await device.reloadReactNative();
-  });
-
-  it('should login with valid credentials', async () => {
-    await element(by.id('email-input')).typeText('user@example.com');
-    await element(by.id('password-input')).typeText('securePass123');
-    await element(by.id('login-button')).tap();
-
-    // Detox auto-waits for navigation and animations
-    await expect(element(by.id('dashboard-screen'))).toBeVisible();
-    await expect(element(by.text('Welcome back'))).toBeVisible();
-  });
-
-  it('should show error for invalid credentials', async () => {
-    await element(by.id('email-input')).typeText('wrong@example.com');
-    await element(by.id('password-input')).typeText('wrongpass');
-    await element(by.id('login-button')).tap();
-
-    await expect(element(by.id('error-message'))).toHaveText('Invalid email or password');
-    await expect(element(by.id('dashboard-screen'))).not.toBeVisible();
-  });
-});
-```
-
-### Device APIs
 
 > Detox 20.51+ added `by.type()` semantic matching — use it to relax brittle exact-class assertions. Detox 20.51 also confirms support for React Native 0.83 + iOS 26.
 
-```javascript
-// Biometric authentication
-await device.setBiometricEnrollment(true);
-await device.matchBiometric();  // Simulate successful Face ID / fingerprint
-await device.unmatchBiometric(); // Simulate failed biometric
-
-// Shake gesture (e.g., to trigger feedback dialog)
-await device.shake();
-
-// Change device orientation
-await device.setOrientation('landscape');
-await device.setOrientation('portrait');
-
-// Set location
-await device.setLocation(37.7749, -122.4194); // San Francisco
-
-// Open URL (deep link)
-await device.openURL({ url: 'myapp://profile/settings' });
-
-// Send user notification (iOS)
-await device.sendUserNotification({
-  trigger: { type: 'push' },
-  title: 'New message',
-  body: 'You have a new message from Alice',
-  payload: { screen: 'chat', chatId: '123' },
-});
-```
-
-### CI Integration
-
-```bash
-# Build and test on CI (iOS)
-detox build --configuration ios.sim.debug
-detox test --configuration ios.sim.debug --cleanup --headless --record-logs all
-
-# Parallel test execution
-detox test --configuration ios.sim.debug --workers 3
-```
+See `references/detox-and-maestro.md` for the `.detoxrc.js` config, login-flow test patterns, device APIs (biometric, shake, orientation, location, deep link, notifications), and CI build/test commands.
 
 ---
 
@@ -268,233 +82,31 @@ detox test --configuration ios.sim.debug --workers 3
 
 Maestro CLI 2.5.x (Apr 2026) is the lowest-friction option for cross-platform mobile e2e — declarative YAML flows, native AI commands (e.g. `assertVisible: 'login button'` works without selectors), works against simulators, real devices, and Maestro Cloud. Best for teams that don't want to maintain Appium's Java/JS stack or RN-only Detox tooling.
 
-```bash
-# Install
-curl -Ls "https://get.maestro.mobile.dev" | bash
-
-# Run a flow
-maestro test flows/login.yaml
-```
-
-```yaml
-# flows/login.yaml
-appId: com.example.app
----
-- launchApp
-- tapOn: "Sign in"
-- inputText: "user@example.com"
-- tapOn: "Password"
-- inputText: "${MAESTRO_TEST_PASSWORD}"
-- tapOn: "Continue"
-- assertVisible: "Welcome back"
-```
-
 When to choose Maestro: cross-platform suite, mixed-skill team, fast iteration. When not: deep native gesture or biometric coverage (Appium/Detox win), or when you need fine-grained programmatic control.
+
+See `references/detox-and-maestro.md` for the install command and an annotated login flow YAML.
 
 ---
 
 ## Device Farm Integration
 
-### BrowserStack App Automate
+Provision a tiered device matrix from analytics, not from the newest hardware. Typical split: 60% of tests on P0 devices, 30% on P1, 10% on P2. Build test apps are uploaded to the farm and referenced by capability (`app` URL / `storage:filename`).
 
-```typescript
-// browserstack.config.ts
-export const bsCapabilities = {
-  'bstack:options': {
-    userName: process.env.BROWSERSTACK_USERNAME,
-    accessKey: process.env.BROWSERSTACK_ACCESS_KEY,
-    projectName: 'MyApp Mobile Tests',
-    buildName: `build-${process.env.CI_BUILD_NUMBER}`,
-    sessionName: 'Login Flow',
-    debug: true,
-    networkLogs: true,
-    appiumVersion: '3.4.2',
-  },
-  platformName: 'Android',
-  'appium:deviceName': 'Samsung Galaxy S24',
-  'appium:platformVersion': '14.0',
-  'appium:app': process.env.BROWSERSTACK_APP_URL, // Upload via API: POST api-cloud.browserstack.com/app-automate/upload
-};
-```
-
-### Sauce Labs
-
-```typescript
-export const sauceCapabilities = {
-  platformName: 'iOS',
-  'appium:deviceName': 'iPhone 15 Pro',
-  'appium:platformVersion': '17',
-  'appium:app': 'storage:filename=MyApp.ipa',
-  'sauce:options': {
-    name: 'Login Flow',
-    build: `build-${process.env.CI_BUILD_NUMBER}`,
-    appiumVersion: '3.4',
-  },
-};
-```
-
-### Device Matrix Strategy
-
-```yaml
-# GitHub Actions matrix for device farm
-strategy:
-  fail-fast: false
-  matrix:
-    include:
-      # P0: Top devices from analytics
-      - platform: android
-        device: Samsung Galaxy S24
-        os_version: "14"
-      - platform: ios
-        device: iPhone 15 Pro
-        os_version: "17"
-      # P1: Previous generation
-      - platform: android
-        device: Google Pixel 8
-        os_version: "14"
-      - platform: ios
-        device: iPhone 14
-        os_version: "16"
-      # P2: Oldest supported
-      - platform: android
-        device: Samsung Galaxy A54
-        os_version: "13"
-      - platform: ios
-        device: iPhone SE 3rd Gen
-        os_version: "16"
-```
-
-Build the matrix from analytics data. Typical split: 60% of tests on P0 devices, 30% on P1, 10% on P2.
+See `references/device-farm.md` for BrowserStack and Sauce Labs capability objects and the GitHub Actions device-matrix strategy (P0/P1/P2 across iOS and Android).
 
 ---
 
 ## Mobile-Specific Testing Patterns
 
-### Deep Link Testing
+These scenarios cannot be tested by web frameworks. Treat each as a first-class flow.
 
-```typescript
-// Appium: launch app via deep link
-await driver.execute('mobile: deepLink', {
-  url: 'myapp://products/widget-123',
-  package: 'com.mycompany.myapp', // Android only
-});
-// Verify correct screen loaded
-const productTitle = await driver.$('~product-title');
-await expect(productTitle).toHaveText('Widget');
+- **Deep links** — cold start, authenticated redirect, and running-app navigation.
+- **Push notifications** — Detox `sendUserNotification` and Appium + FCM test-endpoint patterns.
+- **Offline / poor network** — Appium airplane-mode shell, BrowserStack network profiles, Detox status-bar/proxy notes.
+- **Permission dialogs** — `autoGrantPermissions` (Android), explicit `mobile: alert` / predicate handling (iOS), Detox `systemDialog`.
+- **App lifecycle** — background/foreground, cold start, fresh install vs. resume.
 
-// Test deep link when app is not running (cold start)
-await driver.terminateApp('com.mycompany.myapp');
-await driver.execute('mobile: deepLink', {
-  url: 'myapp://products/widget-123',
-  package: 'com.mycompany.myapp',
-});
-await expect(driver.$('~product-title')).toBeDisplayed();
-
-// Test deep link with authentication required
-// App should redirect to login, then forward to deep link target after auth
-await driver.execute('mobile: deepLink', {
-  url: 'myapp://settings/billing',
-  package: 'com.mycompany.myapp',
-});
-await expect(driver.$('~login-screen')).toBeDisplayed();
-```
-
-### Push Notification Testing
-
-```javascript
-// Detox: send push notification and verify handling
-await device.sendUserNotification({
-  trigger: { type: 'push' },
-  title: 'Order shipped',
-  body: 'Your order #1234 has been shipped',
-  payload: { screen: 'order-detail', orderId: '1234' },
-});
-await expect(element(by.id('order-detail-screen'))).toBeVisible();
-await expect(element(by.id('order-id'))).toHaveText('#1234');
-
-// Appium: use Firebase Cloud Messaging test API for real push
-// Send via backend test endpoint, then verify notification appears
-await fetch(`${API_BASE}/test/send-push`, {
-  method: 'POST',
-  body: JSON.stringify({ userId: testUser.id, title: 'Order shipped' }),
-});
-// Wait for notification in notification shade (Android)
-await driver.openNotifications();
-const notification = await driver.$('android=new UiSelector().text("Order shipped")');
-await notification.click();
-```
-
-### Offline and Poor Network Simulation
-
-```typescript
-// Appium: toggle airplane mode (Android)
-await driver.execute('mobile: shell', {
-  command: 'cmd connectivity airplane-mode enable',
-});
-// Verify offline UI
-await expect(driver.$('~offline-banner')).toBeDisplayed();
-// Perform action while offline
-await driver.$('~save-draft-button').click();
-// Re-enable network
-await driver.execute('mobile: shell', {
-  command: 'cmd connectivity airplane-mode disable',
-});
-// Verify queued action syncs
-await expect(driver.$('~sync-complete-indicator')).toBeDisplayed();
-
-// BrowserStack: throttle network
-// Set in capabilities:
-// 'browserstack.networkProfile': '3g-lossy'
-// Options: 'no-network', '2g-gprs', '3g-lossy', '4g-lte', 'reset'
-```
-
-```javascript
-// Detox: WiFi toggle (iOS simulator)
-await device.setStatusBar({ dataNetwork: 'wifi' });
-// Note: Detox does not directly simulate offline. Use a proxy or
-// mock the network layer in the app with a test-only flag.
-```
-
-### Permission Dialog Handling
-
-```typescript
-// Android: set 'appium:autoGrantPermissions': true in capabilities
-
-// iOS: handle permission dialogs explicitly
-const allowButton = await driver.$('-ios predicate string:label == "Allow"');
-if (await allowButton.isDisplayed()) {
-  await allowButton.click();
-}
-// Or use the mobile: alert command
-await driver.execute('mobile: alert', { action: 'accept' });
-
-// Detox
-await systemDialog.accept(); // Tap "Allow"
-await systemDialog.deny();   // Tap "Don't Allow"
-```
-
-### App Lifecycle Testing
-
-```typescript
-// Background and foreground
-await driver.execute('mobile: backgroundApp', { seconds: 5 });
-await expect(driver.$('~dashboard-screen')).toBeDisplayed();
-
-// Terminate and relaunch (cold start)
-await driver.terminateApp('com.mycompany.myapp');
-await driver.activateApp('com.mycompany.myapp');
-await expect(driver.$('~last-viewed-screen')).toBeDisplayed();
-```
-
-```javascript
-// Detox lifecycle
-await device.sendToHome();
-await device.launchApp({ newInstance: false }); // Resume from background
-await expect(element(by.id('dashboard'))).toBeVisible();
-
-await device.launchApp({ newInstance: true, delete: true }); // Fresh install
-await expect(element(by.id('onboarding-screen'))).toBeVisible();
-```
+See `references/mobile-patterns.md` for the runnable code for all five.
 
 ---
 
@@ -523,6 +135,13 @@ await expect(element(by.id('onboarding-screen'))).toBeVisible();
 - Gesture tests (swipe, scroll, long-press) and deep link tests (cold start + authenticated redirect) cover the app's primary flows
 - Push notification tests exist or are explicitly deferred with a documented rationale (e.g. "deferred until FCM test endpoint available")
 - CI pipeline runs tests on at least one emulator per platform (iOS simulator + Android emulator) on every PR, with real device farm runs gated to nightly or release branches
+
+## Reference Files (in `references/`)
+
+- **appium-patterns.md** — Appium 3.x install, W3C capabilities, element-location strategies, and gesture simulation code.
+- **detox-and-maestro.md** — Detox `.detoxrc.js` config, test patterns, device APIs, CI commands; plus Maestro install and YAML flow.
+- **device-farm.md** — BrowserStack and Sauce Labs capabilities and the GitHub Actions P0/P1/P2 device matrix.
+- **mobile-patterns.md** — Runnable code for deep links, push notifications, network simulation, permission dialogs, and app lifecycle.
 
 ## Related Skills
 

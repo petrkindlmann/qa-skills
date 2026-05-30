@@ -172,29 +172,7 @@ Findings document:
 | Network partition | iptables, Chaos Mesh | Simulate split-brain scenarios |
 | Bandwidth restriction | tc, toxiproxy | Simulate congested network |
 
-```bash
-# Add 200ms latency to all traffic to port 5432 (PostgreSQL)
-tc qdisc add dev eth0 root netem delay 200ms 50ms distribution normal
-
-# Add 5% packet loss
-tc qdisc add dev eth0 root netem loss 5%
-
-# Remove the injected fault
-tc qdisc del dev eth0 root
-```
-
-```yaml
-# toxiproxy configuration for database latency
-- name: postgres-latency
-  listen: 0.0.0.0:15432
-  upstream: postgres:5432
-  toxics:
-    - name: latency
-      type: latency
-      attributes:
-        latency: 200
-        jitter: 50
-```
+See `references/fault-injection.md` for the `tc netem` latency/packet-loss commands and the toxiproxy latency config.
 
 ### Service failures
 
@@ -205,37 +183,7 @@ tc qdisc del dev eth0 root
 | Error injection | Return 500/503, throw exceptions | Simulate application errors |
 | Memory pressure | stress-ng, Chaos Mesh | Simulate memory leaks |
 
-```bash
-# Kill a Kubernetes pod
-kubectl delete pod order-service-abc123 --grace-period=0
-
-# Stress CPU on a specific container (via Chaos Mesh)
-# chaos-mesh-cpu-stress.yaml
-```
-
-```yaml
-# LitmusChaos: pod kill experiment
-apiVersion: litmuschaos.io/v1alpha1
-kind: ChaosEngine
-metadata:
-  name: order-service-chaos
-spec:
-  appinfo:
-    appns: production
-    applabel: app=order-service
-  chaosServiceAccount: litmus-admin
-  experiments:
-    - name: pod-delete
-      spec:
-        components:
-          env:
-            - name: TOTAL_CHAOS_DURATION
-              value: '60'
-            - name: CHAOS_INTERVAL
-              value: '30'
-            - name: FORCE
-              value: 'false'
-```
+See `references/fault-injection.md` for the `kubectl delete pod` command and the LitmusChaos pod-delete ChaosEngine manifest.
 
 ### Infrastructure failures
 
@@ -246,19 +194,7 @@ spec:
 | Memory exhaustion | stress-ng | Simulate OOM conditions |
 | Clock skew | chrony manipulation, timedatectl | Simulate time drift |
 
-```bash
-# Fill disk to trigger disk-full handling
-fallocate -l 10G /tmp/fill-disk.dat
-
-# Stress 4 CPU cores for 60 seconds
-stress-ng --cpu 4 --timeout 60s
-
-# Consume 2GB of memory
-stress-ng --vm 1 --vm-bytes 2G --timeout 60s
-
-# Cleanup
-rm /tmp/fill-disk.dat
-```
+See `references/fault-injection.md` for the `fallocate` disk-fill and `stress-ng` CPU/memory commands.
 
 ### Dependency failures
 
@@ -269,34 +205,7 @@ rm /tmp/fill-disk.dat
 | Cache unavailable | block Redis port | Simulate cache miss storm |
 | Message queue full | fill queue, block consumers | Simulate backpressure |
 
-```typescript
-// Toxiproxy programmatic control for integration tests
-import Toxiproxy from 'toxiproxy-node-client';
-
-const toxiproxy = new Toxiproxy('http://localhost:8474');
-
-test('application handles Redis unavailability gracefully', async () => {
-  const proxy = await toxiproxy.get('redis');
-
-  // Disable Redis
-  await proxy.disable();
-
-  try {
-    const response = await fetch('http://localhost:3000/api/products');
-    // Should still work, but slower (cache miss, hits database)
-    expect(response.ok).toBe(true);
-    const data = await response.json();
-    expect(data.products.length).toBeGreaterThan(0);
-
-    // Verify degraded performance is within acceptable range
-    const latency = parseInt(response.headers.get('x-response-time') ?? '0');
-    expect(latency).toBeLessThan(5000); // 5 seconds max without cache
-  } finally {
-    // Always re-enable
-    await proxy.enable();
-  }
-});
-```
+See `references/fault-injection.md` for the programmatic toxiproxy integration test that disables Redis and asserts graceful degradation.
 
 ---
 
@@ -498,6 +407,10 @@ The experiment revealed that the circuit breaker does not work correctly. The te
 - Steady-state baseline metrics are measured immediately before each injection so results have a valid comparison point
 - Experiment results are documented with actual vs. expected behavior, recovery time, and whether data integrity was maintained
 - Each weakness found has a remediation action item with an assigned owner, due date, and a scheduled re-run to verify the fix
+
+## Reference Files (in `references/`)
+
+- **fault-injection.md** — Runnable commands, configs, and test code for injecting each failure class: `tc netem` and toxiproxy network faults, `kubectl`/LitmusChaos service faults, `fallocate`/`stress-ng` infrastructure faults, and the programmatic toxiproxy dependency-failure test.
 
 ## Related Skills
 

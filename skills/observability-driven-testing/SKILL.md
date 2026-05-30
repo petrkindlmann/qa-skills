@@ -74,141 +74,15 @@ The complete cycle: production error detected, error analyzed, test written, tes
 
 ## Traces as Test Evidence
 
-### OpenTelemetry integration in test infrastructure
-
-Instrument your test runner to emit traces that correlate test execution with application behavior.
-
 > **Pin `@opentelemetry/semantic-conventions`** and treat sem-conv version bumps as breaking. v1.41.0 (April 2026) shipped GenAI breaking changes and a `process.executable` entity split; `graphql.document` moved from Recommended to Opt-In. Trace assertions written against attribute names will silently drift if you don't pin.
 >
 > **Do not introduce new OpenTracing shims.** The OpenTelemetry spec deprecated OpenTracing compatibility requirements in March 2026 — new instrumentation should target native OTel APIs and OTLP.
 
-```typescript
-// test-setup/tracing.ts
-import { NodeSDK } from '@opentelemetry/sdk-node';
-import { OTLPTraceExporter } from '@opentelemetry/exporter-trace-otlp-http';
-import { resourceFromAttributes } from '@opentelemetry/resources'; // helper preferred over `new Resource(...)` on @opentelemetry/sdk-node >= 0.50
-import { ATTR_SERVICE_NAME } from '@opentelemetry/semantic-conventions';
+Three patterns, all in `references/trace-assertions.md`:
 
-const sdk = new NodeSDK({
-  resource: resourceFromAttributes({
-    [ATTR_SERVICE_NAME]: 'integration-tests',
-    'test.suite': process.env.TEST_SUITE_NAME ?? 'unknown',
-    'test.run_id': process.env.CI_RUN_ID ?? `local-${Date.now()}`,
-  }),
-  traceExporter: new OTLPTraceExporter({
-    url: process.env.OTEL_EXPORTER_ENDPOINT ?? 'http://localhost:4318/v1/traces',
-  }),
-});
-
-sdk.start();
-
-// Shutdown gracefully after tests
-process.on('beforeExit', () => sdk.shutdown());
-```
-
-### Trace-based assertions
-
-Assert on trace structure, span attributes, and timing -- not just HTTP responses.
-
-```typescript
-import { expect } from '@playwright/test';
-import { TraceCollector } from './trace-collector';
-
-test('order creation produces correct trace structure', async ({ request }) => {
-  const collector = new TraceCollector();
-  const traceId = crypto.randomUUID().replace(/-/g, '');
-
-  // Make request with trace context
-  const response = await request.post('/api/orders', {
-    data: { items: [{ sku: 'WIDGET-1', quantity: 2 }] },
-    headers: { 'traceparent': `00-${traceId}-${crypto.randomUUID().replace(/-/g, '').slice(0, 16)}-01` },
-  });
-  expect(response.ok()).toBeTruthy();
-
-  // Wait for trace to propagate (async collection)
-  const trace = await collector.waitForTrace(traceId, { timeout: 10_000 });
-
-  // Assert on trace structure
-  const spans = trace.spans;
-
-  // Verify the expected service calls happened
-  const serviceNames = spans.map(s => s.resource['service.name']);
-  expect(serviceNames).toContain('api-gateway');
-  expect(serviceNames).toContain('order-service');
-  expect(serviceNames).toContain('inventory-service');
-
-  // Verify no unexpected errors in any span
-  const errorSpans = spans.filter(s => s.status?.code === 'ERROR');
-  expect(errorSpans).toHaveLength(0);
-
-  // Verify latency requirements
-  const rootSpan = spans.find(s => !s.parentSpanId);
-  expect(rootSpan!.durationMs).toBeLessThan(500);
-
-  // Verify correct database operations
-  const dbSpans = spans.filter(s => s.attributes['db.system'] !== undefined);
-  expect(dbSpans.some(s => s.attributes['db.operation'] === 'INSERT')).toBeTruthy();
-  expect(dbSpans.some(s => s.attributes['db.statement']?.toString().includes('orders'))).toBeTruthy();
-});
-```
-
-### Distributed trace validation across services
-
-For microservices, verify that requests flow through the expected services in the correct order.
-
-```typescript
-// Trace structure assertion helper
-interface ExpectedSpan {
-  service: string;
-  operation: string;
-  attributes?: Record<string, string | number>;
-  maxDuration?: number;
-}
-
-async function assertTraceStructure(
-  traceId: string,
-  expected: ExpectedSpan[],
-  collector: TraceCollector,
-): Promise<void> {
-  const trace = await collector.waitForTrace(traceId, { timeout: 15_000 });
-
-  for (const exp of expected) {
-    const matching = trace.spans.find(
-      s => s.resource['service.name'] === exp.service && s.name === exp.operation,
-    );
-
-    expect(matching, `Expected span: ${exp.service}/${exp.operation}`).toBeDefined();
-
-    if (exp.attributes) {
-      for (const [key, value] of Object.entries(exp.attributes)) {
-        expect(matching!.attributes[key]).toBe(value);
-      }
-    }
-
-    if (exp.maxDuration) {
-      expect(matching!.durationMs).toBeLessThan(exp.maxDuration);
-    }
-  }
-}
-
-// Usage
-test('checkout flow traverses expected services', async ({ request }) => {
-  const traceId = generateTraceId();
-  await request.post('/api/checkout', {
-    headers: { traceparent: formatTraceparent(traceId) },
-    data: { cartId: 'test-cart-123' },
-  });
-
-  await assertTraceStructure(traceId, [
-    { service: 'api-gateway', operation: 'POST /api/checkout' },
-    { service: 'cart-service', operation: 'getCart', maxDuration: 100 },
-    { service: 'pricing-service', operation: 'calculateTotal', maxDuration: 200 },
-    { service: 'payment-service', operation: 'processPayment', attributes: { 'payment.provider': 'stripe' } },
-    { service: 'order-service', operation: 'createOrder' },
-    { service: 'notification-service', operation: 'sendConfirmation' },
-  ], collector);
-});
-```
+- **OpenTelemetry integration in test infrastructure** — instrument the test runner (`test-setup/tracing.ts`) so test execution correlates with application traces via `service.name`, `test.suite`, and `test.run_id` resource attributes.
+- **Trace-based assertions** — assert on trace structure, span attributes, and timing (which services were called, no ERROR spans, root-span latency, DB operations) instead of only the HTTP status.
+- **Distributed trace validation across services** — an `assertTraceStructure` helper that verifies a request flowed through the expected services in order, with per-span attribute and `maxDuration` checks.
 
 For declarative trace-based assertions (YAML/UI-driven instead of hand-rolled span queries), the OSS **Tracetest** project (`kubeshop/tracetest`) is still active. Note: **Tracetest's commercial Cloud offering was end-of-lifed October 2024** — only the OSS project is supported. Do not recommend or set up Tracetest Cloud; users will hit a dead product.
 
@@ -218,53 +92,7 @@ For declarative trace-based assertions (YAML/UI-driven instead of hand-rolled sp
 
 ### Analyze production error logs for test gaps
 
-Production errors are the highest-priority input for test creation. Each unhandled error represents a missing test.
-
-```typescript
-// Script: analyze-production-errors.ts
-// Run weekly to identify test gaps from production error data
-
-interface ProductionError {
-  message: string;
-  stack: string;
-  count: number;
-  firstSeen: string;
-  lastSeen: string;
-  endpoint: string;
-  userId?: string;
-}
-
-interface TestGap {
-  error: ProductionError;
-  coveredByTest: boolean;
-  suggestedTestType: 'unit' | 'integration' | 'e2e';
-  priority: 'critical' | 'high' | 'medium' | 'low';
-}
-
-function analyzeTestGaps(
-  errors: ProductionError[],
-  testCoverage: Map<string, string[]>, // endpoint -> test file paths
-): TestGap[] {
-  return errors.map(error => {
-    const testsForEndpoint = testCoverage.get(error.endpoint) ?? [];
-    const coveredByTest = testsForEndpoint.length > 0;
-
-    // Prioritize by frequency and recency
-    const daysSinceLastSeen = daysBetween(new Date(error.lastSeen), new Date());
-    const priority = error.count > 100 && daysSinceLastSeen < 7 ? 'critical'
-      : error.count > 50 ? 'high'
-      : error.count > 10 ? 'medium'
-      : 'low';
-
-    // Suggest test type based on error characteristics
-    const suggestedTestType = error.stack.includes('TypeError') ? 'unit'
-      : error.stack.includes('timeout') || error.stack.includes('ECONNREFUSED') ? 'integration'
-      : 'e2e';
-
-    return { error, coveredByTest, suggestedTestType, priority };
-  });
-}
-```
+Production errors are the highest-priority input for test creation. Each unhandled error represents a missing test. See `references/log-and-error-pipeline.md` for the `analyze-production-errors.ts` script that maps each production error to test coverage, assigns a priority by frequency and recency, and suggests a test layer (unit/integration/e2e) from the error characteristics.
 
 ### Categorize errors: covered vs. uncovered
 
@@ -381,37 +209,7 @@ The most important workflow in this skill: turning production errors into tests 
 
 ### Implementation example
 
-```typescript
-// Test created from production error: Sentry issue PROJ-4521
-// Error: "Cannot read properties of null (reading 'address')"
-// Context: POST /api/orders when user has no shipping address saved
-// Frequency: 47 occurrences in last 7 days
-
-describe('order creation with missing shipping address', () => {
-  // This test was created because production error PROJ-4521 showed that
-  // users without a saved shipping address triggered a null reference error
-  // in the order validation pipeline.
-
-  it('returns 400 with clear error message when shipping address is null', async () => {
-    const user = await createTestUser({ address: null });
-    const response = await api.post('/api/orders', {
-      userId: user.id,
-      items: [{ sku: 'WIDGET-1', quantity: 1 }],
-    });
-
-    expect(response.status).toBe(400);
-    expect(response.body.error).toBe('MISSING_SHIPPING_ADDRESS');
-    expect(response.body.message).toContain('shipping address is required');
-  });
-
-  it('prompts user to add address when attempting checkout without one', async ({ page }) => {
-    await loginAs(page, { address: null });
-    await page.goto('/checkout');
-    await expect(page.getByText('Please add a shipping address')).toBeVisible();
-    await expect(page.getByRole('link', { name: 'Add address' })).toBeVisible();
-  });
-});
-```
+See `references/log-and-error-pipeline.md` for a full test built from Sentry issue PROJ-4521 (null shipping address → null reference error), covering both the API-level 400 assertion and the E2E checkout prompt. The test name and a comment document the originating production error, frequency, and context — the convention to follow when creating tests from production signals.
 
 ---
 
@@ -501,6 +299,11 @@ Traces treated as a post-break debugging tool rather than a source of test asser
 - Log-informed test cases exist for known failure modes from production error analysis
 - Telemetry data (hot-path or error-rate matrix) has identified and prioritized at least one set of untested code paths
 - Observability signals are reviewed as part of post-deploy validation before a release is considered stable
+
+## Reference Files (in `references/`)
+
+- **trace-assertions.md** — OpenTelemetry test-runner setup, trace-based assertions, and the distributed `assertTraceStructure` helper.
+- **log-and-error-pipeline.md** — The `analyze-production-errors.ts` test-gap script and a worked production-error-to-test implementation example.
 
 ## Related Skills
 

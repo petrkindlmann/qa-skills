@@ -60,165 +60,13 @@ expect(discount(100, true)).toBe(80);
 
 > **Node baseline:** `c8` v11 and `nyc` v18 (both released 2026-02-22) require **Node 20 || >= 22**. If your project still runs on Node 18, pin `c8@^10` / `nyc@^17` until you can upgrade. New projects should standardize on Node 20+ and the current majors.
 
-### V8 / c8 (Node.js Built-in)
+Three provider choices:
 
-V8's built-in code coverage is faster than Istanbul because it does not instrument source code. Use `c8` as the CLI wrapper.
+- **V8 / c8 (Node.js built-in)** — faster because it does not instrument source. Default for Vitest. Recommended for new Node projects.
+- **Istanbul / nyc** — instruments source, slower but more widely compatible. Use when V8 maps poorly to your transpiled output.
+- **coverage.py (Python)** — `pytest-cov` wrapper. coverage.py 7.13+ supports a standalone `.coveragerc.toml`.
 
-```bash
-npm i -D c8@^11   # Node 20+ baseline
-```
-
-```json
-// package.json
-{
-  "scripts": {
-    "test": "vitest run",
-    "test:coverage": "vitest run --coverage"
-  }
-}
-```
-
-```typescript
-// vitest.config.ts
-import { defineConfig } from "vitest/config";
-
-export default defineConfig({
-  test: {
-    coverage: {
-      provider: "v8",
-      reporter: ["text", "html", "lcov", "json-summary"],
-      reportsDirectory: "./coverage",
-      include: ["src/**/*.ts"],
-      exclude: [
-        "src/**/*.test.ts",
-        "src/**/*.spec.ts",
-        "src/**/*.d.ts",
-        "src/**/index.ts",       // Barrel exports
-        "src/**/types.ts",       // Type-only files
-        "src/**/*.stories.ts",   // Storybook
-        "src/generated/**",      // Generated code
-      ],
-      thresholds: {
-        lines: 80,
-        branches: 80,
-        functions: 80,
-        statements: 80,
-      },
-    },
-  },
-});
-```
-
-### Istanbul / nyc (JavaScript/TypeScript)
-
-Istanbul instruments source code for coverage tracking. Slower than V8 but more widely compatible.
-
-```bash
-npm i -D nyc@^18   # Node 20+ baseline
-```
-
-```json
-// .nycrc.json
-{
-  "all": true,
-  "include": ["src/**/*.ts"],
-  "exclude": [
-    "src/**/*.test.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.d.ts",
-    "src/**/index.ts",
-    "src/generated/**"
-  ],
-  "reporter": ["text", "html", "lcov", "json-summary"],
-  "report-dir": "./coverage",
-  "check-coverage": true,
-  "branches": 80,
-  "lines": 80,
-  "functions": 80,
-  "statements": 80,
-  "watermarks": {
-    "lines": [70, 90],
-    "functions": [70, 90],
-    "branches": [70, 90],
-    "statements": [70, 90]
-  }
-}
-```
-
-```json
-// package.json (with Jest)
-{
-  "scripts": {
-    "test:coverage": "jest --coverage"
-  },
-  "jest": {
-    "coverageProvider": "v8",
-    "collectCoverageFrom": [
-      "src/**/*.ts",
-      "!src/**/*.{test,spec,d}.ts",
-      "!src/**/index.ts",
-      "!src/generated/**"
-    ],
-    "coverageThreshold": {
-      "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
-      }
-    }
-  }
-}
-```
-
-### coverage.py (Python)
-
-```bash
-pip install pytest-cov   # current coverage.py 7.13.x
-```
-
-> coverage.py 7.13.0 added `.coveragerc.toml` as a TOML-first standalone config — prefer it for new Python projects when you want config separated from `pyproject.toml`. 7.12.0 split statements vs branches totals in HTML and JSON reports.
-
-```toml
-# pyproject.toml (or .coveragerc.toml in 7.13+)
-[tool.coverage.run]
-source = ["src"]
-branch = true
-omit = [
-    "src/**/test_*.py",
-    "src/**/conftest.py",
-    "src/**/__init__.py",
-    "src/generated/*",
-]
-
-[tool.coverage.report]
-fail_under = 80
-show_missing = true
-skip_covered = true
-precision = 1
-exclude_lines = [
-    "pragma: no cover",
-    "if TYPE_CHECKING:",
-    "if __name__ == .__main__.",
-    "raise NotImplementedError",
-    "@overload",
-    "\\.\\.\\.",     # Ellipsis in abstract methods
-]
-
-[tool.coverage.html]
-directory = "coverage/html"
-
-[tool.coverage.xml]
-output = "coverage/coverage.xml"
-```
-
-```bash
-# Run tests with coverage
-pytest --cov=src --cov-report=term-missing --cov-report=html --cov-report=xml
-
-# Fail if coverage drops below threshold
-pytest --cov=src --cov-fail-under=80
-```
+See `references/tool-config.md` for the full provider configs (Vitest `coverage` block, `.nycrc.json`, Jest `coverageThreshold`, and `pyproject.toml` / `.coveragerc.toml`), install commands, and the run invocations.
 
 ### Coverage Report Types
 
@@ -261,23 +109,9 @@ npm run test:coverage
 
 ### Coverage Diff on PRs
 
-Show coverage change per PR so reviewers see the impact of each change.
+Show coverage change per PR so reviewers see the impact of each change. The standard approach is `davelosert/vitest-coverage-report-action@v2` reading the JSON summary, or `marocchino/sticky-pull-request-comment@v2` with a script that filters to changed files (via `git diff --name-only origin/main...HEAD`) and renders a markdown table.
 
-```yaml
-# GitHub Actions: coverage diff comment
-- name: Run tests with coverage
-  run: npm run test:coverage
-
-- name: Coverage Report
-  uses: davelosert/vitest-coverage-report-action@v2
-  if: github.event_name == 'pull_request'
-  with:
-    json-summary-path: coverage/coverage-summary.json
-    json-final-path: coverage/coverage-final.json
-    vite-config-path: vitest.config.ts
-```
-
-Alternative: use `marocchino/sticky-pull-request-comment@v2` with a script that reads `coverage-summary.json`, filters to changed files (via `git diff --name-only origin/main...HEAD`), and renders a markdown table showing per-file line and branch coverage.
+See `references/ci-gating.md` for the full coverage-diff workflow.
 
 ---
 
@@ -285,112 +119,17 @@ Alternative: use `marocchino/sticky-pull-request-comment@v2` with a script that 
 
 ### Threshold Configuration
 
-**Global threshold (minimum for the entire project):**
+Set a **global threshold** as the project minimum, then layer **per-directory thresholds** that are stricter for critical code (payments, auth) than for utilities. Both Vitest (`thresholds` with glob keys) and Jest (`coverageThreshold` with path keys) support per-path overrides.
 
-```typescript
-// vitest.config.ts
-coverage: {
-  thresholds: {
-    lines: 80,
-    branches: 80,
-    functions: 80,
-    statements: 80,
-  },
-}
-```
-
-**Per-directory thresholds (stricter for critical code):**
-
-```typescript
-// vitest.config.ts
-coverage: {
-  thresholds: {
-    // Global baseline
-    lines: 75,
-    branches: 75,
-
-    // Stricter for critical paths
-    "src/payments/**": { lines: 95, branches: 90 },
-    "src/auth/**": { lines: 90, branches: 85 },
-    "src/utils/**": { lines: 80, branches: 80 },
-  },
-}
-```
-
-**Jest per-file thresholds:**
-
-```javascript
-// jest.config.js
-module.exports = {
-  coverageThreshold: {
-    global: { branches: 75, functions: 75, lines: 75, statements: 75 },
-    "./src/payments/": { branches: 90, functions: 90, lines: 95, statements: 95 },
-    "./src/auth/": { branches: 85, functions: 85, lines: 90, statements: 90 },
-  },
-};
-```
+See `references/ci-gating.md` for the global, per-directory, and Jest per-file threshold config.
 
 ### Ratchet Pattern
 
-Never let coverage decrease. Record the current level as the minimum and update it upward when coverage improves.
-
-```typescript
-// scripts/coverage-ratchet.ts
-import fs from "fs";
-import coverageSummary from "../coverage/coverage-summary.json";
-
-const RATCHET_FILE = ".coverage-ratchet.json";
-
-interface Ratchet {
-  lines: number;
-  branches: number;
-  functions: number;
-  statements: number;
-  updatedAt: string;
-}
-
-// Read current ratchet or initialize
-let ratchet: Ratchet;
-try {
-  ratchet = JSON.parse(fs.readFileSync(RATCHET_FILE, "utf-8"));
-} catch {
-  ratchet = { lines: 0, branches: 0, functions: 0, statements: 0, updatedAt: "" };
-}
-
-const current = (coverageSummary as any).total;
-const metrics = ["lines", "branches", "functions", "statements"] as const;
-let failed = false;
-
-for (const metric of metrics) {
-  const currentPct = current[metric].pct;
-  const ratchetPct = ratchet[metric];
-
-  if (currentPct < ratchetPct) {
-    console.error(
-      `FAIL: ${metric} coverage dropped from ${ratchetPct}% to ${currentPct}% (delta: ${(currentPct - ratchetPct).toFixed(1)}%)`
-    );
-    failed = true;
-  } else if (currentPct > ratchetPct) {
-    console.log(`IMPROVED: ${metric} coverage increased from ${ratchetPct}% to ${currentPct}%`);
-    ratchet[metric] = Math.floor(currentPct); // Floor to avoid ratcheting on decimals
-  } else {
-    console.log(`STABLE: ${metric} coverage at ${currentPct}%`);
-  }
-}
-
-if (failed) {
-  console.error("\nCoverage ratchet failed. Coverage must not decrease.");
-  console.error("If this is intentional (e.g., removing dead code), update .coverage-ratchet.json manually.");
-  process.exit(1);
-}
-
-// Update ratchet file
-ratchet.updatedAt = new Date().toISOString();
-fs.writeFileSync(RATCHET_FILE, JSON.stringify(ratchet, null, 2) + "\n");
-console.log(`\nRatchet updated: ${JSON.stringify(ratchet)}`);
-```
+Never let coverage decrease. Record the current level as the minimum and update it upward when coverage improves. A ratchet script reads `coverage-summary.json`, compares each metric against a committed `.coverage-ratchet.json`, fails the build on any regression, and floors-up the baseline when coverage improves.
 
 Commit `.coverage-ratchet.json` to the repo (e.g., `{ "lines": 82, "branches": 78, ... }`). In CI, run the ratchet script after tests. On main branch merges, auto-commit the updated ratchet file if coverage improved.
+
+See `references/ci-gating.md` for the full `coverage-ratchet.ts` script.
 
 ### PR Diff Coverage Gate
 
@@ -402,33 +141,7 @@ Require that new code in a PR meets a higher threshold (e.g., 90%) than the proj
 
 ## Mutation Testing
 
-Mutation testing measures *assertion quality*, not just code execution. With Stryker JS v9.6+ and Vitest 4.1+, the cost is low enough to make mutation score realistic on PR-changed files.
-
-### Stryker (JS/TS)
-
-```json
-// stryker.config.json
-{
-  "$schema": "./node_modules/@stryker-mutator/core/schema/stryker-schema.json",
-  "testRunner": "vitest",
-  "coverageAnalysis": "perTest",
-  "incremental": true,
-  "incrementalFile": ".stryker-tmp/incremental.json",
-  "mutate": ["src/**/*.ts"],
-  "thresholds": { "high": 80, "low": 60, "break": 50 }
-}
-```
-
-Run on PR-changed files only with `--mutate '$(git diff --name-only origin/main...HEAD | grep "src/.*\.ts")'`. Pair `incremental: true` with the JSON cache so consecutive runs only re-mutate touched files.
-
-### mutmut (Python)
-
-```bash
-mutmut run --paths-to-mutate=src/
-mutmut results
-```
-
-mutmut 3.x is a from-scratch rewrite (still active 2026); pin via `pip install mutmut==3.*`.
+Mutation testing measures *assertion quality*, not just code execution. With Stryker JS v9.6+ and Vitest 4.1+, the cost is low enough to make mutation score realistic on PR-changed files. See `references/mutation-testing.md` for the Stryker config (`stryker.config.json`, run on changed files only) and mutmut (Python) invocation.
 
 ### Targeting
 
@@ -524,6 +237,12 @@ Coverage percentage alone is insufficient. Combine it with:
 - Coverage report is published as a CI artifact (HTML report and `json-summary`) and linked from PR comments showing per-PR coverage delta.
 - Meaningful vs. vanity coverage distinction is documented for the codebase: excluded paths are listed and justified (generated code, barrel exports, type definitions), and per-directory thresholds are set higher for critical paths such as payments and auth.
 - Coverage-as-ratchet is configured so the threshold only goes up: `.coverage-ratchet.json` is committed, the ratchet script runs in CI, and the build fails if coverage regresses from the recorded baseline.
+
+## Reference Files (in `references/`)
+
+- **tool-config.md** — Full provider configs for V8/c8 (Vitest), Istanbul/nyc, Jest, and coverage.py (Python), with install and run commands.
+- **ci-gating.md** — PR coverage-diff workflow, global/per-directory/per-file thresholds, and the `coverage-ratchet.ts` script.
+- **mutation-testing.md** — Stryker (`stryker.config.json`) and mutmut configuration for measuring assertion quality.
 
 ## Related Skills
 

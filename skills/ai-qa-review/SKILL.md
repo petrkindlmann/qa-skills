@@ -86,76 +86,19 @@ Problems that cause tests to fail intermittently or in unexpected environments.
 
 #### Sleep-Based Waiting
 
-**What it looks like:** `setTimeout`, `sleep()`, `waitForTimeout()` used for synchronization.
-
-```typescript
-// SMELL: Slow on fast machines, flaky on slow ones
-it('should show notification after save', async () => {
-  await page.click('#save');
-  await page.waitForTimeout(3000);
-  expect(await page.isVisible('.notification')).toBe(true);
-});
-
-// FIX: Wait for the specific condition
-it('should show notification after save', async () => {
-  await page.getByRole('button', { name: 'Save' }).click();
-  await expect(page.getByRole('alert')).toBeVisible();
-});
-```
+**What it looks like:** `setTimeout`, `sleep()`, `waitForTimeout()` used for synchronization. See `references/smell-examples.md` for the SMELL/FIX pair (replace `waitForTimeout` with an explicit `toBeVisible` wait).
 
 **Review action:** Reject. Sleep-based waiting is never acceptable. Require explicit wait conditions.
 
 #### Order Dependency
 
-**What it looks like:** Tests pass when run together but fail in isolation or different order.
-
-```typescript
-// SMELL: Test B depends on Test A's side effects
-describe('user management', () => {
-  it('A: should create a user', async () => {
-    await api.post('/users', { name: 'Alice' });
-  });
-  it('B: should list users', async () => {
-    const users = await api.get('/users');
-    expect(users).toContainEqual({ name: 'Alice' }); // Fails if A didn't run first
-  });
-});
-
-// FIX: Each test sets up its own state
-describe('user management', () => {
-  it('should create a user', async () => {
-    const response = await api.post('/users', { name: 'Alice' });
-    expect(response.status).toBe(201);
-  });
-  it('should list users including recently created', async () => {
-    await api.post('/users', { name: 'Bob' }); // Own setup
-    const users = await api.get('/users');
-    expect(users).toContainEqual({ name: 'Bob' });
-  });
-});
-```
+**What it looks like:** Tests pass when run together but fail in isolation or different order. See `references/smell-examples.md` for the SMELL/FIX pair (each test creating its own preconditions).
 
 **Review action:** Request data isolation. Each test must create its own preconditions.
 
 #### External Service Coupling
 
-**What it looks like:** Tests call real external APIs (payment gateways, email providers, third-party services).
-
-```typescript
-// SMELL: Fails when Stripe is down, rate-limited, or returns different data
-it('should process payment', async () => {
-  const result = await stripe.charges.create({ amount: 2000, currency: 'usd' });
-  expect(result.status).toBe('succeeded');
-});
-
-// FIX: Mock the boundary
-it('should process payment', async () => {
-  const mockStripe = { charges: { create: vi.fn().mockResolvedValue({ status: 'succeeded' }) } };
-  const service = new PaymentService(mockStripe);
-  const result = await service.charge(2000, 'usd');
-  expect(result.status).toBe('succeeded');
-});
-```
+**What it looks like:** Tests call real external APIs (payment gateways, email providers, third-party services). See `references/smell-examples.md` for the SMELL/FIX pair (mocking the service boundary).
 
 **Review action:** Request mock or fake at the service boundary. External calls belong in integration/contract tests, not unit tests.
 
@@ -167,61 +110,13 @@ Problems that make test failures hard to understand and debug.
 
 #### Weak Assertion Messages
 
-**What it looks like:** Assertion fails with no context about what was expected or why.
-
-```typescript
-// SMELL: Failure message: "Expected false to be true" -- useless
-it('should validate the form', () => {
-  expect(isValid(form)).toBe(true);
-});
-
-// FIX: Use specific assertions that produce clear failure messages
-it('should accept form with valid email and non-empty name', () => {
-  const result = validate(form);
-  expect(result.isValid).toBe(true);
-  expect(result.errors).toEqual([]);
-  // Failure: "Expected errors to equal [] but received [{ field: 'email', message: 'invalid format' }]"
-});
-```
+**What it looks like:** Assertion fails with no context about what was expected or why. See `references/smell-examples.md` for the SMELL/FIX pair (replacing `toBe(true)` with specific assertions that surface the offending value).
 
 **Review action:** Request stronger assertions with diagnostic value. The failure message should explain the problem without reading the test source.
 
 #### Multiple Failure Causes Per Test
 
-**What it looks like:** A single test covers multiple independent behaviors. When it fails, you do not know which behavior broke.
-
-```typescript
-// SMELL: If this fails, is it the creation, the update, or the deletion?
-it('should handle user lifecycle', async () => {
-  const user = await service.create({ name: 'Alice' });
-  expect(user.id).toBeDefined();
-
-  await service.update(user.id, { name: 'Bob' });
-  const updated = await service.get(user.id);
-  expect(updated.name).toBe('Bob');
-
-  await service.delete(user.id);
-  await expect(service.get(user.id)).rejects.toThrow(NotFoundError);
-});
-
-// FIX: One behavior per test
-it('should create user with generated id', async () => {
-  const user = await service.create({ name: 'Alice' });
-  expect(user.id).toBeDefined();
-});
-
-it('should update user name', async () => {
-  const user = await service.create({ name: 'Alice' });
-  await service.update(user.id, { name: 'Bob' });
-  expect((await service.get(user.id)).name).toBe('Bob');
-});
-
-it('should delete user so they cannot be retrieved', async () => {
-  const user = await service.create({ name: 'Alice' });
-  await service.delete(user.id);
-  await expect(service.get(user.id)).rejects.toThrow(NotFoundError);
-});
-```
+**What it looks like:** A single test covers multiple independent behaviors. When it fails, you do not know which behavior broke. See `references/smell-examples.md` for the SMELL/FIX pair (splitting a lifecycle test into one-behavior-per-test).
 
 **Review action:** Request test splitting. Each test should have one reason to fail.
 
@@ -233,83 +128,19 @@ Problems in test architecture that increase maintenance cost.
 
 #### Conditional Test Logic
 
-**What it looks like:** `if/else`, `switch`, or ternaries inside test bodies.
-
-```typescript
-// SMELL: Test logic that can take different paths is itself untested
-it('should handle all user roles', () => {
-  for (const role of ['admin', 'user', 'guest']) {
-    const result = getPermissions(role);
-    if (role === 'admin') {
-      expect(result).toContain('delete');
-    } else if (role === 'user') {
-      expect(result).toContain('read');
-      expect(result).not.toContain('delete');
-    } else {
-      expect(result).toEqual(['read']);
-    }
-  }
-});
-
-// FIX: Use parameterized tests (test.each / it.each)
-it.each([
-  ['admin', ['read', 'write', 'delete']],
-  ['user', ['read', 'write']],
-  ['guest', ['read']],
-])('role "%s" should have permissions %j', (role, expected) => {
-  expect(getPermissions(role)).toEqual(expected);
-});
-```
+**What it looks like:** `if/else`, `switch`, or ternaries inside test bodies. See `references/smell-examples.md` for the SMELL/FIX pair (converting a branching loop into `it.each`).
 
 **Review action:** Request parameterized tests. Conditional logic in tests hides which cases are actually verified.
 
 #### Giant Fixtures
 
-**What it looks like:** A `beforeEach` or fixture that sets up 20+ objects for every test, even though each test uses 2-3 of them.
-
-```typescript
-// SMELL: Every test pays the setup cost for data it doesn't use
-beforeEach(async () => {
-  await createUser(pool, { id: 'u1', role: 'admin' });
-  await createUser(pool, { id: 'u2', role: 'user' });
-  await createUser(pool, { id: 'u3', role: 'guest' });
-  await createProduct(pool, { id: 'p1', stock: 100 });
-  await createProduct(pool, { id: 'p2', stock: 0 });
-  await createOrder(pool, { id: 'o1', userId: 'u2' });
-  await createOrder(pool, { id: 'o2', userId: 'u2' });
-  // ... 15 more objects
-});
-
-// FIX: Each test creates only what it needs
-it('should prevent guest from deleting products', async () => {
-  const guest = await createUser(pool, { role: 'guest' });
-  const product = await createProduct(pool, { stock: 50 });
-  await expect(productService.delete(product.id, guest.id)).rejects.toThrow(ForbiddenError);
-});
-```
+**What it looks like:** A `beforeEach` or fixture that sets up 20+ objects for every test, even though each test uses 2-3 of them. See `references/smell-examples.md` for the SMELL/FIX pair (replacing a monolithic `beforeEach` with per-test inline setup).
 
 **Review action:** Request inline setup. Move shared setup to factories, not monolithic `beforeEach` blocks.
 
 #### Over-Mocking
 
-**What it looks like:** Every collaborator is mocked, including simple value objects and pure functions.
-
-```typescript
-// SMELL: Mocking the thing you are testing
-it('should format price', () => {
-  const mockFormatter = vi.fn().mockReturnValue('$29.99');
-  const result = mockFormatter(29.99);
-  expect(mockFormatter).toHaveBeenCalledWith(29.99);
-  expect(result).toBe('$29.99');
-  // This test verifies nothing about the real formatPrice function
-});
-
-// FIX: Only mock external boundaries (network, DB, filesystem, time)
-it('should format price with currency symbol', () => {
-  expect(formatPrice(29.99, 'USD')).toBe('$29.99');
-  expect(formatPrice(29.99, 'EUR')).toBe('29,99 EUR');
-});
-```
+**What it looks like:** Every collaborator is mocked, including simple value objects and pure functions. See `references/smell-examples.md` for the SMELL/FIX pair (dropping a mock of the very function under test).
 
 **Review action:** Request removal of unnecessary mocks. Mock boundaries, not internals.
 
@@ -335,41 +166,7 @@ Problems that leave gaps in what is verified.
 
 #### Happy Path Only
 
-**What it looks like:** Every test provides valid input and expects success. No error paths tested.
-
-```typescript
-// SMELL: What happens with invalid input? Empty input? Null? Boundary values?
-describe('calculateDiscount', () => {
-  it('should apply 10% discount', () => {
-    expect(calculateDiscount(100, 0.1)).toBe(90);
-  });
-  it('should apply 20% discount', () => {
-    expect(calculateDiscount(200, 0.2)).toBe(160);
-  });
-});
-
-// FIX: Add boundary, negative, and error cases
-describe('calculateDiscount', () => {
-  it('should apply percentage discount', () => {
-    expect(calculateDiscount(100, 0.1)).toBe(90);
-  });
-  it('should handle zero discount', () => {
-    expect(calculateDiscount(100, 0)).toBe(100);
-  });
-  it('should handle 100% discount', () => {
-    expect(calculateDiscount(100, 1.0)).toBe(0);
-  });
-  it('should reject negative discount', () => {
-    expect(() => calculateDiscount(100, -0.1)).toThrow('Discount must be between 0 and 1');
-  });
-  it('should reject discount over 100%', () => {
-    expect(() => calculateDiscount(100, 1.5)).toThrow('Discount must be between 0 and 1');
-  });
-  it('should handle zero price', () => {
-    expect(calculateDiscount(0, 0.1)).toBe(0);
-  });
-});
-```
+**What it looks like:** Every test provides valid input and expects success. No error paths tested. See `references/smell-examples.md` for the SMELL/FIX pair (adding zero, max, negative, and boundary cases to a discount calculator).
 
 **Review action:** Request missing scenarios. Use the BOUNDARY framework: Boundary values, Null/empty, Duplicates, Ordering, Range limits.
 
@@ -393,17 +190,7 @@ When reviewing application code, assess whether it is structured for testability
 
 ### Dependency Injection
 
-Flag classes that instantiate dependencies directly (`new PostgresDatabase()`, `new StripeClient()` inside methods). Suggest constructor injection so tests can substitute mocks/fakes.
-
-```typescript
-// HARD TO TEST                          // TESTABLE
-class OrderService {                     class OrderService {
-  async create(data: OrderInput) {         constructor(
-    const db = new PostgresDB();             private readonly db: Database,
-    const email = new SendGrid();            private readonly email: EmailClient,
-  }                                        ) {}
-}                                        }
-```
+Flag classes that instantiate dependencies directly (`new PostgresDatabase()`, `new StripeClient()` inside methods). Suggest constructor injection so tests can substitute mocks/fakes. See `references/testability-refactors.md` for the hard-to-test vs. testable side-by-side.
 
 ### Side Effect Isolation
 
@@ -503,6 +290,13 @@ Three prompt patterns for AI-assisted review:
 - Findings report created with severity ratings (high/medium/low) for each identified issue
 - High-severity issues have actionable remediation steps, not just descriptions of the problem
 - Review findings fed back into the team's Definition of Done to prevent recurrence
+
+---
+
+## Reference Files (in `references/`)
+
+- **smell-examples.md** — Full SMELL/FIX code for every catalogued smell across reliability, diagnostic, design, and coverage dimensions.
+- **testability-refactors.md** — Hard-to-test vs. testable before/after code for the Testability Analysis section (dependency injection).
 
 ---
 

@@ -90,45 +90,7 @@ Pick the layer that fits the job. Don't reach for hand-rolled TS unless none of 
 
 **Public benchmarks** (HELM, LMSYS Chatbot Arena, Inspect AI's catalog) are for *model selection*, not for app regression testing — they don't know your domain. Use them when picking a base model; use the tools above for everything after.
 
-### Tool-call validation with DeepEval (replaces hand-rolled assertions)
-
-```python
-# pip install deepeval
-from deepeval import evaluate
-from deepeval.metrics import TaskCompletionMetric, ToolCorrectnessMetric, ArgumentCorrectnessMetric
-from deepeval.test_case import LLMTestCase, ToolCall
-
-case = LLMTestCase(
-    input="What is the weather in Prague?",
-    actual_output="It is currently 18°C and partly cloudy.",
-    expected_tools=[ToolCall(name="get_weather", arguments={"city": "Prague"})],
-    tools_called=[ToolCall(name="get_weather", arguments={"city": "Prague"})],
-)
-
-evaluate(
-    test_cases=[case],
-    metrics=[TaskCompletionMetric(threshold=0.7), ToolCorrectnessMetric(), ArgumentCorrectnessMetric()],
-)
-```
-
-For prompt regression at the suite level, Promptfoo's YAML config is the lowest-friction entry point:
-
-```yaml
-# promptfooconfig.yaml
-prompts: [file://prompts/summarize.txt]
-providers:
-  - openai:gpt-4o
-  - anthropic:claude-sonnet-4-6
-tests:
-  - vars: { document: "..." }
-    assert:
-      - type: contains-all
-        value: ["actionable insight", "key finding"]
-      - type: llm-rubric
-        value: "Output is 3 sentences or fewer and contains no opinions"
-```
-
-For red-team / safety, run `garak --model_type openai --probes encoding.InjectAscii85,goat,system_prompt_extraction` against your deployed prompt before launch.
+For runnable entry points — DeepEval tool-call validation, the Promptfoo YAML suite, and the Garak red-team command — see `references/tooling-evals.md`.
 
 ---
 
@@ -136,133 +98,17 @@ For red-team / safety, run `garak --model_type openai --probes encoding.InjectAs
 
 ### Version prompts like code
 
-Prompts are a critical part of your application's behavior. They should be versioned, reviewed, and tested with the same rigor as code.
-
-```typescript
-// prompts/summarize.ts
-export const SUMMARIZE_PROMPT = {
-  version: '1.3',
-  template: `Summarize the following document in {{maxSentences}} sentences.
-Focus on key findings and actionable insights.
-Use professional tone. Do not include opinions or speculation.
-
-Document:
-{{document}}`,
-  parameters: {
-    maxSentences: { type: 'number', default: 3, min: 1, max: 10 },
-    document: { type: 'string', required: true },
-  },
-  changelog: [
-    { version: '1.3', change: 'Added "Do not include opinions" constraint' },
-    { version: '1.2', change: 'Changed from bullet points to sentences' },
-    { version: '1.1', change: 'Added professional tone requirement' },
-  ],
-};
-```
+Prompts are a critical part of your application's behavior. They should be versioned, reviewed, and tested with the same rigor as code — a versioned prompt object carries its `version`, `template`, typed `parameters`, and a `changelog`.
 
 ### Baseline response quality
 
-Establish quality baselines for each prompt and detect regressions when prompts, models, or parameters change.
-
-```typescript
-// evals/summarize.eval.ts
-interface EvalCase {
-  input: string;
-  criteria: EvalCriteria;
-}
-
-interface EvalCriteria {
-  maxLength?: number;
-  mustContain?: string[];
-  mustNotContain?: string[];
-  sentenceCount?: { min: number; max: number };
-  formatCheck?: RegExp;
-}
-
-const summarizeEvalCases: EvalCase[] = [
-  {
-    input: readFixture('quarterly-report-q3.txt'),
-    criteria: {
-      maxLength: 500,
-      mustContain: ['revenue', 'growth'],
-      mustNotContain: ['I think', 'in my opinion', 'probably'],
-      sentenceCount: { min: 2, max: 4 },
-    },
-  },
-  {
-    input: readFixture('technical-whitepaper.txt'),
-    criteria: {
-      maxLength: 500,
-      mustContain: ['methodology'],
-      mustNotContain: ['I think', 'maybe'],
-      sentenceCount: { min: 2, max: 4 },
-    },
-  },
-];
-
-describe('summarize prompt regression', () => {
-  for (const evalCase of summarizeEvalCases) {
-    it(`produces acceptable summary for: ${evalCase.input.slice(0, 50)}...`, async () => {
-      const result = await aiService.summarize(evalCase.input, { maxSentences: 3 });
-
-      if (evalCase.criteria.maxLength) {
-        expect(result.length).toBeLessThanOrEqual(evalCase.criteria.maxLength);
-      }
-      if (evalCase.criteria.mustContain) {
-        for (const term of evalCase.criteria.mustContain) {
-          expect(result.toLowerCase()).toContain(term.toLowerCase());
-        }
-      }
-      if (evalCase.criteria.mustNotContain) {
-        for (const term of evalCase.criteria.mustNotContain) {
-          expect(result.toLowerCase()).not.toContain(term.toLowerCase());
-        }
-      }
-      if (evalCase.criteria.sentenceCount) {
-        const sentences = result.split(/[.!?]+/).filter(s => s.trim().length > 0);
-        expect(sentences.length).toBeGreaterThanOrEqual(evalCase.criteria.sentenceCount.min);
-        expect(sentences.length).toBeLessThanOrEqual(evalCase.criteria.sentenceCount.max);
-      }
-    });
-  }
-});
-```
+Establish quality baselines for each prompt and detect regressions when prompts, models, or parameters change. Each eval case pairs an `input` with `criteria` (`maxLength`, `mustContain`, `mustNotContain`, `sentenceCount`, `formatCheck`), and the test asserts every applicable criterion.
 
 ### A/B test prompts
 
-When changing a prompt, run both versions against the eval suite and compare scores.
+When changing a prompt, run both versions against the eval suite over N runs and compare aggregate scores (mean, stddev, min) to pick a winner — or declare a tie when the gap is below threshold.
 
-```typescript
-async function abTestPrompts(
-  promptA: string,
-  promptB: string,
-  evalCases: EvalCase[],
-  runs: number = 5,
-): Promise<{ promptA: EvalScores; promptB: EvalScores; winner: 'A' | 'B' | 'tie' }> {
-  const scoresA: number[] = [];
-  const scoresB: number[] = [];
-
-  for (const evalCase of evalCases) {
-    for (let i = 0; i < runs; i++) {
-      const resultA = await callLLM(promptA, evalCase.input);
-      const resultB = await callLLM(promptB, evalCase.input);
-
-      scoresA.push(scoreResponse(resultA, evalCase.criteria));
-      scoresB.push(scoreResponse(resultB, evalCase.criteria));
-    }
-  }
-
-  const avgA = average(scoresA);
-  const avgB = average(scoresB);
-  const winner = Math.abs(avgA - avgB) < 0.05 ? 'tie' : avgA > avgB ? 'A' : 'B';
-
-  return {
-    promptA: { mean: avgA, stddev: stddev(scoresA), min: Math.min(...scoresA) },
-    promptB: { mean: avgB, stddev: stddev(scoresB), min: Math.min(...scoresB) },
-    winner,
-  };
-}
-```
+See `references/prompt-regression.md` for the versioned-prompt object, the baseline eval suite, and the A/B test harness.
 
 ---
 
@@ -297,27 +143,7 @@ When AI systems use tools (function calling, API calls, database queries), test 
 
 ### Verify correct tool selection
 
-```typescript
-describe('AI tool selection', () => {
-  it('selects weather tool for weather queries', async () => {
-    const result = await aiAgent.process('What is the weather in Prague?');
-    expect(result.toolCalls).toHaveLength(1);
-    expect(result.toolCalls[0].name).toBe('get_weather');
-    expect(result.toolCalls[0].arguments.city).toBe('Prague');
-  });
-
-  it('selects search tool for factual queries', async () => {
-    const result = await aiAgent.process('Who won the 2024 World Series?');
-    expect(result.toolCalls.some(tc => tc.name === 'web_search')).toBe(true);
-  });
-
-  it('does not call tools for conversational responses', async () => {
-    const result = await aiAgent.process('Thank you for your help');
-    expect(result.toolCalls).toHaveLength(0);
-    expect(result.textResponse).toBeDefined();
-  });
-});
-```
+Assert that the agent picks the right tool (and arguments) for a query, falls through to search for factual queries, and calls no tools for conversational turns. See `references/test-patterns.md` for the tool-selection test suite.
 
 ### Argument validation
 
@@ -336,66 +162,11 @@ Test three failure scenarios with mocked tools:
 
 ### Statistical testing over N runs
 
-For nondeterministic outputs, run the same test multiple times and assert on aggregate results.
-
-```typescript
-async function statisticalAssert(
-  fn: () => Promise<string>,
-  assertion: (output: string) => boolean,
-  { runs = 10, requiredPassRate = 0.8 }: { runs?: number; requiredPassRate?: number } = {},
-): Promise<void> {
-  const results = await Promise.all(
-    Array.from({ length: runs }, () => fn().then(assertion)),
-  );
-  const passCount = results.filter(Boolean).length;
-  const passRate = passCount / runs;
-
-  expect(passRate).toBeGreaterThanOrEqual(requiredPassRate);
-}
-
-// Usage
-test('summarizer consistently produces concise output', async () => {
-  await statisticalAssert(
-    () => aiService.summarize(longDocument),
-    (summary) => summary.split('.').length <= 5 && summary.length < 500,
-    { runs: 10, requiredPassRate: 0.9 },
-  );
-});
-```
+For nondeterministic outputs, run the same test multiple times and assert on aggregate results — e.g., require an 8/10 or 9/10 pass rate rather than a single pass. See `references/test-patterns.md` for the `statisticalAssert` helper.
 
 ### Property-based assertions
 
-Assert on properties that must hold regardless of the specific output.
-
-```typescript
-describe('response properties', () => {
-  it('classification always returns a valid category', async () => {
-    const validCategories = ['billing', 'technical', 'account', 'general'];
-    for (const input of testInputs) {
-      const result = await aiService.classify(input);
-      expect(validCategories).toContain(result.category);
-      expect(result.confidence).toBeGreaterThanOrEqual(0);
-      expect(result.confidence).toBeLessThanOrEqual(1);
-    }
-  });
-
-  it('response language matches request language', async () => {
-    const frenchQuery = 'Quel est le prix de cet article?';
-    const response = await aiService.chat(frenchQuery);
-    const detectedLang = await detectLanguage(response);
-    expect(detectedLang).toBe('fr');
-  });
-
-  it('structured extraction returns valid JSON schema', async () => {
-    const result = await aiService.extractContact(emailText);
-    expect(result).toMatchObject({
-      name: expect.any(String),
-      email: expect.stringMatching(/.+@.+\..+/),
-      phone: expect.stringMatching(/^[\d\s\-\+\(\)]+$/),
-    });
-  });
-});
-```
+Assert on properties that must hold regardless of the specific output: a classification always returns a valid category and a confidence in `[0,1]`, response language matches request language, structured extraction matches the expected JSON schema. See `references/test-patterns.md` for the property-based suite.
 
 ### Temperature-aware testing
 
@@ -499,6 +270,12 @@ The AI produces great results but each request costs $0.10 and takes 8 seconds. 
 - Tool call validation tests cover every tool the AI can invoke, including correct argument typing, sanitization, and error/fallback handling
 - Hallucination risk areas are identified (fact claims, URLs, numerical data, RAG responses) and each has at least one targeted test
 - Eval results are baselined and tracked across model versions so quality regressions are detectable when the underlying model changes
+
+## Reference Files (in `references/`)
+
+- **tooling-evals.md** — Runnable entry points for the eval/red-team tools: DeepEval tool-call validation, the Promptfoo YAML suite, and the Garak red-team command.
+- **prompt-regression.md** — Versioned-prompt object, the baseline eval-suite test, and the A/B prompt-comparison harness.
+- **test-patterns.md** — Tool-selection test suite, the `statisticalAssert` helper for N-run testing, and property-based assertions.
 
 ## Related Skills
 

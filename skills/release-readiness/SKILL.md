@@ -205,26 +205,7 @@ Before promoting to the next stage, verify **all** of these:
 
 ### Automated Promotion Criteria
 
-Define rules for automatic promotion between stages:
-
-```
-Promote from canary (1%) to 10% when:
-  - Error rate < 0.5% for 15 minutes
-  - P95 latency < 500ms
-  - No new exception types
-  - Zero crash reports
-
-Promote from 10% to 50% when:
-  - Error rate < 0.5% for 1 hour
-  - P95 latency < 500ms
-  - Conversion rate within 5% of baseline
-  - No customer-reported issues
-
-Promote from 50% to 100% when:
-  - Error rate < 0.5% for 2 hours
-  - All business metrics within expected range
-  - No rollback signals from any monitoring system
-```
+Define rules for automatic promotion between stages. Each gate combines an error-rate ceiling, a latency ceiling, a stability window, and (at higher stages) business-metric guardrails. See `references/rollout-automation.md` for the full canary→10%→50%→100% promotion ruleset.
 
 ### Feature Flag Gradual Rollout
 
@@ -360,22 +341,7 @@ When a migration can't be rolled back:
 
 ### Verification Commands
 
-Quick checks you can run right after deployment:
-
-```bash
-# Check application health
-curl -s https://your-app.com/health | jq .
-
-# Check response time
-curl -o /dev/null -s -w "HTTP %{http_code} in %{time_total}s\n" https://your-app.com
-
-# Check for new errors in the last 15 minutes (Sentry CLI example)
-sentry-cli issues list --project your-project --query "firstSeen:>15m"
-
-# Compare error counts (Datadog example)
-# Before deploy: note the 5xx count
-# After deploy: check if 5xx count increased
-```
+Quick checks you can run right after deployment: a health-endpoint curl, a response-time curl, and error-tracker queries (Sentry/Datadog) comparing the 5xx count before and after deploy. See `references/rollout-automation.md` for the copy-paste command snippets.
 
 ---
 
@@ -445,40 +411,7 @@ Standard A/B fails on marketplaces, ride-share, ad auctions, and other systems w
 
 ## Templates
 
-### Release Communication Template
-
-```
-Subject: [Release] v{version} — {date}
-
-Status: DEPLOYING / DEPLOYED / ROLLED BACK
-
-Changes:
-- {Summary of changes, 3-5 bullet points}
-
-Risk Level: LOW / MEDIUM / HIGH
-Rollback Plan: {Revert deploy / Disable feature flag / etc.}
-On-Call: {Name, contact}
-
-Monitoring Dashboard: {link}
-Release Notes: {link}
-```
-
-### Rollback Communication Template
-
-```
-Subject: [Rollback] v{version} — {date} {time}
-
-Status: ROLLED BACK
-
-Reason: {Brief description of the issue}
-Impact: {Who was affected, for how long}
-Current State: Running previous version v{prev_version}
-
-Next Steps:
-- Root cause investigation: {owner}
-- Fix ETA: {estimate or "investigating"}
-- Re-release plan: {TBD after investigation}
-```
+Two fill-in-the-blank announcement templates — one for the release itself (status, changes, risk level, on-call, dashboard links) and one for a rollback (reason, impact, current state, next steps). See `references/communication-templates.md` for both ready-to-copy templates.
 
 ---
 
@@ -489,6 +422,11 @@ Next Steps:
 - Rollback criteria documented (specific thresholds that trigger rollback) and rollback procedure practiced on staging
 - Staged rollout plan defined with traffic percentages, promotion criteria, and guardrail metrics for each stage
 - Release sign-off recorded with approver names, timestamp, and link to the go/no-go checklist artifact
+
+## Reference Files (in `references/`)
+
+- **rollout-automation.md** — Automated canary→10%→50%→100% promotion criteria and post-deployment verification command snippets (health/response-time curls, Sentry/Datadog error checks).
+- **communication-templates.md** — Fill-in-the-blank release and rollback announcement templates.
 
 ## Related Skills
 

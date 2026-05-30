@@ -96,116 +96,19 @@ Explore [target]
   to discover [information]
 ```
 
-**Examples:**
-
-```
-Explore the checkout flow
-  with multiple payment methods and expired cards
-  to discover how the system handles payment failures and edge cases
-
-Explore the user profile page
-  with slow network conditions (Chrome DevTools throttling)
-  to discover how the UI handles latency, timeouts, and partial loads
-
-Explore the search functionality
-  with special characters, Unicode, and SQL injection strings
-  to discover input validation gaps and error handling behavior
-
-Explore the data export feature
-  with datasets of 0, 1, 1000, and 100000 records
-  to discover performance boundaries and data integrity issues
-
-Explore the multi-user collaboration flow
-  with two browser sessions logged in as different users
-  to discover race conditions, conflict resolution, and real-time sync behavior
-```
-
 **Charter quality checklist:**
 - Target is specific enough to guide exploration (not "explore the app")
 - Resources name specific tools, data, or conditions to use
 - Information goal describes what you want to learn, not what you want to prove
 - A single session can reasonably cover the charter in 45-90 minutes
 
-### Session Setup
+See `references/session-templates.md` for five worked charter examples (checkout, profile, search, data export, multi-user collaboration).
 
-**Before the session:**
+### Session Setup, Flow, and Debrief
 
-1. Read the charter and understand the target area
-2. Prepare the environment (deploy the right version, seed test data, set up monitoring)
-3. Prepare tools (browser DevTools open, screen recorder running if capturing evidence, note-taking template ready)
-4. Set a timer for the session duration
-5. Clear distractions (close Slack, mute notifications)
+The full session lifecycle — pre-session setup steps, environment preparation checklist, the minute-by-minute session flow, the "when you find something interesting" loop, and the structured debrief template — lives in `references/session-templates.md`. Pull it up at the start of a session and keep it open.
 
-**Environment preparation checklist:**
-
-```
-[ ] Correct build/version deployed
-[ ] Test data seeded (relevant states: empty, typical, large)
-[ ] Test accounts ready (roles: admin, standard user, guest)
-[ ] DevTools open: Console, Network, Performance tabs
-[ ] Screen recorder running (optional but recommended)
-[ ] Note-taking template open
-[ ] Timer set: ___ minutes
-```
-
-### During the Session
-
-Explore the target area guided by the charter. Use heuristics (below) as thinking prompts. Follow interesting leads even if they deviate slightly from the charter -- document the deviation.
-
-**Session flow:**
-
-```
-0:00 - 0:05   Orient: Navigate to the target area, understand the current state
-0:05 - 0:15   Survey: Perform the happy path to establish baseline behavior
-0:15 - 0:55   Explore: Apply heuristics, probe boundaries, follow anomalies
-0:55 - 1:00   Wrap up: Review notes, capture final observations
-1:00 - 1:15   Debrief: Summarize findings, identify follow-up actions
-```
-
-**When you find something interesting:**
-
-1. Stop and observe -- do not rush past anomalies
-2. Reproduce it -- can you make it happen again?
-3. Vary the conditions -- does it happen with different data, users, or browsers?
-4. Document it -- screenshot, console log, network trace
-5. Assess severity -- is this a bug, a design question, or a test idea?
-6. Decide: investigate deeper now, or note it and continue exploring?
-
-### Debrief
-
-After every session, conduct a structured debrief (even if it is just self-reflection for a solo tester).
-
-**Debrief template:**
-
-```
-Session Debrief
-Charter: [charter text]
-Tester: [name]
-Duration: [planned] → [actual]
-Date: [date]
-Build: [version/commit]
-
-Coverage:
-  What percentage of the charter was covered? [%]
-  What areas were explored that were NOT in the charter?
-  What areas in the charter were NOT explored? Why?
-
-Findings:
-  Bugs: [count] (list with IDs if filed)
-  Issues: [count] (not bugs, but concerns -- performance, UX, design questions)
-  Test ideas: [count] (ideas for new automated tests)
-
-Observations:
-  What surprised you?
-  What was harder than expected?
-  What areas need deeper exploration in a follow-up session?
-
-Follow-up Actions:
-  [ ] File bug reports for findings
-  [ ] Create automated tests for reproducible bugs
-  [ ] Schedule follow-up session for unexplored areas
-  [ ] Update risk assessment based on findings
-```
+Key timing guardrails to remember without opening the reference: orient and survey in the first 15 minutes, explore for ~40, wrap up and debrief at the end. Always debrief, even solo.
 
 ---
 
@@ -237,128 +140,20 @@ Adds three lenses to the base HICCUPS model:
 | **E** | Explainability | Can you explain the behavior to someone else? If not, it might be a bug. |
 | **W** | World | Does it work in the real world? (different locales, time zones, network conditions, screen sizes) |
 
-### Boundary Testing Heuristics
+### Heuristic Test-Idea Banks
 
-Boundaries are where bugs cluster. Systematically test these:
+The detailed test-idea lists for boundary, state-transition, error-handling, and "what if" exploration are in `references/heuristics-and-automation.md`. Reach for them when you need concrete prompts:
 
-```
-Numeric boundaries:
-  - Zero, one, many
-  - Minimum - 1, minimum, minimum + 1
-  - Maximum - 1, maximum, maximum + 1
-  - Negative numbers (if unexpected)
-  - Very large numbers (overflow)
-  - Decimal precision (0.1 + 0.2 ≠ 0.3)
-
-String boundaries:
-  - Empty string
-  - Single character
-  - Maximum length
-  - Maximum length + 1
-  - Unicode (emoji 👋, RTL text مرحبا, CJK characters 你好)
-  - Special characters (' " < > & \ / ; -- DROP TABLE)
-  - Whitespace only (spaces, tabs, newlines)
-  - Leading/trailing whitespace
-
-Time boundaries:
-  - Midnight (00:00), end of day (23:59:59)
-  - Timezone changes (DST transitions)
-  - Leap year (Feb 29), month boundaries (Jan 31 → Feb 1)
-  - Epoch (1970-01-01), far future (2038, Y2K38)
-  - Date formats across locales (DD/MM vs MM/DD)
-
-Collection boundaries:
-  - Empty collection
-  - Single item
-  - Exactly at page size boundary (e.g., 20, 21 items with 20-per-page)
-  - More than max displayable
-  - Duplicate items
-```
-
-### State Transition Heuristics
-
-Focus on how the application moves between states:
-
-```
-State transition test ideas:
-  - What happens if you skip a step? (Direct URL to step 3 of a wizard)
-  - What happens if you go backward? (Browser back button, undo)
-  - What happens if you interrupt? (Close tab mid-operation, lose network)
-  - What happens if you repeat? (Double-click submit, refresh during save)
-  - What happens if two users trigger the same transition? (Concurrent edits)
-  - What is the state after an error? (Can you retry? Is data corrupted?)
-  - What happens on timeout? (Session expires mid-form, API call hangs)
-```
-
-### Error Handling Heuristics
-
-```
-Error handling test ideas:
-  - Disconnect the network mid-operation
-  - Reduce bandwidth to 3G speeds
-  - Fill disk space (for upload features)
-  - Send malformed API responses (modify with browser DevTools)
-  - Trigger server errors (if you can control the backend)
-  - Exceed rate limits
-  - Use expired tokens/sessions
-  - Provide invalid file types to upload controls
-  - Submit forms with JavaScript disabled
-```
-
-### "What If" Scenarios
-
-Open-ended questions that lead to bugs:
-
-```
-What if the user...
-  - Uses the back button at every step?
-  - Opens the same page in two tabs?
-  - Switches between mobile and desktop mid-session?
-  - Has an ad blocker that blocks your analytics/tracking scripts?
-  - Pastes content from Word (with hidden formatting)?
-  - Has accessibility features enabled (screen reader, high contrast, zoom)?
-  - Is in a locale you did not consider? (RTL, long translations, different number formats)
-  - Has never used this product before and has no mental model?
-  - Is deliberately trying to break the application?
-```
+- **Boundary heuristics** — numeric, string, time, and collection boundaries (zero/one/many, max±1, Unicode, DST, page-size edges).
+- **State transition heuristics** — skipping steps, going backward, interrupting, repeating, concurrent transitions, post-error state.
+- **Error handling heuristics** — network loss, malformed responses, rate limits, expired sessions, invalid uploads.
+- **"What if" scenarios** — back button, duplicate tabs, ad blockers, pasted formatting, accessibility features, unfamiliar locales, hostile users.
 
 ---
 
 ## Note-Taking Template
 
-Use this during the session. Capture observations in real time.
-
-### Session Log Format
-
-```
-Session: [charter summary]
-Date: [date]  |  Tester: [name]  |  Build: [version]  |  Duration: [minutes]
-
-| Time  | Action / Input           | Observation                  | Bug? | Follow-up      |
-|-------|--------------------------|------------------------------|------|----------------|
-| 0:03  | Navigate to /checkout    | Page loads in 1.2s           | No   |                |
-| 0:05  | Add item, proceed        | Happy path works             | No   |                |
-| 0:08  | Enter expired card       | Error: "Card declined" ✓     | No   |                |
-| 0:10  | Enter card with spaces   | Error: "Invalid card number" | ?    | Spaces should   |
-|       |                          | but many cards have spaces   |      | be stripped     |
-| 0:14  | Paste card with dashes   | Accepted and processed ✓     | No   | Inconsistent    |
-|       |                          |                              |      | with spaces     |
-| 0:18  | Submit with empty email  | No validation, order created | YES  | BUG: required   |
-|       |                          | without email                |      | field not       |
-|       |                          |                              |      | validated       |
-| 0:22  | Network offline mid-pay  | Spinner forever, no timeout  | YES  | BUG: no timeout |
-|       |                          |                              |      | handling        |
-```
-
-### Tagging Observations
-
-Use consistent tags for post-session analysis:
-
-- **BUG** -- Definite defect, file a report
-- **QUESTION** -- Unclear whether this is intended behavior; ask product
-- **IDEA** -- Test case idea for automation
-- **RISK** -- Potential issue that needs investigation
-- **NOTE** -- Interesting observation, not actionable yet
+Use a session log to capture observations in real time. The session-log table format and the observation tags (BUG, QUESTION, IDEA, RISK, NOTE) are in `references/session-templates.md`. Tag every observation consistently so the debrief can sort findings without re-reading the whole log.
 
 ---
 
@@ -386,47 +181,7 @@ Not all testing should be exploratory, and not all testing should be automated. 
 
 ### The Exploration-to-Automation Pipeline
 
-```
-Exploratory session finds bug
-        │
-        ▼
-File bug report with reproduction steps
-        │
-        ▼
-Developer fixes the bug
-        │
-        ▼
-Write automated regression test that covers the scenario
-        │
-        ▼
-Bug is now prevented from recurring
-        │
-        ▼
-Future exploratory sessions focus on NEW areas (not re-checking old bugs)
-```
-
-**When converting findings to automated tests:**
-
-1. Extract the exact reproduction steps from the session log
-2. Determine the appropriate test level (unit if logic bug, integration if boundary bug, E2E if UI flow bug)
-3. Write the test with a clear reference to the original bug ID
-4. Verify the test fails on the buggy version and passes on the fix
-
-```typescript
-// Example: Converting exploratory finding to Playwright test
-// Found during session 2026-03-15: BUG-456 email validation missing on checkout
-
-test('checkout requires valid email - regression for BUG-456', async ({ page }) => {
-  await page.goto('/checkout');
-  // Leave email empty
-  await page.getByLabel('Email').fill('');
-  await page.getByRole('button', { name: 'Place order' }).click();
-
-  // Should show validation error, not proceed
-  await expect(page.getByText('Email is required')).toBeVisible();
-  await expect(page).not.toHaveURL(/.*confirmation/);
-});
-```
+Every reproducible bug found through exploration should become an automated regression test, so future sessions focus on new areas instead of re-checking old bugs. See `references/heuristics-and-automation.md` for the full pipeline diagram, the conversion steps, and a worked Playwright regression example (BUG-456 email validation).
 
 ---
 
@@ -510,6 +265,11 @@ CTAL-AT v2.0 (May 2026) names several tester archetypes worth knowing for staffi
 If your org is moving toward embedded testers, exploratory testing is one of the highest-leverage skills to demonstrate — it's hard for developers to pick up without coaching, and it's where the testing mindset shows up most clearly.
 
 For background on the broader testing-vs-checking distinction and AI's role, see "What Is Testing? A Conversation with Bach and Bolton" (DevelopSense, Feb 2026): https://developsense.com/blog/2026/02/what-is-testing-a-conversation-with-james-bach-and-michael-bolton
+
+## Reference Files (in `references/`)
+
+- **session-templates.md** — Charter examples, environment-prep checklist, session-flow timings, debrief template, and the note-taking session-log format.
+- **heuristics-and-automation.md** — Boundary/state/error/"what if" heuristic test-idea banks, the exploration-to-automation pipeline diagram, and a worked Playwright regression example.
 
 ## Related Skills
 

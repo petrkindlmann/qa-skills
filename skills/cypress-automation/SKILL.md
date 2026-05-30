@@ -75,370 +75,71 @@ Use `data-testid`, `data-cy`, or `data-test` attributes for selectors. They are 
 
 ---
 
-## Project Structure
+## Project Structure & Configuration
 
-```
-project-root/
-├── cypress.config.ts
-├── cypress/
-│   ├── e2e/                    # E2E test specs, organized by feature
-│   ├── component/              # Component test specs (*.cy.tsx)
-│   ├── fixtures/               # Static test data (JSON), including api-responses/
-│   ├── support/
-│   │   ├── commands.ts         # Custom commands
-│   │   ├── e2e.ts              # E2E support file
-│   │   ├── component.ts        # Component support file
-│   │   └── index.d.ts          # TypeScript declarations for custom commands
-│   └── downloads/              # Git-ignored
-├── cypress.env.json            # Git-ignored, environment-specific variables
-└── tsconfig.json
-```
+Standard layout splits `e2e/`, `component/`, `fixtures/`, and `support/` directories, with `cypress.config.ts` at the root configuring both the `e2e` and `component` runners. Key config choices: `baseUrl` from env (never hardcode for CI), explicit viewport, `retries.runMode: 2` for CI, and the framework/bundler pair under `component.devServer`.
 
-### cypress.config.ts
-
-```typescript
-import { defineConfig } from 'cypress';
-
-export default defineConfig({
-  projectId: process.env.CYPRESS_PROJECT_ID, // For Cypress Cloud
-
-  e2e: {
-    baseUrl: process.env.CYPRESS_BASE_URL ?? 'http://localhost:3000',
-    specPattern: 'cypress/e2e/**/*.cy.ts',
-    supportFile: 'cypress/support/e2e.ts',
-    viewportWidth: 1280,
-    viewportHeight: 720,
-    defaultCommandTimeout: 10000,
-    requestTimeout: 15000,
-    responseTimeout: 30000,
-    video: false,                    // Enable in CI if needed
-    screenshotOnRunFailure: true,
-    retries: {
-      runMode: 2,                    // Retries in CI (cypress run)
-      openMode: 0,                   // No retries in interactive mode
-    },
-    // experimentalRunAllSpecs is no longer needed — stabilized in Cypress 14;
-    // the "Run all specs" tab is the default in 15.x.
-    setupNodeEvents(on, config) {
-      // Task plugins, code coverage, etc.
-      return config;
-    },
-  },
-
-  component: {
-    devServer: {
-      framework: 'react',           // 'react' | 'vue' | 'angular' | 'svelte'
-      bundler: 'vite',              // 'vite' | 'webpack'
-    },
-    specPattern: 'cypress/component/**/*.cy.tsx',
-    supportFile: 'cypress/support/component.ts',
-  },
-});
-```
-
-Add `"types": ["cypress"]` to `tsconfig.json` compilerOptions and include `"cypress/**/*.ts"` in the `include` array.
+See `references/config-and-commands.md` for the full directory tree, the complete `cypress.config.ts`, and the `tsconfig.json` additions.
 
 ---
 
 ## Custom Commands
 
-Custom commands encapsulate repeated actions and provide a clean API. Always type them for autocomplete and compile-time safety.
-
-### Defining Commands
-
-```typescript
-// cypress/support/commands.ts
-
-// Login command -- avoid UI login in every test
-Cypress.Commands.add('login', (email: string, password: string) => {
-  cy.session([email, password], () => {
-    cy.request({
-      method: 'POST',
-      url: '/api/auth/login',
-      body: { email, password },
-    }).then((response) => {
-      expect(response.status).to.eq(200);
-      window.localStorage.setItem('auth_token', response.body.token);
-    });
-  });
-});
-
-// Data attribute selector shorthand
-Cypress.Commands.add('getByTestId', (testId: string) => {
-  return cy.get(`[data-testid="${testId}"]`);
-});
-
-// Assert toast notification appears and disappears
-Cypress.Commands.add('shouldShowToast', (message: string) => {
-  cy.get('[role="alert"]')
-    .should('be.visible')
-    .and('contain.text', message);
-  cy.get('[role="alert"]').should('not.exist');
-});
-```
-
-### TypeScript Declarations
-
-```typescript
-// cypress/support/index.d.ts
-
-declare namespace Cypress {
-  interface Chainable {
-    /**
-     * Log in via API and cache the session.
-     * @example cy.login('user@example.com', 'password123')
-     */
-    login(email: string, password: string): Chainable<void>;
-
-    /**
-     * Select element by data-testid attribute.
-     * @example cy.getByTestId('submit-button').click()
-     */
-    getByTestId(testId: string): Chainable<JQuery<HTMLElement>>;
-
-    /**
-     * Assert a toast notification appears with the given message.
-     * @example cy.shouldShowToast('Profile updated')
-     */
-    shouldShowToast(message: string): Chainable<void>;
-  }
-}
-```
+Custom commands encapsulate repeated actions and provide a clean API. Always type them for autocomplete and compile-time safety. Common commands: `login` (via `cy.session` + API, not UI), a `getByTestId` selector shorthand, and assertion helpers like `shouldShowToast`. Declare them in `cypress/support/index.d.ts` so they get autocomplete and compile-time checking.
 
 For retryable element lookups, use `Cypress.Commands.addQuery()` (Cypress 12+) instead of `Cypress.Commands.add()` -- custom queries retry automatically like built-in queries.
+
+See `references/config-and-commands.md` for the full command definitions and their TypeScript declarations.
 
 ---
 
 ## cy.intercept Patterns
 
-### Stub a Response
+`cy.intercept` covers the full network-control surface:
 
-```typescript
-cy.intercept('GET', '/api/products', {
-  statusCode: 200,
-  body: { products: [{ id: '1', name: 'Widget', price: 29.99 }] },
-}).as('getProducts');
+- **Stub a response** — return canned data with `{ statusCode, body }` and `cy.wait('@alias')`.
+- **Spy without stubbing** — `cy.intercept('POST', '/api/orders').as('createOrder')`, then assert on `interception.request.body`.
+- **Conditional responses** — drive a closure with `callCount` to simulate polling (202 → 200).
+- **Network errors** — `{ statusCode: 500 }`, `{ forceNetworkError: true }`, or `req.reply({ delay })` for slow responses.
+- **Modify real responses** — `req.continue((res) => { ...; res.send(); })`.
+- **Fixture-backed** — `{ fixture: 'api-responses/checkout-success.json' }`.
 
-cy.visit('/products');
-cy.wait('@getProducts');
-cy.getByTestId('product-card').should('have.length', 1);
-```
+Always wait on a network alias or a DOM assertion, never a fixed `cy.wait(ms)`.
 
-### Spy on Requests (No Stubbing)
-
-```typescript
-cy.intercept('POST', '/api/orders').as('createOrder');
-
-cy.getByTestId('place-order').click();
-cy.wait('@createOrder').then((interception) => {
-  expect(interception.request.body).to.have.property('items');
-  expect(interception.request.body.items).to.have.length(2);
-  expect(interception.response?.statusCode).to.eq(201);
-});
-```
-
-### Conditional Responses
-
-```typescript
-let callCount = 0;
-cy.intercept('GET', '/api/status', (req) => {
-  callCount += 1;
-  if (callCount <= 2) {
-    req.reply({ statusCode: 202, body: { status: 'processing' } });
-  } else {
-    req.reply({ statusCode: 200, body: { status: 'complete', url: '/download/report.pdf' } });
-  }
-}).as('pollStatus');
-```
-
-### Simulate Network Errors
-
-```typescript
-// Simulate server error
-cy.intercept('POST', '/api/checkout', { statusCode: 500, body: { error: 'Internal Server Error' } }).as('checkoutFail');
-
-// Simulate network failure
-cy.intercept('POST', '/api/checkout', { forceNetworkError: true }).as('networkError');
-
-// Simulate slow response
-cy.intercept('GET', '/api/dashboard', (req) => {
-  req.reply({
-    delay: 5000,
-    statusCode: 200,
-    body: { widgets: [] },
-  });
-}).as('slowDashboard');
-```
-
-### Modify Real Response
-
-```typescript
-cy.intercept('GET', '/api/feature-flags', (req) => {
-  req.continue((res) => {
-    res.body.flags['new-checkout'] = true;
-    res.send();
-  });
-}).as('featureFlags');
-```
-
-### Using Fixture Files
-
-```typescript
-// Load response from cypress/fixtures/api-responses/checkout-success.json
-cy.intercept('POST', '/api/checkout', { fixture: 'api-responses/checkout-success.json' }).as('checkout');
-```
+See `references/intercept-patterns.md` for runnable code for each of these.
 
 ---
 
 ## Component Testing
 
-Component testing mounts a single component in a real browser without running the full application. It is faster than E2E and gives more visual feedback than unit tests.
+Component testing mounts a single component in a real browser without running the full application. It is faster than E2E and gives more visual feedback than unit tests. Use `cy.mount(<Component .../>)`, pass `cy.stub()`/`cy.spy()` for callbacks, and assert with the same `cy.contains`/`cy.get` chain you use in E2E. For Vue, use `cy.mount(Component, { props: { ... } })`.
 
-### React Component Test
-
-```tsx
-// cypress/component/ProductCard.cy.tsx
-import { ProductCard } from '../../src/components/ProductCard';
-
-describe('ProductCard', () => {
-  const product = { id: '1', name: 'Widget', price: 29.99, image: '/widget.png' };
-
-  it('renders product information', () => {
-    cy.mount(<ProductCard product={product} onAddToCart={cy.stub()} />);
-
-    cy.contains('Widget').should('be.visible');
-    cy.contains('$29.99').should('be.visible');
-    cy.get('img').should('have.attr', 'src', '/widget.png');
-  });
-
-  it('calls onAddToCart with product id when button clicked', () => {
-    const onAddToCart = cy.stub().as('addToCart');
-    cy.mount(<ProductCard product={product} onAddToCart={onAddToCart} />);
-
-    cy.contains('button', 'Add to Cart').click();
-    cy.get('@addToCart').should('have.been.calledOnceWith', '1');
-  });
-
-  it('shows out of stock state', () => {
-    cy.mount(<ProductCard product={{ ...product, inStock: false }} onAddToCart={cy.stub()} />);
-
-    cy.contains('button', 'Add to Cart').should('be.disabled');
-    cy.contains('Out of Stock').should('be.visible');
-  });
-});
-```
-
-For Vue, use `cy.mount(Component, { props: { ... } })` with `cy.spy()` for event assertions. The pattern mirrors React but uses Vue's prop/event conventions.
+See `references/component-and-fixtures.md` for a full React `ProductCard` component-test suite.
 
 ---
 
 ## Data-Driven Testing with Fixtures
 
-### Static Fixture Data
+Three layers, depending on where the data comes from:
 
-```typescript
-// Load from cypress/fixtures/users.json
-describe('Role-based access', () => {
-  beforeEach(function () {
-    cy.fixture('users').as('users');
-  });
+- **Static fixtures** — `cy.fixture('users').as('users')` for JSON that rarely changes.
+- **Dynamic data via `cy.task`** — register Node-side tasks in `setupNodeEvents` for API calls or DB seeding that must run outside the browser.
+- **Environment-specific config** — merge a per-environment `baseUrl` map in `setupNodeEvents`, selected by `--env ENVIRONMENT=...`.
 
-  it('admin sees admin panel', function () {
-    const admin = this.users.find((u: { role: string }) => u.role === 'admin');
-    cy.login(admin.email, admin.password);
-    cy.visit('/admin');
-    cy.getByTestId('admin-panel').should('be.visible');
-  });
-});
-```
-
-### Dynamic Test Data via cy.task
-
-Use `cy.task` for operations that need Node.js context (API calls, database seeding):
-
-```typescript
-// cypress.config.ts -- register tasks in setupNodeEvents
-on('task', {
-  async seedTestUser(role: string) {
-    const response = await fetch(`${config.env.API_URL}/test/seed-user`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role }),
-    });
-    return response.json();
-  },
-});
-
-// In test:
-beforeEach(() => {
-  cy.task('seedTestUser', 'admin').then((user) => {
-    cy.login(user.email, user.password);
-  });
-});
-```
-
-### Environment-Specific Configuration
-
-```typescript
-// Run with: npx cypress run --env ENVIRONMENT=staging
-setupNodeEvents(on, config) {
-  const envConfig = { local: { baseUrl: 'http://localhost:3000' }, staging: { baseUrl: 'https://staging.example.com' } };
-  return { ...config, ...envConfig[config.env.ENVIRONMENT || 'local'] };
-}
-```
+See `references/component-and-fixtures.md` for the fixture, `cy.task` seeding, and env-config code.
 
 ---
 
 ## CI Integration
 
-### With Cypress Cloud
-
-Set `projectId` in `cypress.config.ts`. Run with `npx cypress run --record --key $CYPRESS_RECORD_KEY`. Cloud provides parallelization, flake detection, test replay, and analytics.
-
 **Cypress AI** (paid Cloud add-on, GA 2026) ships Auto Heal (selector self-healing), AI Test Generation, and AI Bug Triage. Overlaps directly with `test-reliability` (selector healing) and `ai-bug-triage` (failure clustering). Worth flagging during framework selection if your team is already on Cypress Cloud — buying the add-on may be cheaper than building the equivalent.
 
 > **Versions:** Current is Cypress 15.x (Node 20+ baseline). Cypress 14 dropped Node 16/18; Cypress 15 dropped Node 20 EOL paths. The `cypress-io/github-action` is at v6 (current LTS) — pin to a specific tag and verify v7 readiness before bumping.
 
-```yaml
-# GitHub Actions -- Cloud parallelization
-jobs:
-  cypress:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        containers: [1, 2, 3, 4]
-    steps:
-      - uses: actions/checkout@v4
-      - uses: cypress-io/github-action@v6
-        with:
-          record: true
-          parallel: true
-          group: 'E2E Tests'
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-```
+- **With Cypress Cloud:** set `projectId`, run with `npx cypress run --record --key $CYPRESS_RECORD_KEY`, and parallelize across a container matrix for flake detection, test replay, and analytics.
+- **Without Cloud:** use `cypress-io/github-action@v6` with `build`/`start`/`wait-on`, and upload `cypress/screenshots` + `cypress/videos` as artifacts on failure.
 
-### Without Cloud
-
-```yaml
-# GitHub Actions -- standalone
-steps:
-  - uses: actions/checkout@v4
-  - uses: cypress-io/github-action@v6
-    with:
-      build: npm run build
-      start: npm run start
-      wait-on: 'http://localhost:3000'
-      browser: chrome
-  - uses: actions/upload-artifact@v4
-    if: failure()
-    with:
-      name: cypress-artifacts
-      path: |
-        cypress/screenshots
-        cypress/videos
-```
+See `references/ci-recipes.md` for both complete GitHub Actions workflows.
 
 ---
 
@@ -477,7 +178,7 @@ Do not reach into Stripe/PayPal iframes. Mock the payment API with `cy.intercept
 
 ### Not Using cy.session() for Login
 
-UI-based login in every test is slow and fragile. Use `cy.session()` (shown in custom commands above) to authenticate via API once and cache the session.
+UI-based login in every test is slow and fragile. Use `cy.session()` (shown in the custom commands reference) to authenticate via API once and cache the session.
 
 ### Running All Tests Serially in CI
 
@@ -492,6 +193,13 @@ Parallelize once the suite exceeds 5 minutes. Use Cypress Cloud, `cypress-split`
 - `cy.intercept` used for all API dependencies that could be slow or unreliable — no tests relying on real network calls for determinism
 - Tests pass in CI with either a recorded Cypress Cloud run (parallel) or local video/screenshot artifacts uploaded on failure
 - Component tests co-located with source files (e.g. `ProductCard.cy.tsx` next to `ProductCard.tsx`) rather than in a separate top-level directory
+
+## Reference Files (in `references/`)
+
+- **config-and-commands.md** — Project directory tree, the full `cypress.config.ts`, and custom commands with their TypeScript declarations.
+- **intercept-patterns.md** — Every `cy.intercept` recipe: stub, spy, conditional, error simulation, response modification, fixture-backed.
+- **component-and-fixtures.md** — React component-test suite plus data-driven testing (static fixtures, `cy.task` seeding, env-specific config).
+- **ci-recipes.md** — GitHub Actions workflows with and without Cypress Cloud, including parallelization and artifact upload.
 
 ## Related Skills
 
