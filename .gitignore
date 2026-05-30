@@ -21,3 +21,7 @@ __pycache__/
 .venv/
 
 .wrangler/
+
+# Project survey reports (local analysis, not shipped)
+docs/PROJECT_SURVEY.md
+docs/PROJECT_SURVEY_CODEX_REVIEW.md
