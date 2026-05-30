@@ -7,7 +7,7 @@ description: >-
   descriptions, and generic stakeholder reports. Makes QA writing sound like
   a real engineer wrote it. Use when: "humanize report," "rewrite QA summary,"
   "fix test report," "make this sound human," "clean up status update."
-  Related: bug-reporting, qa-metrics, qa-dashboard, quality-postmortem.
+  Related: ai-bug-triage, qa-metrics, qa-dashboard, quality-postmortem.
 license: MIT
 metadata:
   author: kindlmann
@@ -207,7 +207,7 @@ Be honest about what you missed and why.
 
 ## Related skills
 
-- For bug report templates and severity matrices, see `bug-reporting`
+- For bug report templates and severity matrices, see `ai-bug-triage`
 - For QA metrics and what to track, see `qa-metrics`
 - For dashboard setup and stakeholder reports, see `qa-dashboard`
 - For postmortem structure and root cause analysis, see `quality-postmortem`

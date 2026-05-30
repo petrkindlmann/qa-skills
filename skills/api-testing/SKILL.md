@@ -141,4 +141,4 @@ PUT and DELETE should be idempotent. Test that calling them twice produces the s
 - **playwright-automation** -- Browser-based E2E testing, Page Object Model, and combined browser + API patterns.
 - **ci-cd-integration** -- Running API test suites in CI pipelines, parallelization, and environment management.
 - **test-strategy** -- Deciding what to test at the API layer vs. unit vs. E2E.
-- **self-healing-tests** -- Reducing maintenance burden when API contracts evolve.
+- **test-reliability** -- Reducing maintenance burden when API contracts evolve.

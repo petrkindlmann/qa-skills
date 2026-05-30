@@ -7,7 +7,7 @@ description: >-
   realistic targets by company stage. No other skills repo covers QA metrics comprehensively.
   Use when: "QA metrics," "test metrics," "quality KPIs," "test health," "flakiness rate,"
   "defect escape rate," "test dashboard."
-  Related: qa-dashboard, coverage-analysis, ci-cd-integration, qa-retrospective.
+  Related: qa-dashboard, coverage-analysis, ci-cd-integration, quality-postmortem.
 license: MIT
 metadata:
   author: kindlmann

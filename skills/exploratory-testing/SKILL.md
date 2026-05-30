@@ -6,7 +6,7 @@ description: >-
   FEW HICCUPS), bug discovery patterns, note-taking templates, and conversion of
   findings to automated tests. Use when: "exploratory testing," "SBTM," "manual testing,"
   "bug hunting," "test charter," "heuristic testing."
-  Related: test-planning, bug-reporting, risk-based-testing.
+  Related: test-planning, ai-bug-triage, risk-based-testing.
 license: MIT
 metadata:
   author: kindlmann

@@ -74,7 +74,7 @@ Ask your AI agent in natural language. The right skill activates automatically.
 
 ## Skill categories
 
-43 skills across 10 categories. Each skill is under 500 lines with cross-references to related skills.
+43 skills across 10 categories. Each skill keeps a lean `SKILL.md` (heavy code offloaded to `references/`, loaded on demand) with cross-references to related skills.
 
 ### Foundation (1)
 `qa-project-context` — project context template that every other skill reads first

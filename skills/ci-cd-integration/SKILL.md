@@ -7,7 +7,7 @@ description: >-
   copy-paste-ready workflow files for Playwright, Jest, and multi-stage pipelines.
   Use when: "CI/CD," "GitHub Actions," "pipeline," "test in CI," "GitLab CI,"
   "continuous integration," "test automation pipeline."
-  Related: playwright-automation, qa-metrics, self-healing-tests, coverage-analysis.
+  Related: playwright-automation, qa-metrics, test-reliability, coverage-analysis.
 license: MIT
 metadata:
   author: kindlmann
@@ -473,7 +473,7 @@ A stuck test can consume a runner for hours. Always set `timeout-minutes` on job
 
 - **playwright-automation** -- E2E test framework setup, Page Object Model, and test patterns.
 - **qa-metrics** -- Test result dashboards, coverage tracking, and flakiness monitoring.
-- **self-healing-tests** -- Strategies for reducing test maintenance and auto-recovering from UI changes.
+- **test-reliability** -- Strategies for reducing test maintenance and auto-recovering from UI changes.
 - **test-strategy** -- Overall test planning, pyramid design, and risk-based test selection.
 
 For complete, copy-paste-ready GitHub Actions workflow files, see `references/github-actions-templates.md`.

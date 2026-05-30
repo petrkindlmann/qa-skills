@@ -197,7 +197,7 @@ Team size and process directly affect what kind of QA strategy is realistic. A s
 
 ### Conventions
 
-Consistency rules that keep the test suite maintainable as it grows. Selector strategy is especially important for E2E stability -- skills like `playwright-automation` and `self-healing-tests` read this to generate selectors that match your conventions.
+Consistency rules that keep the test suite maintainable as it grows. Selector strategy is especially important for E2E stability -- skills like `playwright-automation` and `test-reliability` read this to generate selectors that match your conventions.
 
 ## Example: SaaS Product Context
 
