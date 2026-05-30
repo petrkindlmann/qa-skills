@@ -3,6 +3,8 @@
 QA and test automation skills for Claude Code, Codex, Cursor,
 Gemini CLI, VS Code, and other agents that support the Agent Skills Standard.
 
+**Website:** [qa-skills.com](https://qa-skills.com)
+
 ```bash
 npx skills add petrkindlmann/qa-skills
 ```
@@ -21,6 +23,7 @@ npx skills add petrkindlmann/qa-skills
 Based on patterns from QA automation work across 6+ production sites.
 
 [![Skills](https://img.shields.io/badge/Skills-43-blue.svg)](#full-skills-table)
+[![Website](https://img.shields.io/badge/Website-qa--skills.com-6366f1.svg)](https://qa-skills.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Agent Skills Standard](https://img.shields.io/badge/Agent_Skills-Standard-purple.svg)](https://agentskills.io)
 [![Playwright](https://img.shields.io/badge/Playwright-First-green.svg)](https://playwright.dev)

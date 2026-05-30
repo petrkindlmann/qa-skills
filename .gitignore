@@ -20,6 +20,12 @@ __pycache__/
 *.pyc
 .venv/
 
+# Local agent/harness config (machine-specific, not shipped)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+.claude/*.lock
+
+# Cloudflare deploy cache
 .wrangler/
 
 # Project survey reports (local analysis, not shipped)

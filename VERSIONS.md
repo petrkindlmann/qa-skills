@@ -1,5 +1,34 @@
 # Versions
 
+## v2.6.0 (2026-05-30)
+
+### References refactor, eval coverage, cross-ref fixes, and launch
+
+A full-repo hardening pass plus the first public deployment.
+
+#### Structure — references pattern across the library
+
+- All 22 over-length skills refactored to the `playwright-automation` model: heavy code blocks moved out of `SKILL.md` into `references/*.md` (loaded on demand), keeping principles, decision prose, tables, and checklists inline. ~5,300 lines of code relocated verbatim into reference files — leaner context at skill-trigger time.
+- `SKILL.md` line cap raised 500 → 650 in `scripts/validate_skills.py`; `playwright-automation` (the reference model, 529 lines) is the only skill over 500 by design.
+
+#### Evals — 2/43 → 43/43 coverage
+
+- Added eval spec files for the 41 skills that lacked them. Each `evals/<skill>-evals.json` follows the existing `{skill, version, evals[]}` shape with 8–10 grounded cases (prompt + `expected_patterns` + `anti_patterns` + tags). 428 cases total, no cross-file duplication. (Eval execution harness is not yet built — specs are data.)
+
+#### Correctness — broken cross-references fixed
+
+- Six `Related:`/inline references pointed at skills that don't exist:
+  `self-healing-tests` → `test-reliability`, `bug-reporting` → `ai-bug-triage`, `qa-retrospective` → `quality-postmortem`.
+
+#### Security & housekeeping
+
+- Removed a committed `.wrangler/` cache (Cloudflare account ID + email — identifiers, not credentials) from the tree and gitignored it.
+- README line claim corrected (was "under 500 lines") to describe the lean-`SKILL.md` + references pattern.
+
+#### Launch
+
+- Landing page (`site/index.html`) deployed to Cloudflare Pages, live at **[qa-skills.com](https://qa-skills.com)** (apex + www).
+
 ## v2.5.0 (2026-05-21)
 
 ### Routing fix + new selector-drift-recovery skill
