@@ -1,0 +1,209 @@
+{
+  "skill": "test-suite-curation",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "tsc-001",
+      "prompt": "We have a 4,000-test pytest regression suite and suspect a lot of overlap. How do I find out which lines and branches each test uniquely covers, so I know which tests are pulling their weight?",
+      "expected_patterns": [
+        "--cov-context=test OR cov-context",
+        "coverage\\.py OR coverage.py OR pytest-cov",
+        "switch_context OR dynamic context OR per-test context",
+        "branch OR --cov-branch OR --branch",
+        "unique OR uniquely covered OR only test covering",
+        "sqlite OR \\.coverage OR coverage database OR contexts table"
+      ],
+      "anti_patterns": [
+        "single combined coverage report",
+        "--cov=. with no context",
+        "line count per test file as the metric",
+        "delete tests with low overall coverage percentage"
+      ],
+      "tags": [
+        "coverage-fingerprinting",
+        "per-test-coverage",
+        "pytest"
+      ]
+    },
+    {
+      "id": "tsc-002",
+      "prompt": "Test A and Test B both cover exactly the same set of lines according to our per-test coverage data. Can I just delete one? Walk me through whether identical coverage actually proves redundancy.",
+      "expected_patterns": [
+        "coverage equality does not prove (equivalent OR same assertions OR redundant)",
+        "mutation OR mutant OR PIT OR Stryker OR fault detection",
+        "different assertions OR different inputs OR different oracle",
+        "covers same lines but (asserts OR checks) different",
+        "keep OR retain OR do not delete (when|if) assertions differ"
+      ],
+      "anti_patterns": [
+        "identical coverage means safe to delete",
+        "delete the duplicate immediately",
+        "coverage is the only signal needed",
+        "same lines covered therefore same test"
+      ],
+      "tags": [
+        "redundancy",
+        "mutation-testing",
+        "decision-rules"
+      ]
+    },
+    {
+      "id": "tsc-003",
+      "prompt": "Cluster our test suite to surface near-duplicate tests that were probably copy-pasted. What's a defensible technique that won't just flag every test in the same file?",
+      "expected_patterns": [
+        "AST OR abstract syntax tree",
+        "similarity OR jaccard OR cosine OR edit distance OR token similarity",
+        "cluster OR clustering OR hierarchical OR agglomerative",
+        "threshold OR similarity threshold OR cutoff",
+        "coverage (profile|signature|fingerprint) OR execution profile",
+        "review OR flag for review OR human (review|confirm)"
+      ],
+      "anti_patterns": [
+        "group tests by filename",
+        "exact string match only",
+        "delete all tests in a cluster automatically",
+        "use raw line numbers as similarity"
+      ],
+      "tags": [
+        "near-duplicate",
+        "clustering",
+        "ast"
+      ]
+    },
+    {
+      "id": "tsc-004",
+      "prompt": "Mine our last 12 months of CI history. I want to find tests that have literally never failed and tests that are always flaky. Then tell me what each finding means for the suite.",
+      "expected_patterns": [
+        "pass rate OR fail rate OR flip rate OR transition",
+        "never failed OR zero failures OR 100% pass",
+        "flaky OR same SHA OR same commit (pass and fail|different results)",
+        "junit OR test result history OR CI history OR Datadog OR Trunk",
+        "never-failing does not mean (delete|useless) OR low (defect-detection|signal) value",
+        "quarantine OR investigate OR fix the flake (before|not) delete"
+      ],
+      "anti_patterns": [
+        "delete every test that never failed",
+        "a green test is a useless test",
+        "flaky tests should be deleted to clean up CI",
+        "single run determines flakiness"
+      ],
+      "tags": [
+        "ci-history-mining",
+        "flaky",
+        "never-failing"
+      ]
+    },
+    {
+      "id": "tsc-005",
+      "prompt": "Give me the decision rules for what to do with each test we audit. I keep conflating 'redundant', 'obsolete', and 'low-value' and just deleting things.",
+      "expected_patterns": [
+        "redundant.*(another test|covers the same|subsumed)",
+        "obsolete.*(feature removed|dead code|no longer)",
+        "low.?value.*(never failed|trivial|getter|no assertion)",
+        "keep.*(unique coverage|catches defects|risk)",
+        "different (action|disposition) per (category|class)",
+        "redundant => (delete|merge) OR obsolete => delete OR low-value => (quarantine|review)"
+      ],
+      "anti_patterns": [
+        "treat all three categories the same",
+        "delete anything that looks redundant",
+        "low value means delete immediately",
+        "one rule for all flagged tests"
+      ],
+      "tags": [
+        "prune-decision-rules",
+        "categorization"
+      ]
+    },
+    {
+      "id": "tsc-006",
+      "prompt": "Restructure our flat 3,000-test suite into smoke, core, and extended tiers. What evidence decides which tier a test lands in?",
+      "expected_patterns": [
+        "smoke.*(fast|critical|minutes|few)",
+        "extended OR full OR nightly OR slow",
+        "risk OR business-critical OR critical path",
+        "defect.?detection history OR tests that (caught|found) (real )?bugs OR fault-finding",
+        "(runtime|duration|execution time) as a (tier|tiering) input",
+        "tag OR marker OR pytest mark OR @pytest.mark OR label"
+      ],
+      "anti_patterns": [
+        "tier by test file alphabetically",
+        "smoke = first N tests",
+        "random sample for smoke",
+        "tier purely by how fast tests run"
+      ],
+      "tags": [
+        "tiering",
+        "smoke-core-extended",
+        "risk"
+      ]
+    },
+    {
+      "id": "tsc-007",
+      "prompt": "Before we delete 600 tests flagged as redundant, what's the safe rollout? I do not want to nuke them in one PR and find out three weeks later we lost real coverage.",
+      "expected_patterns": [
+        "quarantine OR grace period OR soft-delete OR skip (before|not) delete",
+        "@pytest.mark.skip OR xfail OR exclude OR move to (quarantine|deprecated) (dir|suite)",
+        "human (sign-?off|approval|review) OR code owner OR CODEOWNERS",
+        "(2|two|several) (week|sprint|release) OR grace window OR observation period",
+        "(restore|revert|recover) OR git history OR keep the commit",
+        "monitor OR watch for (escaped|missed) (defects|bugs|regressions)"
+      ],
+      "anti_patterns": [
+        "delete all 600 in one PR",
+        "rm the test files",
+        "no review needed for redundant tests",
+        "deletion is reversible so just do it"
+      ],
+      "tags": [
+        "destructive-safety",
+        "quarantine",
+        "sign-off"
+      ]
+    },
+    {
+      "id": "tsc-008",
+      "prompt": "Produce the 'what we deleted and why' record for an audit so a future engineer (or auditor) can defend every removal. What goes in it?",
+      "expected_patterns": [
+        "per-test OR per-deletion OR one (row|entry) per test",
+        "reason OR justification OR category (redundant|obsolete|low-value)",
+        "(subsumed by|covered by|replaced by) (which|the) test OR superseding test id",
+        "coverage (delta|impact|before/after) OR lines no longer covered",
+        "(date|commit|PR|sha) OR approver OR signed off by",
+        "restore OR how to (recover|revert) OR quarantine location"
+      ],
+      "anti_patterns": [
+        "just a count of deleted tests",
+        "no per-test justification",
+        "trust me it was redundant",
+        "no record of who approved"
+      ],
+      "tags": [
+        "audit-record",
+        "defensibility"
+      ]
+    },
+    {
+      "id": "tsc-009",
+      "prompt": "A test we want to cut has never failed in 18 months of CI AND is fully covered (same lines) by another test. Is that enough to delete it? Reason through the gotcha.",
+      "expected_patterns": [
+        "not (sufficient|enough) on its own OR still verify OR not automatically",
+        "(mutation|mutant) OR does the OTHER test (assert|catch|kill) what this one does",
+        "never failed (because|may mean) (low (risk|change)|stable code) not (worthless|redundant)",
+        "different (assertion|input|edge case|oracle) could still be unique",
+        "quarantine OR observe OR grace period (before|then) delete"
+      ],
+      "anti_patterns": [
+        "two green signals so delete it",
+        "never-failed plus same-coverage equals safe delete",
+        "coverage overlap is conclusive",
+        "no further checks required"
+      ],
+      "tags": [
+        "decision-rules",
+        "combined-signals",
+        "edge-case"
+      ]
+    }
+  ]
+}

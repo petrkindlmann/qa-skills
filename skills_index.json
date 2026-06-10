@@ -1,6 +1,6 @@
 {
   "repository": "petrkindlmann/qa-skills",
-  "version": "2.6.0",
+  "version": "3.0.0",
   "skills": [
     {
       "name": "qa-do",
@@ -233,6 +233,44 @@
       ]
     },
     {
+      "name": "analytics-tracking-testing",
+      "path": "skills/analytics-tracking-testing",
+      "category": "specialized",
+      "tags": [
+        "specialized",
+        "analytics",
+        "tracking"
+      ]
+    },
+    {
+      "name": "email-testing",
+      "path": "skills/email-testing",
+      "category": "specialized",
+      "tags": [
+        "specialized",
+        "email"
+      ]
+    },
+    {
+      "name": "payment-testing",
+      "path": "skills/payment-testing",
+      "category": "specialized",
+      "tags": [
+        "specialized",
+        "payment"
+      ]
+    },
+    {
+      "name": "agentic-browser-testing",
+      "path": "skills/agentic-browser-testing",
+      "category": "ai-qa",
+      "tags": [
+        "ai-qa",
+        "agentic",
+        "browser"
+      ]
+    },
+    {
       "name": "ai-bug-triage",
       "path": "skills/ai-bug-triage",
       "category": "ai-qa",
@@ -266,6 +304,16 @@
         "test-generation",
         "prompt",
         "pipeline"
+      ]
+    },
+    {
+      "name": "bug-reproduction",
+      "path": "skills/bug-reproduction",
+      "category": "ai-qa",
+      "tags": [
+        "ai-qa",
+        "bug",
+        "reproduction"
       ]
     },
     {
@@ -447,6 +495,26 @@
         "pairing",
         "code-review",
         "quality-culture"
+      ]
+    },
+    {
+      "name": "test-case-management",
+      "path": "skills/test-case-management",
+      "category": "process",
+      "tags": [
+        "process",
+        "case",
+        "management"
+      ]
+    },
+    {
+      "name": "test-suite-curation",
+      "path": "skills/test-suite-curation",
+      "category": "process",
+      "tags": [
+        "process",
+        "suite",
+        "curation"
       ]
     },
     {

@@ -1,0 +1,203 @@
+{
+  "skill": "analytics-tracking-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "ana-001",
+      "prompt": "Write a Playwright test that asserts a GA4 'add_to_cart' event fires with the correct parameters when a user clicks the add-to-cart button. Intercept the GA4 network beacon rather than reading the DOM.",
+      "expected_patterns": [
+        "page.waitForRequest OR page.on('request' OR page.route",
+        "google-analytics.com/g/collect OR /g/collect",
+        "en=add_to_cart OR en%3Dadd_to_cart",
+        "tid=G- OR v=2",
+        "ep\\. OR epn\\. OR searchParams",
+        "toBe OR toEqual OR toContain"
+      ],
+      "anti_patterns": [
+        "page.evaluate(() => window.dataLayer) as the only assertion",
+        "waitForTimeout(",
+        "toBeVisible"
+      ],
+      "tags": [
+        "ga4",
+        "beacon-interception",
+        "ecommerce"
+      ]
+    },
+    {
+      "id": "ana-002",
+      "prompt": "We have a tracking plan describing every event our site should send (event name, required params, types). Show me how to structure that tracking plan as a contract and validate a captured GA4 event against it in a test.",
+      "expected_patterns": [
+        "tracking plan OR tracking-plan",
+        "required OR requiredParams OR schema",
+        "event name OR eventName",
+        "type OR typeof OR number OR string",
+        "missing OR violations OR mismatch",
+        "JSON OR yaml OR interface"
+      ],
+      "anti_patterns": [
+        "assert only the event name and ignore parameters",
+        "no schema OR no contract source of truth",
+        "hardcode expected values inline without a plan file"
+      ],
+      "tags": [
+        "tracking-plan",
+        "contract",
+        "schema-validation"
+      ]
+    },
+    {
+      "id": "ana-003",
+      "prompt": "Verify that a Meta Pixel PageView and Purchase event fire correctly, and that the Purchase is de-duplicated against the server-side Conversions API by checking the event_id.",
+      "expected_patterns": [
+        "facebook.com/tr OR /tr?",
+        "ev=PageView OR ev=Purchase OR ev%3DPurchase",
+        "event_id OR eventID",
+        "fbq OR fbevents",
+        "deduplicat OR same event_id OR matches the server"
+      ],
+      "anti_patterns": [
+        "connect.facebook.net/en_US/fbevents.js as a load check only",
+        "ignore event_id OR no deduplication assertion",
+        "count the pixel fired and stop"
+      ],
+      "tags": [
+        "meta-pixel",
+        "deduplication",
+        "capi"
+      ]
+    },
+    {
+      "id": "ana-004",
+      "prompt": "Write a test for Google Consent Mode v2: before consent, GA4 and ad beacons must NOT fire (or must fire only as cookieless consent pings); after the user accepts, the full beacon fires. Assert the default consent state is denied for all four signals.",
+      "expected_patterns": [
+        "ad_storage.*denied OR 'ad_storage': 'denied'",
+        "analytics_storage.*denied",
+        "ad_user_data.*denied",
+        "ad_personalization.*denied",
+        "consent.*default OR gtag('consent', 'default'",
+        "gcs= OR gcd= OR &gcs",
+        "addInitScript OR before consent"
+      ],
+      "anti_patterns": [
+        "default consent granted",
+        "only checks two signals ad_storage and analytics_storage",
+        "no before-consent assertion"
+      ],
+      "tags": [
+        "consent-mode-v2",
+        "consent",
+        "gating"
+      ]
+    },
+    {
+      "id": "ana-005",
+      "prompt": "Assert the GTM dataLayer.push payload for a 'view_item' event. I want to confirm the ecommerce object shape (items array, item_id, price, currency) is pushed when the product page loads.",
+      "expected_patterns": [
+        "dataLayer OR window.dataLayer",
+        "addInitScript OR page.evaluate",
+        "view_item",
+        "ecommerce",
+        "items OR item_id OR currency",
+        "find( OR filter( OR some("
+      ],
+      "anti_patterns": [
+        "page.route to mock the dataLayer",
+        "read GA4 network beacon instead of the dataLayer push",
+        "toBeVisible OR getByRole"
+      ],
+      "tags": [
+        "gtm",
+        "datalayer",
+        "ecommerce"
+      ]
+    },
+    {
+      "id": "ana-006",
+      "prompt": "Our news article pages should fire article-view on load, scroll-depth events at 25/50/75/100 percent, and a paywall-hit event when the meter is exhausted. Write the analytics tests for these news-media events.",
+      "expected_patterns": [
+        "article_view OR article-view",
+        "scroll OR scroll_depth OR scroll-depth",
+        "25 OR 50 OR 75 OR 90 OR percent",
+        "paywall OR paywall_hit OR meter",
+        "mouse.wheel OR scrollIntoView OR evaluate.*scrollTo OR scrollBy",
+        "waitForRequest OR collectedEvents OR captured"
+      ],
+      "anti_patterns": [
+        "waitForTimeout( to wait for scroll events",
+        "assert only article_view and skip scroll depth",
+        "no paywall event coverage"
+      ],
+      "tags": [
+        "news-media",
+        "scroll-depth",
+        "paywall"
+      ]
+    },
+    {
+      "id": "ana-007",
+      "prompt": "Build a reusable Playwright fixture/helper that captures every analytics and pixel beacon during a test (GA4, Meta, TikTok, LinkedIn) so individual tests can assert against the collected list. Make it parse the event name and params out of each request.",
+      "expected_patterns": [
+        "page.on('request'",
+        "google-analytics.com/g/collect OR /g/collect",
+        "facebook.com/tr OR analytics.tiktok.com OR px.ads.linkedin.com",
+        "new URL OR searchParams OR postData",
+        "push( OR collected OR beacons",
+        "fixture OR helper OR test.extend"
+      ],
+      "anti_patterns": [
+        "page.route.*abort to block beacons in a capture helper",
+        "only capture GA4 and ignore pixels",
+        "re-implement capture in every test"
+      ],
+      "tags": [
+        "fixture",
+        "multi-pixel",
+        "capture"
+      ]
+    },
+    {
+      "id": "ana-008",
+      "prompt": "I want to gate tracking regressions in CI. If a previously-firing event stops firing, or a required parameter goes missing after a release, the build should fail. How do I structure this against the tracking plan?",
+      "expected_patterns": [
+        "CI OR pipeline OR GitHub Actions",
+        "tracking plan OR contract OR baseline",
+        "required OR missing param OR dropped event",
+        "exit OR fail the build OR non-zero",
+        "expect( OR assert",
+        "regression OR diff against"
+      ],
+      "anti_patterns": [
+        "manual QA in GA4 DebugView as the gate",
+        "only run against production traffic",
+        "warn but do not fail the build"
+      ],
+      "tags": [
+        "ci",
+        "regression-gating",
+        "tracking-plan"
+      ]
+    },
+    {
+      "id": "ana-009",
+      "prompt": "We have hundreds of events across many domains and a small team. Is writing all this in Playwright worth it, or should we buy a tool? Give me the buy-vs-build call with named options.",
+      "expected_patterns": [
+        "Trackingplan OR ObservePoint",
+        "buy OR build OR DIY",
+        "Playwright",
+        "production monitoring OR continuous OR 24/7 OR drift",
+        "maintenance OR scale OR many domains"
+      ],
+      "anti_patterns": [
+        "recommend Segment Protocols as the only validation",
+        "Playwright is always the answer regardless of scale",
+        "Google Tag Assistant as a CI gate"
+      ],
+      "tags": [
+        "buy-vs-build",
+        "tooling",
+        "scale"
+      ]
+    }
+  ]
+}

@@ -9,20 +9,21 @@ Gemini CLI, VS Code, and other agents that support the Agent Skills Standard.
 npx skills add petrkindlmann/qa-skills
 ```
 
-43 skills covering:
+50 skills covering:
 - Playwright and Cypress automation
 - API, unit, and mobile testing
 - Test strategy and risk-based planning
 - CI/CD integration and test environments
 - Accessibility, security, and compliance
 - Visual regression and performance testing
-- AI-assisted test generation and bug triage
-- Chaos engineering and observability
-- Coverage analysis and QA dashboards
+- AI-assisted test generation, bug triage, and agentic browser testing
+- Email, payment, and analytics-tracking testing
+- Manual test-case management and regression-suite curation
+- Chaos engineering, observability, and QA dashboards
 
 Based on patterns from QA automation work across 6+ production sites.
 
-[![Skills](https://img.shields.io/badge/Skills-43-blue.svg)](#full-skills-table)
+[![Skills](https://img.shields.io/badge/Skills-50-blue.svg)](#full-skills-table)
 [![Website](https://img.shields.io/badge/Website-qa--skills.com-6366f1.svg)](https://qa-skills.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Agent Skills Standard](https://img.shields.io/badge/Agent_Skills-Standard-purple.svg)](https://agentskills.io)
@@ -77,7 +78,7 @@ Ask your AI agent in natural language. The right skill activates automatically.
 
 ## Skill categories
 
-43 skills across 10 categories. Each skill keeps a lean `SKILL.md` (heavy code offloaded to `references/`, loaded on demand) with cross-references to related skills.
+50 skills across 10 categories. Each skill keeps a lean `SKILL.md` (heavy code offloaded to `references/`, loaded on demand) with cross-references to related skills.
 
 ### Foundation (1)
 `qa-project-context` — project context template that every other skill reads first
@@ -88,11 +89,11 @@ Ask your AI agent in natural language. The right skill activates automatically.
 ### Automation (8)
 `playwright-automation` · `cypress-automation` · `selector-drift-recovery` · `api-testing` · `unit-testing` · `mobile-testing` · `visual-testing` · `performance-testing` — Playwright E2E, Cypress component/E2E, bulk post-refactor selector regeneration, REST/GraphQL, Jest/Vitest/pytest, Appium/Detox, visual regression, k6 load testing and Lighthouse CI
 
-### Specialized (4)
-`accessibility-testing` · `security-testing` · `cross-browser-testing` · `database-testing` — WCAG compliance, OWASP Top 10, analytics-driven browser matrices, migration testing and schema validation
+### Specialized (6)
+`accessibility-testing` · `security-testing` · `cross-browser-testing` · `database-testing` · `email-testing` · `payment-testing` · `analytics-tracking-testing` — WCAG compliance, OWASP Top 10 + LLM, analytics-driven browser matrices, migration testing, email-flow capture, Stripe/PSP checkout and 3DS, GA4/pixel tracking correctness
 
-### AI-augmented QA (4)
-`ai-test-generation` · `ai-bug-triage` · `test-reliability` · `ai-qa-review` — LLM test generation, automated bug triage, flaky test management, test quality review
+### AI-augmented QA (7)
+`ai-test-generation` · `ai-bug-triage` · `test-reliability` · `ai-qa-review` · `bug-reproduction` · `agentic-browser-testing` — LLM test generation, automated bug triage, flaky test management, test quality review, report-to-failing-test reproduction, goal-driven agentic browser testing
 
 ### Infrastructure (5)
 `ci-cd-integration` · `test-environments` · `test-data-management` · `contract-testing` · `service-virtualization` — CI/CD pipelines, environment strategy, data factories, Pact consumer-driven contracts, WireMock/MSW
@@ -100,8 +101,8 @@ Ask your AI agent in natural language. The right skill activates automatically.
 ### Metrics (3)
 `qa-metrics` · `qa-dashboard` · `coverage-analysis` — quality gates and KPIs, Allure/Grafana/ReportPortal dashboards, coverage-as-ratchet in CI
 
-### Process (6)
-`shift-left-testing` · `qa-project-bootstrap` · `release-readiness` · `quality-postmortem` · `compliance-testing` · `qa-report-humanizer` — shift-left patterns, QA onboarding, go/no-go checklists, blameless postmortems, GDPR/CMP compliance, QA report humanization
+### Process (8)
+`shift-left-testing` · `qa-project-bootstrap` · `release-readiness` · `quality-postmortem` · `compliance-testing` · `qa-report-humanizer` · `test-case-management` · `test-suite-curation` — shift-left patterns, QA onboarding, go/no-go checklists, blameless postmortems, GDPR/CMP compliance, QA report humanization, manual test-case authoring, regression-suite pruning
 
 ### Production and observability (3)
 `testing-in-production` · `synthetic-monitoring` · `observability-driven-testing` — feature flag validation, scheduled synthetic probes, trace-based test assertions
@@ -156,6 +157,13 @@ Ask your AI agent in natural language. The right skill activates automatically.
 | [`ai-system-testing`](skills/ai-system-testing) | Test AI features. LLM prompt regression, tool call validation, nondeterministic output evaluation, hallucination risk assessment. | Knowledge |
 | [`chaos-engineering`](skills/chaos-engineering) | Controlled fault injection. Hypothesis-driven chaos experiments, network/service/infrastructure failure injection, blast radius control. | Knowledge |
 | [`test-migration`](skills/test-migration) | Incremental test suite migration. Selenium to Playwright, Cypress to Playwright, Jest to Vitest, Mocha to Jest, Protractor to Playwright. | Knowledge |
+| [`test-case-management`](skills/test-case-management) | Author and maintain manual/hybrid test cases in TestRail, Xray, Zephyr, Qase. Case anatomy, bulk authoring from stories, ambiguous-step linting, CSV/API import-export, traceability. | Process |
+| [`test-suite-curation`](skills/test-suite-curation) | Audit and prune a regression suite with evidence: coverage fingerprinting, AST duplicate clustering, CI-history mining, smoke/core/extended tiering, quarantine-before-delete. | Process |
+| [`bug-reproduction`](skills/bug-reproduction) | Turn a vague bug report into a verified minimal reproduction and a failing regression test. Reproduce-minimize-isolate-capture, git bisect, deterministic repro, red-before-fix. | AI-QA |
+| [`agentic-browser-testing`](skills/agentic-browser-testing) | Goal-driven E2E via a browser agent (Playwright MCP / computer-use). Determinism controls, cost/latency budgets, accessibility-tree interaction, graduation to scripted tests. | AI-QA |
+| [`email-testing`](skills/email-testing) | End-to-end email-flow testing: signup, password reset, magic-link, OTP/MFA. Mailpit/Mailosaur/MailSlurp capture, inbox polling, link/OTP extraction, deliverability checks. | Specialized |
+| [`payment-testing`](skills/payment-testing) | Payment/checkout testing against PSP sandboxes. Stripe test cards, 3DS/SCA iframe handling, test clocks, webhook signature/idempotency, refunds — never real cards. | Specialized |
+| [`analytics-tracking-testing`](skills/analytics-tracking-testing) | Validate GA4/GTM dataLayer, pixels, and ad-tech tags fire correctly. Tracking-plan contract, beacon interception, param/value/timing assertions, Consent Mode v2, CI gating. | Specialized |
 
 ---
 

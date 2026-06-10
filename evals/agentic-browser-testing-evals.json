@@ -1,0 +1,186 @@
+{
+  "skill": "agentic-browser-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "abt-001",
+      "prompt": "We want an agent to smoke-test our checkout. Set up a goal-driven browser test where the agent reads a natural-language goal and explores the app itself, instead of us writing a Playwright script.",
+      "expected_patterns": [
+        "playwright mcp OR @playwright/mcp",
+        "browser_snapshot",
+        "browser_navigate",
+        "goal OR natural language",
+        "explicit success OR success assertion OR success criteria",
+        "accessibility tree OR accessibility snapshot"
+      ],
+      "anti_patterns": [
+        "page.locator",
+        "page.goto",
+        "await expect(page",
+        "data-testid"
+      ],
+      "tags": ["setup", "playwright-mcp", "goal-driven"]
+    },
+    {
+      "id": "abt-002",
+      "prompt": "Should we use an agentic browser test or a scripted Playwright test for our login flow vs our new experimental dashboard that changes weekly? Give me a rule.",
+      "expected_patterns": [
+        "fast-changing OR fast changing OR redesign OR unstable UI OR churns",
+        "stable OR high-frequency OR critical path",
+        "scripted OR durable OR pinned for (login|stable)",
+        "agentic OR intent-driven OR exploratory for (dashboard|experimental)",
+        "cost OR latency OR slower OR 2-5x"
+      ],
+      "anti_patterns": [
+        "always use the agent",
+        "agentic for everything",
+        "agents replace OR replace all scripted"
+      ],
+      "tags": ["decision", "intent-vs-scripted", "fit"]
+    },
+    {
+      "id": "abt-003",
+      "prompt": "Our agent browser test passes one run and fails the next with no app change. Make the run deterministic enough to trust in CI.",
+      "expected_patterns": [
+        "temperature.*0 OR temperature: 0 OR pinned model OR model pin",
+        "seed OR seeded data OR fixed fixture OR reset database",
+        "max steps OR step budget OR bounded steps OR maxSteps",
+        "explicit success OR success assertion OR pass.?fail verdict",
+        "snapshot OR accessibility tree"
+      ],
+      "anti_patterns": [
+        "temperature: 0.7 OR temperature 1",
+        "retry until it passes OR just retry",
+        "browser_take_screenshot (for assertion)",
+        "waitForTimeout"
+      ],
+      "tags": ["determinism", "ci", "flake"]
+    },
+    {
+      "id": "abt-004",
+      "prompt": "How does the agent actually click and type on the page? Explain the interaction model and why we don't feed it screenshots.",
+      "expected_patterns": [
+        "accessibility tree OR accessibility snapshot",
+        "browser_snapshot",
+        "ref OR role OR accessible name OR aria",
+        "browser_click OR browser_type",
+        "tokens OR token-efficient OR cheaper OR deterministic"
+      ],
+      "anti_patterns": [
+        "pixel coordinates OR x,y coordinate OR mouse_click_xy (as default)",
+        "vision model OR screenshot (as primary input)",
+        "OCR",
+        "browser_take_screenshot (as default)"
+      ],
+      "tags": ["accessibility-tree", "interaction-model", "snapshot-first"]
+    },
+    {
+      "id": "abt-005",
+      "prompt": "These agent runs are burning tokens and take 90 seconds each. Cut the cost and latency without losing coverage.",
+      "expected_patterns": [
+        "step budget OR max steps OR maxSteps OR bounded steps",
+        "model tier OR cheaper model OR haiku OR sonnet OR tiering",
+        "cache OR caching OR prompt cache",
+        "scope OR narrow goal OR single flow OR seeded entry point",
+        "snapshot OR accessibility tree (over screenshots)"
+      ],
+      "anti_patterns": [
+        "opus 4.8 for every (step|run)",
+        "increase the step limit OR raise max steps",
+        "screenshot every step OR full-page screenshot each",
+        "no budget"
+      ],
+      "tags": ["cost", "latency", "model-tiering"]
+    },
+    {
+      "id": "abt-006",
+      "prompt": "Write the success assertion for an agent goal: 'sign in as an existing user and confirm the dashboard shows the right account name'. The agent keeps reporting success when it's actually stuck on the login page.",
+      "expected_patterns": [
+        "explicit success criteria OR success assertion OR done when",
+        "account name OR specific text OR expected text",
+        "url OR /dashboard OR navigated",
+        "fail.?fast OR negative OR not.* login page OR must not OR forbidden state",
+        "browser_snapshot OR assert against snapshot"
+      ],
+      "anti_patterns": [
+        "no error OR didn't crash OR page loaded (as success)",
+        "looks good OR seems fine",
+        "LLM decides on its own OR trust the agent",
+        "screenshot looks correct"
+      ],
+      "tags": ["success-assertion", "oracle", "false-positive"]
+    },
+    {
+      "id": "abt-007",
+      "prompt": "This agentic checkout test has run green for two weeks and the flow is now stable. Promote it into a durable scripted Playwright test we can run on every PR.",
+      "expected_patterns": [
+        "playwright test agents OR generator agent OR planner agent",
+        "test plan OR markdown plan OR \\.md plan",
+        "tests/ OR \\.spec\\.ts",
+        "getByRole OR getByLabel OR getByText OR role-based locator",
+        "graduate OR promote OR codegen OR generate (the )?test"
+      ],
+      "anti_patterns": [
+        "keep running it as an agent OR no need to script",
+        "page.locator('xpath",
+        "data-testid only",
+        "record clicks OR record my actions"
+      ],
+      "tags": ["graduation", "playwright-test-agents", "promotion"]
+    },
+    {
+      "id": "abt-008",
+      "prompt": "Wire our agentic browser test into GitHub Actions so a failed agent goal blocks the merge. The result needs to be machine-readable, not a paragraph the LLM wrote.",
+      "expected_patterns": [
+        "exit code OR exit 1 OR non-zero exit",
+        "pass.?fail OR boolean OR true/false verdict OR structured (verdict|output)",
+        "github actions OR \\.github/workflows OR ci",
+        "step budget OR max steps OR timeout (cap)",
+        "seeded OR ephemeral OR reset (state|data) OR fixture"
+      ],
+      "anti_patterns": [
+        "manual review OR human reads the output",
+        "always exit 0",
+        "parse the prose OR grep the explanation",
+        "allow_failure: true OR continue-on-error: true"
+      ],
+      "tags": ["ci", "gating", "machine-readable"]
+    },
+    {
+      "id": "abt-009",
+      "prompt": "Our canvas-based chart editor has no accessibility tree, so the snapshot-driven agent can't interact with it. What do we do?",
+      "expected_patterns": [
+        "--caps=vision OR vision capability OR caps vision",
+        "browser_mouse_click_xy OR mouse.*xy OR coordinate",
+        "screenshot OR pixel (as fallback only)",
+        "last resort OR fallback OR exception OR only when",
+        "add aria OR add roles OR fix accessibility OR instrument the canvas"
+      ],
+      "anti_patterns": [
+        "use coordinates everywhere OR coordinates by default",
+        "abandon agentic testing",
+        "browser_snapshot will work fine (on the canvas)",
+        "disable accessibility tree globally"
+      ],
+      "tags": ["canvas", "vision-fallback", "accessibility-gap"]
+    },
+    {
+      "id": "abt-010",
+      "prompt": "Convert this brittle 80-line Playwright script (it re-types the login on every test, walks through 6 hardcoded steps) into an agentic browser test, and tell me what could go wrong.",
+      "expected_patterns": [
+        "goal OR natural language goal OR intent",
+        "explicit success OR success criteria OR assertion",
+        "non-determin OR flaky OR variance OR could pass falsely",
+        "step budget OR bounded OR max steps",
+        "graduate OR keep scripted OR not every test (should be agentic)"
+      ],
+      "anti_patterns": [
+        "convert all our tests OR migrate everything",
+        "this is strictly better OR no downsides",
+        "no determinism concern",
+        "remove the assertions"
+      ],
+      "tags": ["migration", "tradeoffs", "intent-vs-scripted"]
+    }
+  ]
+}

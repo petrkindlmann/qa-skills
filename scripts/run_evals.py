@@ -112,6 +112,12 @@ def _recommends_antipattern(pattern: str, text: str) -> bool:
             stripped = line.lstrip()
             if stripped.startswith("#"):
                 continue  # a heading naming the construct is meta, not usage
+            low = line.lower()
+            # A search/lint command that hunts FOR the anti-pattern (to ban it) is
+            # meta, not a recommendation: `grep -rE 'waitForTimeout' tests/`.
+            if any(tool in low for tool in ("grep", "rg ", "eslint", "forbid",
+                                            "no-restricted", "ripgrep", "lint")):
+                continue
             if matches(alt, line) and not neg[i]:
                 return True
     return False

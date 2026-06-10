@@ -1,0 +1,236 @@
+{
+  "skill": "email-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "eml-001",
+      "prompt": "We test a signup flow that sends a confirmation email. Help me pick a tool to capture and assert on those emails in our Playwright suite. We run locally and in GitHub Actions, on a tight budget, and self-hosting is fine.",
+      "expected_patterns": [
+        "Mailpit",
+        "single binary OR docker OR self-host",
+        "8025 OR /api/v1/messages",
+        "free OR no.*cost OR open source OR open-source",
+        "Mailosaur OR MailSlurp",
+        "real.*address OR hosted.*inbox"
+      ],
+      "anti_patterns": [
+        "MailHog",
+        "papercut",
+        "smtp4dev",
+        "just check the database instead of the email"
+      ],
+      "tags": [
+        "tool-selection",
+        "decision-tree",
+        "mailpit"
+      ]
+    },
+    {
+      "id": "eml-002",
+      "prompt": "Write a Playwright helper that polls the Mailpit API for the latest message sent to a given address and returns the parsed body. Don't use a fixed sleep.",
+      "expected_patterns": [
+        "expect.poll OR .toPass OR waitFor",
+        "/api/v1/messages",
+        "/api/v1/message/",
+        "request.get OR fetch(",
+        "to: OR to= OR sentTo OR query= OR search",
+        "timeout OR intervals OR poll"
+      ],
+      "anti_patterns": [
+        "waitForTimeout",
+        "setTimeout.*resolve",
+        "page.waitForTimeout",
+        "sleep(",
+        "Thread.sleep"
+      ],
+      "tags": [
+        "mailpit",
+        "polling",
+        "no-flaky-wait"
+      ]
+    },
+    {
+      "id": "eml-003",
+      "prompt": "After polling the inbox we have the email body. Extract the 6-digit OTP code and the magic-link verification URL from it, robustly.",
+      "expected_patterns": [
+        "\\d{6} OR [0-9]{6}",
+        ".match( OR .exec( OR matchAll",
+        "https OR verify OR confirm OR token=",
+        ".text OR .html OR Text OR HTML",
+        "throw OR toBeTruthy OR not.*null OR toBeDefined"
+      ],
+      "anti_patterns": [
+        "split(' ')[3]",
+        "substring(0, 6)",
+        "indexOf('code')",
+        "innerText of a live page instead of the email body"
+      ],
+      "tags": [
+        "extraction",
+        "otp",
+        "magic-link",
+        "regex"
+      ]
+    },
+    {
+      "id": "eml-004",
+      "prompt": "Two tests sign up in parallel and both poll for 'the latest signup email'. They keep grabbing each other's messages. How should I make each test's inbox deterministic?",
+      "expected_patterns": [
+        "plus-address OR plus address OR sub-address",
+        "user+ OR +${ OR +test OR @ OR tag",
+        "unique OR per-test OR per test OR uuid OR Date.now OR randomUUID",
+        "sentTo OR filter OR match.*recipient",
+        "Mailosaur OR dedicated inbox OR per-inbox OR own inbox"
+      ],
+      "anti_patterns": [
+        "messages[0]",
+        "messages.at(-1)",
+        "fetch the most recent message overall",
+        "delete all messages between tests as the only fix"
+      ],
+      "tags": [
+        "determinism",
+        "plus-addressing",
+        "parallel-isolation"
+      ]
+    },
+    {
+      "id": "eml-005",
+      "prompt": "Write a full Playwright test for the password-reset flow: request reset on the UI, capture the email, click the reset link, set a new password, and confirm login works.",
+      "expected_patterns": [
+        "page.goto OR page.click OR getByRole",
+        "expect.poll OR waitFor.*message OR messages.get",
+        "reset.*link OR href OR token=",
+        "page.goto(.*resetUrl OR page.goto(.*link OR goto(reset",
+        "new.*password OR fill.*password",
+        "expect.*toHaveURL OR expect.*toBeVisible"
+      ],
+      "anti_patterns": [
+        "waitForTimeout",
+        "hardcoded reset token",
+        "skip the email and call the reset endpoint directly",
+        "manually paste the link"
+      ],
+      "tags": [
+        "password-reset",
+        "e2e-flow",
+        "magic-link"
+      ]
+    },
+    {
+      "id": "eml-006",
+      "prompt": "We use Mailosaur for staging tests because it gives real addresses. Show me how to fetch a message and assert on its subject, from address, and that a link points to our staging domain.",
+      "expected_patterns": [
+        "MailosaurClient OR new Mailosaur",
+        "messages.get(",
+        "serverId OR server",
+        "sentTo",
+        "subject",
+        "from OR message.from",
+        "links OR message.html.links OR href"
+      ],
+      "anti_patterns": [
+        "waitForTimeout",
+        "messages.list(",
+        "setTimeout",
+        "assert only that an email exists without checking content"
+      ],
+      "tags": [
+        "mailosaur",
+        "assertions",
+        "headers",
+        "links"
+      ]
+    },
+    {
+      "id": "eml-007",
+      "prompt": "Our notification emails sometimes land in spam. Add a deliverability check to our suite that flags SPF, DKIM, and DMARC problems, separate from the functional email tests.",
+      "expected_patterns": [
+        "SPF",
+        "DKIM",
+        "DMARC",
+        "pass OR fail OR alignment",
+        "Mailosaur.*spam OR deliverability OR message.metadata OR mail-tester OR spamassassin",
+        "separate OR not.*block.*functional OR own suite OR non-blocking OR nonblocking"
+      ],
+      "anti_patterns": [
+        "body.includes('spf",
+        "body.match(/dkim",
+        "Mailpit.*SPF OR Mailpit.*DKIM OR Mailpit.*DMARC",
+        "assert deliverability inside the OTP flow test"
+      ],
+      "tags": [
+        "deliverability",
+        "spf-dkim-dmarc",
+        "separation"
+      ]
+    },
+    {
+      "id": "eml-008",
+      "prompt": "Set up MailSlurp in our test suite so each test gets its own throwaway inbox and waits for one email without a fixed delay.",
+      "expected_patterns": [
+        "MailSlurp OR mailslurp",
+        "createInbox OR createInboxWithOptions",
+        "waitForLatestEmail OR waitFor",
+        "emailAddress OR inbox.emailAddress OR inbox.id",
+        "timeout OR 30000 OR 60000 OR waitForLatestEmail(",
+        "apiKey OR api key OR API_KEY"
+      ],
+      "anti_patterns": [
+        "waitForTimeout",
+        "setTimeout",
+        "imap-simple OR node-imap OR imapflow",
+        "one shared inbox for the whole suite"
+      ],
+      "tags": [
+        "mailslurp",
+        "per-inbox",
+        "no-flaky-wait"
+      ]
+    },
+    {
+      "id": "eml-009",
+      "prompt": "I just want to preview what our welcome email looks like during local dev without setting up a service. Quick way to capture an outbound email from Node and open it?",
+      "expected_patterns": [
+        "Ethereal OR ethereal",
+        "createTestAccount",
+        "getTestMessageUrl",
+        "nodemailer OR createTransport",
+        "preview OR open.*url OR web.*inbox"
+      ],
+      "anti_patterns": [
+        "Mailosaur",
+        "MailSlurp",
+        "Mailtrap",
+        "use Ethereal in CI for assertions"
+      ],
+      "tags": [
+        "ethereal",
+        "local-preview",
+        "throwaway"
+      ]
+    },
+    {
+      "id": "eml-010",
+      "prompt": "Our email tests are flaky in CI — they pass locally but the email 'hasn't arrived yet' when we assert. Diagnose the root causes and give the fix.",
+      "expected_patterns": [
+        "waitForTimeout OR fixed.*sleep OR arbitrary delay",
+        "poll OR expect.poll OR retry OR waitFor",
+        "timeout.*too short OR increase.*timeout OR raise.*timeout",
+        "filter.*recipient OR match.*to OR sentTo OR unique address",
+        "clear.*inbox OR stale.*message OR previous run OR isolate"
+      ],
+      "anti_patterns": [
+        "add a longer waitForTimeout",
+        "retry the whole test job",
+        "mark the test as flaky and move on",
+        "increase the global sleep to 30 seconds"
+      ],
+      "tags": [
+        "flakiness",
+        "diagnosis",
+        "ci"
+      ]
+    }
+  ]
+}

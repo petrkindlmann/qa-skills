@@ -1,0 +1,192 @@
+{
+  "skill": "test-case-management",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "tcm-001",
+      "prompt": "Here is the anatomy I want for a manual test case: title, preconditions, steps, expected results, test data. Take this acceptance criterion and write one well-formed manual test case from it: 'Given a logged-out user, when they submit the login form with a valid email and a wrong password 5 times, then the account is locked for 15 minutes.' Show the full structure.",
+      "expected_patterns": [
+        "Precondition",
+        "Step.*Expected OR Action.*Expected Result",
+        "Test Data OR test data",
+        "locked OR lockout",
+        "15 minutes OR 15-minute",
+        "one assertion per step OR single expected result"
+      ],
+      "anti_patterns": [
+        "verify it works",
+        "check the page looks correct",
+        "test the login (single vague step)",
+        "should be fine"
+      ],
+      "tags": ["anatomy", "manual-case", "acceptance-criteria"]
+    },
+    {
+      "id": "tcm-002",
+      "prompt": "Bulk-generate manual test cases from this user story for TestRail and give me the API payloads to create them. Story: 'As a shopper I can apply a discount code at checkout; valid codes reduce the total, expired codes show an error, already-used codes are rejected.' Each case needs separated steps.",
+      "expected_patterns": [
+        "add_case",
+        "section_id OR /add_case/",
+        "custom_steps_separated",
+        "expected",
+        "expired OR invalid code",
+        "already.used OR already redeemed"
+      ],
+      "anti_patterns": [
+        "custom_steps (single text field for separated steps)",
+        "add_test ",
+        "POST /case (Qase path used for TestRail)",
+        "basic auth with username and password only",
+        "one giant case for all three rules"
+      ],
+      "tags": ["testrail", "bulk-authoring", "api-payload"]
+    },
+    {
+      "id": "tcm-003",
+      "prompt": "We use Xray on Jira Cloud. I need to import 12 manual test cases programmatically and also a couple of Gherkin scenarios. What API should I use and what does the request look like? Show authentication and the test type fields.",
+      "expected_patterns": [
+        "GraphQL OR /api/v2/graphql",
+        "/api/v2/authenticate OR bearer token",
+        "testType OR Manual",
+        "Cucumber OR Gherkin",
+        "createTest OR import",
+        "steps.*action.*result OR step action expected"
+      ],
+      "anti_patterns": [
+        "/rest/raven/1.0 (deprecated Cloud path)",
+        "Xray Server REST for Cloud",
+        "username/password basic auth for Xray Cloud",
+        "import everything as Generic test"
+      ],
+      "tags": ["xray", "jira-cloud", "graphql", "gherkin"]
+    },
+    {
+      "id": "tcm-004",
+      "prompt": "Lint this test suite for ambiguous steps that aren't deterministically verifiable and rewrite the bad ones. Steps: 1) Open the app. Expected: app opens. 2) Click around the dashboard. Expected: everything works. 3) Enter some data. Expected: it looks right. 4) Wait a bit. Expected: the report is ready.",
+      "expected_patterns": [
+        "ambiguous OR not verifiable OR non-deterministic",
+        "everything works OR it looks right (flagged)",
+        "click around OR some data OR wait a bit (flagged)",
+        "specific element OR exact value OR explicit selector",
+        "rewrite OR rewritten"
+      ],
+      "anti_patterns": [
+        "all steps look fine",
+        "no issues found",
+        "leaving 'everything works' as a valid expected result",
+        "approving 'wait a bit' without a concrete condition"
+      ],
+      "tags": ["linting", "ambiguous-steps", "review-hygiene"]
+    },
+    {
+      "id": "tcm-005",
+      "prompt": "Produce a CSV I can import into TestRail for a 'Password Reset' section with three cases, mapping columns to TestRail fields so the importer recognizes title, steps, and expected results without manual remapping.",
+      "expected_patterns": [
+        "Title",
+        "Steps OR Steps (Separated)",
+        "Expected Result OR Expected",
+        "Section OR Section Hierarchy",
+        "Priority OR Type",
+        "Password Reset"
+      ],
+      "anti_patterns": [
+        "free-form prose with no header row",
+        "single Description column for steps and expected",
+        "JSON instead of CSV when CSV was requested",
+        "no column-to-field mapping"
+      ],
+      "tags": ["testrail", "csv-import", "field-mapping"]
+    },
+    {
+      "id": "tcm-006",
+      "prompt": "We use Qase. Give me the API call to create three test cases in bulk under suite 'Checkout', each with structured steps (action, expected result, input data). Include auth header and the suite reference.",
+      "expected_patterns": [
+        "api.qase.io/v1 OR /case/.*/bulk",
+        "Token (Qase auth header)",
+        "suite_id",
+        "steps.*action.*expected_result OR action.*expected_result.*data",
+        "cases (array)"
+      ],
+      "anti_patterns": [
+        "Authorization: Bearer (Qase uses Token header)",
+        "add_case (TestRail method on Qase)",
+        "custom_steps_separated (TestRail field on Qase)",
+        "one POST per case when bulk endpoint exists"
+      ],
+      "tags": ["qase", "bulk-api", "structured-steps"]
+    },
+    {
+      "id": "tcm-007",
+      "prompt": "How should I organize a growing TestRail repository for a web + mobile product so it stays navigable, and how do suites vs sections vs the single-repository mode change that decision?",
+      "expected_patterns": [
+        "section OR subsection",
+        "suite",
+        "single repository OR single suite mode OR multiple suites",
+        "web.*mobile OR platform",
+        "shallow hierarchy OR avoid deep nesting"
+      ],
+      "anti_patterns": [
+        "one folder per test case",
+        "deep nesting 7+ levels deep",
+        "put every test in the root section",
+        "duplicate the same case across suites"
+      ],
+      "tags": ["organization", "testrail", "suites-sections"]
+    },
+    {
+      "id": "tcm-008",
+      "prompt": "Set up traceability between requirements and test cases. We have Xray on Jira and stories with Jira keys. How do I link cases to requirements and get a coverage report that shows which stories have no tests?",
+      "expected_patterns": [
+        "tests OR test issue link OR coverage",
+        "requirement OR story key",
+        "Traceability Report OR coverage report",
+        "uncovered OR no tests OR gaps",
+        "Jira issue link OR issue key"
+      ],
+      "anti_patterns": [
+        "manual spreadsheet as the only traceability mechanism",
+        "no coverage report",
+        "link tests to test executions instead of requirements",
+        "ignore uncovered requirements"
+      ],
+      "tags": ["traceability", "xray", "coverage", "requirements"]
+    },
+    {
+      "id": "tcm-009",
+      "prompt": "Give me criteria for when a manual test case should graduate to automation, and when it should stay manual. We have a backlog of 400 manual cases in Zephyr Scale and limited automation capacity.",
+      "expected_patterns": [
+        "high frequency OR run often OR every release",
+        "stable OR low churn OR deterministic",
+        "exploratory OR one-off OR rarely run (stay manual)",
+        "ROI OR cost.*benefit OR maintenance cost",
+        "regression OR smoke (automate first)"
+      ],
+      "anti_patterns": [
+        "automate everything",
+        "automate every manual case",
+        "automate flaky or frequently changing UI first",
+        "automate one-off exploratory cases"
+      ],
+      "tags": ["automation-graduation", "prioritization", "zephyr"]
+    },
+    {
+      "id": "tcm-010",
+      "prompt": "We use Zephyr Scale on Jira Cloud. Write the REST call to create a manual test case with named steps in folder 'Smoke', including authentication. Then show how to add the test steps.",
+      "expected_patterns": [
+        "api.zephyrscale.smartbear.com/v2 OR /v2/testcases",
+        "Authorization.*Bearer OR JWT",
+        "projectKey",
+        "/testcases/.*/teststeps OR teststeps",
+        "folderId OR folder",
+        "inline.*description.*expectedResult OR description.*expectedResult"
+      ],
+      "anti_patterns": [
+        "Token (Qase header on Zephyr)",
+        "add_case (TestRail method on Zephyr)",
+        "/v1/ (wrong Zephyr Scale Cloud version)",
+        "steps embedded in the create-case body as a single text blob"
+      ],
+      "tags": ["zephyr-scale", "jira-cloud", "rest-api", "test-steps"]
+    }
+  ]
+}

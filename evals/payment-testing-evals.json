@@ -1,0 +1,245 @@
+{
+  "skill": "payment-testing",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "pay-001",
+      "prompt": "Write a Playwright test for our Stripe checkout that covers a successful Visa payment plus a declined card and an insufficient-funds card. Assert the right outcome for each.",
+      "expected_patterns": [
+        "4242424242424242",
+        "4000000000000002",
+        "4000000000009995",
+        "card_declined OR generic_decline",
+        "insufficient_funds",
+        "test.*mode OR pk_test OR sk_test"
+      ],
+      "anti_patterns": [
+        "4111111111111111",
+        "real card",
+        "process.env.LIVE OR pk_live OR sk_live",
+        "waitForTimeout"
+      ],
+      "tags": [
+        "stripe",
+        "test-cards",
+        "decline-codes",
+        "basic"
+      ]
+    },
+    {
+      "id": "pay-002",
+      "prompt": "Our checkout uses a 3D Secure card that always challenges. Write the Playwright steps to fill the card, trigger the 3DS challenge, and complete authentication so the payment succeeds.",
+      "expected_patterns": [
+        "4000000000003220 OR 4000002500003155",
+        "frameLocator",
+        "Complete authentication OR Complete OR authorize",
+        "frameLocator.*frameLocator OR nested",
+        "expect.*success OR succeeded OR toHaveURL"
+      ],
+      "anti_patterns": [
+        "page.frames()[1] OR frames()[0]",
+        "waitForTimeout",
+        "page.locator only without frameLocator",
+        "switch_to.frame"
+      ],
+      "tags": [
+        "stripe",
+        "3ds",
+        "sca",
+        "iframe",
+        "playwright"
+      ]
+    },
+    {
+      "id": "pay-003",
+      "prompt": "I need to test that an annual subscription renewal charges the customer 12 months later without waiting a year. How do I simulate the billing cycle?",
+      "expected_patterns": [
+        "test clock OR test_clock OR test-clock",
+        "test_helpers.*test_clocks.*create OR testHelpers.testClocks.create",
+        "advance",
+        "frozen_time OR frozenTime",
+        "customer.*test_clock OR test_clock.*customer",
+        "only.*forward OR cannot.*back"
+      ],
+      "anti_patterns": [
+        "fake timers OR sinon OR jest.useFakeTimers",
+        "wait 365 days OR sleep",
+        "manually change.*system clock",
+        "mock the date"
+      ],
+      "tags": [
+        "stripe",
+        "test-clocks",
+        "subscriptions",
+        "billing"
+      ]
+    },
+    {
+      "id": "pay-004",
+      "prompt": "Set up local webhook testing for our Stripe integration so events from a test payment reach our /webhooks endpoint on localhost:3000.",
+      "expected_patterns": [
+        "stripe listen",
+        "--forward-to",
+        "localhost:3000",
+        "stripe trigger",
+        "whsec_ OR signing secret OR webhook secret",
+        "STRIPE_WEBHOOK_SECRET"
+      ],
+      "anti_patterns": [
+        "ngrok required OR expose.*public",
+        "poll the api OR polling for status",
+        "STRIPE_SECRET_KEY as webhook secret",
+        "disable signature"
+      ],
+      "tags": [
+        "stripe-cli",
+        "webhooks",
+        "local-testing"
+      ]
+    },
+    {
+      "id": "pay-005",
+      "prompt": "Write the webhook handler test that verifies the Stripe signature and rejects a forged or tampered event.",
+      "expected_patterns": [
+        "constructEvent OR construct_event OR Webhook.constructEvent",
+        "Stripe-Signature OR stripe-signature",
+        "raw body OR rawBody OR req.body.*raw OR express.raw",
+        "STRIPE_WEBHOOK_SECRET OR signing secret",
+        "expect.*400 OR throw OR SignatureVerificationError",
+        "whsec_"
+      ],
+      "anti_patterns": [
+        "JSON.parse(req.body) before verify",
+        "express.json before signature",
+        "skip.*verification OR trust the payload",
+        "compare.*string OR === signature"
+      ],
+      "tags": [
+        "webhooks",
+        "signature-verification",
+        "security"
+      ]
+    },
+    {
+      "id": "pay-006",
+      "prompt": "Stripe retries webhooks and we saw a customer get fulfilled twice. Write a test proving our handler is idempotent when the same event is delivered twice.",
+      "expected_patterns": [
+        "event.id",
+        "idempoten",
+        "UNIQUE OR unique constraint OR already processed",
+        "deliver.*twice OR send.*same event OR retry",
+        "expect.*once OR called.*1 OR fulfilled once",
+        "200"
+      ],
+      "anti_patterns": [
+        "idempotency key on the request only",
+        "rely on stripe not retrying",
+        "timestamp.*dedup only",
+        "in-memory set OR global variable for dedup"
+      ],
+      "tags": [
+        "webhooks",
+        "idempotency",
+        "retries",
+        "reconciliation"
+      ]
+    },
+    {
+      "id": "pay-007",
+      "prompt": "Test a failed recurring payment: the renewal fails, the subscription goes past_due, then a refund is issued. How do I drive this end to end?",
+      "expected_patterns": [
+        "4000000000000341 OR 4000008260003178 OR attaches.*fails",
+        "test clock OR test_clock OR advance",
+        "invoice.payment_failed",
+        "past_due",
+        "refund OR refunds.create OR createRefund",
+        "charge.refunded OR refund"
+      ],
+      "anti_patterns": [
+        "4242424242424242 for the failure",
+        "manually set status in db",
+        "waitForTimeout",
+        "delete the subscription instead of refund"
+      ],
+      "tags": [
+        "stripe",
+        "failed-payments",
+        "refunds",
+        "dunning",
+        "test-clocks"
+      ]
+    },
+    {
+      "id": "pay-008",
+      "prompt": "We just added PayPal and Adyen alongside Stripe. What is the general sandbox pattern for testing these PSPs, and what stays the same versus Stripe?",
+      "expected_patterns": [
+        "sandbox",
+        "Adyen.*test card OR Adyen test OR test_card_number",
+        "PayPal.*sandbox OR sandbox account OR buyer account",
+        "webhook OR notification",
+        "no real card OR test credentials OR test mode",
+        "Braintree OR drop-in OR hosted fields"
+      ],
+      "anti_patterns": [
+        "use the same Stripe test cards for adyen OR same test cards across psp",
+        "real PayPal account",
+        "production credentials",
+        "live keys"
+      ],
+      "tags": [
+        "adyen",
+        "paypal",
+        "braintree",
+        "multi-psp",
+        "sandbox"
+      ]
+    },
+    {
+      "id": "pay-009",
+      "prompt": "Code review: a teammate hardcoded a real corporate card number into a checkout test that runs in CI. What's wrong and what should it use instead?",
+      "expected_patterns": [
+        "never.*real card OR no real PAN OR PCI",
+        "test card OR 4242424242424242",
+        "test mode OR pk_test OR sk_test",
+        "secret OR remove.*from.*repo OR env OR rotate",
+        "PCI OR compliance OR sensitive"
+      ],
+      "anti_patterns": [
+        "mask the card in logs OR just redact",
+        "it's fine in CI only",
+        "use a low-limit real card",
+        "encrypt the card number"
+      ],
+      "tags": [
+        "pci",
+        "security",
+        "review",
+        "no-real-cards"
+      ]
+    },
+    {
+      "id": "pay-010",
+      "prompt": "Write a reconciliation test that confirms a successful checkout produces a PaymentIntent with status succeeded and that our DB order is marked paid only after the payment_intent.succeeded webhook, not on redirect.",
+      "expected_patterns": [
+        "payment_intent.succeeded OR paymentIntent.*succeeded",
+        "status.*succeeded OR 'succeeded'",
+        "webhook OR event",
+        "not.*redirect OR after webhook OR not on return_url",
+        "order.*paid OR mark.*paid OR fulfillment",
+        "retrieve OR paymentIntents.retrieve OR amount_received"
+      ],
+      "anti_patterns": [
+        "mark paid on redirect OR fulfill on return_url",
+        "trust client-side success",
+        "poll until succeeded with sleep",
+        "waitForTimeout"
+      ],
+      "tags": [
+        "reconciliation",
+        "payment-intent",
+        "webhooks",
+        "fulfillment"
+      ]
+    }
+  ]
+}

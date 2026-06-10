@@ -1,0 +1,249 @@
+{
+  "skill": "bug-reproduction",
+  "version": "1.0",
+  "evals": [
+    {
+      "id": "rep-001",
+      "prompt": "A user filed: 'Checkout is broken, order total is wrong sometimes.' That's the whole report. Before I write any code, what do I need to extract or ask for to make this reproducible?",
+      "expected_patterns": [
+        "exact steps OR steps to reproduce",
+        "build OR version OR commit OR git SHA",
+        "environment OR browser OR OS OR device",
+        "input data OR cart contents OR account OR fixture",
+        "expected.*actual OR expected versus actual",
+        "frequency OR how often OR every time OR intermittent",
+        "timestamp OR locale OR timezone OR currency"
+      ],
+      "anti_patterns": [
+        "start writing the fix",
+        "assume the steps",
+        "guess the root cause",
+        "looks like a rounding bug, let me patch",
+        "close as cannot reproduce"
+      ],
+      "tags": [
+        "repro-extraction",
+        "thin-report",
+        "intake"
+      ]
+    },
+    {
+      "id": "rep-002",
+      "prompt": "Walk me through the loop you use to go from a confirmed-but-messy reproduction to a clean one I can hand to a developer. The original repro takes 14 manual UI steps across 3 pages.",
+      "expected_patterns": [
+        "reproduce OR confirm",
+        "minimize OR reduce OR shrink OR strip",
+        "isolate OR narrow",
+        "capture OR record OR evidence",
+        "one variable at a time OR remove one step",
+        "smallest OR minimal",
+        "still reproduces OR still fails"
+      ],
+      "anti_patterns": [
+        "ship the 14-step repro as-is",
+        "minimize before confirming it reproduces",
+        "remove several steps at once",
+        "skip verifying it still fails after each cut"
+      ],
+      "tags": [
+        "minimize",
+        "isolate",
+        "repro-loop"
+      ]
+    },
+    {
+      "id": "rep-003",
+      "prompt": "The bug exists on HEAD but the feature worked in last month's release. I have a deterministic command that exits non-zero when the bug is present. Show me how to automatically find the commit that introduced it.",
+      "expected_patterns": [
+        "git bisect start",
+        "git bisect bad OR git bisect new",
+        "git bisect good OR git bisect old",
+        "git bisect run",
+        "exit.*0 OR exit code 0",
+        "exit.*125 OR skip",
+        "git bisect reset"
+      ],
+      "anti_patterns": [
+        "manually checkout each commit",
+        "git bisect run npm test:all OR run the full suite",
+        "exit 1 means good",
+        "git revert to find the commit",
+        "binary search by hand"
+      ],
+      "tags": [
+        "bisect",
+        "regression",
+        "introducing-commit"
+      ]
+    },
+    {
+      "id": "rep-004",
+      "prompt": "My bisect script keeps marking commits as bad for the wrong reason — some old commits won't even build, and the test runner sometimes fails on a flaky network call instead of the actual bug. Fix my bisect approach.",
+      "expected_patterns": [
+        "exit 125 OR skip OR git bisect skip",
+        "build fail.*125 OR untestable.*125 OR cannot build.*skip",
+        "wrapper script OR wrap the test",
+        "distinguish OR separate.*build failure",
+        "deterministic OR stub.*network OR mock.*network OR offline",
+        "127 OR 1-127 OR range"
+      ],
+      "anti_patterns": [
+        "exit 1 when the build fails",
+        "let flaky failures mark commits bad",
+        "ignore unbuildable commits",
+        "rerun the whole suite per commit",
+        "trust the network during bisect"
+      ],
+      "tags": [
+        "bisect",
+        "skip-untestable",
+        "determinism"
+      ]
+    },
+    {
+      "id": "rep-005",
+      "prompt": "The bug only appears around midnight and depends on a random discount code and a third-party pricing API. Make the reproduction deterministic so it fails the same way every single run. This is a Vitest project.",
+      "expected_patterns": [
+        "vi.useFakeTimers OR fake timers",
+        "vi.setSystemTime OR setSystemTime",
+        "seed OR seeded OR faker.seed OR fixed seed",
+        "msw OR setupServer OR mock service worker OR http.get",
+        "HttpResponse OR stub.*response OR mock.*response",
+        "frozen OR fixed.*time OR deterministic"
+      ],
+      "anti_patterns": [
+        "let it hit the real pricing API",
+        "Math.random without seeding",
+        "new Date() without mocking",
+        "wait for midnight",
+        "sleep OR setTimeout to handle the timing",
+        "jest.useFakeTimers('legacy') OR legacy fake timers"
+      ],
+      "tags": [
+        "determinism",
+        "fake-timers",
+        "network-stub"
+      ]
+    },
+    {
+      "id": "rep-006",
+      "prompt": "Same midnight/random/third-party-API bug, but it's a browser flow we reproduce in Playwright, not a unit. Make that end-to-end repro deterministic.",
+      "expected_patterns": [
+        "page.clock OR clock.install OR clock.setFixedTime",
+        "page.route OR route.fulfill OR intercept",
+        "fixed.*time OR frozen.*clock OR pin.*time",
+        "stub OR mock OR fulfill.*pricing",
+        "deterministic OR same.*every run"
+      ],
+      "anti_patterns": [
+        "page.waitForTimeout",
+        "hit the live pricing endpoint",
+        "rely on the real system clock",
+        "increase the timeout to make it pass",
+        "page.clock is not a thing OR use Date override only"
+      ],
+      "tags": [
+        "determinism",
+        "playwright",
+        "clock"
+      ]
+    },
+    {
+      "id": "rep-007",
+      "prompt": "I have a clean deterministic reproduction of the bug. The dev hasn't fixed it yet. Write the regression test now and tell me what state it should be in before and after the fix.",
+      "expected_patterns": [
+        "fail.*before.*fix OR red OR failing.*first",
+        "before the fix OR pre-fix",
+        "assert.*expected OR expect.*toBe OR expect.*toEqual",
+        "pass.*after.*fix OR green OR flips to green",
+        "confirm.*fix OR re-run after fix",
+        "commit the test OR test guards the fix"
+      ],
+      "anti_patterns": [
+        "write the test after the fix",
+        "skip.* OR test.skip OR it.skip the failing test",
+        "expect(true).toBe(true)",
+        "mark it pending until the fix lands",
+        "fix first then add a test",
+        "comment out the assertion"
+      ],
+      "tags": [
+        "red-green",
+        "regression-test",
+        "tdd-for-bugs"
+      ]
+    },
+    {
+      "id": "rep-008",
+      "prompt": "The dev pushed a fix and says it's done. The regression test I wrote earlier now passes. Is that enough to close the ticket, or what else do I verify?",
+      "expected_patterns": [
+        "revert.*fix OR without the fix OR temporarily remove",
+        "confirm.*still fails without OR test fails when fix removed",
+        "test actually exercises OR test catches the bug",
+        "passes.*because of the fix OR not passing for another reason",
+        "re-run OR run.*deterministic OR multiple runs"
+      ],
+      "anti_patterns": [
+        "green means done, close it",
+        "trust the dev's word",
+        "no need to verify the test fails without the fix",
+        "skip the revert check",
+        "passing test always proves the fix"
+      ],
+      "tags": [
+        "fix-verification",
+        "red-green",
+        "test-validity"
+      ]
+    },
+    {
+      "id": "rep-009",
+      "prompt": "I've spent two hours and the bug from the report does not reproduce for me — but it clearly happens for the user. How do I decide whether this is a flaky test, an environment-specific bug, or genuinely not reproducible, and what evidence separates them?",
+      "expected_patterns": [
+        "--repeat-each OR rerun.*same environment OR repeat the run",
+        "flaky.*same code.*same env OR passes and fails.*same commit",
+        "environment-specific OR env-specific",
+        "timezone OR locale OR viewport OR OS OR browser version OR CI vs local",
+        "match.*user environment OR reproduce their env OR replicate their config",
+        "data-dependent OR account OR specific input OR their data"
+      ],
+      "anti_patterns": [
+        "close as cannot reproduce immediately",
+        "assume it's flaky and quarantine",
+        "it doesn't repro on my machine so it isn't real",
+        "retry until it passes",
+        "no need to match the user's environment"
+      ],
+      "tags": [
+        "flaky-vs-environment",
+        "not-reproducible",
+        "triage"
+      ]
+    },
+    {
+      "id": "rep-010",
+      "prompt": "Reproduction is done and the regression test is committed. Write the repro evidence back into the bug ticket. What goes in, in what structure?",
+      "expected_patterns": [
+        "minimal.*steps OR minimal reproduction",
+        "environment OR build OR commit OR version",
+        "expected.*actual OR expected versus actual",
+        "introducing commit OR bisect.*commit OR offending commit OR root cause commit",
+        "regression test OR link.*test OR test file OR test path",
+        "evidence OR logs OR screenshot OR trace OR artifact",
+        "determinism notes OR seed OR frozen time OR stubbed"
+      ],
+      "anti_patterns": [
+        "paste the raw 14-step UI walkthrough",
+        "just say reproduced and close",
+        "no link to the regression test",
+        "omit the build or commit",
+        "leave the original vague report unchanged"
+      ],
+      "tags": [
+        "evidence",
+        "ticket-writeback",
+        "documentation"
+      ]
+    }
+  ]
+}

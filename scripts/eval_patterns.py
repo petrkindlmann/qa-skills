@@ -39,15 +39,36 @@ def split_alternation(pattern: str) -> list[str]:
     return [alt.strip() for alt in pattern.split(" OR ") if alt.strip()]
 
 
+_GROUP = re.compile(r"\(([^()]*\|[^()]*)\)")  # (a|b|c) regex-style alternation group
+
+
 def _compile_literal(literal: str) -> re.Pattern:
     """Compile one alternative into a case-insensitive regex.
 
-    `.*` is honoured as a wildcard; every other char is escaped so that regex
-    metacharacters in tool names (e.g. `page.$$(`) match literally.
+    Supported regex-ish syntax (everything else is matched literally):
+    - `.*`           wildcard span
+    - `(a|b|c)`      alternation group — any of the pipe-separated literals
+    Tool names with regex metachars (e.g. `page.$$(`) still match literally
+    because we escape each literal chunk before reassembling.
     """
-    parts = literal.split(".*")
-    escaped = ".*".join(re.escape(part) for part in parts)
-    return re.compile(escaped, re.IGNORECASE | re.DOTALL)
+    # Tokenize into literal chunks, ".*" wildcards, and "(a|b)" groups.
+    out = []
+    i = 0
+    while i < len(literal):
+        if literal.startswith(".*", i):
+            out.append(".*")
+            i += 2
+            continue
+        m = _GROUP.match(literal, i)
+        if m:
+            alts = [re.escape(a.strip()) for a in m.group(1).split("|")]
+            out.append("(?:" + "|".join(alts) + ")")
+            i = m.end()
+            continue
+        # consume one literal char (escaped)
+        out.append(re.escape(literal[i]))
+        i += 1
+    return re.compile("".join(out), re.IGNORECASE | re.DOTALL)
 
 
 def matches(pattern: str, text: str) -> bool:
