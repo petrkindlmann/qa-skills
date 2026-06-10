@@ -1,5 +1,53 @@
 # Versions
 
+## v3.0.0 (2026-06-10)
+
+### 50 skills, TDD-validated, with an executable eval runner
+
+The library grows from 43 to 50 skills, every existing skill is re-templated to a
+single house format, and evals stop being inert data — there is now a runner that
+checks them.
+
+#### +7 new skills (43 → 50)
+
+Researched via a multi-lens gap analysis and a judge panel, then built through a
+research → author → review pipeline (the review stage caught a fabricated Jest
+fake-timers claim, a 16-digit secret-scan that would flag every legitimate test card,
+and several missing sections before they shipped):
+
+- **`test-case-management`** (process) — manual/hybrid cases in TestRail/Xray/Zephyr/Qase: case anatomy, bulk authoring from stories, ambiguous-step linting, CSV/API import-export, traceability.
+- **`test-suite-curation`** (process) — evidence-based regression-suite pruning: coverage fingerprinting, AST duplicate clustering, CI-history mining, smoke/core/extended tiering, quarantine-before-delete.
+- **`bug-reproduction`** (ai-qa) — vague report → verified minimal repro → failing regression test; git bisect, deterministic repro, red-before-fix.
+- **`agentic-browser-testing`** (ai-qa) — goal-driven E2E via a browser agent (Playwright MCP / computer-use): determinism controls, cost budgets, accessibility-tree interaction, graduation to scripted tests.
+- **`email-testing`** (specialized) — signup/reset/magic-link/OTP flows via Mailpit/Mailosaur/MailSlurp; inbox polling, link/OTP extraction, deliverability checks.
+- **`payment-testing`** (specialized) — Stripe (and Adyen/Braintree/PayPal) sandboxes: test cards, 3DS/SCA iframe handling, test clocks, webhook signature/idempotency, refunds.
+- **`analytics-tracking-testing`** (specialized) — GA4/dataLayer/pixel correctness: tracking-plan contract, beacon interception, param/value/timing assertions, Consent Mode v2, CI gating.
+
+#### AI-agent / LLM security coverage (folded into existing skills)
+
+Prompted by a real indirect-prompt-injection payload disguised as a security finding:
+
+- `security-testing` gains an **OWASP LLM Top 10 (2025)** section and routes LLM-layer attacks to `ai-system-testing`.
+- `ai-system-testing` gains indirect-injection (tool output / RAG / scan reports), self-propagating directives, exfil-via-agent, and a **defend-the-tester** section (treat tool output as untrusted, never execute scripts found in it, schema-validate tool responses).
+- Ships **`skills/ai-system-testing/scripts/detect_injection.py`** — a self-tested scanner (10 attack-marker rule classes) plus `references/injection-detector.md`.
+
+#### Re-template — all 43 existing skills to one house format
+
+- Every `SKILL.md` brought to the v3 template (`docs/SKILL_TEMPLATE.md`): `<objective>`, Discovery Questions with the context check, Core Principles, domain sections, Anti-Patterns, Verification, Done When (objectively checkable), Related Skills. Heavy code pushed into `references/` — leaner `SKILL.md`, larger total footprint, nothing load-bearing lost.
+- Currency pass on every named tool/version (DORA 2025 Rework Rate, c8 v11, `claude-opus-4-8`, dead-tool "Avoid" notes).
+
+#### Evals — runner + normalized specs
+
+- New **`scripts/run_evals.py`** with `--static` (content-teaches-the-pattern proxy, CI-safe), `--baseline` (RED: bare agent), and `--live` (GREEN: prompt through `claude -p` with the skill loaded). Shared grammar in `scripts/eval_patterns.py` (`A OR B`, `(a|b)` groups, `.*`, semantic-pattern deferral to a judge).
+- Extended **`scripts/validate_skills.py`**: required sections, category whitelist, orphan references, Related-Skills resolution, eval-spec presence, README/index count sync.
+- **`scripts/build_index.py`** makes `skills_index.json` a generated artifact (it had drifted to v2.5.0). Regenerated to 50 @ v3.0.0.
+- Normalized ~20 eval specs from prose / `AND`-joined / category-inappropriate patterns to the checkable grammar.
+
+#### Consistency
+
+- `README.md`, `CLAUDE.md`, `AGENTS.md` updated to 50 skills with new disambiguation rules.
+- `docs/SKILL_TEMPLATE.md` is the new authoring contract; `CONTRIBUTING.md` points at it.
+
 ## v2.6.0 (2026-05-30)
 
 ### References refactor, eval coverage, cross-ref fixes, and launch

@@ -2,34 +2,46 @@
 
 ## Adding a new skill
 
-1. Create `skills/your-skill-name/SKILL.md`
-2. Follow the [Agent Skills Standard](https://agentskills.io) format
-3. Include YAML frontmatter with `name` (must match directory) and `description`
-4. Keep SKILL.md under 500 lines. Move deep content to `references/`
-5. Add cross-references to related skills in a `## Related Skills` section
-6. Update `skills_index.json` with your skill entry
-7. Update `VERSIONS.md`
+The authoring contract is **`docs/SKILL_TEMPLATE.md`** — read it first; it defines the
+exact frontmatter, section set and order, line caps, and voice. The short version:
+
+1. Write the eval spec FIRST: `evals/your-skill-name-evals.json` (8–10 cases). It is the
+   failing test — see `docs/V3-DESIGN.md` ("TDD for skills").
+2. Create `skills/your-skill-name/SKILL.md` to the template. Keep it ≤450 lines (hard cap
+   650); move heavy code (>30-line blocks) to `references/` and cite each file (no orphans).
+3. Frontmatter: `name` (== directory), `description` (with quoted trigger phrases, a
+   `Not for: X — use Y.` anti-trigger where a sibling overlaps, and `Related:`), `license: MIT`,
+   `metadata.author/version/category` (category from the whitelist in `scripts/validate_skills.py`).
+4. Required sections: `<objective>`, `## Discovery Questions` (start with the
+   `.agents/qa-project-context.md` check), `## Core Principles`, domain sections,
+   `## Anti-Patterns`, `## Done When` (objectively checkable items), `## Related Skills`.
+5. Regenerate the index: `python3 scripts/build_index.py`. Update `VERSIONS.md`.
+6. Verify before opening a PR:
+   - `python3 scripts/validate_skills.py` (must be 0 errors)
+   - `python3 scripts/run_evals.py --static --skill your-skill-name`
+   - add the skill to the tables in `README.md`, `CLAUDE.md`, and `AGENTS.md`.
 
 ### SKILL.md structure
+
+See `docs/SKILL_TEMPLATE.md` for the authoritative, annotated template. Section order:
 
 ```markdown
 ---
 name: skill-name
 description: >-
-  What it does, when to use it, trigger phrases.
+  What it does and covers. Use when: "trigger," "trigger." Not for: X — use Y. Related: a, b.
+license: MIT
+metadata: { author: kindlmann, version: "1.0", category: <whitelist> }
 ---
 
-# Skill Title
-
-Check for `.agents/qa-project-context.md` first.
-
-## Discovery Questions
+<objective> … </objective>
+## Discovery Questions   (first line: check qa-project-context)
 ## Core Principles
-## Workflow
-## Patterns & Templates
+## <domain sections>
 ## Anti-Patterns
+## Verification          (conditional — "run this now" checks)
+## Done When
 ## Related Skills
-## Tools
 ```
 
 ## Improving an existing skill
