@@ -338,6 +338,28 @@ Running quality retrospectives based on feelings and opinions rather than data. 
 
 ---
 
+## Verification
+
+The artifact is the written postmortem plus its tracked, closed-loop action items. Prove it landed — smallest check first.
+
+```bash
+# Every action item became a real, owned, dated ticket — not a doc bullet.
+# (gh example; swap for `jira issue list` / Linear API as appropriate)
+gh issue list --label postmortem-action --json number,title,assignees,milestone \
+  | jq '[.[] | select(.assignees == [] or .milestone == null)]'
+# Expect: []  (empty). Any item missing an owner or due milestone is not done.
+
+# The escaped defect's timeline is reconstructable from evidence, not memory.
+git log --since="<introduced-date>" --until="<detected-date>" --oneline -- <affected/path>
+# Expect: the introducing commit is in this range and named in the postmortem.
+
+# The fix/regression test the action item promised actually exists and passes.
+git log --grep="<INCIDENT-ID>" --oneline      # the fix commit references the incident
+<your test runner> <new regression test path> # exits 0
+```
+
+Then confirm by reading: the 5 Whys ends on a process/tool/structure cause (not "developer didn't write a test"), and both the action-item-closure rate and the escaped-defect rate are recorded — not just one.
+
 ## Done When
 
 - Escaped defect timeline reconstructed (introduced, released, detected, resolved) with supporting evidence from commit history and bug tracker.

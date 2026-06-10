@@ -310,15 +310,6 @@ Prove the artifacts hold before declaring onboarding complete. Cheapest check fi
 2. **The audit doc is complete, not a stub.** Open the findings doc and confirm all five dimensions (coverage/distribution, reliability, CI health, technical debt, conventions) are filled, and findings are categorized into strengths / gaps / risks / quick wins / strategic work. A startup that scoped out the audit (see `team_maturity`) records that decision instead.
 3. **The context file parses and is populated.** `.agents/qa-project-context.md` exists and carries framework, critical paths, team structure, and risk areas — not a high-level placeholder.
 
----
-
-## Reference Files (in `references/`)
-
-- **framework-walkthrough.md** — The full framework walkthrough template: architecture overview, run commands, new-test step-by-step and template, debug playbooks, conventions, and help routing.
-- **audit-worksheets.md** — Copy-and-fill worksheets for the test architecture audit (coverage, reliability, CI health, technical debt, conventions).
-
----
-
 ## Done When
 
 - At least one working test merged to the repo, passing in CI, and stable across 3 local repeats (`--repeat-each=3` exits 0) — proves the local and pipeline setup end-to-end.
@@ -326,6 +317,11 @@ Prove the artifacts hold before declaring onboarding complete. Cheapest check fi
 - Every Week-1 Day-1/2 setup item has a recorded owner and a target date; blocking items are filed as tracked tickets.
 - `.agents/qa-project-context.md` exists and is populated with framework, critical paths, team structure, and risk areas (not a placeholder).
 - Test framework selected with rationale recorded (evaluated alternatives, decision written down) — or marked N/A when inheriting an existing framework.
+
+## Reference Files (in `references/`)
+
+- **framework-walkthrough.md** — The full framework walkthrough template: architecture overview, run commands, new-test step-by-step and template, debug playbooks, conventions, and help routing.
+- **audit-worksheets.md** — Copy-and-fill worksheets for the test architecture audit (coverage, reliability, CI health, technical debt, conventions).
 
 ## Related Skills
 

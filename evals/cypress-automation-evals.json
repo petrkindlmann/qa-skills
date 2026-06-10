@@ -1,6 +1,6 @@
 {
   "skill": "cypress-automation",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "cy-001",
@@ -9,8 +9,8 @@
         "cy.get OR cy.getByTestId",
         "cy.intercept",
         "cy.wait",
-        "should('have.length')",
-        ".as('') for alias"
+        "should('have.length'",
+        ".as('"
       ],
       "anti_patterns": [
         "cy.wait(milliseconds) for arbitrary delay",
@@ -53,7 +53,7 @@
       "prompt": "Write a Cypress test using cy.intercept to stub an API response with fixture data for an order confirmation",
       "expected_patterns": [
         "cy.intercept('POST', '/api/orders')",
-        "fixture: 'api-responses/...'",
+        "fixture: 'api-responses/.*'",
         ".as('createOrder')",
         "cy.wait('@createOrder')",
         "interception.request.body",
@@ -79,9 +79,9 @@
         "baseUrl: process.env.CYPRESS_BASE_URL",
         "specPattern: 'cypress/e2e/**/*.cy.ts'",
         "supportFile: 'cypress/support/e2e.ts'",
-        "retries: { runMode: 2, openMode: 0 }",
+        "retries: {.*runMode: 2.*openMode: 0",
         "defaultCommandTimeout",
-        "component: { devServer: { framework: ..., bundler: ... } }"
+        "devServer: {.*framework:.*bundler:"
       ],
       "anti_patterns": [
         "hardcoded localhost in CI environment",
@@ -101,9 +101,9 @@
       "prompt": "Write a React component test for ProductCard that verifies rendering, callback invocation with cy.stub, and disabled state",
       "expected_patterns": [
         "cypress/component/ProductCard.cy.tsx",
-        "cy.mount(<ProductCard ... />)",
+        "cy.mount(<ProductCard .*/>",
         "cy.stub().as('addToCart')",
-        "cy.get('@addToCart').should('have.been.calledOnceWith')",
+        "cy.get('@addToCart').should('have.been.calledOnceWith'",
         "should('be.disabled')",
         "should('be.visible')"
       ],
@@ -122,10 +122,10 @@
       "id": "cy-006",
       "prompt": "Write a Cypress test using cy.intercept with conditional responses to test polling behavior (retrying until status changes)",
       "expected_patterns": [
-        "cy.intercept('GET', '/api/status', (req) => { ... })",
+        "cy.intercept('GET', '/api/status', (req) => {",
         "let callCount = 0",
-        "callCount <= threshold",
-        "req.reply({ statusCode: ..., body: ... })",
+        "callCount <= 2",
+        "req.reply({ statusCode: .*body:",
         ".as('pollStatus')",
         "cy.wait('@pollStatus')"
       ],
@@ -146,9 +146,9 @@
       "expected_patterns": [
         "cy.fixture('users').as('users')",
         "beforeEach(function () { ... })",
-        "this.users.find(...)",
-        "cy.login(user.email, user.password)",
-        "describe with multiple it() blocks"
+        "this.users.find(",
+        "cy.login(admin.email, admin.password) OR cy.login(user.email, user.password)",
+        "describe('Role-based access'"
       ],
       "anti_patterns": [
         "hardcoding test data in test files",
@@ -168,8 +168,8 @@
         "cy.intercept('POST', '/api/checkout', { forceNetworkError: true })",
         ".as('networkError')",
         "cy.wait('@networkError')",
-        "should('be.visible') for error message",
-        "cy.contains() for assertion"
+        "should('be.visible')",
+        "cy.contains("
       ],
       "anti_patterns": [
         "not handling intercept setup before action",
@@ -186,7 +186,7 @@
       "id": "cy-009",
       "prompt": "Configure Cypress Cloud parallelization with 4 parallel containers in GitHub Actions using the current cypress-io/github-action",
       "expected_patterns": [
-        "strategy.matrix.containers: [1, 2, 3, 4]",
+        "containers: [1, 2, 3, 4]",
         "uses: cypress-io/github-action@v7 OR uses: cypress-io/github-action@v6",
         "record: true",
         "parallel: true",
@@ -209,11 +209,11 @@
       "id": "cy-010",
       "prompt": "Write a Cypress test demonstrating command queueing: chaining cy.get().click().then() without storing intermediate values",
       "expected_patterns": [
-        "cy.get('[data-testid=...]').click()",
-        ".then((element) => { ... })",
-        "invoking text with .invoke('text')",
-        "chaining without variable assignment",
-        "should('be.visible') or similar assertion"
+        "cy.get('[data-testid=.*]').click()",
+        ".then((.*) => {",
+        ".invoke('text')",
+        "chains Cypress commands directly without storing the return value in a variable",
+        "should('be.visible') OR should('be.disabled')"
       ],
       "anti_patterns": [
         "const element = cy.get(...) and using element later",

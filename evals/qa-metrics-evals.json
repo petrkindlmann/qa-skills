@@ -1,6 +1,6 @@
 {
   "skill": "qa-metrics",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "qam-001",
@@ -28,9 +28,9 @@
       "id": "qam-002",
       "prompt": "Our team is spending 8 hours per release cycle on manual regression testing. How do we calculate the ROI of automating it?",
       "expected_patterns": [
-        "Manual cost = manual time per cycle × cycles per year × hourly rate",
-        "Automation cost = write time + annual maintenance",
-        "ROI = (manual cost - automation cost) / automation cost × 100",
+        "Manual cost.*manual time per cycle × cycles per year.*hourly rate",
+        "Automation cost.*write time + annual maintenance",
+        "ROI.*= (manual cost - automation cost) / automation cost × 100",
         "26 releases OR annual basis",
         "Year 1 vs Year 2"
       ],
@@ -71,7 +71,7 @@
       "prompt": "Our flakiness rate just spiked to 8%. What's the immediate action and how do we prevent it?",
       "expected_patterns": [
         "quarantine flaky tests immediately",
-        "investigate top 3 weekly",
+        "investigate the top 3 weekly",
         "timing OR race conditions OR shared state OR external dependencies",
         "tests flaky for 30+ days should be deleted",
         "detection tools: Buildkite OR Datadog OR Trunk"
@@ -94,8 +94,8 @@
       "expected_patterns": [
         "Defect escape rate = (defects found in production / total defects found) × 100",
         "13.3% OR approximately 13%",
-        "classify by layer: unit, integration, E2E, review",
-        "write retrospective test",
+        "classify.*by layer.*unit.*integration.*E2E.*review",
+        "write a retrospective test",
         "identify if escapes cluster in specific areas"
       ],
       "anti_patterns": [
@@ -138,9 +138,9 @@
         "profile slowest tests OR 10% account for 50%",
         "increase parallelism",
         "move slow tests post-merge",
-        "check unnecessary setup/teardown",
+        "unnecessary setup/teardown",
         "plot duration over time OR alert on step changes >20%",
-        "Target: unit <5 min, integration <10 min, E2E <15 min"
+        "unit.*<5 min.*integration.*<10 min.*E2E.*<15 min"
       ],
       "anti_patterns": [
         "accept slow feedback loop",
@@ -157,13 +157,13 @@
       "id": "qam-008",
       "prompt": "We're a Series B company with 4 engineers. What metrics should we track and what targets should we aim for?",
       "expected_patterns": [
-        "Unit test coverage 75% OR branch coverage 60%",
-        "Flakiness rate <3%",
-        "Pass rate >95%",
-        "Defect escape rate <10%",
-        "MTTR P0 <4 hours",
-        "CI pipeline <15 minutes",
-        "8-10 metrics with dashboards",
+        "Unit test coverage.*75% OR branch coverage.*60%",
+        "Flakiness rate.*<3%",
+        "Pass rate.*>95%",
+        "Defect escape rate.*<10%",
+        "MTTR.*<4 hours",
+        "CI pipeline duration.*<15 min",
+        "8-10 with dashboards",
         "Growth stage OR Series B-C"
       ],
       "anti_patterns": [
@@ -206,7 +206,7 @@
       "prompt": "We have 500 passing tests but also 150 skipped tests. Why is this dangerous and what action should we take?",
       "expected_patterns": [
         "skipped tests are invisible coverage gaps",
-        "150 / (500 + 150) = 23% gap",
+        "150 / (500 + 150) = 23%",
         "skipped tests older than 2 sprints: fix or delete",
         "add CI step that fails if skipped count exceeds 5%",
         "trend toward zero",

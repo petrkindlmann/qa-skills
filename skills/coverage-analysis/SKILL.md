@@ -93,7 +93,7 @@ Two engines underneath:
 - **V8 coverage** — built into the V8 engine, so it does not instrument source: faster, no Babel transform. For Vitest, install `@vitest/coverage-v8` (NOT `c8` — that is the standalone CLI for non-Vitest runners). For a plain `node:test` or mocha project, `c8` is the CLI wrapper around the same V8 data. Default for new Node/Vitest projects.
 - **Istanbul** — instruments source code; slower but maps more reliably through transpilers and bundlers. Switch to it (`@vitest/coverage-istanbul`, or `nyc`) when V8 maps poorly. **Symptom that V8 maps poorly:** reported uncovered lines land on blank lines, closing braces, or decorators, or whole covered functions show as red — that means the source map is misattributing lines (common with certain TS bundlers / SWC configs). When you see that, flip to the Istanbul provider.
 
-> **Node baseline:** `c8` 10.x and `nyc` 18.x are current. c8 10.x supports Node >=12; nyc 18 requires **Node 20 || >= 22**. If you must stay on Node 18, pin `nyc@^17`. New projects should standardize on Node 20+.
+> **Node baseline:** `c8` 11.x and `nyc` 18.x are current. c8 11 still supports Node >=12; nyc 18 requires **Node 20 || >= 22**. If you must stay on Node 18, pin `nyc@^17` (c8 11 runs fine on Node 18). New projects should standardize on Node 20+.
 
 See `references/tool-config.md` for the full provider configs (Vitest `coverage` block, `.nycrc.json`, Jest `coverageThreshold`, `pyproject.toml` / `.coveragerc.toml`), install commands, and run invocations.
 

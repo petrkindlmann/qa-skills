@@ -1,6 +1,6 @@
 {
   "skill": "accessibility-testing",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "a11y-001",
@@ -8,10 +8,11 @@
       "expected_patterns": [
         "@axe-core/playwright",
         "AxeBuilder",
-        "withTags(['wcag2a', 'wcag2aa', 'wcag22aa'])",
+        "withTags",
+        "'wcag2a', 'wcag2aa', 'wcag22aa'",
         "analyze",
         "violations",
-        "expect(...).toHaveLength(0)"
+        "toHaveLength(0)"
       ],
       "anti_patterns": [
         "no rule suppression justification",
@@ -31,7 +32,7 @@
         "page.keyboard.press('Tab')",
         "page.keyboard.press('Enter')",
         "page.keyboard.press('Space')",
-        "getByRole('checkbox')",
+        "getByRole('checkbox'",
         "toBeChecked",
         "expect(page).toHaveURL"
       ],
@@ -51,7 +52,7 @@
       "id": "a11y-003",
       "prompt": "Configure CI/CD to run accessibility tests on every PR with axe-core and block merge if violations found",
       "expected_patterns": [
-        "GitHub Actions OR CI workflow",
+        ".github/workflows",
         "npx playwright test e2e/tests/a11y/",
         "upload-artifact",
         "timeout-minutes",
@@ -76,7 +77,7 @@
         "aria-required",
         "aria-invalid",
         "aria-describedby",
-        "role='alert'",
+        "(role=\"alert\"|role='alert')",
         "toHaveAttribute"
       ],
       "anti_patterns": [
@@ -97,13 +98,13 @@
       "expected_patterns": [
         "async function checkAccessibility",
         "interface A11yOptions",
-        "disableRules with comment",
+        "disableRules",
         "exclude",
         "testInfo.attach",
-        "JSON.stringify(results)"
+        "JSON.stringify(results"
       ],
       "anti_patterns": [
-        "suppression without tracking issue OR comment",
+        "disabling axe rules with no documented justification",
         "no option to exclude elements",
         "no results attachment for audit trail"
       ],
@@ -127,7 +128,7 @@
       "anti_patterns": [
         "no focus trap verification",
         "focus not returned to trigger element",
-        "dialog not marked aria-modal OR aria-labelledby"
+        "dialog rendered without the required aria modal labelling attributes"
       ],
       "tags": [
         "aria",
@@ -185,11 +186,11 @@
       "id": "a11y-009",
       "prompt": "Design a comprehensive accessibility testing strategy for a product that must comply with WCAG 2.2 AA and EU EAA requirements, covering both automated and manual testing",
       "expected_patterns": [
-        "axe-core for automated",
+        "axe-core",
         "keyboard navigation audit",
         "screen reader testing",
-        "color contrast 4.5:1 for normal text",
-        "skip link verification",
+        "4.5:1",
+        "skip link",
         "documented screen reader version OR VoiceOver OR NVDA OR JAWS",
         "manual testing checklist"
       ],

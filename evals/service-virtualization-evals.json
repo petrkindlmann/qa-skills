@@ -1,6 +1,6 @@
 {
   "skill": "service-virtualization",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "sv-001",
@@ -134,7 +134,7 @@
         "contract test",
         "test mode OR sandbox",
         "ephemeral OR Testcontainers",
-        "no contract",
+        "without a contract OR don't own",
         "do not own the API"
       ],
       "anti_patterns": [
@@ -158,8 +158,8 @@
         "const sessions = new Map",
         "sessions.set OR sessions.get",
         "HttpResponse.json",
-        "status codes match flow",
-        "Bearer token OR authorization header"
+        "status: 201 OR status: 401 OR status: 204",
+        "Bearer OR authorization"
       ],
       "anti_patterns": [
         "not maintaining state across requests",
@@ -202,10 +202,10 @@
       "prompt": "Analyze an existing test suite that mocks Stripe SDK method stripe.paymentIntents.create() and explain why this is a bad pattern. Propose the correct HTTP-layer stub approach.",
       "expected_patterns": [
         "stub at HTTP layer OR POST /v1/payment_intents",
-        "decouples from SDK version",
+        "decouples the test from the SDK version",
         "works with any HTTP client",
         "MSW OR WireMock",
-        "not SDK method mock",
+        "never at the SDK method OR not stripe.paymentIntents.create",
         "http.post"
       ],
       "anti_patterns": [
@@ -225,7 +225,7 @@
       "expected_patterns": [
         "recordedAt OR timestamp",
         "30 days OR 30-day expiry",
-        "failing test when stale",
+        "fail the test when OR fails the test",
         "multi-step OR stateful sequence",
         "replay OR record"
       ],

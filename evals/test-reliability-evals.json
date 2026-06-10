@@ -1,6 +1,6 @@
 {
   "skill": "test-reliability",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "tr-001",
@@ -48,10 +48,10 @@
       "prompt": "Audit the test suite and assign Selector Stability Scores to each locator. Which score should be the minimum target average across the suite?",
       "expected_patterns": [
         "3.5+ OR 3.5 average",
-        "getByTestId scores 5 OR data-testid scores 5",
-        "getByRole scores 4",
-        "bare XPath OR CSS selector scores 0 or 1",
-        "audit monthly OR prioritize fixing score-0 and score-1"
+        "getByTestId('submit-order')",
+        "getByRole('button', { name: 'Submit' })",
+        "locator('//div[3]/button[1]') OR locator('.btn-primary.submit')",
+        "Audit monthly OR fixing score-0 and score-1"
       ],
       "anti_patterns": [
         "target below 3.5",
@@ -69,8 +69,8 @@
       "prompt": "A test fails with a 401 error during execution. The auth token expired. Design a self-healing test data fixture that regenerates the token if stale.",
       "expected_patterns": [
         "verify → heal → use → cleanup pattern",
-        "check if token is valid OR refresh token",
-        "testInfo.annotations for observability",
+        "token is still valid OR refresh-token",
+        "Annotate `testInfo.annotations`",
         "fixture cleanup guaranteed even on failure",
         "GET /api/me OR POST /refresh-token"
       ],
@@ -121,7 +121,7 @@
       "anti_patterns": [
         "retries applied to main project instead of quarantine",
         "no grep to separate stable from quarantine",
-        "quarantine tag without ticket link OR description",
+        "@quarantine without annotation OR @quarantine without ticket",
         "test.skip for flaky tests instead of quarantine"
       ],
       "tags": [
@@ -205,7 +205,7 @@
         "original locator and candidate replacements",
         "confidence score and approval path",
         "screencast.webm OR page.screencast OR agentic video receipt",
-        "showActions annotations"
+        "`showActions` annotations"
       ],
       "anti_patterns": [
         "repair without logging or evidence",

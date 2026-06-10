@@ -69,7 +69,7 @@ Prisma has **no** `migrate down` / `migrate rollback` command. `prisma migrate r
 
 For **TypeORM and Sequelize**, both ship native revert commands (`dataSource.undoLastMigration()`, `sequelize-cli db:migrate:undo`); swap them in for the `psql -f down.sql` step — the capture → revert → assert → re-apply shape is identical.
 
-For **Drizzle Kit v1.0 (rc as of mid-2026 — `drizzle-kit@1.0.0-rc.1`, no stable GA yet)**: `drizzle-kit generate` + `drizzle-kit migrate`. Pin the exact version in CI — the rc reworked the casing API (per-table `snakeCase.table` / `camelCase.table` imports from `drizzle-orm/dialect-core`) and removed RQB v1 `._query` for Postgres. Drizzle has no down-migration generator; check in your own inverse SQL, same as Prisma.
+For **Drizzle Kit v1.0 (still beta as of mid-2026 — latest is `drizzle-kit@1.0.0-beta.22`, no stable GA yet; `0.44.x` is the conservative pin if you need stable)**: `drizzle-kit generate` + `drizzle-kit migrate`. Pin the exact version in CI — the v1 beta line reworked the `casing` API and removed RQB v1 `._query` for Postgres, and the API is still shifting between betas. Drizzle has no down-migration generator; check in your own inverse SQL, same as Prisma.
 
 ### Data Preservation During Migration
 

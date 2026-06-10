@@ -1,6 +1,6 @@
 {
   "skill": "ai-qa-review",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "aqr-001",
@@ -31,7 +31,7 @@
       "expected_patterns": [
         "sleep OR waitForTimeout OR setTimeout identified as reliability smell",
         "explicit wait condition OR polling OR event-based wait recommended",
-        "Playwright: await expect OR await page.locator",
+        "await expect OR toBeVisible OR page.getByRole",
         "line number or code citation for the smell",
         "explain why it matters before providing fix"
       ],
@@ -50,8 +50,8 @@
       "id": "aqr-003",
       "prompt": "Identify order dependencies in tests that pass together but fail in isolation",
       "expected_patterns": [
-        "test isolation OR test independence OR data isolation mentioned",
-        "shared state OR external file OR database state identified",
+        "data isolation OR fail in isolation OR different order",
+        "shared mutable state OR side effects OR own state",
         "each test creates its own preconditions recommended",
         "beforeEach OR test-specific setup as fix",
         "example showing before and after"
@@ -96,7 +96,7 @@
         "one behavior per test recommended",
         "test splitting OR decomposition suggested",
         "diagnostic value OR clear failure message as rationale",
-        "before/after example showing one test per behavior"
+        "one behavior per test OR SMELL OR FIX:"
       ],
       "anti_patterns": [
         "merging separate test functions to reduce lines of code",
@@ -114,10 +114,10 @@
       "prompt": "Analyze application code for testability issues: dependency injection, side effect isolation, pure function extraction",
       "expected_patterns": [
         "dependency injection OR constructor injection OR service locator identified",
-        "hard-coded instantiation (new DatabaseClass) flagged as untestable",
+        "new PostgresDB OR new PostgresDatabase OR new StripeClient OR new SendGrid",
         "side effect isolation OR pure function extraction mentioned",
         "interface segregation OR narrow interface suggested",
-        "before/after code example showing testable vs untestable"
+        "HARD TO TEST OR TESTABLE"
       ],
       "anti_patterns": [
         "focusing only on test code without analyzing application code testability",
@@ -136,7 +136,7 @@
       "expected_patterns": [
         "hallucinated locator OR data-testid that doesn't exist identified",
         "fabricated import OR plausible API that doesn't exist flagged",
-        "generic test data like 'test@test.com' OR 'Lorem ipsum' OR 'John Doe' noted",
+        "test@test.com OR Lorem ipsum OR John Doe OR example.com",
         "project data factory OR project-specific fixture recommended",
         "run test against real page to verify locator suggested"
       ],
@@ -157,9 +157,9 @@
       "expected_patterns": [
         "conditional logic OR for loop OR if/else in test identified",
         "parameterized test OR it.each OR test.each recommended",
-        "test.each with test data as array of arrays shown",
+        "it.each([ OR test.each",
         "explain that conditional logic in tests is itself untested",
-        "before/after code example with parameterized syntax"
+        "FIX: Use parameterized OR it.each OR test.each"
       ],
       "anti_patterns": [
         "suggesting conditional logic is acceptable if simple",
@@ -176,11 +176,11 @@
       "id": "aqr-009",
       "prompt": "Audit test assertions for weak assertion messages and diagnostic value",
       "expected_patterns": [
-        "assertion like expect(isValid).toBe(true) lacks diagnostic context flagged",
+        "isValid(form)).toBe(true) OR isValid",
         "toBeTruthy OR toBeDefined OR generic assertions identified as weak",
         "specific assertion OR detailed error object recommended",
         "failure message that explains the problem without reading test source shown",
-        "expect(result.errors).toEqual([]) or similar specific assertion example given"
+        "result.errors).toEqual([]) OR result.errors"
       ],
       "anti_patterns": [
         "accepting toBeDefined as sufficient assertion",
@@ -197,11 +197,11 @@
       "id": "aqr-010",
       "prompt": "Review a test suite for giant fixtures and excessive setup per test",
       "expected_patterns": [
-        "20+ objects in beforeEach OR fixture setup identified",
-        "setup bloat OR unnecessary object creation flagged",
-        "inline setup per test OR factory pattern recommended",
-        "each test creates only what it needs principle stated",
-        "before/after showing bloated beforeEach vs test-scoped setup"
+        "20+ objects OR beforeEach OR Giant Fixtures",
+        "pays the setup cost OR data it doesn't use OR every test",
+        "inline setup OR factories OR factory extraction",
+        "creates only what it needs OR each test needs",
+        "FIX: Each test creates only what OR beforeEach"
       ],
       "anti_patterns": [
         "suggesting shared beforeAll as optimization for slow setup",

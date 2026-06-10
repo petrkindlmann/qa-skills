@@ -169,6 +169,7 @@ Assign testing work based on skill match and availability.
 - New feature testing benefits from fresh eyes -- assign someone who did not build it
 - Critical path testing should not have a single point of failure -- two people should be able to cover it
 - Each person's load stays at 70-80% utilization, not 100% — the rest is their buffer
+- Buffer is distributed per person, not lumped into one tester's block: every assignee carries their own buffer line so a blocker on one person does not consume everyone's slack
 
 See `references/workflow-templates.md` for the allocation table format.
 

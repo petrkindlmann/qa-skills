@@ -353,27 +353,6 @@ When a migration can't be rolled back:
 
 ---
 
-## Verification
-
-Run these immediately after the deploy completes, smallest check first. Expand the error-tracker queries in `references/rollout-automation.md`.
-
-```bash
-# Health endpoint returns healthy
-curl -s https://your-app.com/health | jq .
-
-# Response time + status in one shot
-curl -o /dev/null -s -w "HTTP %{http_code} in %{time_total}s\n" https://your-app.com
-
-# New errors since deploy (Sentry CLI) — should be empty
-sentry-cli issues list --project your-project --query "firstSeen:>15m"
-
-# Datadog: compare 5xx count for the service before vs after deploy — must not increase
-```
-
-Pass criteria: health returns `healthy`, status is `200` within your latency budget, the Sentry query returns no new issues, and the post-deploy 5xx count is at or below the pre-deploy baseline.
-
----
-
 ## Anti-Patterns
 
 ### "It worked on staging"
@@ -415,6 +394,27 @@ Auto-rollback wired to a metric that's noisy, late-arriving, or partially aggreg
 ### Switchback experiments for two-sided systems
 Standard A/B fails on marketplaces, ride-share, ad auctions, and other systems where the treatment group affects the control group through shared state. Splitting traffic 50/50 doesn't isolate the experiment — both sides see the same warped market.
 **Fix:** Use a switchback design — alternate the entire system between control and treatment over short windows (minutes to hours). Statsig's Switchback experiments (Feb 2026) automate this for the common cases. Don't block release on a corrupted A/B test result; rerun with the right design. Reference: https://www.statsig.com/updates
+
+---
+
+## Verification
+
+Run these immediately after the deploy completes, smallest check first. Expand the error-tracker queries in `references/rollout-automation.md`.
+
+```bash
+# Health endpoint returns healthy
+curl -s https://your-app.com/health | jq .
+
+# Response time + status in one shot
+curl -o /dev/null -s -w "HTTP %{http_code} in %{time_total}s\n" https://your-app.com
+
+# New errors since deploy (Sentry CLI) — should be empty
+sentry-cli issues list --project your-project --query "firstSeen:>15m"
+
+# Datadog: compare 5xx count for the service before vs after deploy — must not increase
+```
+
+Pass criteria: health returns `healthy`, status is `200` within your latency budget, the Sentry query returns no new issues, and the post-deploy 5xx count is at or below the pre-deploy baseline.
 
 ---
 

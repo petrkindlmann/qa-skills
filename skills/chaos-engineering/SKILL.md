@@ -420,6 +420,19 @@ The experiment revealed that the circuit breaker does not work correctly. The te
 
 ---
 
+## Verification
+
+Prove the safety machinery works **before** trusting a single live experiment — an abort path you have never triggered is a hypothesis, not a control. Smallest check first:
+
+1. **Inject and reverse in staging.** Run the lowest-blast-radius injection (e.g. `tc qdisc add dev eth0 root netem delay 200ms`) against one staging service, confirm the steady-state dashboard moves, then run the documented rollback (`tc qdisc del dev eth0 root`) and confirm metrics return to baseline. Time the rollback — it must complete inside its stated window (under 30s).
+2. **Trip the automated abort.** Force the monitored metric past its threshold (push error rate over the stop-condition) on an experiment wired to AWS FIS CloudWatch stop-conditions, a Gremlin Health Check, or a Litmus `promProbe` in `mode: Continuous`. Confirm the experiment halts on its own with no human action. If it does not fire, the abort is unverified (see `references/fault-injection.md`).
+3. **Confirm the self-clearing timeout.** Start a bounded injection (`stress-ng --cpu 4 --timeout 60s`, or Litmus `TOTAL_CHAOS_DURATION: '60'`), then walk away. Confirm the fault clears itself at the deadline even if nobody aborts.
+4. **Confirm the findings loop closes.** After a staging run, confirm a findings doc was produced with baseline-vs-actual numbers and that every gap became a tracked ticket with an owner — the experiment record is the artifact, not the injection.
+
+If steps 1–3 cannot be demonstrated in staging, the experiment is not safe to promote toward production.
+
+---
+
 ## Done When
 
 - Every experiment has a written hypothesis ("We believe that if [failure X], the system will [expected behavior Y]") recorded before any fault is injected

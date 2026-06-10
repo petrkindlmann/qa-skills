@@ -5,7 +5,7 @@ description: >-
   generation. Normalizes CI logs, creates stable fingerprints, clusters near-duplicates,
   then uses LLM for severity classification and ticket writing. Includes bug reporting
   templates and severity/priority matrix. Use when: "bug triage," "classify bugs,"
-  "failure analysis," "CI failures," "bug report," "defect template."
+  "failure analysis," "auto-classify," "CI failures," "bug report," "defect template."
   Not for: runtime self-healing of one flaky locator — use test-reliability. Not for:
   designing new tests from production telemetry — use observability-driven-testing.
   Related: qa-metrics, qa-dashboard, ci-cd-integration, qa-project-context.

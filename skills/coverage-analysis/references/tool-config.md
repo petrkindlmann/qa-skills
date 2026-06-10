@@ -57,7 +57,7 @@ export default defineConfig({
 For `node:test`, plain mocha, or any runner without its own coverage provider, `c8` wraps the same V8 coverage data as a CLI. Do NOT install c8 in a Vitest project — Vitest's V8 support comes from `@vitest/coverage-v8`.
 
 ```bash
-npm i -D c8@^10   # current major; c8 10.x supports Node >=12
+npm i -D c8@^11   # current major; c8 11 supports Node >=12
 ```
 
 ```jsonc

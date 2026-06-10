@@ -244,9 +244,9 @@ so every new component is gated on accessibility before merge.
 
 ### Treating accessibility as optional
 Deprioritizing a11y tickets because "nobody complained" — users with disabilities can't complain
-through a product they can't use, so they leave silently. **Fix:** track a11y as a release
-blocker with the same severity rules as functional bugs, and report open a11y issues in the
-release readiness check.
+through a product they can't use, so they leave silently, and US web-accessibility lawsuits have
+climbed year over year since 2018. **Fix:** track a11y as a release blocker with the same
+severity rules as functional bugs, and report open a11y issues in the release readiness check.
 
 ### Testing only the happy path
 Scanning only the default page state, missing the modals, expanded dropdowns, error messages,
@@ -261,6 +261,19 @@ test (click to open the menu, trigger the fetch) and re-run the scan against the
 | `toMatchAriaSnapshot` is flaky | Dynamic content or list reordering inside the snapshot scope | Scope to a stable container; use a partial snapshot |
 | Contrast rule passes but text over a gradient/overlay/image is unreadable | axe can't compute contrast against non-solid backgrounds | Check those cases manually or with a contrast picker |
 | Passing axe but failing a WCAG 2.2 AA audit | axe ships no rule for 2.4.11 / 2.5.7 and only partial 2.5.8 | Manually verify focus-not-obscured, dragging alternatives, and target size |
+
+## Verification
+
+Prove the suite actually exercises the page — an a11y test that passes vacuously (wrong URL, axe scanning an error page, snapshot never reached) is worse than none.
+
+1. **Confirm axe is scanning real content.** Point the helper at a page you know has a violation (e.g. temporarily remove a `<label>`) and run it — the test must FAIL and name the rule:
+   ```bash
+   npx playwright test e2e/tests/a11y/pages.spec.ts
+   ```
+   If a page with a planted defect still passes, AxeBuilder is scanning the wrong DOM (redirect, blank page, or wrong selector) — fix that before trusting any green run.
+2. **Confirm the keyboard specs reach the app, not a 404.** Run `npx playwright test e2e/tests/a11y/keyboard.spec.ts` and open the trace for the skip-link test — the first Tab should land on the skip link, not nowhere. A test that "passes" because the page never loaded is a false green.
+3. **Confirm the CI gate blocks.** Introduce one serious violation on a branch and push — the `a11y` job must exit non-zero and fail the PR check. Revert after.
+4. **Spot-check an ARIA snapshot.** Run `toMatchAriaSnapshot` once with `--update-snapshots`, then again without — the second run must pass. If it flakes, the snapshot scope includes async/reordering content; narrow it to a stable container.
 
 ## Done When
 

@@ -216,6 +216,18 @@ Using `userId: '1'` in tests. This couples tests to database state and breaks wh
 
 ---
 
+## Verification
+
+Prove the data layer is deterministic, isolated, and PII-free, smallest check first:
+
+1. **Seeds are idempotent** — run the seed twice back-to-back and diff the row counts: `psql -c "SELECT count(*) FROM countries" && <seed> && psql -c "SELECT count(*) FROM countries"` returns the same number both times and exits 0. A growing count means a missing `ON CONFLICT`.
+2. **No shared mutable state** — run the suite under parallelism *and* randomized order: `npx playwright test --workers=4` (or `pytest -n auto -p randomly`) stays green. A failure that only appears here is an ordering or shared-data dependency.
+3. **Determinism holds** — run the same data-generating test twice; with `faker.seed(n)` set, generated names/IDs/UUIDs match across runs. If they drift, an unseeded Faker call or `Date.now()`/`crypto.randomUUID()` leaked in.
+4. **No real PII** — `grep -rE '@(gmail|outlook|yahoo)\.com|[0-9]{3}-[0-9]{2}-[0-9]{4}' tests/ fixtures/` returns nothing (real-looking emails and SSNs). Anything it finds is an anonymization gap.
+5. **Cleanup returns to baseline** — snapshot row counts before the suite, run it, snapshot again: the test DB is back to baseline with no orphaned records.
+
+---
+
 ## Done When
 
 - Every entity type the suite creates has a factory or fixture (no inline ad-hoc object literals in tests for shared entities -- grep the test dir for hand-built fixtures and confirm none remain).

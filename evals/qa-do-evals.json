@@ -1,6 +1,6 @@
 {
   "skill": "qa-do",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "qado-001",
@@ -8,11 +8,11 @@
       "expected_patterns": [
         "qa-project-context",
         "test-strategy",
-        "context first OR in that order"
+        "qa-project-context.*test-strategy"
       ],
       "anti_patterns": [
-        "playwright-automation OR api-testing directly without context",
-        "skipping project setup"
+        "skipping project setup",
+        "jumping straight to a tool skill without context"
       ],
       "tags": [
         "routing",
@@ -65,7 +65,7 @@
         "reproduce first OR understand first"
       ],
       "anti_patterns": [
-        "ai-bug-triage",
+        "routing a single incident to batch failure clustering",
         "skipping postmortem"
       ],
       "tags": [
@@ -188,7 +188,7 @@
         "bulk OR regenerate"
       ],
       "anti_patterns": [
-        "test-reliability",
+        "per-test runtime healing for a bulk selector break",
         "fixing each test by hand one at a time"
       ],
       "tags": [
@@ -205,7 +205,7 @@
         "audit OR prune"
       ],
       "anti_patterns": [
-        "test-reliability",
+        "routing redundant-test cleanup to flaky-test healing",
         "deleting tests without evidence or quarantine"
       ],
       "tags": [
@@ -222,7 +222,7 @@
         "direct OR single skill"
       ],
       "anti_patterns": [
-        "api-testing",
+        "routing a Stripe 3DS flow to generic endpoint testing",
         "using real card numbers"
       ],
       "tags": [
@@ -239,7 +239,7 @@
         "direct OR single skill"
       ],
       "anti_patterns": [
-        "api-testing",
+        "routing an email magic-link flow to generic endpoint testing",
         "fixed sleeps OR waitForTimeout"
       ],
       "tags": [
@@ -256,8 +256,8 @@
         "direct OR single skill"
       ],
       "anti_patterns": [
-        "qa-start",
-        "qa-project-context"
+        "routing existing-codebase onboarding to brand-new-project bootstrap",
+        "treating onboarding as initial context capture"
       ],
       "tags": [
         "routing",
@@ -273,8 +273,8 @@
         "direct OR single skill"
       ],
       "anti_patterns": [
-        "performance-testing",
-        "api-testing"
+        "routing dataLayer/pixel verification to load testing",
+        "routing tracking verification to generic endpoint testing"
       ],
       "tags": [
         "routing",

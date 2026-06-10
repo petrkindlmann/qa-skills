@@ -1,6 +1,6 @@
 {
   "skill": "api-testing",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "api-001",
@@ -29,7 +29,7 @@
       "id": "api-002",
       "prompt": "Set up an authenticated API fixture in Playwright that logs in dynamically before each test",
       "expected_patterns": [
-        "test.extend",
+        "base.extend",
         "APIRequestContext",
         "test as base",
         "playwright.request.newContext",
@@ -57,7 +57,7 @@
         "authedApi.get.*projectId",
         "authedApi.patch.*data",
         "authedApi.delete",
-        "status() === 201 OR status() === 200 OR status() === 204",
+        "toBe(201) OR toBe(200) OR toBe(204)",
         "let projectId"
       ],
       "anti_patterns": [
@@ -76,7 +76,7 @@
       "prompt": "Write comprehensive error response validation tests for POST /api/users that cover 400 malformed input and 422 validation errors",
       "expected_patterns": [
         "request.post",
-        "status() === 400 OR status() === 422",
+        "toBe(400) OR toBe(422)",
         "body.details",
         "arrayContaining",
         "objectContaining.*field",
@@ -101,8 +101,8 @@
         "accessToken OR refreshToken",
         "request.post.*refresh",
         "Bearer.*accessToken",
-        "status() === 401",
-        "status() === 403",
+        "toBe(401)",
+        "toBe(403)",
         "expect(res.status()).toBe"
       ],
       "anti_patterns": [
@@ -212,9 +212,9 @@
         "Date.now()",
         "response.status()",
         "expect(Date.now() - start).toBeLessThan(500)",
-        "response.body()",
+        ".body()",
         "length / 1024",
-        "expect(body.length).toBeLessThan"
+        "body.length / 1024).toBeLessThan"
       ],
       "anti_patterns": [
         "no performance threshold",

@@ -40,6 +40,13 @@ cy.intercept('GET', '/api/status', (req) => {
     req.reply({ statusCode: 200, body: { status: 'complete', url: '/download/report.pdf' } });
   }
 }).as('pollStatus');
+
+cy.visit('/jobs/123');
+// The app polls until status flips; wait on the alias for each poll, then assert the UI settled.
+cy.wait('@pollStatus');
+cy.wait('@pollStatus');
+cy.wait('@pollStatus');
+cy.contains('Report ready').should('be.visible');
 ```
 
 ## Simulate Network Errors
@@ -48,8 +55,12 @@ cy.intercept('GET', '/api/status', (req) => {
 // Simulate server error
 cy.intercept('POST', '/api/checkout', { statusCode: 500, body: { error: 'Internal Server Error' } }).as('checkoutFail');
 
-// Simulate network failure
+// Simulate network failure, then verify the error-handling UI
 cy.intercept('POST', '/api/checkout', { forceNetworkError: true }).as('networkError');
+
+cy.getByTestId('place-order').click();
+cy.wait('@networkError');
+cy.contains('Something went wrong. Please try again.').should('be.visible');
 
 // Simulate slow response
 cy.intercept('GET', '/api/dashboard', (req) => {

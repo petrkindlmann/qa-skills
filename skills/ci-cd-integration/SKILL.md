@@ -146,6 +146,8 @@ Past 10–15 shards, naïve hash-based splitting wastes runner time on uneven sh
 - **Datadog Test Optimization** — TIA + flake management; shard-balancing by historical time.
 - **Trunk Flaky Tests** — flake-aware quarantine + retry budgeting.
 
+Before reaching for a paid balancer: Playwright's `--shard` already distributes by file and balances on duration from prior runs. To inspect or feed custom timing data, dump it yourself — `npx playwright test --reporter=json | jq '[.suites[].specs[] | {file: .file, duration: .tests[].results[].duration}]'`. For Jest, `jest-slow-test-reporter` surfaces the slowest specs so you can split or fix them.
+
 For self-hosted runners on Kubernetes, use **Actions Runner Controller** (`arc-runner-set` / `gha-runner-scale-set`) — Helm-installed, auto-scales runner pods per workflow. Replaces the deprecated `runner-deployment` CRD.
 
 ### Required status checks

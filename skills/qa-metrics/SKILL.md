@@ -260,11 +260,11 @@ DORA metrics are the standard vocabulary for leadership delivery dashboards. The
 |--------|------------------|---|
 | **Lead Time for Changes** | Commit → production | < 1 day |
 | **Deployment Frequency** | How often you ship | Multiple per day |
-| **Change Failure Rate** | % of deploys that cause incidents | ~5% (older "high performer" bar was <15%) |
 | **Failed Deployment Recovery Time** (formerly MTTR) | Time to restore service after a *change-induced* failure | < 1 hour |
-| **Reliability** (added as 5th key) | Availability, latency, error budget | Meets your SLOs |
+| **Change Failure Rate** | % of deploys that cause incidents | ~5% (older "high performer" bar was <15%) |
+| **Rework Rate** | % of deploys that are unplanned fixes for a prior bad deploy | Low and falling |
 
-DORA 2025 retired the named Elite/High/Medium/Low tiers in favor of percentile distributions and team archetypes — read the columns as percentile benchmarks, not a tier you "are." The **Failed Deployment Recovery Time** rename (2023/2024 reports) separates change-induced failures from external outages; it is a delivery metric distinct from your QA defect MTTR above. The **Reliability** key is where QA/escape framing meets SRE — error rate and availability are the user-facing tail of escaped defects.
+DORA 2025 formalized **Rework Rate** as the fifth metric and regrouped the set: the first three above are *throughput* (recovery time moved here because fast teams just ship the fix), Change Failure Rate + Rework Rate are *instability*. **Reliability** (availability, latency, error budget against your SLOs) is tracked alongside as a separate dimension — it is where QA/escape framing meets SRE, since error rate and availability are the user-facing tail of escaped defects. DORA 2025 also retired the named Elite/High/Medium/Low tiers in favor of percentile distributions and seven team archetypes — read the column as a percentile benchmark, not a tier you "are." The **Failed Deployment Recovery Time** rename (2023/2024 reports) separates change-induced failures from external outages; it is a delivery metric distinct from your QA defect MTTR above.
 
 Source: https://dora.dev/research/. Tools that surface DORA from Git/CI data: Sleuth, Faros, LinearB, Jellyfish, Swarmia.
 

@@ -1,6 +1,6 @@
 {
   "skill": "qa-start",
-  "version": "1.0",
+  "version": "1.1",
   "evals": [
     {
       "id": "qa-001",
@@ -50,9 +50,9 @@
       "prompt": "I already have a project context file. How do I proceed with qa-start?",
       "expected_patterns": [
         "skip Step 1",
-        "invoke test-strategy",
+        "invoke .*test-strategy",
         "Step 2",
-        ".agents/qa-project-context.md exists"
+        ".agents/qa-project-context.md.*exists"
       ],
       "anti_patterns": [
         "re-run qa-project-context",
@@ -75,7 +75,7 @@
         "tech stack OR test frameworks OR CI/CD"
       ],
       "anti_patterns": [
-        "qa-project-bootstrap",
+        "use qa-project-bootstrap",
         "skip context discovery"
       ],
       "tags": [
@@ -88,9 +88,9 @@
       "id": "qa-005",
       "prompt": "Invoke qa-start to bootstrap QA on my new React web app.",
       "expected_patterns": [
-        "invoke qa-project-context",
-        "invoke test-strategy",
-        "invoke test-planning",
+        "invoke .*qa-project-context",
+        "invoke .*test-strategy",
+        "invoke .*test-planning",
         ".agents/qa-project-context.md",
         "automated questions OR discovery"
       ],
@@ -148,10 +148,10 @@
       "id": "qa-008",
       "prompt": "I already have both a context file and a test strategy. Can I skip to just the test planning step?",
       "expected_patterns": [
-        "invoke test-planning",
+        "invoke .*test-planning",
         "skip Steps 1 and 2",
-        "context file exists",
-        "strategy exists"
+        "context file.*exist",
+        "strategy.*exist"
       ],
       "anti_patterns": [
         "re-run qa-project-context",
@@ -167,8 +167,8 @@
       "id": "qa-009",
       "prompt": "What's the difference between qa-start and qa-project-bootstrap?",
       "expected_patterns": [
-        "qa-start: new projects OR no setup",
-        "qa-project-bootstrap: existing team OR deeper onboarding",
+        "qa-start.*none exists OR qa-start.*new project",
+        "qa-project-bootstrap.*joining an existing team OR qa-project-bootstrap.*existing team",
         "qa-start: foundation OR first plan",
         "qa-project-bootstrap: 30-day OR processes"
       ],
@@ -189,7 +189,7 @@
         "playwright-automation OR cypress-automation",
         "ci-cd-integration",
         "qa-metrics",
-        "write E2E tests",
+        "write.*E2E test",
         "highest-risk flows"
       ],
       "anti_patterns": [

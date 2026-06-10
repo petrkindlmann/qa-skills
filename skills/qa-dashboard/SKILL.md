@@ -185,9 +185,10 @@ status as a CI gate and fail the pipeline if it is not `PASSED`.
 ### Allure TestOps (managed alternative)
 
 If self-hosting feels heavy, **Allure TestOps** (26.2.x line, 2026) is the SaaS path: Allure 3 quality
-gates, named environments, global attachments, and Allure 3-style flaky detection. Its **MCP server is in
-public beta (26.1.1)**, letting AI agents query launches and quality gates directly — relevant when your QA
-workflow runs through Claude Code / Cursor.
+gates, named environments, global attachments, and Allure 3-style flaky detection (flags a test once it
+shows ≥3 status transitions across its last 10 runs). Its **MCP server is in public beta (26.1.1)**, letting
+AI agents query launches and quality gates directly — relevant when your QA workflow runs through Claude
+Code / Cursor.
 
 ---
 

@@ -1,6 +1,6 @@
 {
   "skill": "test-environments",
-  "version": "1.0",
+  "version": "1.1",
   "evals": [
     {
       "id": "te-001",
@@ -8,8 +8,8 @@
       "expected_patterns": [
         "docker-compose.test.yml OR docker-compose.yml",
         "services:",
-        "postgres: AND image:",
-        "redis: AND image:",
+        "image: postgres",
+        "image: redis",
         "healthcheck:",
         "depends_on:",
         "volumes:",
@@ -83,7 +83,7 @@
         "preview-url OR PREVIEW_URL",
         "namespace OR pr-number",
         "github.event.number",
-        "docker compose down OR cleanup on close",
+        "docker compose.*down OR Teardown preview",
         "if: github.event.action == 'closed'"
       ],
       "anti_patterns": [
@@ -177,7 +177,7 @@
         "docker compose up -d OR docker compose -f.*up",
         "cleanup() OR cleanup_function",
         "trap cleanup EXIT",
-        "docker compose down -v OR down --remove-orphans",
+        "docker compose.*down -v OR down -v --remove-orphans",
         "DATABASE_URL OR REDIS_URL",
         "vitest OR jest OR npm test"
       ],
@@ -199,9 +199,9 @@
       "expected_patterns": [
         "local dev: seeded fixtures OR minimal OR fast",
         "CI: ephemeral OR per-run OR destroyed",
-        "preview: PR OR per-request OR auto-teardown",
+        "Created on PR OR destroyed on close OR auto-teardown",
         "staging: long-lived OR production-like OR reset",
-        "production: permanent OR real data",
+        "Permanent OR Real integrations OR Live users",
         "factory OR seed OR snapshot"
       ],
       "anti_patterns": [

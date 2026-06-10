@@ -185,6 +185,7 @@ A correct run shows the unhappy-path tests as the gate: "no non-essential cookie
 - **security-testing** — Security compliance (OWASP Top 10:2025, dependency and supply-chain scanning) complements privacy compliance; different threat model, different tools.
 - **ai-system-testing** — Defines the eval layer (hallucination, jailbreak, prompt-injection) for AI features. This skill only tests the Article 50 *disclosure*; that skill tests whether the AI itself behaves.
 - **ci-cd-integration** — Pipeline configuration for the scheduled weekly audit and compliance quality gates.
+- **release-readiness** — A failing compliance gate (consent firing before opt-in, missing AI Act disclosure) is a release blocker; wire this suite into the go/no-go checklist there.
 
 ## Reference Files (in `references/`)
 

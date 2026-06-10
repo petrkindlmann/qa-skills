@@ -5,15 +5,16 @@ description: >-
   (DAST), dependency/supply-chain scanning (OSV-Scanner, SBOM, provenance), Semgrep SAST,
   auth/session tests (JWT, OAuth, RBAC), and XSS/CSRF/SQLi/SSRF Playwright patterns.
   Use when: "security test," "OWASP," "vulnerability," "ZAP," "XSS," "SSRF," "dependency scan,"
-  "auth testing." Scope is automated scanning + negative-path security tests in CI, not manual penetration testing.
+  "auth testing," "OWASP LLM Top 10." Scope is automated scanning + negative-path security tests in CI, not manual penetration testing.
   Not for: mapping security controls to regulations (SOC 2, HIPAA, PCI, GDPR) — use compliance-testing;
   pipeline stage wiring and deploy gating mechanics — use ci-cd-integration; purely functional API auth/input
-  tests with no attacker model — see api-testing.
-  Related: ci-cd-integration, compliance-testing, api-testing, shift-left-testing.
+  tests with no attacker model — see api-testing; testing your product's own LLM features or defending the
+  agent itself (prompt-injection detector, indirect injection, jailbreak red-teaming) — use ai-system-testing.
+  Related: ci-cd-integration, compliance-testing, api-testing, shift-left-testing, ai-system-testing.
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: automation
 ---
 
@@ -45,7 +46,7 @@ Check `.agents/qa-project-context.md` first — if it exists, use it and skip an
 
 2. **OWASP Top 10 is the floor, not the ceiling.** It covers the most common impactful classes. Domain-specific threats (healthcare data, financial transactions, multi-tenant isolation) need their own analysis on top.
 
-3. **Defense in depth — no single tool catches everything.** ZAP misses auth-logic bugs, SCA misses your custom code, Semgrep misses runtime issues. Layer DAST + SCA + SAST + auth tests + secret scanning. When one layer's blind spot is another layer's coverage, a regression has to beat all of them.
+3. **Defense in depth — no single tool catches everything.** ZAP misses auth-logic bugs, SCA misses your custom code, Semgrep misses runtime issues. Layer DAST + SCA + SAST + auth tests + secret scanning. When one layer's blind spot is another layer's coverage, a regression has to beat all of them. SCA earns its layer because most of the shipped code is third-party — known CVEs in dependencies are the lowest-effort attack vector, so scan on every build.
 
 4. **Shift-left.** Catch each class at the earliest stage: SAST and secret scanning on commit, dependency/supply-chain checks on the PR, DAST in staging, custom auth tests on every run. See `shift-left-testing` for the dev-QA workflow this rides on.
 
@@ -124,6 +125,27 @@ Insufficient logging *and* missing alerts on what is logged. Renamed in 2025 to 
 New in 2025. Errors and unexpected states are an attack surface — fail-open defaults, uncaught exceptions leaking internals, race conditions in error paths, security checks skipped when "something went wrong."
 
 **What to test:** error responses leak no stack traces / framework names / DB schema; auth fails closed (deny by default); timeouts and partial failures never bypass authorization; resource cleanup on every error path; fuzz every endpoint and verify responses stay within the documented error contract.
+
+---
+
+## OWASP LLM Top 10 (2025)
+
+If your app embeds an LLM (chatbot, RAG, agent, copilot), the classic Top 10 above does not cover its failure modes — use the OWASP Gen AI Security Project's separate list (genai.owasp.org/llm-top-10/). This is the security/CI-gate view: one-line "what to test" per category. For the DEEP behavioral coverage of LLM01 and LLM02 — indirect injection via tool/RAG data, defend-the-tester technique, jailbreak red-teaming, and the runnable injection detector — hand off to `ai-system-testing`; do not duplicate it here.
+
+| ID | Category | What to test |
+|----|----------|--------------|
+| **LLM01** | Prompt Injection | Direct + indirect injection (instructions hidden in retrieved docs, tool output, file content) override system intent. → DEEP coverage in `ai-system-testing`. |
+| **LLM02** | Sensitive Information Disclosure | Model leaks PII, secrets, other tenants' data, or training data via crafted prompts. → DEEP coverage (detector, scoped tests) in `ai-system-testing`. |
+| **LLM03** | Supply Chain | Provenance of models, adapters, datasets, and plugins; pinned/verified weights; poisoned third-party model or LoRA. |
+| **LLM04** | Data and Model Poisoning | Training/fine-tune/RAG-ingest data integrity; backdoors and bias injected via tainted sources. |
+| **LLM05** | Improper Output Handling | LLM output reaching a downstream interpreter unsanitized — XSS, SSRF, SQLi, command injection from generated text. |
+| **LLM06** | Excessive Agency | Agent has more tools/permissions/autonomy than the task needs; can delete, pay, or email without a human gate. |
+| **LLM07** | System Prompt Leakage | System prompt extractable, and — worse — relied on to hold secrets or enforce authz that belongs server-side. |
+| **LLM08** | Vector and Embedding Weaknesses | RAG retrieval crosses tenant/permission boundaries; embedding inversion; poisoned vectors returned as context. |
+| **LLM09** | Misinformation | Confident fabrication (hallucinated facts, fake citations/URLs, unsafe code) accepted as authoritative. |
+| **LLM10** | Unbounded Consumption | No token/rate/cost ceilings — prompt-driven resource exhaustion, denial-of-wallet, model extraction by query volume. |
+
+LLM05 (Improper Output Handling) is where the classic Top 10 reconnects: treat LLM output as untrusted input and re-run the A05 Injection checks on anything it produces.
 
 ---
 
@@ -213,6 +235,7 @@ Prove the assertions actually fire — a security suite that passes vacuously (w
 
 - **ci-cd-integration** — pipeline stage wiring and deploy gating mechanics; go there for *how* to run these steps, here for *what* they assert.
 - **compliance-testing** — mapping security controls to regulations (SOC 2, HIPAA, PCI, GDPR); this skill proves the controls work, that one proves you have the right ones.
+- **ai-system-testing** — your product's own LLM features. Owns the deep OWASP LLM Top 10 work: indirect prompt injection, the injection detector, sensitive-info-disclosure tests, jailbreak red-teaming. This skill names the LLM categories for CI gating; that one defends the agent.
 - **api-testing** — functional REST/GraphQL auth, input, and rate-limit tests without an attacker model; go there when there's no threat being simulated.
 - **shift-left-testing** — the dev-QA workflow, TDD, and definition-of-done that the shift-left principle here rides on.
 - **test-environments** — secure test-environment config, secret management, network isolation.

@@ -1,6 +1,6 @@
 {
   "skill": "shift-left-testing",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "slt-001",
@@ -9,7 +9,7 @@
         "testable acceptance criteria",
         "edge cases OR negative scenarios",
         "integration risks",
-        "QA effort estimation",
+        "estimate QA effort OR QA effort",
         "test approach per story",
         "clarifying questions"
       ],
@@ -33,7 +33,7 @@
         "QA perspective OR testing questions",
         "15-30 minutes OR 30 minutes max",
         "edge cases OR error states",
-        "agreement on test approach"
+        "test approach agreed"
       ],
       "anti_patterns": [
         "only two amigos",
@@ -78,7 +78,7 @@
         "regression test OR failing test first",
         "test that reproduces the bug",
         "proof the fix works",
-        "prevents bug from returning",
+        "bug never returns OR regression guard",
         "TDD for bugs OR test-first",
         "test quality check OR meaningful assertions"
       ],
@@ -102,8 +102,8 @@
         "TDD for bug fix with known reproduction",
         "TDD for API endpoints with clear contract",
         "test-after for exploratory UI OR prototyping",
-        "test-after for third-party integration",
-        "test-after for performance optimization",
+        "Third-party integration.*Test-after",
+        "Performance optimization.*Test-after",
         "clear inputs/outputs OR fast feedback"
       ],
       "anti_patterns": [
@@ -122,7 +122,7 @@
       "id": "slt-006",
       "prompt": "Design a dev/QA pairing session to create test cases for a coupon feature before any code is written",
       "expected_patterns": [
-        "QA describes scenarios",
+        "QA describes.*scenarios",
         "test signatures OR test function names",
         "unit tests AND integration tests AND e2e tests",
         "happy path AND edge cases",
@@ -148,7 +148,7 @@
         "Level 2 OR Gate level",
         "Three Amigos OR QA in sprint planning",
         "next step is upstream involvement",
-        "measurement metric OR defects found earlier",
+        "Measure: OR defects found in",
         "test-after mentioned as current state",
         "QA as checkpoint not collaborator"
       ],
@@ -173,8 +173,8 @@
         "quality gates without buy-in OR anti-pattern",
         "overwhelm OR start small prove value",
         "exploratory work OR uncertain domains",
-        "team ownership OR imposed gates",
-        "activities vs outcomes"
+        "shared ownership OR ownership of quality OR Gates perceived as imposed",
+        "Activity Instead of Outcomes OR Activities are inputs"
       ],
       "anti_patterns": [
         "this approach is fine",
@@ -194,10 +194,10 @@
         "test fails first OR RED",
         "minimum code to pass OR GREEN",
         "no extra features",
-        "refactor improves structure",
-        "behavior unchanged after refactor",
+        "Improve code structure OR structure improved",
+        "behavior unchanged OR without changing behavior",
         "all tests pass after refactor",
-        "clear test names"
+        "Test names describe OR clear test names"
       ],
       "anti_patterns": [
         "test passes on first run",

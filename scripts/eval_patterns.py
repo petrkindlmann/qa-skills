@@ -26,20 +26,49 @@ _CODEISH = re.compile(r"[(){}\[\].=/<>:_\"'`|$@#]")
 
 
 def is_semantic(pattern: str) -> bool:
-    """True when a pattern is prose that substring-matching cannot fairly judge."""
+    """True when a pattern is prose that substring-matching cannot fairly judge.
+
+    A pattern is semantic (judge-deferred) when, after stripping the regex-ish
+    scaffolding (`.*` wildcards and `(a|b)` / `(a OR b)` alternation groups), what
+    remains is natural-language prose: >4 words with no code-ish tokens. This keeps
+    `getByRole OR getByTestId` checkable while deferring
+    `covers same lines but (asserts OR checks) different` to a human/LLM judge —
+    a sentence no skill text contains verbatim.
+    """
     p = pattern.strip()
-    if " OR " in p:
-        return all(is_semantic(alt) for alt in split_alternation(p))
-    if _CODEISH.search(p):
+    alts = split_alternation(p)
+    if len(alts) > 1:  # genuine top-level alternation (not ' OR ' inside a group)
+        return all(is_semantic(alt) for alt in alts)
+    # Strip scaffolding before judging prose-ness.
+    bare = _GROUP.sub(" ", p).replace(".*", " ").replace(".?", " ").strip()
+    if _CODEISH.search(bare):
         return False
-    return len(p.split()) > 4
+    return len(bare.split()) > 4
 
 
 def split_alternation(pattern: str) -> list[str]:
-    return [alt.strip() for alt in pattern.split(" OR ") if alt.strip()]
+    """Split top-level ' OR ' alternatives, but NOT ' OR ' inside (a OR b) groups."""
+    parts, depth, buf = [], 0, []
+    tokens = re.split(r"(\(|\)|\sOR\s)", pattern)
+    for tok in tokens:
+        if tok == "(":
+            depth += 1
+            buf.append(tok)
+        elif tok == ")":
+            depth = max(0, depth - 1)
+            buf.append(tok)
+        elif tok.strip() == "OR" and depth == 0:
+            parts.append("".join(buf).strip())
+            buf = []
+        else:
+            buf.append(tok)
+    if buf:
+        parts.append("".join(buf).strip())
+    return [p for p in parts if p]
 
 
-_GROUP = re.compile(r"\(([^()]*\|[^()]*)\)")  # (a|b|c) regex-style alternation group
+# (a|b|c) or (a OR b OR c) regex-style alternation group.
+_GROUP = re.compile(r"\(([^()]*(?:\||\sOR\s)[^()]*)\)")
 
 
 def _compile_literal(literal: str) -> re.Pattern:
@@ -61,7 +90,8 @@ def _compile_literal(literal: str) -> re.Pattern:
             continue
         m = _GROUP.match(literal, i)
         if m:
-            alts = [re.escape(a.strip()) for a in m.group(1).split("|")]
+            alts = [re.escape(a.strip())
+                    for a in re.split(r"\||\sOR\s", m.group(1)) if a.strip()]
             out.append("(?:" + "|".join(alts) + ")")
             i = m.end()
             continue

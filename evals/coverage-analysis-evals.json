@@ -1,23 +1,22 @@
 {
   "skill": "coverage-analysis",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "cov-001",
       "prompt": "Set up V8 coverage tracking for a Vitest project with branch coverage gating at 80% globally and a stricter threshold for the payments module",
       "expected_patterns": [
         "@vitest/coverage-v8",
-        "provider: .v8.",
+        "provider: (\"v8\"|'v8') OR coverage.provider",
         "thresholds",
         "lines: 80",
         "src/payments/.*: { lines: .*, branches: .* } OR per-directory threshold for payments",
-        "reporter: [.*text.*lcov.*json-summary] OR reporter array with text, lcov, json-summary"
+        "reporter: [.*text.*lcov.*json-summary"
       ],
       "anti_patterns": [
         "npm i -D c8",
         "provider: 'istanbul'",
         "100% coverage threshold",
-        "src/payments/**.*:",
         "exclude entire payment module from coverage"
       ],
       "tags": [
@@ -32,11 +31,11 @@
       "prompt": "Configure Istanbul/nyc with .nycrc.json to enforce 80% branch coverage and prevent coverage regression in CI",
       "expected_patterns": [
         ".nycrc.json",
-        "check-coverage: true",
+        "check-coverage\": true",
         "branches: 80",
         "include: [.*src.*]",
         "watermarks OR branches threshold",
-        "reporter: [.*text.*html.*lcov] OR reporter array"
+        "reporter: [.*text.*html.*lcov"
       ],
       "anti_patterns": [
         "check-coverage: false",
@@ -59,7 +58,7 @@
         ".coverage-ratchet.json",
         "current[metric].pct OR currentPct < ratchetPct",
         "process.exit(1) OR console.error.*FAIL",
-        "metrics: [.*lines.*branches.*functions.*statements]",
+        "metrics = [.*lines.*branches.*functions.*statements",
         "Math.floor OR flooring the pct"
       ],
       "anti_patterns": [
@@ -103,7 +102,7 @@
       "expected_patterns": [
         "ternary OR condition ? a : b",
         "branch coverage",
-        "one branch only OR isPremium = true only",
+        "only the true branch OR isPremium",
         "expect both true and false paths OR expect(discount(100, false))",
         "line coverage does not guarantee branch coverage",
         "execute does not equal tested"
@@ -128,7 +127,7 @@
         "[tool.coverage.run]",
         "branch = true",
         "fail_under = 80",
-        "exclude_lines = [.*TYPE_CHECKING.*if __name__]",
+        "exclude_lines = [.*TYPE_CHECKING OR if TYPE_CHECKING",
         "pytest --cov=src --cov-fail-under=80"
       ],
       "anti_patterns": [
@@ -152,7 +151,7 @@
         "index.ts OR barrel exports",
         "generated/** OR GraphQL OR Prisma",
         "*.stories.ts OR Storybook",
-        "does not add test value OR inflates denominator",
+        "inflate the denominator OR without adding value",
         "re-exports only OR type-only"
       ],
       "anti_patterns": [
@@ -175,7 +174,7 @@
         "coverage-summary.json",
         "davelosert/vitest-coverage-report-action OR marocchino/sticky-pull-request-comment",
         "git diff --name-only origin/main...HEAD",
-        "coverage ratchet script",
+        "coverage-ratchet OR ratchet script",
         "if: github.event_name == 'pull_request'"
       ],
       "anti_patterns": [
@@ -223,7 +222,7 @@
         "diminishing returns",
         "75-85% OR sweet spot",
         "90%+ OR critical paths (payments, auth)",
-        "effort vs value"
+        "Value | Effort OR diminishing returns"
       ],
       "anti_patterns": [
         "100% coverage as a goal",

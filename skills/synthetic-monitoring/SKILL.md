@@ -339,11 +339,9 @@ Prove the monitoring works before trusting it — smallest check first.
 
 ## Related Skills
 
-| Skill | Relationship |
-|-------|-------------|
-| `testing-in-production` | Synthetic monitoring is the ongoing validation after production-testing techniques validate a release |
-| `release-readiness` | A one-shot post-deploy smoke gate tied to a specific release lives there; synthetic monitoring is the continuous, schedule-driven version |
-| `performance-testing` | Synthetic probes track production performance trends between load tests |
-| `qa-metrics` | Availability, response time, and error budget feed into quality dashboards |
-| `observability-driven-testing` | Telemetry from synthetic probes informs what additional tests to create |
-| `ci-cd-integration` | Synthetic probes can run as a CI pipeline stage for post-deploy verification |
+- **testing-in-production** — safe-release *techniques* (flags, canary, guardrail metrics) applied *during* a rollout; synthetic monitoring is the schedule-driven validation that runs continuously *after*.
+- **release-readiness** — a one-shot post-deploy smoke gate tied to a specific release lives there; come here for the continuous, schedule-driven version that keeps running long after the release.
+- **observability-driven-testing** — uses production telemetry (including signals from these probes) as *input* to design new tests; this skill instead *produces* the probes and their telemetry.
+- **performance-testing** — load tests measure capacity on demand; synthetic probes track production performance *trends* between those load tests.
+- **qa-metrics** — availability, response-time percentiles, and error-budget consumption from probes feed the quality dashboards defined there.
+- **ci-cd-integration** — go there to wire synthetic probes into a pipeline as a post-deploy verification stage.

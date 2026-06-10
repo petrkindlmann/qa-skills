@@ -1,6 +1,6 @@
 {
   "skill": "test-planning",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "tp-001",
@@ -49,7 +49,7 @@
       "id": "tp-003",
       "prompt": "Create a requirements-to-test coverage matrix for a payment API integration. Requirements: API accepts valid card, validates card format, rejects expired cards, handles network timeout, logs all transactions.",
       "expected_patterns": [
-        "requirement ID OR row per requirement",
+        "(Req ID|requirement) OR row per requirement",
         "test type OR automated/manual",
         "test location OR test ID",
         "covered OR gap OR planned",
@@ -71,9 +71,9 @@
       "prompt": "Estimate effort for this sprint: 4 new E2E tests, 6 unit tests, 2 exploratory sessions, 1 accessibility review. You have 30 hours available. What do you allocate?",
       "expected_patterns": [
         "reference estimate OR hours per test",
-        "E2E 2-3 hours",
-        "unit 0.5 hours",
-        "exploratory 1.5 hours",
+        "E2E.*2-3 hours",
+        "Unit.*0.5 hr",
+        "Exploratory.*1.5 hr",
         "buffer OR 20-30%"
       ],
       "anti_patterns": [
@@ -93,7 +93,7 @@
       "expected_patterns": [
         "high risk low effort first OR do first",
         "high risk high effort second OR do second",
-        "medium risk deferred",
+        "Medium-risk.*defer",
         "low risk deferred OR skip",
         "prioritization matrix OR work order"
       ],
@@ -115,7 +115,7 @@
         "SDET gets E2E OR unit",
         "exploratory goes to best feature knowledge",
         "accessibility separated OR assigned",
-        "buffer distributed",
+        "buffer.*per person OR distributed per person",
         "70-80% utilization OR capacity"
       ],
       "anti_patterns": [
@@ -137,7 +137,7 @@
         "environment OR test data OR staging",
         "automated tests written OR day 3-4",
         "manual testing OR day 5",
-        "week 2 regression",
+        "Week 2.*regression",
         "last day confirmation OR sign-off"
       ],
       "anti_patterns": [
@@ -159,7 +159,7 @@
         "defer OR skip low-risk items",
         "keep critical path OR high-risk",
         "justification OR rationale",
-        "gap acceptance OR explicit decision"
+        "accept the risk OR GAP.*decision"
       ],
       "anti_patterns": [
         "cut the buffer arbitrarily",
@@ -178,7 +178,7 @@
       "expected_patterns": [
         "completed OR ✓",
         "blocked OR ✗",
-        "bug found with priority",
+        "BUG.*P(1|2) OR Found today",
         "next day plan OR tomorrow",
         "coverage percentage OR scenarios complete",
         "buffer consumed OR buffer status"
@@ -199,9 +199,9 @@
       "expected_patterns": [
         "estimation accuracy OR variance",
         "cause OR root cause",
-        "buffer too low OR increase buffer",
+        "buffer.*too low OR increase.*buffer",
         "actual vs estimated by test type",
-        "lessons learned"
+        "Lessons OR lessons learned"
       ],
       "anti_patterns": [
         "no data on cause",

@@ -1,6 +1,6 @@
 {
   "skill": "selector-drift-recovery",
-  "version": "2.0",
+  "version": "2.1",
   "evals": [
     {
       "id": "sdr-001",
@@ -10,7 +10,7 @@
         "Phase 2 — Snapshot the new DOM OR new-dom snapshot",
         "Phase 3 — Identify broken selectors OR capture failures",
         "Phase 4 — Generate replacement candidates OR role-first",
-        "Phase 5 — Validate OR run suite",
+        "Phase 5 — Apply OR full affected suite",
         "Phase 6 — Ship the PR OR per-change evidence",
         "confidence score OR stability rubric"
       ],
@@ -31,12 +31,12 @@
       "id": "sdr-002",
       "prompt": "I have a Playwright JSON report showing 15 failed tests after a Tailwind CSS upgrade. Extract the broken locators, their line numbers, and what they're trying to interact with.",
       "expected_patterns": [
-        "JSON report parsing OR locator extraction",
+        "JSON reporter OR locator string",
         "TimeoutError OR locator.* exceeded",
         "line number OR source location",
         "inferred intent OR what assertion follows",
         "table OR structured output",
-        "test file grouping"
+        "Group the results by test file OR group by file"
       ],
       "anti_patterns": [
         "guessing intent without reading code",
@@ -59,7 +59,7 @@
         "page.content() OR ariaSnapshot OR innerHTML",
         "DOM snapshot panel OR snapshot panel OR ariaSnapshot",
         ".drift-recovery/old OR snapshot directory",
-        "per-page snapshots OR per-component"
+        "every page or component OR per affected unit"
       ],
       "anti_patterns": [
         "Copy HTML at this step",
@@ -84,7 +84,7 @@
         "visible text only OR score 2",
         "CSS class OR score 1",
         "no replacement OR score 0 OR human review",
-        "confidence score output"
+        "confidence score OR score, rationale"
       ],
       "anti_patterns": [
         "recommending score-1 as primary candidate",
@@ -104,12 +104,12 @@
       "id": "sdr-005",
       "prompt": "I've applied 47 selector replacements to a feature branch. Now I need to validate the full test suite before merging. What should I do if some tests pass and some fail?",
       "expected_patterns": [
-        "run affected test suite OR full suite",
-        "revert failing replacements OR mark for review",
-        "keep passing replacements",
-        "generate summary OR N recovered, M flagged",
+        "full affected suite",
+        "revert that one OR mark the test for human review",
+        "keep the replacement",
+        "N recovered automatically OR M flagged",
         "clear marking of flagged tests",
-        "all recovered tests pass"
+        "Recovered tests pass"
       ],
       "anti_patterns": [
         "silently including failed tests",
@@ -152,9 +152,9 @@
       "id": "sdr-007",
       "prompt": "After recovering selectors, our average selector stability score dropped from 3.7 to 3.2. What went wrong?",
       "expected_patterns": [
-        "auto-applied score-2 candidates OR over-confidence",
+        "score-2 replacements OR Auto-applying score",
         "not preferring getByRole OR role-first",
-        "CSS class-based replacements OR brittle selectors",
+        "CSS class OR Score-2/CSS candidates",
         "not ratcheting up stability after recovery",
         "recovered tests should have higher score",
         "update or revert low-scoring candidates"
@@ -174,9 +174,9 @@
       "id": "sdr-008",
       "prompt": "Our designer removed the product carousel entirely in the redesign. Should we regenerate the selector for the carousel 'next' button, or handle this differently?",
       "expected_patterns": [
-        "delete test OR mark for deletion",
-        "removed feature OR feature no longer exists",
-        "prune tests OR tests no longer make sense",
+        "deletion pile OR tests deleted",
+        "refactor removed a feature OR no longer exist",
+        "prune its tests OR prune those tests",
         "Phase 6 OR deleted tests section",
         "not regenerating selectors for missing elements"
       ],
@@ -217,11 +217,11 @@
       "id": "sdr-010",
       "prompt": "My team says we should auto-merge the selector recovery PR in CI once all tests pass. Is that appropriate?",
       "expected_patterns": [
-        "no auto-merge OR human reviewer required",
-        "PR is the artifact OR review is essential",
-        "reviewer eyeballs per-change evidence",
-        "screenshots must be verified",
-        "confidence scores need signoff",
+        "Auto-merging the recovery OR Require a reviewer",
+        "PR is the deliverable OR PR .*is.* the artifact",
+        "eyeballing the per-change evidence",
+        "per-change screenshot is the only check OR Check each screenshot",
+        "need a human signoff OR Confidence-scored updates need",
         "anti-pattern OR not recommended"
       ],
       "anti_patterns": [

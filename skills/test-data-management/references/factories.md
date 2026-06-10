@@ -196,11 +196,13 @@ Use Playwright fixtures to create and clean up data per test:
 ```typescript
 // e2e/fixtures/data.fixture.ts
 import { test as base, expect } from '@playwright/test';
+import { userFactory } from '../factories/user.factory';
 
 export const test = base.extend<{ testOrder: { id: string; userId: string } }>({
   testOrder: async ({ request }, use) => {
+    // Unique userId from the factory sequence -- never `Date.now()` (Core Principle 4)
     const response = await request.post('/api/test/orders', {
-      data: { userId: `test-user-${Date.now()}`, items: [{ productId: 'prod-1', quantity: 1 }] },
+      data: { userId: userFactory.build().id, items: [{ productId: 'prod-1', quantity: 1 }] },
     });
     expect(response.ok()).toBeTruthy();
     const order = await response.json();

@@ -54,11 +54,11 @@ tests:
         value: "Output is 3 sentences or fewer and contains no opinions"
 ```
 
-Run with `npx promptfoo eval -c promptfooconfig.yaml`; a non-zero exit gates the merge. Promptfoo is MIT-licensed and open-source (acquired by OpenAI in March 2026, license and public repo retained).
+Run with `npx promptfoo eval -c promptfooconfig.yaml`; a non-zero exit gates the merge. Promptfoo is Apache-2.0-licensed and open-source (acquired by OpenAI in March 2026, license and public repo retained).
 
 ## Red-team / safety with Garak
 
-Run `garak` against your deployed prompt before launch. Keep probe specs consistent (fully-qualified `module.Probe` or bare module names — not a mix), and confirm them against your installed version with `garak --list_probes`. These modules are verified present in v0.14.x:
+Run `garak` against your deployed prompt before launch. Keep probe specs consistent (fully-qualified `module.Probe` or bare module names — not a mix), and confirm them against your installed version with `garak --list_probes`. These modules are verified present in v0.15.0:
 
 ```bash
 # Verify the live probe set first:
@@ -69,4 +69,4 @@ garak --model_type openai --model_name <model> \
   --probes promptinject,latentinjection,encoding.InjectAscii85
 ```
 
-`promptinject` covers instruction-hijacking, `latentinjection` covers injections buried in surrounding context (the RAG/summarization case), and `encoding.InjectAscii85` tests encoded-payload bypasses. Garak v0.14.x (Feb 2026) writes redesigned HTML/JSON reports — review the report for any critical-tier findings before launch.
+`promptinject` covers instruction-hijacking, `latentinjection` covers injections buried in surrounding context (the RAG/summarization case), and `encoding.InjectAscii85` tests encoded-payload bypasses. Garak v0.15.0 (May 2026) adds the Agent Breaker (tool-aware) and system-prompt-extraction probes — review the report for any critical-tier findings before launch.

@@ -1,6 +1,6 @@
 {
   "skill": "qa-project-bootstrap",
-  "version": "1.0",
+  "version": "1.1",
   "evals": [
     {
       "id": "qapb-001",
@@ -55,7 +55,7 @@
       "expected_patterns": [
         "architecture overview OR framework version OR test runner",
         "directory structure OR tests/ organization OR pages/ OR fixtures/ OR helpers/",
-        "how to run tests section OR command examples OR npm playwright test",
+        "How to Run Tests OR npx playwright test OR command examples",
         "step by step guide OR new test template OR arrange-act-assert",
         "how to debug failures OR TimeoutError OR CI vs local patterns",
         "patterns and conventions OR page objects OR authentication OR test data OR selectors",
@@ -152,8 +152,8 @@
       "prompt": "Our project has no qa-project-context.md file. Why is this important for onboarding and what should it contain?",
       "expected_patterns": [
         "documents framework OR critical paths OR team structure",
-        "tribal knowledge capture OR answers questions",
-        "new person writes it OR benefits entire team",
+        "tribal knowledge OR document what they learn",
+        "new person.*document OR benefits the entire team",
         "blocking item OR high-priority task",
         "team_maturity setting OR startup OR growing OR established",
         "forces documentation of what was learned"
@@ -176,10 +176,10 @@
       "prompt": "What is the most important metric for measuring onboarding success? Why?",
       "expected_patterns": [
         "time to first merged test OR first real test",
-        "within two weeks OR first 14 days",
-        "real test in main branch OR CI passes",
+        "within the first two weeks OR first 2 weeks",
+        "merged into the main branch OR runs in CI",
         "not a tutorial exercise OR not local only",
-        "reduces time to productive"
+        "reduces time to first merged test OR time to productive"
       ],
       "anti_patterns": [
         "number of tests written",
@@ -202,7 +202,7 @@
         "tutorial-only OR no real tests early",
         "no documentation OR all tribal knowledge",
         "perfectionism paralysis OR blocking first PR",
-        "ignoring feedback OR no solicitation of experience",
+        "ignoring the onboarding experience OR soliciting feedback",
         "copy-paste without understanding OR code review doesn't explain why"
       ],
       "anti_patterns": [
@@ -225,7 +225,7 @@
         "page objects tour OR naming conventions OR base page class",
         "shared utilities inventory OR auth fixture OR data factory OR API client",
         "CI pipeline walk-through OR stages OR triggers OR artifacts",
-        "why tests organized this way OR where to find things"
+        "Why tests are organized this way OR where to find things"
       ],
       "anti_patterns": [
         "reading documentation instead of walking through",
