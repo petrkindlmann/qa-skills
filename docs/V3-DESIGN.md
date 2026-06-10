@@ -103,3 +103,35 @@ load-bearing lost, every eval `expected_pattern` still taught, line caps hold).
 5. Final verification: validator, static evals, adversarial review panel, VERSIONS/site.
 
 All work on branch `v3-overhaul`; no pushes without owner request.
+
+## Resume state (2026-06-10, after session-limit interruption)
+
+Committed on `v3-overhaul`:
+- `8dee371` validation infra (run_evals, validate_skills extended, build_index).
+- `ac52a6f` 7 new skills (43→50), all reviewed PASS/FIX, index+README to 50.
+- `bcd1201` all 43 existing skills re-templated to v3 format.
+
+Verified green: structural validator passes for all 50 (0 errors). No SKILL.md over
+650 lines (max 460). Shrunk skills moved content into references/ (totals grew, not lost).
+
+REMAINING (resume after session limit resets 7:20pm Prague 2026-06-10):
+1. **Eval-spec normalization** — `python3 scripts/run_evals.py --static --all` shows
+   353/510 pass, 106 semantic→judge. Diagnosis: most failures are EVAL-SPEC quality,
+   not skill content (proven: cypress teaches cy.mount/.as() but spec patterns are
+   prose; test-migration spec flags `send_keys`/`cy.intercept` as anti-patterns which
+   is wrong for a show-the-old-code migration skill; many patterns are AND-joined or
+   prose that the OR/.*/(a|b) grammar defers to judge). Fix: rewrite the weak specs to
+   checkable tokens (the verify stage already did this for test-strategy: 0→10). Worst
+   offenders: qa-project-context 0/10, cypress-automation 1/10, test-migration 1/10,
+   ai-qa-review 2/10, shift-left-testing 2/10. Verify each is spec-not-skill before editing.
+2. **AI-security fold-in** — still TODO: OWASP LLM Top 10 section in security-testing;
+   indirect-injection + defend-the-tester in ai-system-testing; ship
+   skills/ai-system-testing/scripts/detect_injection.py + references/injection-detector.md.
+3. **Content verification** of the 28 skills whose verify stage was cut off (list in the
+   workflow failures). Re-run the verify stage only for those.
+4. **Full live eval** all 50 via `--live`; LLM-judge the semantic patterns + deterministic fails.
+5. **Finalize**: CLAUDE.md/AGENTS.md skill tables to 50 + new disambiguation rules; site/;
+   VERSIONS.md + CHANGELOG.md v3.0.0; CONTRIBUTING.md → docs/SKILL_TEMPLATE.md; TODO.md.
+
+The re-template workflow script is at `_planning/retemplate-workflow.js` (resumable via
+resumeFromRunId wf_cb598de3-fd3 — completed audit/rewrite agents return cached).
