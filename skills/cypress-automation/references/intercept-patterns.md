@@ -78,3 +78,23 @@ cy.intercept('GET', '/api/feature-flags', (req) => {
 // Load response from cypress/fixtures/api-responses/checkout-success.json
 cy.intercept('POST', '/api/checkout', { fixture: 'api-responses/checkout-success.json' }).as('checkout');
 ```
+
+## Cross-Origin Flows with cy.origin
+
+For legitimate cross-origin redirects (SSO, OAuth providers, an auth domain separate from your app), wrap the commands that run on the other origin in `cy.origin`. This replaced the old `chromeWebSecurity: false` / `experimentalSessionAndOrigin` flags -- do not disable web security to work around a redirect.
+
+```typescript
+cy.visit('/login');
+cy.contains('button', 'Sign in with SSO').click();
+
+cy.origin('https://auth.example.com', () => {
+  cy.get('#username').type('user@example.com');
+  cy.get('#password').type('password123', { log: false });
+  cy.contains('button', 'Continue').click();
+});
+
+// back on the app origin
+cy.url().should('include', '/dashboard');
+```
+
+This is distinct from third-party payment iframes (Stripe/PayPal): those you stub with `cy.intercept` and never reach into. `cy.origin` is for redirects to domains you control or trust, not embedded iframes.

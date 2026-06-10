@@ -58,6 +58,8 @@ test('homepage renders correctly', async ({ page }) => {
 
 ## Progressive Enhancement Validation
 
+Abort every request whose `resourceType === 'script'` so the page runs with no JavaScript, then assert the native HTML form still submits. The route interception is Chromium-only — gate it on `browserName === 'chromium'`.
+
 ```typescript
 test('form works without JavaScript', async ({ page, browserName }) => {
   // Disable JavaScript to test progressive enhancement

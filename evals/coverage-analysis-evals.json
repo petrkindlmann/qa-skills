@@ -1,22 +1,23 @@
 {
   "skill": "coverage-analysis",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "cov-001",
-      "prompt": "Set up V8/c8 coverage tracking for a Vitest project with branch coverage gating at 80% globally and 90% for the payments module",
+      "prompt": "Set up V8 coverage tracking for a Vitest project with branch coverage gating at 80% globally and a stricter threshold for the payments module",
       "expected_patterns": [
-        "vitest.config.ts OR vitest.config.ts with coverage",
-        "coverage: { provider: 'v8'",
+        "@vitest/coverage-v8",
+        "provider: .v8.",
         "thresholds",
-        "lines: 80 OR lines: 80 (global threshold)",
-        "src/payments/**.*: { lines: 90, branches: 90 } OR per-directory threshold for payments",
+        "lines: 80",
+        "src/payments/.*: { lines: .*, branches: .* } OR per-directory threshold for payments",
         "reporter: [.*text.*lcov.*json-summary] OR reporter array with text, lcov, json-summary"
       ],
       "anti_patterns": [
-        "provider: istanbul (use v8 instead)",
+        "npm i -D c8",
+        "provider: 'istanbul'",
         "100% coverage threshold",
-        "no per-directory thresholds for critical paths",
+        "src/payments/**.*:",
         "exclude entire payment module from coverage"
       ],
       "tags": [

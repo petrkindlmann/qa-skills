@@ -78,6 +78,26 @@ it('should not create orphan line items', async () => {
 });
 ```
 
+## Data-Quality Audit (intended vs enforced integrity)
+
+Constraint tests prove the constraints that *exist* work. These queries catch columns that *should* be unique or non-null but have no DB constraint — the gap between intended and enforced integrity. Run them against realistic data; a non-zero count means an application invariant is unenforced at the database level.
+
+```typescript
+it('email is effectively unique (no constraint? still must hold)', async () => {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) AS total, COUNT(DISTINCT email) AS distinct_emails FROM users`,
+  );
+  expect(Number(rows[0].total)).toBe(Number(rows[0].distinct_emails));
+});
+
+it('orders.user_id is never null in practice', async () => {
+  const { rows } = await pool.query(
+    `SELECT COUNT(*) FILTER (WHERE user_id IS NULL) AS nulls FROM orders`,
+  );
+  expect(Number(rows[0].nulls)).toBe(0);
+});
+```
+
 ## Factory Pattern (TypeScript)
 
 ```typescript
@@ -109,11 +129,12 @@ export async function createUser(pool: Pool, overrides: Partial<User> = {}) {
 ## Prisma Seed Script
 
 ```typescript
-// prisma/seed.ts -- use upsert for idempotency, fixed IDs for stability
+// prisma/seed.ts -- use upsert for idempotency, fixed IDs for stability.
+// SEED_ENV selects the profile: test (minimal) | staging (volume) | demo (curated).
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-async function seed() {
+async function seedBase() {
   await prisma.user.upsert({
     where: { email: 'admin@example.com' },
     update: {},
@@ -133,10 +154,29 @@ async function seed() {
   }
 }
 
+async function seedStagingVolume() {
+  // staging extends test with realistic volume; fixed IDs keep it idempotent
+  for (let i = 0; i < 50; i++) {
+    const id = `seed-user-${String(i).padStart(3, '0')}`;
+    await prisma.user.upsert({
+      where: { id }, update: {},
+      create: { id, email: `user${i}@example.com`, name: `User ${i}`, role: 'USER' },
+    });
+  }
+}
+
+async function seed() {
+  const env = process.env.SEED_ENV ?? 'test';
+  await seedBase();
+  if (env === 'staging' || env === 'demo') await seedStagingVolume();
+}
+
 seed().catch((e) => { console.error(e); process.exit(1); }).finally(() => prisma.$disconnect());
 ```
 
 ## Test Isolation with Transaction Rollback
+
+> **Parallel caveat:** the module-level `client` below is shared across the file, which is fine for *serial* runs (`jest --runInBand` or a single suite). Under parallel test files in the same worker, the shared client collides — give each suite its own client, or use savepoints (`SAVEPOINT` / `ROLLBACK TO`) for nested isolation.
 
 ```typescript
 // test/helpers/db.ts

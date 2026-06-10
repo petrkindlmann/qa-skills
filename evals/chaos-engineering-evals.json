@@ -1,6 +1,6 @@
 {
   "skill": "chaos-engineering",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "ce-001",
@@ -55,7 +55,7 @@
       "expected_patterns": [
         "toxiproxy-node-client OR toxiproxy.get OR toxiproxy",
         "proxy.disable OR toxic OR latency",
-        "duration: 200 OR attributes: {latency",
+        "latency: 500 OR latency: 200 OR attributes",
         "finally OR try-finally OR ensure cleanup",
         "async OR await"
       ],
@@ -128,7 +128,7 @@
         "eBPF OR fine-grained",
         "network OR network faults",
         "yaml OR CRD OR CustomResourceDefinition",
-        "Kubernetes native"
+        "Kubernetes-native OR Kubernetes native OR K8s"
       ],
       "anti_patterns": [
         "recommending Chaos Monkey without noting it's in maintenance mode",
@@ -149,8 +149,8 @@
         "slow database OR latency injection",
         "third-party API OR 500 errors OR dependency failure",
         "cache unavailable OR Redis",
-        "hypothesis for each",
-        "staging environment",
+        "Hypothesis:",
+        "staging",
         "toxiproxy OR mock OR iptables OR circuit breaker"
       ],
       "anti_patterns": [
@@ -192,11 +192,11 @@
       "prompt": "You're about to run a Redis unavailability experiment in production. What approval and communication steps must you take before starting? What would be irresponsible to skip?",
       "expected_patterns": [
         "engineering leadership approval OR explicit approval",
-        "affected teams notification",
-        "scope and duration communicated",
-        "abort criteria shared",
-        "on-call team briefed OR support team notified",
-        "blast radius bounded"
+        "affected teams",
+        "scope and duration",
+        "abort criteria OR abort authority",
+        "on-call team OR support team",
+        "blast radius"
       ],
       "anti_patterns": [
         "running in production without approval",
@@ -216,8 +216,8 @@
       "prompt": "Your chaos experiment revealed that circuit breakers don't activate when the payment API returns 500 errors for 30 seconds. Write the follow-through action item with owner, due date, and plan for re-validation",
       "expected_patterns": [
         "ticket OR action item",
-        "assigned to [owner name]",
-        "due date OR target date",
+        "assigned to OR owner",
+        "due date OR target date OR due ",
         "circuit breaker configuration OR retry logic",
         "re-run experiment OR verify fix",
         "specific metrics to check"

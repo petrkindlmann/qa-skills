@@ -2,6 +2,20 @@
 
 Runnable Playwright test patterns for each OWASP 2025 category. The `What to test` prose and checklist live in `SKILL.md`; this file holds the implementations.
 
+## Asserting a set of acceptable status codes
+
+Several security tests accept more than one valid status (e.g. an SSRF block may return 400, 403, or 422). **`toBeOneOf` is NOT a built-in Playwright/Jest/Vitest matcher** — `expect(x).toBeOneOf([...])` throws `toBeOneOf is not a function` at runtime. Use the built-in `toContain` against the acceptable set instead:
+
+```typescript
+// GOOD — runs everywhere, no custom matcher needed
+expect([400, 403, 422]).toContain(response.status());
+
+// BAD — crashes: toBeOneOf is not a built-in matcher
+// expect(response.status()).toBeOneOf([400, 403, 422]);
+```
+
+If you genuinely prefer the `toBeOneOf` reading, register it once before your suite (`expect.extend({ toBeOneOf(received, set) { return { pass: set.includes(received), message: () => \`expected \${received} in \${set}\` }; } });`). The patterns below use the matcher-free `toContain` form so they run as-is.
+
 ## A01: Broken Access Control
 
 IDOR, vertical privilege escalation, CORS, and SSRF (now treated as an access-control failure when the server is induced to reach internal resources).
@@ -52,7 +66,7 @@ for (const payload of ssrfPayloads) {
       data: { callbackUrl: payload },
       headers: { Authorization: `Bearer ${token}` },
     });
-    expect(response.status()).toBeOneOf([400, 403, 422]);
+    expect([400, 403, 422]).toContain(response.status());
   });
 }
 ```
@@ -71,7 +85,11 @@ test('should not expose stack traces in production errors', async ({ request }) 
 
 test('should disable TRACE method', async ({ request }) => {
   const response = await request.fetch('/api/health', { method: 'TRACE' });
-  expect(response.status()).toBe(405);
+  // Frameworks vary: 405 (method not allowed), 501 (not implemented), or 403.
+  // The security property is "TRACE is not enabled / not echoed", so assert the
+  // acceptable set, not a single code, and confirm the request body is not reflected.
+  expect([403, 405, 501]).toContain(response.status());
+  expect(await response.text()).not.toContain('TRACE /api/health');
 });
 ```
 
@@ -192,13 +210,28 @@ test('should reject POST without CSRF token', async ({ request }) => {
     headers: { Cookie: `session=${validSessionCookie}` },
     // Deliberately omitting CSRF token
   });
-  expect(response.status()).toBe(403);
+  // CSRF middleware rejects with 403 (forbidden) or 422 (unprocessable) depending on stack
+  expect([403, 422]).toContain(response.status());
 });
 ```
 
 ## A06: Insecure Design
 
-Rate limiting on auth endpoints (fire 15 concurrent login attempts, expect 429), business logic abuse (negative quantities, coupon stacking), missing account lockout, allow-list architecture for any feature that fetches a user-supplied URL.
+Rate limiting on auth endpoints, business logic abuse (negative quantities, coupon stacking), missing account lockout, allow-list architecture for any feature that fetches a user-supplied URL. The design-level test that catches the most: fire a burst of logins and require the backend to throttle.
+
+```typescript
+test('login endpoint rate-limits a burst of attempts', async ({ request }) => {
+  // Fire 15 concurrent failed logins; a rate-limited endpoint returns 429 for some.
+  const attempts = Array.from({ length: 15 }, () =>
+    request.post('/api/auth/login', {
+      data: { email: 'victim@example.com', password: 'wrong-password' },
+    }),
+  );
+  const responses = await Promise.all(attempts);
+  const statuses = responses.map((r) => r.status());
+  expect(statuses.some((s) => s === 429)).toBe(true);
+});
+```
 
 ## A07: Authentication Failures
 
@@ -234,7 +267,7 @@ test('error responses fail closed (no auth bypass on 500)', async ({ request }) 
     data: { causeError: true },
   });
   // Must NOT be 500 with admin-action side effects — must be 401/403
-  expect(response.status()).toBeOneOf([401, 403]);
+  expect([401, 403]).toContain(response.status());
 });
 
 test('error response does not leak internals', async ({ request }) => {

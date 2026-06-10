@@ -158,7 +158,7 @@ Map failures to components for routing to the right team.
 ```
 src/auth/**          → Authentication
 src/checkout/**      → Checkout
-src/cart/**           → Cart
+src/cart/**          → Cart
 src/products/**      → Product Catalog
 src/orders/**        → Order Management
 src/users/**         → User Management

@@ -2,6 +2,8 @@
 
 Copy-paste-ready workflow files. Drop into `.github/workflows/` and customize environment variables and secrets for your project.
 
+Action versions reflect the current majors as of June 2026 (`checkout@v6`, `setup-node@v6`, `cache@v5`, `upload-artifact@v7`, `download-artifact@v7`, `dorny/test-reporter@v3`, `dorny/paths-filter@v3`, `marocchino/sticky-pull-request-comment@v3`, `slackapi/slack-github-action@v2`). Keep them current with Dependabot; for third-party actions, pin to a commit SHA with a version comment.
+
 ---
 
 ## 1. Unit Test Workflow
@@ -28,11 +30,11 @@ jobs:
     timeout-minutes: 10
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - run: npm ci
@@ -49,7 +51,7 @@ jobs:
           JEST_JUNIT_OUTPUT_DIR: test-results
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: coverage-report
@@ -57,7 +59,7 @@ jobs:
           retention-days: 7
 
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: unit-test-results
@@ -95,11 +97,11 @@ jobs:
         shard: [1, 2, 3, 4]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - run: npm ci
@@ -107,7 +109,7 @@ jobs:
       # Cache Playwright browsers to skip 200MB+ download on cache hit
       - name: Cache Playwright browsers
         id: playwright-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -142,7 +144,7 @@ jobs:
 
       # Upload results even on failure so we can debug
       - name: Upload test results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: test-results-shard-${{ matrix.shard }}
@@ -153,7 +155,7 @@ jobs:
 
       # Upload traces only on failure to save storage
       - name: Upload traces on failure
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: traces-shard-${{ matrix.shard }}
@@ -168,17 +170,17 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
 
       - run: npm ci
 
       - name: Download all shard results
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v7
         with:
           pattern: test-results-shard-*
           path: all-results
@@ -187,7 +189,7 @@ jobs:
         run: npx playwright merge-reports --reporter=html all-results
 
       - name: Upload merged report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: playwright-report
           path: playwright-report/
@@ -220,9 +222,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run lint
       - run: npm run type-check
@@ -233,12 +235,12 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm test -- --ci --coverage
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: coverage
@@ -255,14 +257,14 @@ jobs:
       matrix:
         shard: [1, 2, 3]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version: 22, cache: npm }
       - run: npm ci
 
       - name: Cache Playwright browsers
         id: pw-cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.cache/ms-playwright
           key: pw-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -287,7 +289,7 @@ jobs:
         env:
           BASE_URL: http://localhost:3000
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: e2e-results-${{ matrix.shard }}
@@ -302,28 +304,35 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # OIDC keyless auth: no long-lived DEPLOY_TOKEN to store or rotate
+    permissions:
+      id-token: write
+      contents: read
     # Prevent concurrent deploys
     concurrency:
       group: deploy-production
       cancel-in-progress: false
     environment: production
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version: 22, cache: npm }
       - run: npm ci
       - run: npm run build
+      # Exchange the GitHub OIDC JWT for short-lived STS credentials
+      - uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/gha-deploy
+          aws-region: eu-central-1
       - name: Deploy to production
-        run: npm run deploy
-        env:
-          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: npm run deploy   # uses short-lived creds from the step above
 ```
 
 ---
 
 ## 4. Nightly Full Suite
 
-Scheduled to run the complete test suite every night. Includes all browsers, visual regression, and performance tests. Sends a Slack notification on failure.
+Scheduled to run the complete test suite every night across all browsers, plus a security scan (`npm audit`) and an accessibility audit (`@axe-core/playwright`). Sends a Slack notification on failure.
 
 ```yaml
 # .github/workflows/nightly.yml
@@ -331,8 +340,7 @@ name: Nightly Full Suite
 
 on:
   schedule:
-    # Run at 2am UTC every day, Monday through Friday
-    - cron: '0 2 * * 1-5'
+    - cron: '0 2 * * *'   # 2am UTC daily
   # Allow manual trigger for debugging
   workflow_dispatch:
 
@@ -347,10 +355,10 @@ jobs:
         project: [chromium, firefox, webkit]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
+      - uses: actions/setup-node@v6
+        with: { node-version: 22, cache: npm }
 
       - run: npm ci
 
@@ -374,7 +382,7 @@ jobs:
           TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
 
       - name: Upload results
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: nightly-${{ matrix.project }}
@@ -383,15 +391,42 @@ jobs:
             playwright-report/
           retention-days: 14
 
+  # Security + accessibility scans run nightly, not on every PR (too slow / noisy there)
+  security-and-a11y:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+
+      # Fail on high/critical advisories; lower levels are reported but non-blocking
+      - name: Dependency security scan
+        run: npm audit --audit-level=high
+
+      - name: Install Playwright (chromium only)
+        run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Start application
+        run: npm start &
+        env: { NODE_ENV: test }
+      - run: npx wait-on http://localhost:3000 --timeout 60000
+
+      # Runs specs tagged @a11y that assert with @axe-core/playwright (AxeBuilder)
+      - name: Accessibility audit
+        run: npx playwright test --grep @a11y
+        env: { BASE_URL: http://localhost:3000 }
+
   # Notify the team on failure so flaky tests don't go unnoticed
   notify:
-    needs: full-suite
+    needs: [full-suite, security-and-a11y]
     if: failure()
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
       - name: Send Slack notification
-        uses: slackapi/slack-github-action@v2.0.0
+        uses: slackapi/slack-github-action@v2
         with:
           webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
           webhook-type: incoming-webhook
@@ -443,10 +478,10 @@ jobs:
     timeout-minutes: 15
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
-      - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: npm }
+      - uses: actions/setup-node@v6
+        with: { node-version: 22, cache: npm }
 
       - run: npm ci
 
@@ -455,15 +490,19 @@ jobs:
           npm run lint
           npm run type-check
 
+      # Coverage threshold is enforced by jest.config coverageThreshold, so this
+      # command exits 1 if coverage drops below the floor — no bash scrape needed.
+      # The json-summary reporter writes coverage/coverage-summary.json for the comment.
       - name: Run unit tests
         run: npm test -- --ci --coverage --reporters=default --reporters=jest-junit
         env:
           JEST_JUNIT_OUTPUT_DIR: test-results
           JEST_JUNIT_OUTPUT_NAME: junit.xml
 
-      # Publish test results as a check run visible in the PR
+      # Publish test results as a check run visible in the PR.
+      # For a Playwright JUnit report, set reporter: java-junit instead of jest-junit.
       - name: Publish test results
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         if: ${{ !cancelled() }}
         with:
           name: Unit Test Results
@@ -471,33 +510,78 @@ jobs:
           reporter: jest-junit
           fail-on-error: true
 
-      # Post coverage summary as a sticky PR comment (updates on new pushes)
+      # Post coverage summary as a sticky PR comment (updates on new pushes).
+      # Reads the json-summary file directly — there is no `coverage-summary` CLI.
       - name: Generate coverage summary
         if: ${{ !cancelled() }}
         run: |
-          echo "## Test Coverage" > coverage-comment.md
-          echo "" >> coverage-comment.md
-          echo '```' >> coverage-comment.md
-          npx istanbul report --include coverage/coverage-final.json text-summary 2>/dev/null \
-            | tail -n +2 >> coverage-comment.md || echo "Coverage summary unavailable" >> coverage-comment.md
-          echo '```' >> coverage-comment.md
-          echo "" >> coverage-comment.md
-          echo "_Updated by CI on $(date -u +'%Y-%m-%d %H:%M UTC')_" >> coverage-comment.md
+          PCT=$(jq '.total.lines.pct' coverage/coverage-summary.json)
+          {
+            echo "## Test Coverage"
+            echo ""
+            echo "Line coverage: **${PCT}%**"
+            echo ""
+            echo "_Updated by CI on $(date -u +'%Y-%m-%d %H:%M UTC')_"
+          } > coverage-comment.md
 
       - name: Comment coverage on PR
-        uses: marocchino/sticky-pull-request-comment@v2
+        uses: marocchino/sticky-pull-request-comment@v3
         if: ${{ !cancelled() }}
         with:
           header: test-coverage
           path: coverage-comment.md
 
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: ${{ !cancelled() }}
         with:
           name: pr-coverage
           path: coverage/
           retention-days: 7
+```
+
+---
+
+## 6. Conditional Execution
+
+Only run E2E when frontend code or the Playwright config changes, saving CI time on backend-only PRs.
+
+```yaml
+- name: Detect changed files
+  id: changes
+  uses: dorny/paths-filter@v3
+  with:
+    filters: |
+      frontend:
+        - 'src/**'
+        - 'e2e/**'
+      backend:
+        - 'api/**'
+        - 'lib/**'
+      config:
+        - 'package.json'
+        - 'playwright.config.ts'
+
+- name: Run E2E tests
+  if: steps.changes.outputs.frontend == 'true' || steps.changes.outputs.config == 'true'
+  run: npx playwright test
+
+- name: Run API tests
+  if: steps.changes.outputs.backend == 'true' || steps.changes.outputs.config == 'true'
+  run: npm run test:api
+```
+
+---
+
+## 7. Reproduce CI Locally
+
+When a test fails only in CI, replicate the CI container locally using the **same** Playwright image tag your pipeline runs — never a stale one. Keep this in sync with your installed `@playwright/test` version.
+
+```bash
+# Match the version you run in CI; v1.60.0 shown as the current release
+docker run --rm -v "$(pwd)":/work -w /work \
+  mcr.microsoft.com/playwright:v1.60.0-noble \
+  npx playwright test --project=chromium
 ```
 
 ---
@@ -547,6 +631,22 @@ npm install -D jest-junit
 # For E2E tests
 npm install -D @playwright/test
 
+# For the nightly accessibility audit (@a11y specs)
+npm install -D @axe-core/playwright
+
 # For waiting on the app to start in CI
 npm install -D wait-on
 ```
+
+### Coverage Config
+
+Enforce the coverage floor in the runner config so the test command exits non-zero below it, and emit `json-summary` so the PR-comment step can read `coverage/coverage-summary.json`. In `jest.config.js`:
+
+```javascript
+module.exports = {
+  coverageReporters: ['text', 'json-summary', 'lcov'],
+  coverageThreshold: { global: { lines: 80, statements: 80, branches: 70 } },
+};
+```
+
+There is no `coverage-summary` CLI; for nyc/c8 projects use `nyc report --reporter=text-summary` (the standalone `istanbul` CLI is deprecated).

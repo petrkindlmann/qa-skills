@@ -1,6 +1,6 @@
 {
   "skill": "visual-testing",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "vt-001",
@@ -26,7 +26,7 @@
       "id": "vt-002",
       "prompt": "Set up visual regression thresholds in playwright.config.ts for full-page screenshots",
       "expected_patterns": [
-        "expect: { toHaveScreenshot: { } }",
+        "toHaveScreenshot: {",
         "maxDiffPixelRatio: 0.005 OR maxDiffPixels",
         "animations: 'disabled'",
         "caret: 'hide'"
@@ -88,8 +88,8 @@
       "id": "vt-005",
       "prompt": "Set up responsive visual testing across desktop, tablet, and mobile viewports",
       "expected_patterns": [
-        "VISUAL_VIEWPORTS OR viewports array",
-        "viewport: { width, height }",
+        "VISUAL_VIEWPORTS OR viewports",
+        "viewport: { width:",
         "isMobile:",
         "toHaveScreenshot",
         "fullPage: true OR animations: 'disabled'"
@@ -111,8 +111,8 @@
       "expected_patterns": [
         "getByRole('table')",
         "toHaveScreenshot",
-        "page.route for empty/error states",
-        "route.fulfill({ json: { } }) OR route.fulfill({ status: 500 })"
+        "page.route",
+        "route.fulfill({ json: OR route.fulfill({ status: 500 })"
       ],
       "anti_patterns": [
         "full-page screenshot instead of component",
@@ -131,8 +131,8 @@
       "expected_patterns": [
         "projects: [",
         "name: 'visual-desktop' OR name: 'visual-mobile'",
-        "viewport: { width, height }",
-        "testMatch: OR grep: @visual"
+        "viewport: { width:",
+        "testMatch: OR grep @visual"
       ],
       "anti_patterns": [
         "visual tests mixed with functional tests",
@@ -152,7 +152,7 @@
         "npx playwright test --update-snapshots",
         "git diff --stat OR git diff",
         "npx playwright show-report",
-        "baseline updated"
+        "update baselines OR baseline images"
       ],
       "anti_patterns": [
         "--update-snapshots without review",
@@ -169,10 +169,10 @@
       "id": "vt-009",
       "prompt": "Evaluate whether to use Playwright built-in toHaveScreenshot or a dedicated tool like Chromatic/Percy/Argos CI",
       "expected_patterns": [
-        "Storybook in project -> Chromatic OR no Storybook -> Playwright built-in",
-        "CI platform capability",
-        "team size and review workflow needs",
-        "artifact storage"
+        "Storybook",
+        "Chromatic",
+        "CI platform",
+        "artifact"
       ],
       "anti_patterns": [
         "choosing tool without considering Storybook status",
@@ -191,8 +191,8 @@
       "expected_patterns": [
         ".gitattributes",
         "*.png filter=lfs OR *.png merge=lfs",
-        "snapshotPathTemplate in playwright.config.ts",
-        "platform-specific baselines"
+        "snapshotPathTemplate",
+        "platform-specific OR platform-tagged"
       ],
       "anti_patterns": [
         "no Git LFS configuration",

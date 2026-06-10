@@ -1,6 +1,6 @@
 {
   "skill": "database-testing",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "dbt-001",
@@ -48,17 +48,17 @@
       "id": "dbt-003",
       "prompt": "Create a factory pattern for seed data that produces deterministic test records with fixed IDs and stable timestamps",
       "expected_patterns": [
-        "buildUser OR buildOrder OR build*",
+        "buildUser OR buildOrder OR build.*",
         "overrides: Partial",
         "userCounter OR counter",
         "new Date OR fixed timestamp",
-        "export async function create*"
+        "export async function create.*"
       ],
       "anti_patterns": [
         "faker.random()",
         "Math.random()",
-        "uuid()",
-        "now() OR Date.now()",
+        "?? uuid()",
+        "createdAt.*Date.now()",
         "no fixed seed"
       ],
       "tags": [
@@ -78,9 +78,9 @@
         "PoolClient OR pool.connect"
       ],
       "anti_patterns": [
-        "DELETE OR truncate without rollback",
+        "TRUNCATE TABLE",
         "shared database state between tests",
-        "cleanup in afterEach without explicit ROLLBACK"
+        "afterEach.*DELETE FROM"
       ],
       "tags": [
         "isolation",
@@ -92,13 +92,14 @@
       "id": "dbt-005",
       "prompt": "Write a test to verify that rolling back a migration cleanly reverts schema changes and supports re-applying the migration",
       "expected_patterns": [
-        "prisma migrate resolve --rolled-back OR migration:revert",
-        "down.sql OR undoLastMigration",
-        "captured pre-rollback state",
-        "verify rollback succeeded",
-        "re-apply after rollback"
+        "down.sql OR undoLastMigration OR migration:revert",
+        "information_schema.columns",
+        "toHaveLength(0) OR toHaveLength(1) OR rows.length",
+        "migrate deploy OR runMigrations",
+        "re-apply"
       ],
       "anti_patterns": [
+        "migrate resolve --rolled-back",
         "skip rollback testing",
         "only test forward migration",
         "assume rollback is possible without testing",
@@ -158,13 +159,14 @@
       "id": "dbt-008",
       "prompt": "Test that existing data is preserved when a migration adds a nullable column with a default value",
       "expected_patterns": [
-        "prisma migrate deploy --to",
-        "INSERT INTO.*before the migration",
-        "SELECT.*FROM after migration",
+        "migrate deploy",
+        "INSERT INTO",
+        "SELECT.*FROM",
         "expect.*toBe OR toBeNull",
-        "data survived"
+        "survived OR preserved"
       ],
       "anti_patterns": [
+        "migrate deploy --to",
         "no data inserted before migration",
         "only test new rows",
         "no assertion on preserved data"

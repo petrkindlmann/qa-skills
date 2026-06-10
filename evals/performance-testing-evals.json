@@ -1,6 +1,6 @@
 {
   "skill": "performance-testing",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "perf-001",
@@ -29,18 +29,19 @@
     },
     {
       "id": "perf-002",
-      "prompt": "Set up a k6 spike test that simulates a sudden surge from 50 normal users to 500 for 30 seconds, then back to 50. Include logic to detect if the system recovers.",
+      "prompt": "Set up a k6 spike test that simulates a sudden surge from 50 normal users to 500 for 30 seconds, then back to 50. Include logic to detect if the system recovers, not just a comment.",
       "expected_patterns": [
         "stages",
-        "{ duration: '1m', target: 50 }",
-        "{ duration: '30s', target: 500 }",
+        "target: 500",
         "recovery",
-        "thresholds"
+        "thresholds",
+        "phase:recovery OR {phase: OR scenario:recovery",
+        "p\\(95\\)"
       ],
       "anti_patterns": [
         "constant load without spike shape",
-        "no recovery period",
-        "undefined 'recovery' term"
+        "recovery only as a // comment",
+        "no scoped threshold for recovery window"
       ],
       "tags": [
         "k6",
@@ -74,12 +75,13 @@
     },
     {
       "id": "perf-004",
-      "prompt": "Configure a Lighthouse CI job with performance budgets: LCP under 2.5s, CLS under 0.1, INP under 200ms, and total JS size under 300KB. Enforce as hard errors in CI.",
+      "prompt": "Configure a Lighthouse CI job with performance budgets: LCP under 2.5s, CLS under 0.1, responsiveness under 200ms, and total JS size under 300KB. Enforce as hard errors in CI. The user asked for INP — explain how to handle it correctly in Lighthouse CI.",
       "expected_patterns": [
         "lighthouserc.js OR module.exports",
         "largest-contentful-paint",
         "cumulative-layout-shift",
-        "interaction-to-next-paint OR INP",
+        "total-blocking-time",
+        "INP.*field OR field-only OR CrUX OR RUM",
         "2500",
         "0.1",
         "200",
@@ -89,6 +91,7 @@
       "anti_patterns": [
         "FID",
         "web-vitals v4 FID metric",
+        "'interaction-to-next-paint': \\['error'",
         "budgets as 'warn' only",
         "no numeric values in assertions"
       ],
@@ -152,17 +155,19 @@
     },
     {
       "id": "perf-007",
-      "prompt": "You are migrating from k6 v1 to v2. Update a load test script that uses k6/experimental/websockets and options.ext.loadimpact. What are the breaking changes?",
+      "prompt": "You are migrating from k6 v1 to v2. Update a load test script that uses k6/experimental/websockets, k6/experimental/redis, options.ext.loadimpact, and the --no-summary CLI flag. What are the breaking changes?",
       "expected_patterns": [
         "k6/websockets",
-        "drop experimental prefix",
+        "k6/x/redis",
         "options.cloud",
         "exit code 97",
-        "externally-controlled removed",
-        "k6/experimental/redis removed"
+        "externally-controlled.*removed",
+        "summary-mode=disabled"
       ],
       "anti_patterns": [
-        "k6/experimental/websockets",
+        "k6/experimental/websockets AS the migration target",
+        "k6/experimental/redis removed",
+        "custom redis client OR wait for replacement",
         "options.ext.loadimpact without migration",
         "no mention of exit code 97"
       ],

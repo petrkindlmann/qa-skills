@@ -6,23 +6,37 @@ description: >-
   for testability, and Definition of Done with quality gates. Includes shift-left
   maturity model for team assessment. Use when: "shift left," "TDD," "dev-QA pairing,"
   "definition of done," "testability," "quality culture," "QA in sprint planning."
+  Not for: writing the unit tests themselves — use unit-testing; automated PR
+  test-quality review at scale — use ai-qa-review; multi-quarter QA direction or
+  roadmap — use test-strategy.
   Related: unit-testing, ai-qa-review, test-strategy.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: process
 ---
 
 <objective>
-Move quality validation earlier in the development lifecycle where defects are cheaper, faster, and simpler to fix. This skill covers the practices, patterns, and cultural shifts that embed quality into every phase -- from story refinement to PR merge.
-
-**Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains team composition, current dev/QA workflow, sprint structure, and quality goals that shape which shift-left practices to introduce first.
+Move quality validation earlier in the development lifecycle where defects are cheaper, faster, and simpler to fix. A missing validation rule caught in refinement is a five-minute conversation; the same bug in production is an incident, a hotfix, and a postmortem. This skill covers the practices, patterns, and cultural shifts that embed quality into every phase — from story refinement to PR merge — plus a maturity model to find the next concrete step.
 </objective>
+
+## Quick Route
+
+| Situation | Go to |
+|-----------|-------|
+| QA only sees features after dev is "done" | Dev/QA Pairing → QA in Sprint Planning |
+| Need a pre-dev requirements conversation | Dev/QA Pairing → Three Amigos Sessions |
+| Deciding whether to TDD this work | TDD Facilitation → When TDD vs. Test-After |
+| Reviewing a PR for test quality | PR Review Checklist |
+| Reviewing an AI-generated/AI-using PR | PR Review Checklist → When the Change Is AI-Generated |
+| "Where is my team and what's next?" | Shift-Left Maturity Model |
 
 ---
 
 ## Discovery Questions
+
+Check `.agents/qa-project-context.md` first — if it exists, use it (team composition, dev/QA workflow, sprint structure, quality goals) and skip anything answered there.
 
 ### Current Dev/QA Workflow
 
@@ -48,22 +62,9 @@ Move quality validation earlier in the development lifecycle where defects are c
 
 Quality is not a phase performed by the QA team after development. It is a property of the entire workflow: product managers write testable requirements, developers write tests alongside code, code reviewers check for testability, and QA engineers design the strategy and catch what automation misses. When quality belongs to everyone, defects are caught by whoever encounters them first.
 
-### 2. Earlier Detection = Exponentially Cheaper Fixes
+### 2. Earlier Detection = Cheaper Fixes (Directionally)
 
-The cost of fixing a defect rises exponentially as it moves through the pipeline:
-
-```
-Phase Found         Relative Cost
-─────────────────────────────────
-Requirements              1x
-Design                    5x
-Development              10x
-Testing (QA)             25x
-Staging                  50x
-Production              100x
-```
-
-A missing validation rule caught during story refinement is a 5-minute conversation. The same defect found in production is an incident, a hotfix, a postmortem, and eroded user trust. Shift-left practices target the 1x-10x range.
+A missing validation rule caught during story refinement is a five-minute conversation. The same defect found in production is an incident, a hotfix, a postmortem, and eroded user trust. The cost of fixing a defect rises sharply the further right it is caught — refinement < design < development < QA < staging < production. That direction is real and well-attested; **the exact multipliers are not.** The widely cited "1x → 100x" table traces to an undated, unsourced IBM Systems Science Institute training chart with no published methodology, so treat any precise figure as illustrative, not measured. Lead with the concrete cost story above, not invented numbers. Shift-left practices aim to catch defects in the cheap left-hand columns — refinement through development — before QA, staging, or prod ever see them.
 
 ### 3. QA Is Embedded, Not a Gate
 
@@ -262,7 +263,7 @@ Apply these additional checks when a PR contains code authored by an AI agent or
 
 - [ ] **AI provenance disclosed.** PR description names the agent, model, and what it generated (so reviewers calibrate scrutiny appropriately).
 - [ ] **Tests written first or by a human.** AI-generated implementation paired with AI-generated tests is a closed loop — at least one side of the test/implementation pair should be authored or critically reviewed by a human (see TDD decision guide row above).
-- [ ] **Prompt and model version pinned.** For AI-using features (LLM calls, prompt templates), the prompt version and model ID are checked in or referenced from the AI Configs platform — not embedded as ad-hoc strings that drift.
+- [ ] **Prompt and model version pinned.** For AI-using features (LLM calls, prompt templates), the prompt version and model ID live in a flag-based config store — LaunchDarkly AI Configs (GA 2025) or equivalent — not embedded as ad-hoc strings that drift. The PR should reference the config key, not paste the prompt inline.
 - [ ] **Runtime kill switch wired.** Any AI feature ships behind a feature flag that can disable it without redeploy. Pair shift-left prevention with shift-right containment.
 - [ ] **Prompt eval test exists.** At least one regression test for the prompt's behavior on representative inputs (see `ai-system-testing`).
 - [ ] **No fabricated APIs or imports.** Reviewer verifies every imported symbol exists — LLMs invent plausible-sounding APIs.
@@ -275,7 +276,7 @@ The Definition of Done (DoD) is the team's shared agreement on what "done" means
 
 ### Recommended DoD with Quality Gates
 
-A complete DoD groups its checks under Code Complete, Tested, Quality Gates Pass, Documentation, and Deployment Ready. See `references/templates.md` for the full copy-paste checklist.
+A complete DoD groups its checks under Code Complete, Tested, Quality Gates Pass, Documentation, and Deployment Ready. The Tested group requires unit tests for business logic, integration tests for API/service changes, an E2E test for user-facing critical paths, edge cases and error states covered, and **manual exploratory testing completed for medium/high risk changes**. The Quality Gates group requires a green CI pipeline, no new lint/type errors, and **code coverage not decreased from baseline** (a baseline number, not an absolute threshold pulled from the air). See `references/templates.md` for the full copy-paste checklist.
 
 ### Enforcing the DoD
 
@@ -365,14 +366,24 @@ Tracking "number of Three Amigos sessions held" instead of "defects found in pla
 
 ---
 
+## Verification
+
+Prove the gates actually bite — a gate that never fires proves nothing:
+
+1. **A no-test behavioral PR is blocked.** Open a throwaway PR that changes behavior with no test (or drops coverage below baseline) and confirm CI goes red and the merge button is disabled. If it merges, the gate is decorative.
+2. **The DoD checklist renders in the PR template.** Confirm the DoD checklist exists in `.github/pull_request_template.md` (or your platform's equivalent) so reviewers see it on every PR — `test -f .github/pull_request_template.md && grep -qi "unit test" .github/pull_request_template.md`.
+3. **The AI kill switch toggles off.** For any AI-powered path, flip its feature flag to disabled in your flag platform and confirm the path goes dark without a redeploy.
+
+---
+
 ## Done When
 
-- Definition of Done updated to include test criteria (unit, integration, and E2E gates) and enforced in CI
-- PR review checklist includes a test coverage check and QA is reviewing at least high-risk PRs
-- At least one Three Amigos session run for an upcoming feature, with gaps documented and acceptance criteria updated
-- Dev/QA pairing schedule established and first pairing session completed
-- Pre-merge quality gates (test pass, coverage not decreased, linting) active in CI and blocking merge
-- Runtime kill switch identified for any risky or AI-powered code path so prevention (shift-left) and containment (shift-right) ship together
+- Definition of Done updated to include test criteria (unit, integration, and E2E gates) and committed to the repo (e.g. present in `.github/pull_request_template.md`)
+- PR review checklist with a test-coverage check is checked into the PR template and required by branch protection
+- At least one Three Amigos session run for an upcoming feature, with gaps documented and acceptance criteria updated in the ticket
+- A first dev/QA pairing session has happened, with the agreed test signatures committed to the repo
+- Pre-merge quality gates (test pass, coverage not decreased, linting) are active in CI and a no-test PR is observed to fail (see Verification step 1)
+- A feature flag exists for each risky or AI-powered code path and its disable toggle is verified in the flag platform (see Verification step 3), so prevention (shift-left) and containment (shift-right) ship together
 
 ## Reference Files (in `references/`)
 

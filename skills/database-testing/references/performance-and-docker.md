@@ -67,7 +67,7 @@ import { PostgreSqlContainer } from '@testcontainers/postgresql';
 let pg: Awaited<ReturnType<PostgreSqlContainer['start']>>;
 
 beforeAll(async () => {
-  pg = await new PostgreSqlContainer('postgres:17-alpine')
+  pg = await new PostgreSqlContainer('postgres:18-alpine')
     .withDatabase('test')
     .withTmpFs({ '/var/lib/postgresql/data': 'rw' })
     .start();
@@ -76,5 +76,24 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await pg.stop();
+});
+```
+
+## Proving the EXPLAIN test has teeth
+
+A performance assertion that can never fail gives false confidence — it is the #1 false-positive trap in DB testing. Before trusting the EXPLAIN test, confirm it *fails* when the index is gone. Drop the index, re-run, expect red; restore it, expect green.
+
+```typescript
+it('the index assertion actually catches a missing index', async () => {
+  await pool.query('DROP INDEX IF EXISTS users_email_idx');
+  const explain = await pool.query(
+    'EXPLAIN (ANALYZE, FORMAT JSON) SELECT * FROM users WHERE email = $1',
+    ['alice@example.com'],
+  );
+  const plan = explain.rows[0]['QUERY PLAN'][0];
+  // With the index dropped the planner must fall back to Seq Scan
+  expect(plan.Plan['Node Type']).toBe('Seq Scan');
+  // restore for the rest of the suite
+  await pool.query('CREATE INDEX users_email_idx ON users (email)');
 });
 ```

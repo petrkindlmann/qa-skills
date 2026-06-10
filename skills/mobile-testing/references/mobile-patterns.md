@@ -34,7 +34,9 @@ await expect(driver.$('~login-screen')).toBeDisplayed();
 ## Push Notification Testing
 
 ```javascript
-// Detox: send push notification and verify handling
+// Detox: send push notification and verify handling — iOS only.
+// On Android, sendUserNotification behavior differs; use the Appium + FCM
+// notification-shade flow below instead of assuming parity.
 await device.sendUserNotification({
   trigger: { type: 'push' },
   title: 'Order shipped',
@@ -44,7 +46,7 @@ await device.sendUserNotification({
 await expect(element(by.id('order-detail-screen'))).toBeVisible();
 await expect(element(by.id('order-id'))).toHaveText('#1234');
 
-// Appium: use Firebase Cloud Messaging test API for real push
+// Appium (Android real push): use Firebase Cloud Messaging test API
 // Send via backend test endpoint, then verify notification appears
 await fetch(`${API_BASE}/test/send-push`, {
   method: 'POST',
@@ -59,22 +61,37 @@ await notification.click();
 ## Offline and Poor Network Simulation
 
 ```typescript
-// Appium: toggle airplane mode (Android)
-await driver.execute('mobile: shell', {
-  command: 'cmd connectivity airplane-mode enable',
-});
+// Appium: toggle airplane mode — GUARD on platform first.
+// `cmd connectivity airplane-mode` exists only on newer Android and not on iOS.
+const platform = driver.capabilities.platformName; // 'Android' | 'iOS'
+
+async function setAirplaneMode(on: boolean) {
+  if (platform === 'Android') {
+    // Newer Android:
+    await driver.execute('mobile: shell', {
+      command: `cmd connectivity airplane-mode ${on ? 'enable' : 'disable'}`,
+    });
+    // Older Android fallback (cmd connectivity unavailable):
+    //   settings put global airplane_mode_on <0|1>
+    //   am broadcast -a android.intent.action.AIRPLANE_MODE --ez state <true|false>
+  } else {
+    // iOS: no airplane-mode shell. Use the device-farm network profile
+    // (e.g. BrowserStack 'no-network') or the iOS Network Link Conditioner.
+    throw new Error('Use a device-farm network profile to go offline on iOS');
+  }
+}
+
+await setAirplaneMode(true);
 // Verify offline UI
 await expect(driver.$('~offline-banner')).toBeDisplayed();
 // Perform action while offline
 await driver.$('~save-draft-button').click();
 // Re-enable network
-await driver.execute('mobile: shell', {
-  command: 'cmd connectivity airplane-mode disable',
-});
+await setAirplaneMode(false);
 // Verify queued action syncs
 await expect(driver.$('~sync-complete-indicator')).toBeDisplayed();
 
-// BrowserStack: throttle network
+// BrowserStack: throttle network (works for iOS and Android)
 // Set in capabilities:
 // 'browserstack.networkProfile': '3g-lossy'
 // Options: 'no-network', '2g-gprs', '3g-lossy', '4g-lte', 'reset'
@@ -97,12 +114,18 @@ const allowButton = await driver.$('-ios predicate string:label == "Allow"');
 if (await allowButton.isDisplayed()) {
   await allowButton.click();
 }
-// Or use the mobile: alert command
+// Or use the mobile: alert command (action: 'accept' grants, 'dismiss' denies)
 await driver.execute('mobile: alert', { action: 'accept' });
+await driver.execute('mobile: alert', { action: 'dismiss' });
 
-// Detox
-await systemDialog.accept(); // Tap "Allow"
-await systemDialog.deny();   // Tap "Don't Allow"
+// Detox: there is no `systemDialog` global. Grant permissions deterministically
+// at launch instead of tapping the dialog (avoids the iOS system-alert race):
+await device.launchApp({
+  newInstance: true,
+  permissions: { location: 'always', camera: 'YES', notifications: 'YES' },
+});
+// To exercise the DENIAL flow, pass the negative value:
+//   permissions: { location: 'never' }
 ```
 
 ## App Lifecycle Testing

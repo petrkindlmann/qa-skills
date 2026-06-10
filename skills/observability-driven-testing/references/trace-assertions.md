@@ -24,15 +24,49 @@ const sdk = new NodeSDK({
   }),
 });
 
-sdk.start();
+export async function startTracing() {
+  sdk.start();
+}
 
-// Shutdown gracefully after tests
-process.on('beforeExit', () => sdk.shutdown());
+// Flush and shut down from the runner's GLOBAL TEARDOWN hook, awaiting the promise
+// so the exporter finishes flushing before the process exits.
+export async function stopTracing() {
+  await sdk.shutdown();
+}
 ```
+
+> **Do not flush from `process.on('beforeExit', () => sdk.shutdown())`.** `beforeExit`
+> does not fire on `process.exit()`, an uncaught exception, or SIGINT/SIGTERM — the
+> common ways a test runner ends — and the un-awaited promise can drop the last spans
+> of the run. Wire `stopTracing()` into the runner's teardown instead:
+
+```typescript
+// playwright: global-teardown.ts (config.globalTeardown), or
+// vitest: return the teardown from globalSetup
+import { stopTracing } from './test-setup/tracing';
+export default async function globalTeardown() {
+  await stopTracing(); // awaited flush — no trailing spans dropped
+}
+```
+
+### Fast, deterministic alternative: in-memory exporter
+
+For unit-level span assertions you do not need a real collector or `waitForTrace`. Export
+spans to an in-process `InMemorySpanExporter` via a `SimpleSpanProcessor`, run the code,
+then read `exporter.getFinishedSpans()` synchronously — no network, no async wait, no
+timeout flake. Use this for the 80% case (assert one service's own spans); reach for the
+collector + `waitForTrace` path below only when you must assert a trace that crosses
+process boundaries.
 
 ## Trace-based assertions
 
 Assert on trace structure, span attributes, and timing -- not just HTTP responses.
+
+> **Force-sample test traffic.** Head/probabilistic sampling will randomly drop the very
+> trace a test is asserting on — the #1 cause of these tests being intermittently flaky.
+> Run the test workload under an always-on sampler (`OTEL_TRACES_SAMPLER=always_on`) or a
+> per-request sampling override, so every asserted trace is guaranteed to be recorded.
+> Never assert against a probabilistically sampled trace.
 
 ```typescript
 import { expect } from '@playwright/test';
@@ -61,7 +95,11 @@ test('order creation produces correct trace structure', async ({ request }) => {
   expect(serviceNames).toContain('order-service');
   expect(serviceNames).toContain('inventory-service');
 
-  // Verify no unexpected errors in any span
+  // Verify no unexpected errors in any span.
+  // NOTE: the literal here is collector-dependent. The OTel status code is an enum;
+  // in OTLP/JSON it serializes as the integer 2 (STATUS_CODE_ERROR) or the string
+  // 'STATUS_CODE_ERROR' depending on your collector/exporter normalization — not a
+  // bare 'ERROR'. Match what YOUR TraceCollector emits; do not copy 'ERROR' blindly.
   const errorSpans = spans.filter(s => s.status?.code === 'ERROR');
   expect(errorSpans).toHaveLength(0);
 

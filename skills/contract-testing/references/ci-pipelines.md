@@ -40,8 +40,12 @@ jobs:
           npx pact-broker can-i-deploy \
             --pacticipant="frontend-app" \
             --version="${{ github.sha }}" \
-            --to-environment=production
+            --to-environment=production \
+            --retry-while-unknown=6 \
+            --retry-interval=10
 ```
+
+The `--retry-while-unknown` / `--retry-interval` flags poll the broker while results are still "unknown" — they fix the most common real-world `can-i-deploy` failure: the consumer just published a pact and the provider hasn't finished verifying it yet, so without retries the gate hard-fails on a race instead of waiting for the verification to land.
 
 ## Provider CI Pipeline
 
@@ -91,19 +95,27 @@ jobs:
           npx pact-broker can-i-deploy \
             --pacticipant="user-service" \
             --version="${{ github.sha }}" \
-            --to-environment=production
+            --to-environment=production \
+            --retry-while-unknown=6 \
+            --retry-interval=10
 ```
+
+The gate is on `main` deliberately, and you must **never** skip it there: `main` is what reaches production. A skipped `can-i-deploy` on a feature branch costs nothing, but skipping it on `main` ships a version the broker has not confirmed is compatible — which is the exact production break contract testing exists to prevent.
 
 ## can-i-deploy
 
 The `can-i-deploy` command is the deployment gate. It checks the Pact Broker matrix to determine if a version is safe to deploy.
 
 ```bash
-# Check if consumer can be deployed to production
+# Check if consumer can be deployed to production.
+# --retry-while-unknown waits out the race where provider verification
+# of the just-published pact hasn't landed yet.
 npx pact-broker can-i-deploy \
   --pacticipant="frontend-app" \
   --version="abc123" \
-  --to-environment=production
+  --to-environment=production \
+  --retry-while-unknown=6 \
+  --retry-interval=10
 
 # Output:
 # CONSUMER        | C.VERSION | PROVIDER     | P.VERSION | SUCCESS?

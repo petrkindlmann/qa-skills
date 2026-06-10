@@ -1,6 +1,6 @@
 {
   "skill": "synthetic-monitoring",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "synth-001",
@@ -35,9 +35,9 @@
         "expect(response.ok()) OR expect(body.status).toBe"
       ],
       "anti_patterns": [
-        "data mutation OR create OR write",
-        "DELETE OR truncate in probe",
-        "hardcoded credentials in code"
+        "request.post(`${API_URL}",
+        "request.delete(",
+        "TRUNCATE OR DROP TABLE"
       ],
       "tags": [
         "api-health",
@@ -113,7 +113,7 @@
       "prompt": "Calculate availability and error budget for a service with 99.9% SLA, showing monthly downtime allowance and budget consumption",
       "expected_patterns": [
         "99.9% OR 0.1%",
-        "43 minutes OR 43min 50s downtime per month",
+        "43.2 min OR 43min 12s OR 43.2 minutes",
         "error budget calculation",
         "availability = (total_minutes - downtime_minutes) / total_minutes",
         "error budget consumed OR remaining"

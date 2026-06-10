@@ -424,6 +424,28 @@ Rules:
 
 ---
 
+## Worked Scenario Sets (what good Step-4 output looks like)
+
+Concrete reference output for the input types this pipeline handles most often. Use these as few-shot targets — the scenario coverage, not the exact wording, is what matters.
+
+### Registration form (email, password, name)
+
+Cover at minimum: valid registration (happy path); invalid email (`a@`, no `@`, no domain → format error); password validation / weak password (too short, no number, no symbol → rejected); empty or missing fields (each required field blank → field-level error); duplicate email / already exists (registering an email already in the DB → "account already exists"). Do not stop at the happy path.
+
+### Price-range filter (min / max inputs)
+
+Cover: minimum / lower bound at the smallest allowed price; maximum / upper bound at the largest; a range that returns no results / empty state; boundary / edge where min == max and where min > max (invalid range → validation, not silent empty); and reset / clear filter restoring the unfiltered list.
+
+### Password-validation change (from a code diff)
+
+When the diff tightens or changes a validation rule: assert existing behavior / backward compatible (previously-valid passwords that are still valid stay accepted; previously-rejected stay rejected); the new validation / changed rule (passwords newly allowed or newly rejected by the change); boundary / edge at the exact new threshold (e.g. min length boundary, one char under and one over); and the user-facing error message text for newly-rejected input. Scope tests to the changed code paths.
+
+### Date-range picker (start/end selection)
+
+Cover the BOUNDARIES edges: same start and end date (zero-length range — allowed or rejected per spec); end before start / invalid range; leap year / Feb 29 (and a non-leap year Feb 29 → rejected); timezone / DST transition days (range spanning a DST shift, picker in a non-UTC locale); and min / max date limits (selecting outside the allowed window).
+
+---
+
 ## Usage Guidelines
 
 1. **Follow the pipeline order.** Do not skip to Step 6 prompts. The intermediates from Steps 1-5 are the input that makes Step 6 produce good output.

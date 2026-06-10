@@ -5,7 +5,8 @@ Commands, configs, and test code for injecting each failure class. The decision 
 ## Network failures
 
 ```bash
-# Add 200ms latency to all traffic to port 5432 (PostgreSQL)
+# Add latency to all egress on eth0 (200ms ± 50ms here simulates a distant region;
+# use 500ms to mirror Starter Experiment 1's "slow database").
 tc qdisc add dev eth0 root netem delay 200ms 50ms distribution normal
 
 # Add 5% packet loss
@@ -16,7 +17,9 @@ tc qdisc del dev eth0 root
 ```
 
 ```yaml
-# toxiproxy configuration for database latency
+# toxiproxy configuration for database latency.
+# `latency` and `jitter` are milliseconds. 500/100 here matches Starter
+# Experiment 1 ("add 500ms latency"); use 200/50 to mirror a distant region.
 - name: postgres-latency
   listen: 0.0.0.0:15432
   upstream: postgres:5432
@@ -24,8 +27,8 @@ tc qdisc del dev eth0 root
     - name: latency
       type: latency
       attributes:
-        latency: 200
-        jitter: 50
+        latency: 500
+        jitter: 100
 ```
 
 ## Service failures
@@ -39,12 +42,16 @@ kubectl delete pod order-service-abc123 --grace-period=0
 ```
 
 ```yaml
-# LitmusChaos: pod kill experiment
+# LitmusChaos 3.29.x: pod-delete experiment.
+# engineState: active is REQUIRED to start — without it the engine is created
+# but never runs. annotationCheck: 'false' targets pods by label, not annotation.
 apiVersion: litmuschaos.io/v1alpha1
 kind: ChaosEngine
 metadata:
   name: order-service-chaos
 spec:
+  engineState: active
+  annotationCheck: 'false'
   appinfo:
     appns: production
     applabel: app=order-service
@@ -81,8 +88,9 @@ rm /tmp/fill-disk.dat
 ## Dependency failures
 
 ```typescript
-// Toxiproxy programmatic control for integration tests
-import Toxiproxy from 'toxiproxy-node-client';
+// Toxiproxy programmatic control for integration tests.
+// Named import — toxiproxy-node-client (v4.x) has no default export.
+import { Toxiproxy } from 'toxiproxy-node-client';
 
 const toxiproxy = new Toxiproxy('http://localhost:8474');
 
@@ -107,4 +115,51 @@ test('application handles Redis unavailability gracefully', async () => {
     await proxy.enable();
   }
 });
+```
+
+## Automated abort / steady-state gating
+
+Manual abort conditions are policy until a tool enforces them. Make the abort
+condition machine-checked so a flapping experiment halts without a human at the
+keyboard. This turns "chaos without monitoring" and "no rollback plan" from
+discipline into infrastructure.
+
+```json
+// AWS FIS experiment template: a CloudWatch alarm auto-stops the experiment
+// the moment error rate breaches threshold. No human in the loop.
+"stopConditions": [
+  {
+    "source": "aws:cloudwatch:alarm",
+    "value": "arn:aws:cloudwatch:us-east-1:123456789012:alarm:HighErrorRate"
+  }
+]
+```
+
+Equivalents on other tools:
+- **Gremlin** — Health Checks attached to a scenario auto-halt and roll back when
+  a monitored metric (a CloudWatch/Datadog/Prometheus check) goes unhealthy.
+- **LitmusChaos** — probes (`httpProbe`, `promProbe`, `cmdProbe`) with
+  `mode: Continuous` fail the experiment and stop chaos when an SLO breaks.
+- **Litmus MCP Server** (Oct 2025) — lets an AI assistant such as Claude list,
+  run, and stop experiments against ChaosCenter via natural language; useful for
+  driving the abort ("stop the network latency experiment") conversationally.
+
+## Continuous chaos in CI (GameDay-as-code)
+
+Run a low-blast-radius experiment on a schedule, gated to a low-traffic window so
+a regression surfaces in CI rather than during peak. The probe above is what makes
+this safe to leave unattended.
+
+```yaml
+# GitHub Actions: nightly Litmus pod-delete during the 03:00 UTC traffic trough.
+on:
+  schedule:
+    - cron: '0 3 * * *'   # off-peak only; never gate a release on this job
+jobs:
+  chaos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: kubectl apply -f chaos/order-service-chaos.yaml   # engineState: active
+      - run: kubectl wait --for=condition=complete chaosengine/order-service-chaos --timeout=180s
 ```

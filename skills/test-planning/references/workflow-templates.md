@@ -60,8 +60,11 @@ New automated tests to write:
   E2E:         ___ tests × 2.0 hrs = ___ hrs
 
 Manual testing:
-  Test cases to execute: ___ × 0.25 hrs = ___ hrs
-  Exploratory sessions:  ___ × 1.5 hrs  = ___ hrs
+  Test cases to execute:  ___ × 0.25 hrs    = ___ hrs
+  Exploratory sessions:   ___ × 1.5 hrs     = ___ hrs
+  Accessibility reviews:  ___ × 0.5-1 hr    = ___ hrs
+
+Setup & test data:        ___ × 0.5-2 hrs   = ___ hrs   (per feature — do not omit)
 
 Bug verification buffer (20%):     ___ hrs
 Re-test after fixes buffer (10%):  ___ hrs

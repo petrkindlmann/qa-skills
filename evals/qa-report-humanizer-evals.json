@@ -1,6 +1,6 @@
 {
   "skill": "qa-report-humanizer",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "qah-001",
@@ -208,6 +208,47 @@
         "sprint-summary",
         "rule-of-three",
         "specificity"
+      ]
+    },
+    {
+      "id": "qah-011",
+      "prompt": "Humanize this bug report WITHOUT inventing numbers. The source gives no metrics: 'A defect was identified in the checkout flow that may affect users.' We do not know how many users are affected or how often it happens.",
+      "expected_patterns": [
+        "names the specific broken behavior in checkout",
+        "not measured OR unknown OR not quantified OR couldn't reproduce reliably OR haven't measured",
+        "states the impact is unmeasured instead of guessing a figure"
+      ],
+      "anti_patterns": [
+        "8% OR 12% OR 5%",
+        "fabricated percentage of affected users",
+        "invented incident count not in the source",
+        "two production incidents"
+      ],
+      "tags": [
+        "anti-fabrication",
+        "fact-preservation",
+        "honest-gaps"
+      ]
+    },
+    {
+      "id": "qah-012",
+      "prompt": "Rewrite this for a Slack channel: 'Hello team, I wanted to share the results of our latest test execution. The E2E suite was run and the majority of tests passed with a few exceptions that are being investigated.' Full report link: https://ci.example.com/run/4821",
+      "expected_patterns": [
+        "E2E OR end-to-end",
+        "passed",
+        "link OR https OR report",
+        "names the failures OR flaky OR known issue"
+      ],
+      "anti_patterns": [
+        "keeping 'Hello team'",
+        "keeping 'I wanted to share'",
+        "keeping 'the majority of tests passed'",
+        "multi-paragraph formal report in a Slack message"
+      ],
+      "tags": [
+        "slack-message",
+        "channel-fit",
+        "concision"
       ]
     }
   ]

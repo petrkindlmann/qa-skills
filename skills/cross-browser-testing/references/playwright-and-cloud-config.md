@@ -22,6 +22,9 @@ export default defineConfig({
 
     // P1: Desktop
     { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    // One Edge project only — drive installed Edge via the channel option.
+    // The `channel: 'msedge'` snippet further down is the SAME idea, not an
+    // additional project; do not declare two projects both named `edge`.
     { name: 'edge', use: { channel: 'msedge' } },
 
     // P2: Tablets
@@ -37,12 +40,14 @@ export default defineConfig({
 ## Browser Channels
 
 Playwright can drive locally installed branded browsers instead of its bundled engines.
+These are illustrative alternatives to the `edge` project above, not additional projects —
+pick one declaration per branded browser so two projects never share the name `edge`.
 
 ```typescript
 // Use installed Chrome instead of bundled Chromium
 { name: 'chrome', use: { channel: 'chrome' } },
 
-// Use installed Edge
+// Use installed Edge (same channel as the `edge` project above — declare it once)
 { name: 'edge', use: { channel: 'msedge' } },
 
 // WebKit is always Playwright's bundled version (no channel option)
@@ -64,6 +69,12 @@ npx playwright test --project=chromium --project=webkit --project=mobile-chrome 
 
 ## BrowserStack
 
+BrowserStack now recommends the `npx browserstack-node-sdk playwright test` runner with a
+`browserstack.yml` capabilities file, plus a `client.playwrightVersion` capability (alongside
+`browserstack.playwrightVersion`) so the client and grid sockets stay in lock-step. The raw
+`wsEndpoint`/CDP config below still works for a direct connection — use the SDK path for new
+setups. Whichever you use, pin the version to match `npx playwright --version` in `package.json`.
+
 ```typescript
 // browserstack.config.ts
 import { defineConfig } from '@playwright/test';
@@ -78,7 +89,9 @@ export default defineConfig({
         os_version: '11',
         'browserstack.username': process.env.BROWSERSTACK_USERNAME,
         'browserstack.accessKey': process.env.BROWSERSTACK_ACCESS_KEY,
-        'browserstack.playwrightVersion': '1.59.1', // keep aligned with the version in package.json
+        // Pin BOTH to your installed Playwright (e.g. 1.60.x) to avoid client/server socket mismatch.
+        'browserstack.playwrightVersion': '1.60.0', // keep aligned with package.json
+        'client.playwrightVersion': '1.60.0',       // SDK-recommended; mirrors the above
         build: `cross-browser-${process.env.CI_BUILD_NUMBER}`,
         name: 'Cross-browser test suite',
       }))}`,

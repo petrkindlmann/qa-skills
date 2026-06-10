@@ -25,6 +25,8 @@ import { Pact, Matchers } from "@pact-foundation/pact";
 import path from "path";
 import { UserApiClient } from "../../src/userApiClient";
 
+// Destructure for brevity, or access directly as Matchers.integer / Matchers.string /
+// Matchers.regex / Matchers.eachLike — both forms are equivalent.
 const { like, eachLike, integer, string, regex } = Matchers;
 
 const provider = new Pact({
@@ -121,10 +123,11 @@ Running this test generates `pacts/frontend-app-user-service.json` -- the contra
 
 The provider verifies it can satisfy all consumer contracts. This runs against the real provider implementation (not mocks).
 
+In production, pull pacts from the **broker** (`pactBrokerUrl` + `consumerVersionSelectors`), not local files — the broker is the source of truth and knows which consumer versions are live. The `pactUrls` (local file) form is fine for a first spike but does not reflect what is actually deployed.
+
 ```typescript
 // provider/tests/contract/providerVerification.spec.ts
 import { Verifier } from "@pact-foundation/pact";
-import path from "path";
 import { startApp, stopApp } from "../../src/server";
 
 describe("Provider Verification", () => {
@@ -145,10 +148,21 @@ describe("Provider Verification", () => {
       providerBaseUrl: serverUrl,
       provider: "user-service",
 
-      // Option A: local files; Option B: set pactBrokerUrl/pactBrokerToken/consumerVersionSelectors
-      pactUrls: [
-        path.resolve(__dirname, "../../../pacts/frontend-app-user-service.json"),
+      // Broker-driven (production): pull pacts the broker knows are live.
+      // For a local spike instead, drop the broker fields and use:
+      //   pactUrls: [path.resolve(__dirname, "../../../pacts/frontend-app-user-service.json")]
+      pactBrokerUrl: process.env.PACT_BROKER_BASE_URL,
+      pactBrokerToken: process.env.PACT_BROKER_TOKEN,
+      consumerVersionSelectors: [
+        { mainBranch: true },       // latest pact from each consumer's main branch
+        { deployedOrReleased: true }, // pacts for versions currently in an environment
       ],
+
+      // Pending pacts: a brand-new consumer interaction can land without breaking
+      // the provider build — it is reported but does not fail until the consumer
+      // marks it as expected. The standard incremental-adoption safety net.
+      enablePending: true,
+      includeWipPactsSince: "2024-01-01",
 
       // Provider states: set up data that matches consumer expectations
       stateHandlers: {
@@ -172,19 +186,26 @@ describe("Provider Verification", () => {
 });
 ```
 
+## Async / Message Contracts
+
+Pact-JS v16's `Pact` class also supports **message pacts** for event-driven systems (Kafka, SNS/SQS, RabbitMQ) — the consumer asserts the shape of a message it expects to receive, and the provider verifies the message its producer emits. The HTTP examples above cover request/response APIs; reach for message pacts when the integration is a queue or topic rather than an endpoint. See the [Pact-JS message docs](https://github.com/pact-foundation/pact-js) for the `MessageConsumerPact` / message provider verifier API.
+
 ## Pact Broker Setup with Docker
 
 The Pact Broker is the central registry where pact files are published and provider verification results are recorded. It enables the `can-i-deploy` workflow.
 
+Inject every credential from the environment — including the Postgres password and the broker's DB URL. Hardcoding them in the compose file leaks secrets into version control and is exactly the anti-pattern this skill warns against. Pin the broker image to a released tag (not `:latest`) for reproducible builds.
+
 ```yaml
 # docker-compose.pact-broker.yml
+# Provide DB_PASSWORD and PACT_BROKER_PASSWORD via an untracked .env file.
 services:
   pact-broker:
-    image: pactfoundation/pact-broker:latest
+    image: pactfoundation/pact-broker:2.118.0  # pin a release; avoid :latest
     ports:
       - "9292:9292"
     environment:
-      PACT_BROKER_DATABASE_URL: postgres://pact:pact@postgres/pact
+      PACT_BROKER_DATABASE_URL: postgres://pact:${DB_PASSWORD}@postgres/pact
       PACT_BROKER_BASIC_AUTH_USERNAME: admin
       PACT_BROKER_BASIC_AUTH_PASSWORD: ${PACT_BROKER_PASSWORD}
       PACT_BROKER_ALLOW_PUBLIC_READ: "true"
@@ -197,7 +218,7 @@ services:
     environment:
       POSTGRES_DB: pact
       POSTGRES_USER: pact
-      POSTGRES_PASSWORD: pact
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - pact-db:/var/lib/postgresql/data
     healthcheck:

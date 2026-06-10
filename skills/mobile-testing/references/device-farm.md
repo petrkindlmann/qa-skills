@@ -15,13 +15,22 @@ export const bsCapabilities = {
     sessionName: 'Login Flow',
     debug: true,
     networkLogs: true,
-    appiumVersion: '3.4.2',
+    appiumVersion: '3.x', // pin to a current 3.x stable the farm advertises
   },
   platformName: 'Android',
   'appium:deviceName': 'Samsung Galaxy S24',
   'appium:platformVersion': '14.0',
-  'appium:app': process.env.BROWSERSTACK_APP_URL, // Upload via API: POST api-cloud.browserstack.com/app-automate/upload
+  'appium:app': process.env.BROWSERSTACK_APP_URL, // app_url returned by the upload below
 };
+```
+
+Upload the build first and pass the returned `app_url` (`bs://...`) as `BROWSERSTACK_APP_URL`:
+
+```bash
+curl -u "$BROWSERSTACK_USERNAME:$BROWSERSTACK_ACCESS_KEY" \
+  -X POST "https://api-cloud.browserstack.com/app-automate/upload" \
+  -F "file=@./build/app-debug.apk"
+# → { "app_url": "bs://<hashed-id>" }   # export as BROWSERSTACK_APP_URL
 ```
 
 ## Sauce Labs
@@ -35,7 +44,7 @@ export const sauceCapabilities = {
   'sauce:options': {
     name: 'Login Flow',
     build: `build-${process.env.CI_BUILD_NUMBER}`,
-    appiumVersion: '3.4',
+    appiumVersion: '3.x', // pin to a current 3.x stable Sauce advertises
   },
 };
 ```

@@ -12,13 +12,24 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: production
 ---
 
 <objective>
-Production is the only environment that is production. Every other environment is an approximation. This skill covers how to validate software quality in production safely -- with controlled blast radius, automated rollback, and guardrail metrics that catch problems before users do.
+Production is the only environment that is production. Every other environment is an approximation — staging never replicates real data volume, traffic, or third-party quirks. This skill covers how to validate quality in production safely: controlled blast radius, automated rollback, guardrail metrics, and smoke tests that catch problems before users do. The recurring failure it prevents: shipping to 100% of users with no flag to flip, no baseline to compare against, and no tested way back.
 </objective>
+
+## Quick Route
+
+| Situation | Go to |
+|-----------|-------|
+| Shipping a feature behind a flag | Feature Flag Testing |
+| Ramping traffic 1% → 100% with gates | Progressive Rollout + `references/rollout-policy.md` |
+| Need post-deploy checks on every release | Production Smoke Tests + `references/patterns.md` |
+| Deciding what numbers gate the rollout | Guardrail Metrics |
+| New code path with no user-visible change yet | Dark Launches |
+| Proving the rollback actually works | Verification |
 
 ---
 
@@ -56,15 +67,15 @@ Check `.agents/qa-project-context.md` first. If it exists, use it as context and
 
 ### 1. Production is the final test environment
 
-Staging approximates production. It does not replicate production's data volume, traffic patterns, third-party integrations, infrastructure quirks, or user behavior. Testing in production is not reckless -- it is realistic. The question is not whether to test in production, but how to do it safely.
+Staging approximates production. It does not replicate production's data volume, traffic patterns, third-party integrations, infrastructure quirks, or user behavior. Testing in production is not reckless — it is realistic. The question is not whether to test in production, but how to do it safely.
 
 ### 2. Safety through blast radius control
 
 Every production test must answer: "If this goes wrong, how many users are affected?" The answer must be as small as possible. Feature flags, canary deploys, and traffic splitting exist to shrink the blast radius from 100% to 1% or less.
 
-### 3. Always have a rollback plan
+### 3. Always have a tested rollback plan
 
-Before any production test begins, the rollback mechanism must be identified, tested, and fast. "Disable the flag" is a good rollback plan. "Redeploy the previous version" is acceptable. "We'll figure it out" is not a plan.
+Before any production test begins, the rollback mechanism must be identified, tested, and fast. "Disable the flag" is a good rollback plan. "Redeploy the previous version" is acceptable. "We'll figure it out" is not a plan. A rollback you have never fired is a hypothesis, not a plan — see [Verification](#verification) for how to prove it works.
 
 ### 4. Monitoring is a prerequisite, not a nice-to-have
 
@@ -82,25 +93,7 @@ Feature flags are the safest mechanism for production testing. They decouple dep
 
 ### Test with flags ON and OFF
 
-Every flagged feature needs tests in both states. The flag-off path is the rollback path and must work flawlessly.
-
-```typescript
-// Test the feature-on experience
-test('new checkout flow renders when flag is enabled', async ({ page }) => {
-  await setFeatureFlag('new-checkout', true, { userId: TEST_USER_ID });
-  await page.goto('/checkout');
-  await expect(page.getByRole('heading', { name: 'Express Checkout' })).toBeVisible();
-  await expect(page.getByRole('button', { name: 'Pay with saved card' })).toBeEnabled();
-});
-
-// Test the feature-off fallback
-test('legacy checkout flow renders when flag is disabled', async ({ page }) => {
-  await setFeatureFlag('new-checkout', false, { userId: TEST_USER_ID });
-  await page.goto('/checkout');
-  await expect(page.getByRole('heading', { name: 'Checkout' })).toBeVisible();
-  await expect(page.getByRole('form', { name: 'Payment details' })).toBeVisible();
-});
-```
+Every flagged feature needs tests in both states. The flag-off path **is the rollback path** and must work flawlessly — use `setFeatureFlag(name, true|false, { userId: TEST_USER_ID })` to drive both. See `references/patterns.md` for the full ON/OFF test pair.
 
 ### Flag lifecycle testing
 
@@ -120,43 +113,19 @@ Test at each stage:
 
 ### Stale flag cleanup
 
-Flags left in code become technical debt. Run a weekly CI job that queries the flag provider for flags that are 100% rolled out and older than 14 days. These are candidates for code cleanup -- the flag branching logic should be removed and only the enabled path retained.
+Flags left in code become technical debt. Run a **weekly CI job** that queries the flag provider for flags that are **100% rolled out and older than 14 days**. These are candidates for code cleanup — remove the flag branching logic and retain only the enabled path. Removing the flag without removing the dead code is half a cleanup.
 
 ### Flag combination testing
 
-When multiple flags interact, test the combinations that matter. Do not test all 2^N combinations -- focus on flags that affect the same user flow.
-
-```typescript
-// Identify interacting flags by feature area
-const checkoutFlags = ['new-checkout', 'express-pay', 'discount-engine-v2'];
-
-// Test the critical combinations
-const criticalCombinations = [
-  { 'new-checkout': true, 'express-pay': true, 'discount-engine-v2': true },   // all new
-  { 'new-checkout': true, 'express-pay': false, 'discount-engine-v2': true },  // mixed
-  { 'new-checkout': false, 'express-pay': false, 'discount-engine-v2': false }, // all legacy
-];
-
-for (const combo of criticalCombinations) {
-  test(`checkout with flags: ${JSON.stringify(combo)}`, async ({ page }) => {
-    for (const [flag, value] of Object.entries(combo)) {
-      await setFeatureFlag(flag, value, { userId: TEST_USER_ID });
-    }
-    await page.goto('/checkout');
-    // Assert checkout completes without errors
-    await page.getByRole('button', { name: /place order/i }).click();
-    await expect(page.getByText(/order confirmed/i)).toBeVisible();
-  });
-}
-```
+When multiple flags interact, test the combinations that matter. Do **not** test all 2^N combinations — focus on flags that affect the **same user flow** (e.g. `new-checkout`, `express-pay`, `discount-engine-v2` all touch checkout). Pick the critical combinations: all-new, a representative mixed state, and all-legacy. See `references/patterns.md` for the combination-test loop.
 
 ---
 
 ## Progressive Rollout
 
-> **Vendor-native canary analysis.** Before hand-rolling the rollout-policy YAML below, check whether your platform already does it: **LaunchDarkly Guarded Rollouts** (auto-monitored progressive rollouts with metric-based auto-rollback), **Statsig Auto-tune**, **Argo Rollouts AnalysisRun**, **Flagger**, **Harness Continuous Verification**. If you have one, prefer it — the integration with your metrics and rollback mechanics is cheaper than maintaining a custom analysis loop.
+> **Vendor-native canary analysis.** Before hand-rolling the rollout-policy YAML below, check whether your platform already does it: **LaunchDarkly Guarded Rollouts** (auto-monitored progressive rollouts with metric-based auto-rollback; uses a frequentist sequential-testing analysis model since early 2026), **Statsig Auto-tune**, **Argo Rollouts AnalysisRun**, **Flagger**, **Harness Continuous Verification**. If you have one, prefer it — the integration with your metrics and rollback mechanics is cheaper than maintaining a custom analysis loop.
 >
-> **AI feature rollout** is its own pattern: model variant + prompt as a flag value, with cost guardrails and a kill switch. **LaunchDarkly AI Configs** is the documented path for shipping LLM features behind progressive rollout. See `release-readiness` for the full pattern.
+> **AI feature rollout** is its own pattern: model variant + prompt as a flag value, with cost guardrails and a kill switch. **LaunchDarkly AI Configs / AgentControl** (AI Configs rebranded under the AgentControl umbrella, announced May 2026) is the documented path for shipping LLM features behind progressive rollout. See `release-readiness` for the full pattern.
 
 ### Canary stages: 1% to 100%
 
@@ -169,85 +138,20 @@ A structured rollout with explicit promotion criteria at each stage.
 | Partial | 50% | 2-4 hours | All guardrails, business metrics |
 | Full | 100% | 24 hours monitoring | Long-tail issues, batch job compatibility |
 
-### Automated promotion criteria
+### Automated promotion and rollback
 
-Define machine-checkable conditions for advancing between stages. Human override remains available but should be rare.
+Define machine-checkable conditions for advancing between stages — `hold_duration` plus metric conditions (`error_rate_5xx < 0.5%`, `latency_p95 < 500ms`, `crash_rate == 0`). Automatic rollback fires when guardrails are breached, with **no human approval needed**: `error_rate_5xx > 2x_baseline for 5m`, `latency_p99 > 3x_baseline for 5m`, `crash_rate > 0.1% for 2m`, each notifying on-call. Gate on **error-budget burn rate**, not only raw multipliers, so slow burns that still blow the SLO are caught. See `references/rollout-policy.md` for the full promotion YAML, rollback triggers, and SLO-gate config.
 
-```yaml
-# rollout-policy.yaml
-canary_to_10_percent:
-  hold_duration: 30m
-  conditions:
-    - metric: error_rate_5xx
-      comparison: less_than
-      threshold: 0.5%
-      window: 15m
-    - metric: latency_p95
-      comparison: less_than
-      threshold: 500ms
-      window: 15m
-    - metric: crash_rate
-      comparison: equals
-      threshold: 0
-      window: 15m
+### Verify the rollback fired correctly
 
-10_percent_to_50_percent:
-  hold_duration: 2h
-  conditions:
-    - metric: error_rate_5xx
-      comparison: less_than
-      threshold: 0.5%
-      window: 1h
-    - metric: latency_p95
-      comparison: less_than
-      threshold: 500ms
-      window: 1h
-    - metric: conversion_rate
-      comparison: within_percentage
-      baseline: pre_deploy_average
-      tolerance: 5%
-      window: 1h
+Auto-rollback firing is not the same as the incident being resolved. After a rollback triggers, do not declare "recovered" until you have **confirmed** the system is actually back:
 
-50_percent_to_100_percent:
-  hold_duration: 4h
-  conditions:
-    - metric: error_rate_5xx
-      comparison: less_than
-      threshold: 0.3%
-      window: 2h
-    - metric: all_guardrails
-      comparison: passing
-      window: 2h
-    - metric: customer_reported_issues
-      comparison: equals
-      threshold: 0
-```
+1. **Re-run the health-check smoke test** against production (`GET /api/health` returns `healthy` and the previous `version`).
+2. **Confirm the flag/deploy state reverted** — query the flag platform that the flag is off (or the deploy that the previous build is serving), don't assume.
+3. **Confirm guardrail metrics returned to baseline** — error rate, P99 latency, and crash rate back within their pre-deploy windows.
+4. **Confirm the rollback notification reached on-call** (Slack/PagerDuty) so the incident is owned.
 
-### Rollback triggers
-
-Automatic rollback fires when guardrails are breached. No human approval needed.
-
-```yaml
-automatic_rollback:
-  - condition: error_rate_5xx > 2x_baseline
-    for: 5m
-    action: rollback_to_previous
-    notify: [oncall-slack, pagerduty]
-
-  - condition: latency_p99 > 3x_baseline
-    for: 5m
-    action: rollback_to_previous
-    notify: [oncall-slack]
-
-  - condition: crash_rate > 0.1%   # mobile: calibrate to user-perceived crash rate
-    for: 2m                          # (Play Console Vitals, App Store Connect Crashes,
-    action: rollback_to_previous     # iOS Hang Rate / ANR rate) — not raw exception counts
-    notify: [oncall-slack, pagerduty, engineering-leads]
-
-  - condition: health_check_failures > 3_consecutive
-    action: rollback_immediately
-    notify: [oncall-slack, pagerduty]
-```
+Only when all four hold is the rollback verified. See [Verification](#verification) for the staging dry-run that proves this chain before first production use.
 
 ---
 
@@ -255,99 +159,17 @@ automatic_rollback:
 
 ### Post-deploy critical path tests
 
-Run immediately after every deployment. These verify that the application's core functionality works with production configuration, data, and infrastructure.
-
-```typescript
-// production-smoke.spec.ts
-import { test, expect } from '@playwright/test';
-
-const PROD_URL = process.env.PRODUCTION_URL!;
-const SMOKE_USER = process.env.SMOKE_TEST_EMAIL!;
-const SMOKE_PASS = process.env.SMOKE_TEST_PASSWORD!;
-
-test.describe('Production Smoke', () => {
-  test.describe.configure({ retries: 1, timeout: 30_000 });
-
-  test('application loads and responds', async ({ request }) => {
-    const health = await request.get(`${PROD_URL}/api/health`);
-    expect(health.ok()).toBeTruthy();
-    const body = await health.json();
-    expect(body.status).toBe('healthy');
-    expect(body.version).toBeDefined();
-  });
-
-  test('authentication flow works', async ({ page }) => {
-    await page.goto(`${PROD_URL}/login`);
-    await page.getByLabel('Email').fill(SMOKE_USER);
-    await page.getByLabel('Password').fill(SMOKE_PASS);
-    await page.getByRole('button', { name: 'Sign in' }).click();
-    await expect(page).toHaveURL(/dashboard/);
-    await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
-  });
-
-  test('core data loads correctly', async ({ page }) => {
-    // Assumes auth state from storageState
-    await page.goto(`${PROD_URL}/dashboard`);
-    await expect(page.getByRole('table')).toBeVisible();
-    await expect(page.getByRole('row')).not.toHaveCount(0);
-  });
-
-  test('search returns results', async ({ page }) => {
-    await page.goto(`${PROD_URL}/search`);
-    await page.getByRole('searchbox').fill('test query');
-    await page.getByRole('button', { name: 'Search' }).click();
-    await expect(page.getByRole('listitem')).not.toHaveCount(0);
-  });
-});
-```
+Run immediately after every deployment as a **pipeline stage** (not only in pre-deploy CI). These verify core functionality works with production configuration, data, and infrastructure: a `/api/health` check, the authentication flow with synthetic credentials, core data loading, and search. Configure `retries: 1` and a `timeout` so a flaky post-deploy run doesn't block the pipeline on the first blip. See `references/patterns.md` for the full `production-smoke.spec.ts`.
 
 ### Synthetic user accounts
 
-Production test accounts must be clearly distinguishable from real users.
-
-```
-Synthetic account conventions:
-  - Email pattern: smoke-test+{env}@yourcompany.com
-  - Display name: "[SYNTHETIC] Smoke Test User"
-  - Flag: is_synthetic = true in user record
-  - Excluded from: analytics, billing, email campaigns, support queues
-  - Data isolation: test data uses reserved ID ranges or namespaces
-
-Account management:
-  - Create accounts via admin API, not through the UI
-  - Prefer short-lived OIDC-issued tokens / workload identity over rotating passwords
-    (GitHub Actions OIDC -> cloud, AWS IAM Roles Anywhere, SPIFFE/SPIRE for mTLS)
-  - If long-lived credentials are unavoidable, rotate quarterly and store in a
-    secrets manager (Vault, AWS Secrets Manager, GCP Secret Manager)
-  - Never reuse synthetic accounts across different test suites
-```
+Production test accounts must be clearly distinguishable from real users: a reserved email pattern (`smoke-test+{env}@yourcompany.com`), an `is_synthetic = true` flag, and exclusion from analytics, billing, and email campaigns. Create them via admin API, and prefer short-lived OIDC / workload-identity tokens over long-lived passwords. See `references/patterns.md` for the full conventions.
 
 ### Non-destructive assertions
 
-Production smoke tests must read, not write. When writes are unavoidable, clean up immediately.
+Production smoke tests must read, not write. When writes are unavoidable, clean up in **fixture teardown** so cleanup runs whether the test passes or fails.
 
-```typescript
-// Pattern: create-verify-cleanup
-test('can create and delete a draft', async ({ page }) => {
-  await page.goto(`${PROD_URL}/documents`);
-  // Create
-  await page.getByRole('button', { name: 'New document' }).click();
-  await page.getByLabel('Title').fill('[SMOKE TEST] Auto-cleanup');
-  await page.getByRole('button', { name: 'Save draft' }).click();
-  const url = page.url();
-
-  // Verify
-  await expect(page.getByText('[SMOKE TEST] Auto-cleanup')).toBeVisible();
-
-  // Cleanup -- always runs, even on test failure
-  test.afterEach(async ({ request }) => {
-    const docId = url.split('/').pop();
-    await request.delete(`${PROD_URL}/api/documents/${docId}`, {
-      headers: { Authorization: `Bearer ${process.env.SMOKE_TEST_TOKEN}` },
-    });
-  });
-});
-```
+Do not call `test.afterEach()` inside a `test()` body — Playwright registers hooks at describe/file scope, so a hook registered mid-test never schedules teardown and throws `test.afterEach() can only be called in a describe block`. The data leaks. Use an auto-cleanup fixture that records created resource IDs and deletes them on teardown (or `try/finally` for a one-off script). See `references/patterns.md` for the fixture-based create-verify-cleanup pattern.
 
 ---
 
@@ -420,7 +242,7 @@ What to compare:
 
 ### Parallel execution
 
-For migrations (new database, new algorithm, new service), run both the old and new path in production. The old path returns the result to the user; the new path runs asynchronously, logs differences, and discards its result. Track the match rate over time -- target 99%+ match before cutting over.
+For migrations (new database, new algorithm, new service), run both the old and new path in production. The old path returns the result to the user; the new path runs asynchronously, logs differences, and discards its result. Track the match rate over time — target 99%+ match before cutting over.
 
 ```
 Shadow launch timeline:
@@ -436,58 +258,69 @@ Shadow launch timeline:
 ## Anti-Patterns
 
 ### Testing in production without monitoring
-
 Running production tests without dashboards and alerts is flying blind. You will not know if your tests caused an issue until a user reports it.
-
 **Fix:** Monitoring is a prerequisite. Before adding any production test, verify you can see error rates, latency, and key business metrics in real time. Set up alerts before the first test runs.
 
 ### No rollback plan
-
 "We'll deploy a fix if something goes wrong" is not a rollback plan. Under pressure, fixes take longer, introduce new bugs, and extend the outage.
-
-**Fix:** Every production test or rollout must have a documented rollback mechanism that takes less than 5 minutes to execute. Feature flag disable, previous deployment, or traffic reroute.
+**Fix:** Every production test or rollout must have a documented rollback mechanism that takes less than 5 minutes to execute — feature flag disable, previous deployment, or traffic reroute — and a verification step that confirms it actually recovered the system (see [Verification](#verification)).
 
 ### Destructive operations in production tests
+Production tests that create real orders, send real emails, or modify real user data are not tests — they are incidents waiting to happen.
+**Fix:** Use synthetic accounts flagged as test data. Use sandbox modes for payment and email. Clean up created data in fixture teardown so it always runs. If a test cannot be made non-destructive, it does not belong in production.
 
-Production tests that create real orders, send real emails, or modify real user data are not tests -- they are incidents waiting to happen.
-
-**Fix:** Use synthetic accounts flagged as test data. Use sandbox modes for payment and email. Clean up any created data immediately. If a test cannot be made non-destructive, it does not belong in production.
+### Cleanup that only runs on success
+A cleanup step placed after an assertion never runs when the assertion fails, leaking exactly the test data it was meant to remove. Calling `test.afterEach()` inside a `test()` body is the same trap — it throws or is ignored.
+**Fix:** Put teardown in an auto-cleanup fixture or a `finally` block so it runs on pass and fail alike. See `references/patterns.md`.
 
 ### Testing in production instead of pre-production
-
-Production testing supplements pre-production testing. It does not replace it. If your staging environment is broken and you are "testing in production" because it is the only working environment, fix staging first.
-
+Production testing supplements pre-production testing. It does not replace it. If staging is broken and you are "testing in production" because it is the only working environment, fix staging first.
 **Fix:** Maintain a working pre-production environment. Use production testing for what only production can validate: real traffic, real data volumes, real third-party integrations.
 
 ### Canary deploys without comparison
-
 Deploying to 1% of traffic but not comparing canary metrics against a control group misses the entire point. You are just deploying slowly, not detecting problems.
-
 **Fix:** Always compare canary metrics against a baseline. Use side-by-side dashboards or automated canary analysis tools (Kayenta, Argo Rollouts analysis).
 
 ### Stale feature flags
-
 Flags that are fully rolled out but never removed accumulate. After a year, you have 200 flags with unknown interactions, and every code path has branching logic that nobody understands.
+**Fix:** Every flag gets an expiration date at creation time. After full rollout + 2 weeks of stability, remove the flag and its dead branch. Track flag age and alert when flags exceed their expiration.
 
-**Fix:** Every flag gets an expiration date at creation time. After full rollout + 2 weeks of stability, remove the flag. Track flag age and alert when flags exceed their expiration.
+---
+
+## Verification
+
+Prove the rollback path actually fires **before** the first production use — a rollback you have never triggered is a hypothesis. Smallest check first:
+
+1. **Trip a guardrail in staging.** Inject failure (e.g. force `error_rate_5xx` above `2x_baseline`, or fail the health check 3 times) on a staged rollout wired to the same `automatic_rollback` policy. Confirm the rollback action fires within its `for:` window.
+2. **Confirm the reverted state.** Re-run the health-check smoke test and assert `status === 'healthy'` and the **previous** `version`. Query the flag platform/deploy that the previous build is serving — don't assume.
+3. **Confirm metrics recovered.** Error rate, P99 latency, and crash rate are back inside their pre-deploy windows.
+4. **Confirm the notification fired.** The rollback alert reached the on-call channel (Slack/PagerDuty).
+5. **Smoke tests are wired into the pipeline.** Run the deploy job against staging and confirm the post-deploy smoke stage executes and gates promotion — `npx playwright test production-smoke.spec.ts` exits 0.
+
+If steps 1–4 cannot be demonstrated in staging, the rollback is unverified and the rollout is not ready.
+
+> **Agent shortcut:** vendor MCP servers exist for LaunchDarkly, GrowthBook, Unleash, Flagsmith, Statsig, and Harness FME, letting an AI agent flip flags and read rollout metrics directly during these checks rather than driving the dashboard by hand.
 
 ---
 
 ## Done When
 
-- Feature flag rollout plan is documented with explicit percentage steps (1% → 10% → 50% → 100%) and named guardrail metrics at each stage
-- Canary analysis is configured with automated pass/fail criteria so promotion and rollback decisions do not require manual metric comparison
-- Production smoke tests run as a pipeline stage on every deploy (not only in CI pre-deploy)
-- Rollback trigger conditions are defined, documented, and verified to fire correctly (e.g., tested in staging before first production use)
-- Production test data strategy is documented, specifying whether synthetic users or anonymized real users are used and how they are excluded from analytics and billing
+- Feature flag rollout plan is documented with explicit percentage steps (1% → 10% → 50% → 100%) and named guardrail metrics at each stage.
+- Canary analysis is configured with automated pass/fail criteria so promotion and rollback decisions do not require manual metric comparison.
+- Production smoke tests run as a pipeline stage on every deploy (not only in CI pre-deploy) and the stage exits 0 against production.
+- Rollback trigger conditions are defined, documented, and demonstrated to fire correctly via the [Verification](#verification) staging dry-run (guardrail tripped → rollback fired → reverted state and recovered metrics confirmed) before first production use.
+- Production test data strategy is documented, specifying whether synthetic users or anonymized real users are used and how they are excluded from analytics and billing.
+
+## Reference Files (in `references/`)
+
+- **rollout-policy.md** — full promotion-criteria YAML, automatic-rollback triggers, and the error-budget / SLO-gate config.
+- **patterns.md** — flag ON/OFF and combination tests, the `production-smoke.spec.ts` suite, synthetic-account conventions, and the fixture-based non-destructive create-verify-cleanup pattern.
 
 ## Related Skills
 
-| Skill | Relationship |
-|-------|-------------|
-| `release-readiness` | Production testing is part of the post-deploy verification in the release process |
-| `synthetic-monitoring` | Ongoing production validation after the rollout is complete |
-| `observability-driven-testing` | Traces and logs from production inform which tests to write |
-| `qa-metrics` | Guardrail metrics and rollout criteria feed into QA dashboards |
-| `ci-cd-integration` | Production smoke tests run as a CI pipeline stage post-deployment |
-| `test-environments` | Production testing complements, not replaces, pre-production environments |
+- **release-readiness** — Go/no-go for the whole release; production testing is the post-deploy verification step inside it. Go there for the release checklist, not the rollout mechanics.
+- **synthetic-monitoring** — Scheduled probes that run continuously *after* the rollout is complete. Go there for ongoing SLA validation, not in-flight rollout safety.
+- **observability-driven-testing** — Uses prod traces and logs as the *input* to design new tests. Go there when telemetry tells you what to test, not when you need to ship safely.
+- **qa-metrics** — Where guardrail metrics and rollout criteria feed into dashboards and KPIs.
+- **ci-cd-integration** — Wiring the smoke-test stage and rollout gates into the pipeline.
+- **test-environments** — Pre-production environments that production testing complements, never replaces.

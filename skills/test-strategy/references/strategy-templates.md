@@ -297,10 +297,10 @@ performance testing are disproportionately important compared to typical SaaS.
 | Unit (Vitest) | 420 | Paywall logic, ad placement algorithm, personalization scoring, video state machine |
 | Integration | 95 | CMS API contract, ad server integration, search index sync |
 | E2E (Playwright) | 65 | Video playback (5 browsers), paywall enforcement, content rendering |
-| Visual (Playwright + Percy) | 120 | All content templates, responsive breakpoints, dark mode, ad slots |
+| Visual (Playwright + Argos) | 120 | All content templates, responsive breakpoints, dark mode, ad slots |
 | Performance (Lighthouse CI + k6) | 15 | LCP/CLS/INP for all templates, video start time, TTFB |
 | Cross-browser | Matrix | Chrome, Safari, Firefox, Edge, Samsung Internet, iOS Safari |
-| Accessibility (axe-core) | All templates | WCAG 2.1 AA for all content pages |
+| Accessibility (axe-core) | All templates | WCAG 2.2 AA for all content pages |
 
 ### Performance Strategy
 Content sites live and die by Core Web Vitals. Every PR runs Lighthouse CI against:

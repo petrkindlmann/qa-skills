@@ -34,6 +34,8 @@ test.describe('Synthetic: Login Flow', () => {
 
 ## API health-check probe
 
+Validates database connection and cache connection without mutating data — the `/health` endpoint reports dependency status, and the probe asserts each is `connected`.
+
 ```typescript
 // probes/api-health.ts
 import { test, expect } from '@playwright/test';
@@ -75,9 +77,41 @@ test.describe('Synthetic: API Health', () => {
 });
 ```
 
+## Search probe (fill query, submit, assert on results + latency budget)
+
+A search probe must type a query, submit it, and assert on returned results — not just status. Status-only search probes pass while search returns zero results.
+
+```typescript
+// probes/search.ts
+import { test, expect } from '@playwright/test';
+
+const PROD_URL = process.env.PRODUCTION_URL!;
+
+test.describe('Synthetic: Search', () => {
+  test.describe.configure({ timeout: 15_000, retries: 0 });
+
+  test('search returns relevant results within latency budget', async ({ page }) => {
+    await page.goto(`${PROD_URL}/search`);
+    const start = Date.now();
+
+    await page.getByRole('searchbox').fill('invoice');
+    await page.getByRole('button', { name: 'Search' }).click();
+
+    // Assert on results, not just on a 200 — a search page that returns
+    // zero results still returns 200.
+    const results = page.getByRole('listitem', { name: /result/i });
+    await expect(results.first()).toBeVisible({ timeout: 5_000 });
+    expect(await results.count()).toBeGreaterThan(0);
+
+    const duration = Date.now() - start;
+    expect(duration).toBeLessThan(2000); // 2 second search latency budget
+  });
+});
+```
+
 ## Environment-aware probe config
 
-Probes should adapt to the environment they run against without code changes.
+Probes should adapt to the environment they run against without code changes — `getProbeConfig()` returns a different baseUrl, credentials per environment, and thresholds (staging thresholds are looser than production) keyed off `PROBE_ENVIRONMENT`.
 
 ```typescript
 // probes/config.ts

@@ -5,12 +5,14 @@ description: >-
   generation. Normalizes CI logs, creates stable fingerprints, clusters near-duplicates,
   then uses LLM for severity classification and ticket writing. Includes bug reporting
   templates and severity/priority matrix. Use when: "bug triage," "classify bugs,"
-  "failure analysis," "auto-classify," "CI failures," "bug report," "defect template."
+  "failure analysis," "CI failures," "bug report," "defect template."
+  Not for: runtime self-healing of one flaky locator — use test-reliability. Not for:
+  designing new tests from production telemetry — use observability-driven-testing.
   Related: qa-metrics, qa-dashboard, ci-cd-integration, qa-project-context.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: ai-qa
 ---
 
@@ -20,13 +22,11 @@ A hybrid pipeline for bug classification, deduplication, and ticket generation. 
 **Key reframe:** The LLM is best at explaining and routing, not deduplication. Teach agents to DESIGN the pipeline, not BE the pipeline.
 </objective>
 
-**Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains tech stack, component mapping, and known flaky areas that improve classification accuracy.
-
 ---
 
 ## Discovery Questions
 
-Before building or using a triage pipeline, clarify:
+Check `.agents/qa-project-context.md` first — it carries tech stack, component mapping, and known flaky areas that improve classification accuracy. Use it and skip anything already answered there. Then clarify:
 
 1. **What is the failure source?**
    - CI pipeline logs (GitHub Actions, GitLab CI, Jenkins, CircleCI)
@@ -116,7 +116,7 @@ Strip noise that makes identical failures look different.
 2. Strip timestamps:              \d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}[.\d]*Z? → "<TIMESTAMP>"
 3. Strip UUIDs:                   [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12} → "<UUID>"
 4. Strip process IDs:             pid[=: ]\d+ → "pid=<PID>"
-5. Strip port numbers:            :\d{4,5}(?=[\s/]) → ":<PORT>"
+5. Strip port numbers:            :\d{4,5}(?=[\s/,)\]]|$) → ":<PORT>"
 6. Strip temp file paths:         /tmp/[^\s]+ → "<TMPPATH>"
 7. Strip memory addresses:        0x[0-9a-f]{8,16} → "<ADDR>"
 8. Strip random suffixes:         [-_][a-z0-9]{6,8}(?=\.) → "<RAND>"
@@ -132,6 +132,8 @@ Before: 2025-03-22T14:32:01.456Z [pid=42891] Error: Connection refused at 127.0.
 After:  <TIMESTAMP> [pid=<PID>] Error: Connection refused at 127.0.0.1:<PORT>
         <REQ_ID>
 ```
+
+Rule 5 strips the port but not the literal loopback IP — `127.0.0.1` stays in the fingerprint. That's fine for same-host failures, but two runners that bind different hosts (e.g. `127.0.0.1` vs `0.0.0.0`) will split into separate fingerprints. If you run heterogeneous hosts, add a rule to normalize bind addresses too.
 
 ### Step 2: Extract Stable Anchors
 
@@ -211,7 +213,15 @@ Exact fingerprint matching catches identical failures. Similarity scoring catche
 
 ### Step 5: LLM Classify
 
-After deterministic fingerprinting and clustering, use LLM to classify the failure. See `references/pipeline-prompts-and-integration.md` for the full LLM classification prompt (exception, message, stack frames, test name, CI context in; failure category, severity, component, root cause, confidence out).
+After deterministic fingerprinting and clustering, use the LLM to classify the failure. The prompt feeds in exception, message, top 5 stack frames, test name, and CI context, and asks for five fields:
+
+1. **Failure category** — `test bug | application bug | environment issue | flaky test | build failure`
+2. **Severity** — `critical | major | minor | trivial` (see the severity matrix below)
+3. **Component** — inferred from stack trace and file paths
+4. **Suspected root cause** — 1-2 sentence hypothesis
+5. **Confidence** — `high | medium | low`; when low, the LLM states what extra information would resolve it
+
+Route low-confidence classifications to human review rather than auto-acting. See `references/pipeline-prompts-and-integration.md` for the full prompt text and `references/classification-taxonomy.md` for the bug-category, severity, and component-mapping definitions the prompt should reference.
 
 **Failure categories (see references/ci-failure-analysis.md for detail):**
 
@@ -225,7 +235,16 @@ After deterministic fingerprinting and clustering, use LLM to classify the failu
 
 ### Step 6: LLM Generate Ticket
 
-Once classified, use LLM to generate a human-quality bug ticket. See `references/pipeline-prompts-and-integration.md` for the full ticket-generation prompt (takes the classification plus normalized error, log excerpt, and related cluster fingerprints; produces title, description, repro steps, evidence, labels, and suggested assignee).
+Once classified, use the LLM to generate a human-quality bug ticket. The prompt takes the classification plus the normalized error, a log excerpt, and related cluster fingerprints, and produces:
+
+- **Title** — concise, searchable, includes component name (under 80 chars)
+- **Description** — what happened, in plain language (never raw logs)
+- **Steps to reproduce** — derived from the test name and log context
+- **Evidence** — relevant log lines, assertion diffs, screenshots if available
+- **Suggested labels** — `[component, severity, failure-category, fingerprint]`
+- **Suggested assignee** — based on component ownership, if known
+
+The `fingerprint` belongs on the ticket (label and Fingerprint field) so future dedup can match. See `references/pipeline-prompts-and-integration.md` for the full prompt and the bug report template.
 
 ### Step 7: Human Approval
 
@@ -309,14 +328,14 @@ Before implementing the full pipeline, check whether a hosted platform already c
 |----------|--------|-------|
 | **Trunk Flaky Tests** | Fingerprinting, clustering, severity routing, native PR comments + webhooks | Dedicated Agents feature for triage; documented Quarantining workflow — the closest off-the-shelf analog to this skill's pipeline |
 | **CloudBees Smart Tests** | Fingerprinting, ML-based prioritization, Test Impact Analysis | Formerly **Launchable** — agents searching old docs may find the old name |
-| **Datadog Test Optimization** | Flaky Test Management (Auto Retries, Early Flake Detection, Failed Test Replay), Test Impact Analysis | Pairs with Datadog APM if you're already on Datadog |
+| **Datadog Test Optimization** | Flaky Test Management (Auto Retries, Early Flake Detection, Failed Test Replay), Test Impact Analysis | Bits AI Dev Agent now auto-generates fix PRs and Flaky Test Policies auto-quarantine-then-disable after 30 days; pairs with Datadog APM if you're already on Datadog |
 | **Sealights** | Quality intelligence and test-impact gating | Enterprise; strongest in regulated industries |
 
 Use the in-skill pipeline when (a) you need on-prem or air-gapped deployment, (b) your tracker integration is exotic, or (c) you want an explicit AI-prompt audit trail for compliance. Otherwise, buying is usually cheaper than rebuilding fingerprinting + clustering.
 
 ### Model selection cost note
 
-Use Sonnet 4.6 / Haiku 4.5 for classification (Step 5) — it's cheap and capable enough. Escalate to Opus 4.7 only when the cluster is novel, the failure is ambiguous, or the suggested root cause has low confidence. Burning Opus on every triage is wasteful.
+Use Sonnet 4.6 / Haiku 4.5 for classification (Step 5) — it's cheap and capable enough. Escalate to Opus 4.8 only when the cluster is novel, the failure is ambiguous, or the suggested root cause has low confidence. Burning Opus on every triage is wasteful.
 
 ---
 
@@ -348,7 +367,7 @@ Pasting 500 lines of raw CI output into a bug ticket. Normalize, extract relevan
 
 ### 7. Fingerprinting Without Normalization
 
-Hashing raw log lines produces unstable fingerprints that change every run. Normalization (Step 1) is mandatory before fingerprinting.
+Hashing raw log lines produces unstable fingerprints that change every run — the same failure gets a different fingerprint each time, so dedup never fires. Normalization is mandatory: always normalize before fingerprinting (Step 1), never fingerprint raw logs.
 
 ### 8. No Component Ownership Mapping
 
@@ -356,13 +375,27 @@ Classification without routing is useless. Maintain a component-to-team mapping 
 
 ---
 
+## Verification
+
+The fingerprinter is the load-bearing piece — prove it before trusting any dedup. Run the 5 stability assertions from `references/ci-failure-analysis.md` against your implementation:
+
+1. Same error, **different timestamps** → same fingerprint.
+2. Same error, **different PIDs and ports** → same fingerprint.
+3. Same error, **different line numbers** (code edited) → same fingerprint.
+4. **Different errors** (e.g. `TypeError` vs `RangeError`) → different fingerprints.
+5. Same exception type, **different message property** (`'name'` vs `'email'`) → different fingerprints.
+
+Tests 1-3 must collapse to one hash; tests 4-5 must produce distinct hashes. A failure here means normalization (Step 1) is leaking noise into the hash or stripping a stable anchor — fix that before tuning clustering. The clustering weights (0.30 / 0.25 / 0.25 / 0.10 / 0.10) must sum to 1.00.
+
+---
+
 ## Done When
 
-- Each triaged bug has severity, component, and root cause labels assigned
-- Duplicates merged or linked with references to the canonical ticket
-- CI failure analysis report generated summarizing failure categories and counts
-- Actionable tickets created for all P0 and P1 issues with assigned owners
-- Triage session findings summarized and shared with the team
+- Every failure in `failures.json` has non-null `severity`, `component`, and `category` fields.
+- The 5 fingerprint stability assertions above pass (tests 1-3 same hash, tests 4-5 distinct).
+- Duplicates are merged or linked, each pointing to the canonical ticket's fingerprint label.
+- Every P0/P1 ticket has an assignee set.
+- Auto-classification accuracy is measured and recorded (target > 85%; see `qa-metrics`).
 
 ---
 
@@ -370,7 +403,8 @@ Classification without routing is useless. Maintain a component-to-team mapping 
 
 - **`qa-metrics`** — Track triage accuracy, duplicate rates, mean time to classification, and defect escape rates.
 - **`ci-cd-integration`** — Pipeline configuration for running triage on test failures, parallel execution, and reporting.
-- **`test-reliability`** — Flaky test classification, quarantine management, and root cause analysis.
+- **`test-reliability`** — Runtime per-test healing and quarantine for a single flaky locator. Triage classifies failures; test-reliability fixes one test live.
+- **`observability-driven-testing`** — Goes the other direction: turns production telemetry into new test designs. Use it when prod errors should spawn tests, not tickets.
 - **`qa-project-context`** — Project context that improves classification accuracy: component map, known issues, ownership.
 - **`ai-test-generation`** — Generate regression tests from triaged bug reports.
 

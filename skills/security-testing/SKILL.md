@@ -1,234 +1,225 @@
 ---
 name: security-testing
 description: >-
-  Test application security against OWASP Top 10 vulnerabilities. Covers OWASP ZAP
-  integration, dependency scanning (Snyk/Dependabot), SAST with ESLint security
-  plugins, auth/session testing (JWT, OAuth), XSS/CSRF/SQLi patterns, and CI
-  integration for continuous security validation.
-  Use when: "security test," "OWASP," "vulnerability," "pen test," "ZAP," "XSS,"
-  "dependency scan," "auth testing."
-  Related: ci-cd-integration, compliance-testing, api-testing.
+  Test application security against OWASP Top 10 (2025) with automated CI tooling: OWASP ZAP
+  (DAST), dependency/supply-chain scanning (OSV-Scanner, SBOM, provenance), Semgrep SAST,
+  auth/session tests (JWT, OAuth, RBAC), and XSS/CSRF/SQLi/SSRF Playwright patterns.
+  Use when: "security test," "OWASP," "vulnerability," "ZAP," "XSS," "SSRF," "dependency scan,"
+  "auth testing." Scope is automated scanning + negative-path security tests in CI, not manual penetration testing.
+  Not for: mapping security controls to regulations (SOC 2, HIPAA, PCI, GDPR) — use compliance-testing;
+  pipeline stage wiring and deploy gating mechanics — use ci-cd-integration; purely functional API auth/input
+  tests with no attacker model — see api-testing.
+  Related: ci-cd-integration, compliance-testing, api-testing, shift-left-testing.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: automation
 ---
 
 <objective>
-Test application security systematically against known vulnerability classes with automated tooling integrated into CI.
+A login test that only checks the happy path passes while an expired JWT still grants admin, an
+IDOR lets user A read user B's orders, and a webhook field reaches `169.254.169.254`. This skill
+forces the negative-path checks — broken access control, injection, SSRF, auth bypass, supply-chain
+drift — into CI on every PR, layered across DAST, SCA, SAST, and custom Playwright tests so no single
+tool's blind spot ships. It produces runnable tests mapped to the OWASP Top 10 (2025) plus the CI
+gates that fail the build when a category regresses.
 </objective>
-
-**Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains auth mechanisms, compliance requirements, and infrastructure details that determine which security checks apply.
-
----
 
 ## Discovery Questions
 
-1. **Threat model:** Has the team identified key assets, threat actors, and attack surfaces? If not, start with a lightweight threat model before writing security tests.
-2. **Auth mechanism:** Session cookies, JWT, OAuth 2.0/OIDC, API keys, or multi-factor? Each has distinct test patterns.
-3. **Compliance requirements:** SOC 2, HIPAA, PCI DSS, GDPR? These mandate specific security controls that must be validated.
-4. **Existing security tooling:** Already running Snyk, Dependabot, SonarQube, or ZAP? Check CI config for existing security stages.
-5. **API surface:** REST, GraphQL, gRPC? Each protocol has specific injection and authorization vulnerabilities.
-6. **Deployment model:** Cloud (AWS/GCP/Azure), containers, serverless? Infrastructure misconfigurations are OWASP #5.
+Check `.agents/qa-project-context.md` first — if it exists, use it and skip anything already answered there (auth mechanism, compliance requirements, infrastructure). Then:
+
+1. **Threat model:** Has the team identified key assets, threat actors, and attack surfaces? If not, do a lightweight threat model before writing tests — it tells you which categories matter most.
+2. **Auth mechanism:** Session cookies, JWT, OAuth 2.0/OIDC, API keys, or MFA? Each has distinct negative-path tests (alg confusion, session fixation, state tampering).
+3. **Compliance requirements:** SOC 2, HIPAA, PCI DSS, GDPR? These mandate specific controls — map them with `compliance-testing`; this skill only proves the controls behave.
+4. **Existing security tooling:** Already running OSV-Scanner, Snyk, Dependabot, Semgrep, or ZAP? Check CI config for existing security stages before adding duplicates.
+5. **API surface:** REST, GraphQL, gRPC? Each protocol has specific injection and authorization vectors.
+6. **Deployment model:** Cloud (AWS/GCP/Azure), containers, serverless? Cloud-metadata endpoints are prime SSRF targets and misconfiguration is A02.
 
 ---
 
 ## Core Principles
 
-1. **Security is a mindset, not a phase.** Security testing is continuous. It runs in CI on every PR, not as a quarterly penetration test.
+1. **Security is continuous, not a phase.** Scans run in CI on every PR, not as a quarterly penetration test. A vulnerability caught on the PR that introduced it costs minutes; the same vulnerability found in prod costs an incident.
 
-2. **OWASP Top 10 is the minimum.** It covers the most common and impactful vulnerability classes. It is not exhaustive -- domain-specific threats (healthcare data, financial transactions) require additional analysis.
+2. **OWASP Top 10 is the floor, not the ceiling.** It covers the most common impactful classes. Domain-specific threats (healthcare data, financial transactions, multi-tenant isolation) need their own analysis on top.
 
-3. **Shift-left security.** Catch vulnerabilities at the earliest possible stage: SAST in the IDE, dependency scanning on commit, DAST in staging, penetration testing before release.
+3. **Defense in depth — no single tool catches everything.** ZAP misses auth-logic bugs, SCA misses your custom code, Semgrep misses runtime issues. Layer DAST + SCA + SAST + auth tests + secret scanning. When one layer's blind spot is another layer's coverage, a regression has to beat all of them.
 
-4. **Defense in depth.** No single tool catches everything. Layer SAST + dependency scanning + DAST + auth testing + secret scanning for comprehensive coverage.
+4. **Shift-left.** Catch each class at the earliest stage: SAST and secret scanning on commit, dependency/supply-chain checks on the PR, DAST in staging, custom auth tests on every run. See `shift-left-testing` for the dev-QA workflow this rides on.
 
-5. **Continuous dependency scanning.** 80%+ of application code is third-party. Known vulnerabilities in dependencies are the lowest-effort attack vector. Scan on every build.
+5. **Test the attacker, not the user.** Happy-path auth proves login works. Security tests prove logout invalidates the session, an expired token is rejected, role escalation fails, and a malformed payload fails closed. The negative path IS the test.
 
 ---
 
 ## OWASP Top 10 (2025) Testing Checklist
 
-The 2025 list re-orders categories and introduces two new ones. Major changes from 2021:
+The 2025 list (final, owasp.org/Top10/2025/) re-orders categories and introduces two new ones. Changes from 2021:
 
-- **A03 Software Supply Chain Failures** is new (replaces "Vulnerable and Outdated Components"; broadens to provenance, build pipeline trust, SBOM).
+- **A03 Software Supply Chain Failures** is new (replaces "Vulnerable and Outdated Components"; broadens to provenance, build-pipeline trust, SBOM).
 - **A10 Mishandling of Exceptional Conditions** is new. SSRF is no longer standalone — its tests now sit under A01 (access control) and A06 (insecure design).
 - **A02 Security Misconfiguration** moved up from A05.
 - **A07 Authentication Failures** — name shortened (drops "Identification and").
-- **A09 Security Logging and Alerting Failures** — name updated (was "Logging and Monitoring").
-
-Source: https://owasp.org/Top10/2025/
+- **A09 Security Logging and Alerting Failures** — renamed (was "Logging and Monitoring").
 
 For runnable test code per category, see `references/owasp-tests.md`.
 
 ### A01: Broken Access Control
 
-The #1 vulnerability. Users can act outside their intended permissions. SSRF (server-side request forgery) is now treated as an access-control failure when the server is induced to access internal resources on behalf of an attacker.
+The #1 vulnerability. Users act outside intended permissions. SSRF is now an access-control failure when the server is induced to reach internal resources for an attacker.
 
-**What to test:**
-- Insecure Direct Object References (IDOR): change resource IDs in URLs/API calls to access other users' data
-- Missing function-level access control: access admin endpoints as a regular user
-- Path traversal: `../../etc/passwd` in file parameters
-- CORS misconfiguration: can a malicious origin make authenticated requests?
-- SSRF: user-supplied URLs reaching internal networks, cloud metadata endpoints, or `file://` schemes
+**What to test:** IDOR (change resource IDs to reach other users' data), missing function-level access control (admin endpoints as a regular user), path traversal (`../../etc/passwd`), CORS misconfiguration, SSRF (user URLs reaching internal networks, cloud-metadata endpoints, `file://`).
 
 ### A02: Security Misconfiguration
 
-Default credentials, unnecessary features enabled, overly verbose errors. Promoted from A05 in 2021 — misconfigurations remain the easiest way for attackers to walk in.
+Default credentials, unnecessary features, verbose errors. Promoted from A05 — still the easiest way in.
 
-**What to test:**
-- Debug/stack traces disabled in production
-- Default credentials changed
-- Unnecessary HTTP methods disabled
-- Directory listing disabled
-- Admin panels not publicly accessible
-- Cloud storage buckets not publicly readable/writable
+**What to test:** stack traces disabled in prod, default credentials changed, unnecessary HTTP methods (e.g. TRACE) disabled, directory listing off, admin panels not public, cloud buckets not public.
 
 ### A03: Software Supply Chain Failures
 
-New in 2025. Goes beyond "outdated dependencies" to cover provenance, build pipeline integrity, and the supply chain end-to-end.
+New in 2025. Beyond "outdated dependencies" — provenance, build-pipeline integrity, the supply chain end-to-end.
 
-**What to test:**
-- Lockfile integrity: `package-lock.json` / `pnpm-lock.yaml` / `requirements.txt` is committed and CI installs from it (`npm ci`, not `npm install`)
-- SBOM generated and stored as a build artifact (Syft, `actions/dependency-review-action`)
-- Provenance attestation produced for built artifacts (SLSA v1.0 levels 2/3, signed with `cosign` / Sigstore)
-- Dependency review on every PR (blocks new high-severity vulnerabilities entering the lockfile)
-- CI/CD pipeline secrets not exposed to forks or untrusted code paths
-- Self-hosted runners not running untrusted PR code without job-level isolation
+**What to test:** lockfile committed and CI installs from it (`npm ci`, never `npm install`); SBOM generated and stored as a build artifact (Syft / `anchore/sbom-action`); provenance attestation for built artifacts (SLSA v1.0 L2/3, signed via `cosign` / `actions/attest-build-provenance`); dependency review on every PR; CI secrets not exposed to forks; self-hosted runners isolated from untrusted PR code.
 
-See `references/owasp-tests.md` for the dependency-review/SBOM/provenance workflow and lockfile-drift check.
+See `references/owasp-tests.md` for the dependency-review / SBOM / provenance workflow and the lockfile-drift check.
 
 ### A04: Cryptographic Failures
 
-Sensitive data exposed due to weak or missing encryption.
+Sensitive data exposed via weak or missing encryption.
 
-**What to test:**
-- Data in transit: TLS version, cipher suites, HSTS header
-- Data at rest: passwords hashed with bcrypt/argon2 (not MD5/SHA1)
-- Sensitive data in URLs, logs, or error messages
-- Cookies missing `Secure`, `HttpOnly`, `SameSite` flags
+**What to test:** TLS version / cipher suites / HSTS; passwords hashed with bcrypt/argon2 (not MD5/SHA1); no sensitive data in URLs, logs, or errors; cookies carry `Secure`, `HttpOnly`, `SameSite`; security headers present (HSTS, `X-Content-Type-Options: nosniff`, `X-Frame-Options`).
 
 ### A05: Injection
 
-Untrusted data sent to an interpreter as part of a command or query.
+Untrusted data sent to an interpreter.
 
-**What to test:**
-- SQL injection in query parameters, form fields, headers
-- XSS (reflected, stored, DOM-based) in user-generated content
-- CSRF on state-changing operations
-- Command injection in file names, search queries, webhook URLs
+**What to test:** SQL injection in params/fields/headers; XSS (reflected, stored, DOM) in user content; CSRF on state-changing operations; command injection in filenames, search queries, webhook URLs.
 
 ### A06: Insecure Design
 
-Flawed architecture that cannot be fixed by implementation alone. Includes design-level vectors for SSRF (URL-accepting features without an allow-list), credential stuffing without rate limits, and business-logic abuse.
+Flawed architecture implementation alone can't fix. Includes design-level SSRF (URL-accepting features without an allow-list), credential stuffing without rate limits, business-logic abuse.
 
-**What to test:** Rate limiting on auth endpoints (fire 15 concurrent login attempts, expect 429), business logic abuse (negative quantities, coupon stacking), missing account lockout after failed attempts, allow-list architecture for any feature that fetches a user-supplied URL.
+**What to test:** rate limiting on auth endpoints (fire 15 concurrent login attempts, expect a `429` in the responses); business-logic abuse (negative quantities, coupon stacking); account lockout after failed attempts; allow-list architecture for any feature that fetches a user-supplied URL.
 
 ### A07: Authentication Failures
 
-Broken authentication, weak passwords, credential stuffing. See `references/auth-tests.md`.
+Broken authentication, weak passwords, credential stuffing. Session rotation after login, expired/`alg:none` JWT rejection, RBAC matrix, OAuth state tampering. See `references/auth-tests.md`.
 
 ### A08: Software or Data Integrity Failures
 
-Unsigned updates, insecure deserialization, untrusted CI/CD pipelines.
+Unsigned updates, insecure deserialization, untrusted CI/CD.
 
-**What to test:**
-- Subresource Integrity (SRI) on CDN scripts
-- Content Security Policy headers
+**What to test:** Subresource Integrity (SRI) on CDN scripts; Content-Security-Policy header present and free of `'unsafe-inline'` / `'unsafe-eval'`.
 
 ### A09: Security Logging and Alerting Failures
 
-Insufficient logging *and* missing alerts on the events that are logged. Renamed in 2025 to emphasize that logs without alerts are evidence after the fact, not detection.
+Insufficient logging *and* missing alerts on what is logged. Renamed in 2025 to stress that logs without alerts are after-the-fact evidence, not detection.
 
-**What to test:**
-- Failed login attempts are logged AND trigger an alert when above threshold
-- Admin actions are audit-logged AND alert on out-of-hours admin events
-- Logs do not contain sensitive data (passwords, tokens, PII)
-- Alert pipeline is itself monitored (alerts about absent alerts)
+**What to test:** failed logins logged AND alerting above threshold; admin actions audit-logged AND alerting on out-of-hours events; logs free of secrets/PII; the alert pipeline itself monitored.
 
 ### A10: Mishandling of Exceptional Conditions
 
-New in 2025. Errors and unexpected states are an attack surface — fail-open defaults, uncaught exceptions leaking internals, race conditions in error paths, and security checks that get skipped when "something went wrong."
+New in 2025. Errors and unexpected states are an attack surface — fail-open defaults, uncaught exceptions leaking internals, race conditions in error paths, security checks skipped when "something went wrong."
 
-**What to test:**
-- Error responses do not leak stack traces, framework names, or DB schema
-- Auth failures fail closed (deny by default), not open
-- Timeouts and partial failures do not bypass authorization checks
-- Resource cleanup happens on every error path (locks released, transactions rolled back)
-- Fuzzing: send malformed payloads to every endpoint and verify responses stay within the documented error contract
+**What to test:** error responses leak no stack traces / framework names / DB schema; auth fails closed (deny by default); timeouts and partial failures never bypass authorization; resource cleanup on every error path; fuzz every endpoint and verify responses stay within the documented error contract.
 
 ---
 
 ## Automated Security Scanning
 
-A complete pipeline layers DAST, dependency scanning, SAST, and secret scanning. Tooling config and CI workflows are in `references/scanning-and-ci.md`.
+A complete pipeline layers DAST, dependency/supply-chain scanning, SAST, and secret scanning. Config and CI workflows are in `references/scanning-and-ci.md`.
 
-- **OWASP ZAP (DAST):** baseline scan against staging on every PR; `zap-api-scan.py` for APIs. ZAP MCP Server (2026) lets coding agents drive "scan the diff" workflows.
-- **Dependency scanning:** `npm audit --audit-level=high` + Snyk + Dependabot.
-- **SAST:** `eslint-plugin-security` + `eslint-plugin-no-unsanitized`; Semgrep for deeper multi-language analysis (`p/owasp-top-ten`).
+- **OWASP ZAP (DAST):** baseline scan against staging on every PR; `zap-api-scan.py` for APIs. ZAP 2.17.0 is current (weekly `w2026-MM-DD` Docker tags). The **ZAP MCP Server (April 2026)** lets coding agents drive spider/active-scan/alert-analysis for "scan the diff" workflows.
+- **Dependency / supply-chain:** **OSV-Scanner is the default gate** — multi-language and exits non-zero on any vuln. Add SBOM (Syft) + provenance (`cosign` / `attest-build-provenance`) for A03. `npm audit --audit-level=high` is a noisy semver-only quick check, not the gate (it won't flag non-strict-semver versions and doesn't reliably exit non-zero).
+- **SAST:** **Semgrep `p/owasp-top-ten` is the SAST gate.** `eslint-plugin-security` is a weak secondary signal — see the note below; keep it as a lint-time nudge, not coverage.
 - **Secret scanning:** TruffleHog with `--only-verified` in CI; `git-secrets` pre-commit.
+
+**Avoid relying on `eslint-plugin-security` as your SAST gate** — as of mid-2026 it ships ~13 rules, has had no meaningful rule growth since 2020, and benchmarks put its miss rate near 90% of detectable vulnerabilities. Its 4.0.0 release is flat-config-compatible so the config runs, but layer it *under* Semgrep, never instead of it.
+
+**ESLint 10 (Feb 2026) removed `.eslintrc` entirely** — only flat config (`eslint.config.js`) works. Any `.eslintrc.*` security config is dead on ESLint 10; use it only for repos pinned to ESLint 8. See `references/scanning-and-ci.md` for both blocks.
 
 ---
 
 ## Auth Testing Patterns
 
-Session management, JWT (expiry, `alg: none` confusion), and RBAC matrix tests. Full code in `references/auth-tests.md`. Also test session rotation after login, JWT signed with the wrong key, and OAuth state-parameter tampering.
+Session management, JWT (expiry, `alg: none` confusion, wrong-key signing), and RBAC matrix tests. Full code in `references/auth-tests.md`. Also test session rotation after login (session fixation) and OAuth state-parameter tampering.
 
 ---
 
 ## CI Integration
 
-A complete security pipeline has five layers, each as a CI step:
+A complete security pipeline has five layers, each a CI step:
 
-1. **Secret scanning** -- TruffleHog with `--only-verified`
-2. **Dependency check** -- `npm audit --audit-level=high`
-3. **SAST** -- ESLint security plugins against source
-4. **DAST** -- ZAP baseline scan against staging URL
-5. **Custom auth tests** -- `npx playwright test --project=security`
+1. **Secret scanning** — TruffleHog with `--only-verified`
+2. **Dependency check** — OSV-Scanner (fails on any vuln); SBOM + provenance for A03
+3. **SAST** — Semgrep `p/owasp-top-ten` as the gate; ESLint security plugins as a weak secondary
+4. **DAST** — ZAP baseline scan against staging URL
+5. **Custom auth tests** — `npx playwright test --project=security`
 
-### Security as PR Gate
-
-Block merges when `npm audit --json` reports high/critical vulnerabilities. Parse the JSON output and fail the step with `exit 1` if count > 0. See `references/scanning-and-ci.md` for the full pipeline.
+**Security as PR gate:** OSV-Scanner exits non-zero on any vulnerability and gates the merge directly. If you gate on `npm audit` instead, parse `npm audit --json` and `exit 1` when high/critical count > 0 — `npm audit` does not reliably exit non-zero on its own. See `references/scanning-and-ci.md` for the runnable gate.
 
 ---
 
 ## Anti-Patterns
 
-**Security testing only before release.** Vulnerabilities found late are expensive to fix. Run security scans on every PR, not quarterly.
+**Security testing only before release.** Late findings are expensive. Scan every PR, not quarterly.
 
-**Relying on a single tool.** ZAP misses auth logic bugs. Snyk misses custom code vulnerabilities. ESLint misses runtime issues. Layer multiple tools for defense in depth.
+**Relying on a single tool.** ZAP misses auth-logic bugs; SCA misses custom code; ESLint misses runtime issues. Layer multiple tools.
 
-**Ignoring npm audit warnings.** "We'll fix it later" becomes a backlog of known vulnerabilities. Treat high/critical dependency vulnerabilities as build failures.
+**Treating a near-dead linter as SAST coverage.** `eslint-plugin-security` alone catches almost nothing (~13 rules, 2020-era detection). Gate on Semgrep `p/owasp-top-ten`; keep the linter as a nudge.
 
-**Testing only happy-path auth.** Login works -- great. Does logout actually invalidate the session? Can an expired token still access resources? Does role escalation work?
+**Ignoring dependency warnings.** "Fix it later" becomes a backlog of known CVEs. Fail the build on high/critical via OSV-Scanner.
 
-**Hardcoding secrets in test files.** Security tests that contain real API keys or passwords are themselves a vulnerability. Use environment variables and CI secrets.
+**Testing only happy-path auth.** Login works — fine. Does logout invalidate the session? Can an expired token still access resources? Does role escalation work?
 
-**Skipping SSRF testing.** Any feature that accepts a URL (webhooks, image uploads, imports) is an SSRF vector. Test with internal network addresses.
+**Hardcoding secrets in test files.** Tests holding real keys are themselves a vulnerability. Use env vars and CI secrets.
 
-**Testing only known payloads.** The XSS and SQLi payloads in the references are examples, not an exhaustive list. Use tools like ZAP that maintain current payload databases.
+**Skipping SSRF testing.** Any URL-accepting feature (webhooks, image uploads, imports) is an SSRF vector. Test internal addresses and cloud-metadata endpoints.
+
+**Asserting a single status where several are valid.** SSRF/CSRF/exceptional-condition tests have a set of acceptable codes. Use `expect([400, 403, 422]).toContain(response.status())` — `toBeOneOf` is not a built-in matcher and throws at runtime.
+
+**Testing only known payloads.** The XSS/SQLi payloads in the references are examples, not exhaustive. Use ZAP's maintained payload database for breadth.
+
+---
+
+## Verification
+
+Prove the assertions actually fire — a security suite that passes vacuously (wrong URL, matcher never reached) is worse than none.
+
+1. **Point one negative-path test at a deliberately vulnerable target** and confirm it FAILS. Run a known-vulnerable app such as OWASP Juice Shop locally:
+   ```bash
+   docker run --rm -p 3000:3000 bkimminich/juice-shop
+   BASE_URL=http://localhost:3000 npx playwright test --project=security
+   ```
+   The IDOR / injection / missing-header tests should report failures. If everything is green against Juice Shop, your assertions aren't reaching the app — fix selectors/URLs before trusting a green run against your own staging.
+2. **Confirm the matcher form runs.** `grep -r "toBeOneOf" tests/` must return nothing — every acceptable-set assertion uses `expect([...]).toContain(...)`.
+3. **Confirm the gate fails on a planted vuln.** Add a known-vulnerable dependency, run the OSV-Scanner step, and verify the job exits non-zero. Remove it after.
 
 ---
 
 ## Done When
 
-- OWASP Top 10 checklist reviewed against the application and each item marked as tested, mitigated, or accepted risk with justification.
-- ZAP passive scan run against the staging environment with all findings triaged (critical/high addressed, medium/low tracked in backlog).
-- Dependency scanning enabled on the repository via Snyk or Dependabot, with high/critical vulnerabilities treated as build failures.
-- SAST lint rules (ESLint security plugin or Semgrep) enabled in CI and producing zero unresolved errors on the main branch.
-- Auth and session edge cases explicitly tested: CSRF protection, token expiry rejection, session invalidation on logout, and role escalation prevention.
-
-## Reference Files (in `references/`)
-
-- **owasp-tests.md** — Runnable test code for OWASP A01–A10 (IDOR, SSRF, injection, crypto, supply chain, exceptional conditions).
-- **scanning-and-ci.md** — ZAP, dependency, SAST, secret-scanning tooling config and the five-layer CI pipeline.
-- **auth-tests.md** — Session, JWT, and RBAC test patterns for A07.
+- A committed `owasp-coverage.md` (or a CI job asserting it) maps every OWASP 2025 category to at least one tagged test, or to a recorded "mitigated / accepted risk" entry with justification — no category is silently absent.
+- OSV-Scanner (or equivalent) runs in CI and the job exits non-zero on high/critical vulnerabilities — verified by the planted-vuln check in Verification.
+- Semgrep `p/owasp-top-ten` runs in CI and reports zero unresolved findings on the main branch (ESLint security plugins may run as a secondary, non-gating signal).
+- ZAP baseline scan runs against staging and uploads its report as a CI artifact on every run (`if: always()`).
+- The security Playwright project (`--project=security`) exits 0 against staging AND produces failures when pointed at OWASP Juice Shop (proves assertions fire).
+- Auth/session edge cases each have a passing test: CSRF rejection, expired-token rejection, `alg:none` rejection, session invalidation on logout, RBAC role-escalation prevention.
+- No real secrets in test files (`grep` / TruffleHog clean).
 
 ## Related Skills
 
-- **ci-cd-integration** -- Pipeline stages for security scanning, gating deployments on security results.
-- **compliance-testing** -- Mapping security tests to regulatory requirements (SOC 2, HIPAA, PCI).
-- **api-testing** -- API-specific security patterns: auth header validation, input sanitization, rate limiting.
-- **test-environments** -- Secure test environment configuration, secret management, network isolation.
-- **database-testing** -- Data integrity validation, access control at the database level.
+- **ci-cd-integration** — pipeline stage wiring and deploy gating mechanics; go there for *how* to run these steps, here for *what* they assert.
+- **compliance-testing** — mapping security controls to regulations (SOC 2, HIPAA, PCI, GDPR); this skill proves the controls work, that one proves you have the right ones.
+- **api-testing** — functional REST/GraphQL auth, input, and rate-limit tests without an attacker model; go there when there's no threat being simulated.
+- **shift-left-testing** — the dev-QA workflow, TDD, and definition-of-done that the shift-left principle here rides on.
+- **test-environments** — secure test-environment config, secret management, network isolation.
+- **database-testing** — data integrity and access control at the database level.
+
+## Reference Files (in `references/`)
+
+- **owasp-tests.md** — runnable Playwright code for OWASP A01–A10 (IDOR, SSRF, injection, crypto, security headers, rate-limiting, supply-chain SBOM/provenance, exceptional conditions), plus the acceptable-status-set matcher note.
+- **scanning-and-ci.md** — ZAP, OSV-Scanner/Snyk, Semgrep + ESLint flat-config SAST, secret scanning, and the five-layer CI pipeline with the runnable dependency gate.
+- **auth-tests.md** — session, JWT (`alg:none`, expiry), and RBAC matrix tests for A07.

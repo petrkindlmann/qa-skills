@@ -413,7 +413,7 @@ When automated repair is attempted, score the repair confidence to determine the
 
 | Dimension | Weight | How to Measure |
 |-----------|--------|---------------|
-| **Match specificity** | 0.30 | How specific is the replacement locator? (testId=1.0, role=0.9, text=0.7, CSS=0.3) |
+| **Match specificity** | 0.30 | How specific is the replacement locator? (testId=1.0, role=0.9, text=0.7, context=0.5, CSS=0.3) |
 | **Element visibility** | 0.15 | Is the replacement element visible on the page? |
 | **Container match** | 0.15 | Is it in the same parent container as the original? |
 | **Element type match** | 0.15 | Same HTML tag and ARIA role? |
@@ -422,13 +422,14 @@ When automated repair is attempted, score the repair confidence to determine the
 
 ### Score Interpretation
 
-| Score | Interpretation | Action |
-|-------|---------------|--------|
-| 0.90 - 1.00 | Very high confidence | Auto-apply, log for batch review |
-| 0.80 - 0.89 | High confidence | Auto-apply in quarantine, flag for individual review |
-| 0.70 - 0.79 | Moderate confidence | Do not auto-apply, create PR with evidence for review |
-| 0.50 - 0.69 | Low confidence | Do not apply, create investigation ticket |
-| Below 0.50 | Very low confidence | Discard candidate, manual investigation required |
+Half-open bands — 0.9 belongs to the auto-apply tier only. These four bands are identical to the thresholds in `SKILL.md` (Observable Repair Workflow → Confidence Scoring); keep all three locations in sync if you edit them.
+
+| Score | Confidence | Action |
+|-------|-----------|--------|
+| >= 0.90 | Very high | Auto-apply, log for batch review |
+| 0.70 - 0.89 | High | Apply in quarantine, flag for individual review |
+| 0.50 - 0.69 | Low | Do not apply; open a PR with evidence for review |
+| < 0.50 | Very low | Discard candidate, manual investigation required |
 
 ### Examples
 

@@ -11,18 +11,18 @@ appium driver install uiautomator2   # Android
 appium driver install xcuitest       # iOS
 
 # Verify installation
-appium --version       # >= 3.4.x
+appium --version       # 3.x current stable line
 appium driver list --installed
 ```
 
 ## Capabilities (W3C Format)
 
 ```typescript
-// Android capabilities — bump to current device + OS for new matrices
+// Android capabilities — P0 baseline; bump to current device + OS for new matrices
 const androidCaps: Record<string, unknown> = {
   platformName: 'Android',
   'appium:automationName': 'UiAutomator2',
-  'appium:deviceName': 'Pixel 9', // iPhone 17 / Pixel 9 / Galaxy S25 are current 2026 baselines
+  'appium:deviceName': 'Pixel 9', // Pixel 9 / Galaxy S24 are current P0 baselines
   'appium:platformVersion': '15',
   'appium:app': '/path/to/app.apk',
   'appium:autoGrantPermissions': true,
@@ -30,19 +30,19 @@ const androidCaps: Record<string, unknown> = {
   'appium:noReset': false,
 };
 
-// iOS capabilities — bump to current device + OS for new matrices
+// iOS capabilities — P0 baseline; bump to current device + OS for new matrices
 const iosCaps: Record<string, unknown> = {
   platformName: 'iOS',
   'appium:automationName': 'XCUITest',
-  'appium:deviceName': 'iPhone 17 Pro',
-  'appium:platformVersion': '19',
+  'appium:deviceName': 'iPhone 15 Pro',
+  'appium:platformVersion': '17',
   'appium:app': '/path/to/app.ipa',
   'appium:autoAcceptAlerts': false,  // Handle alerts explicitly
   'appium:newCommandTimeout': 300,
 };
 
 // Older devices still belong in the matrix when analytics show the long tail —
-// e.g. iPhone 15 Pro / iOS 17, Pixel 7 / Android 14. Tier them P1/P2.
+// e.g. iPhone 14 / iOS 16, Pixel 7 / Android 14. Tier them P1/P2.
 ```
 
 ## Element Location Strategies
@@ -95,3 +95,24 @@ await driver.execute('mobile: doubleClickGesture', {
   elementId: imageElement.elementId,
 });
 ```
+
+## Platform Guard
+
+Shell commands, selector strategies, and some device APIs exist on only one platform. Branch on `platformName` before issuing them, or the test fails silently on the other OS. The airplane-mode `cmd connectivity` subcommand, for example, exists only on newer Android and not on iOS at all.
+
+```typescript
+const platform = driver.capabilities.platformName; // 'Android' | 'iOS'
+
+if (platform === 'Android') {
+  // Newer Android: cmd connectivity subcommand.
+  await driver.execute('mobile: shell', { command: 'cmd connectivity airplane-mode enable' });
+  // Older Android fallback if cmd connectivity is unavailable:
+  //   settings put global airplane_mode_on 1
+  //   am broadcast -a android.intent.action.AIRPLANE_MODE --ez state true
+} else {
+  // iOS has no airplane-mode shell. Drive offline via the device-farm network
+  // profile (e.g. BrowserStack 'no-network') or the iOS Network Link Conditioner.
+}
+```
+
+See `mobile-patterns.md` for the full offline test flow built on this guard.

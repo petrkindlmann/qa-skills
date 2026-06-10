@@ -2,6 +2,8 @@
 
 Runnable Playwright patterns for AI Act obligations. The phase timeline and test-approach table live in `SKILL.md`; this file holds the implementations. For LLM-specific evaluation (hallucination, jailbreak resistance, prompt-injection), see the `ai-system-testing` skill.
 
+> **Currency (June 2026):** the Digital Omnibus (Nov 2025 proposal, 7 May 2026 provisional agreement) postponed high-risk obligations — Annex III use-case systems to **2 Dec 2027**, Annex I product-regulated systems to **2 Aug 2028**. What is still live on **2 Aug 2026** is **Article 50 transparency** (the disclosure test below). The machine-readable marking/watermark obligation for systems already on the market gets a grace period to **2 Dec 2026** (compressed from six to three months by the Omnibus). So write the Article 50 disclosure test now; defer high-risk risk-management/human-oversight UI tests until the Annex III obligations land.
+
 ```typescript
 // Article 50 — verify AI-generated content carries disclosure
 test('AI-generated responses carry transparency disclosure', async ({ page }) => {

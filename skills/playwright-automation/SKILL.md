@@ -3,163 +3,49 @@ name: playwright-automation
 description: >-
   Write production-grade Playwright tests in TypeScript: Page Object Model,
   fixtures, auto-waiting, user-facing locators, parallel execution, CI
-  integration, visual testing, accessibility. Includes explicit "do not" list
-  for AI agents and 2025-2026 feature awareness. Use when: "Playwright," "write
-  E2E test," "page object," "browser test setup," "new Playwright suite." Not
-  for: fixing individual flaky tests at runtime — use `test-reliability`. Not
-  for: bulk regenerating selectors after a UI refactor — use
-  `selector-drift-recovery`.
+  integration, sharding, and 2025-2026 feature awareness. Includes an explicit
+  "do not" list for AI agents.
+  Use when: "Playwright," "write E2E test," "page object," "new Playwright suite,"
+  "Playwright config."
+  Not for: fixing one flaky test at runtime — use test-reliability. Not for: bulk
+  regenerating selectors after a UI refactor — use selector-drift-recovery. Not for:
+  visual baseline creation/management — use visual-testing. Not for: deep WCAG/axe
+  audits — use accessibility-testing.
   Related: visual-testing, ci-cd-integration, api-testing, test-reliability, selector-drift-recovery, accessibility-testing.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: automation
 ---
 
 <objective>
-How an expert agent writes stable, maintainable, production-grade Playwright tests in TypeScript.
+How an expert agent writes stable, maintainable, production-grade Playwright tests in TypeScript. The failure this prevents: AI agents reflexively reach for the three patterns that produce suites which pass once and flake forever — never use `waitForTimeout`, never default to CSS selectors, and avoid the legacy `page.click()` family. This skill encodes the auto-waiting, user-facing-locator, fixture-based discipline that makes a suite survive a refactor.
 </objective>
 
 ## Discovery Questions
 
-Before generating any code, ask:
+Check `.agents/qa-project-context.md` first — if it exists, use it and skip any question answered there. Then ask only what's missing:
 
-1. **TypeScript or JavaScript?** TypeScript is strongly recommended. It catches locator and assertion mistakes at compile time, and every example in this skill assumes TypeScript.
-2. **Which browsers?** Chromium for local dev. Add Firefox and WebKit in CI. Mobile viewports are separate Playwright projects, not separate test files.
-3. **Existing suite or fresh start?** If migrating from Cypress or Selenium, start by rewriting the flakiest tests first. Do not attempt a big-bang rewrite.
-4. **Single site or multi-site?** Multi-site architectures need shared fixtures and per-site config objects. See `references/multi-site-architecture.md`.
+1. **TypeScript or JavaScript?** TypeScript is strongly recommended — it catches locator and assertion mistakes at compile time, and every example here assumes it.
+2. **Which browsers?** Chromium for local dev; add Firefox and WebKit in CI. Mobile viewports are separate Playwright projects, not separate test files — they change the device descriptor.
+3. **Existing suite or fresh start?** Migrating from Cypress/Selenium, rewrite the flakiest tests first; never big-bang. Changes the sequencing entirely.
+4. **Single site or multi-site?** Multi-site needs shared fixtures and per-site config objects — see `references/multi-site-architecture.md`.
 
 ---
 
 ## Core Principles
 
 1. **User-facing locators first.** `getByRole` > `getByLabel` > `getByTestId` > CSS (last resort). Locators must reflect what the user sees, not how the DOM is structured. See `references/selector-strategies.md`.
-2. **Auto-waiting -- NEVER use `waitForTimeout`.** Every Playwright action and web-first assertion auto-waits. If you think you need a timeout, you need a better locator or assertion.
+2. **Auto-waiting — NEVER use `waitForTimeout`.** Every Playwright action and web-first assertion auto-waits. If you think you need a timeout, you need a better locator or assertion.
 3. **Test isolation.** Each test gets a fresh `BrowserContext`. Tests must never depend on other tests' state or execution order.
-4. **Parallel by default, serial only when necessary.** Use `fullyParallel: true` in config. Reserve `test.describe.serial` for flows that genuinely cannot be isolated (rare).
-5. **Fixtures for setup, not hooks.** Fixtures compose, provide type safety, and automatically tear down. Prefer them over `beforeEach`/`afterEach` for anything non-trivial. See `references/fixtures-and-projects.md`.
+4. **Parallel by default, serial only when necessary.** Use `fullyParallel: true`. Reserve `test.describe.serial` for flows that genuinely cannot be isolated (rare).
+5. **Fixtures for setup, not hooks.** Fixtures compose, provide type safety, and tear down automatically. Prefer them over `beforeEach`/`afterEach` for anything non-trivial. See `references/fixtures-and-projects.md`.
 
 > **Calibrate to your team maturity** (set `team_maturity` in `.agents/qa-project-context.md`):
-> - **startup** — Chromium only, 5–10 critical path tests, basic CI run on PR. Skip sharding and visual testing until the suite is stable.
-> - **growing** — Multi-browser (Chromium + Firefox), POM structure, parallel execution, CI with sharding, HTML report artifacts.
+> - **startup** — Chromium only, 5–10 critical-path tests, basic CI run on PR. Skip sharding and visual baselines until the suite is stable.
+> - **growing** — Chromium + Firefox, POM structure, parallel execution, sharding in CI, HTML report artifacts.
 > - **established** — Full browser matrix, auth fixtures, API mocking layer, visual regression baseline, trace-on-failure, flakiness tracking.
-
----
-
-## Common AI Agent Mistakes
-
-**Do not generate code that matches any of these patterns.**
-
-### 1. Never use `waitForTimeout()` as synchronization
-
-**Why it is wrong:** Arbitrary waits are slow on fast machines and flaky on slow ones. They hide the real condition you are waiting for.
-
-```typescript
-// BAD
-await page.waitForTimeout(2000);
-await page.click('#submit');
-
-// GOOD
-await page.getByRole('button', { name: 'Submit' }).click(); // auto-waits
-```
-
-### 2. Never default to CSS/XPath when `getByRole`/`getByLabel`/`getByTestId` work
-
-**Why it is wrong:** CSS selectors encode DOM structure, break on refactors, and do not communicate test intent.
-
-```typescript
-// BAD
-await page.locator('.btn-primary.submit-form').click();
-
-// GOOD
-await page.getByRole('button', { name: 'Submit' }).click();
-```
-
-See the full decision tree in `references/selector-strategies.md`.
-
-### 3. Never use discouraged `page.*` APIs when locator APIs exist
-
-**Why it is wrong:** `page.click()`, `page.fill()`, `page.type()` are legacy convenience methods that bypass the locator auto-waiting pipeline and cannot be chained or filtered.
-
-```typescript
-// BAD
-await page.click('#email');
-await page.fill('#email', 'user@example.com');
-
-// GOOD
-await page.getByLabel('Email').fill('user@example.com');
-```
-
-### 4. Never use `force: true` without documented justification
-
-**Why it is wrong:** `force: true` skips actionability checks (visible, enabled, stable, receives events). Either the wrong element is targeted, or there is an accessibility bug.
-
-```typescript
-// BAD
-await page.getByRole('button', { name: 'Save' }).click({ force: true });
-
-// GOOD -- dismiss any overlay first
-await page.getByRole('button', { name: 'Dismiss' }).click();
-await page.getByRole('button', { name: 'Save' }).click();
-```
-
-### 5. Never share mutable state between tests
-
-**Why it is wrong:** Tests run in parallel. Shared module-level variables create race conditions and order-dependent failures. Use fixtures instead. See `references/anti-patterns.md`.
-
-### 6. Never put login boilerplate in every test -- use `storageState`
-
-**Why it is wrong:** UI login for every test is slow and fragile. `storageState` logs in once and replays cookies/localStorage for all tests. See `references/auth-patterns.md`.
-
-### 7. Never use `locator.all()` on dynamic collections without a stability check
-
-**Why it is wrong:** `locator.all()` returns a snapshot. If the DOM is still updating, you get a partial or empty array. It does not auto-retry.
-
-```typescript
-// BAD
-const items = await page.getByRole('listitem').all();
-expect(items.length).toBe(5); // may be 0 if DOM is still rendering
-
-// GOOD
-await expect(page.getByRole('listitem')).toHaveCount(5);
-const items = await page.getByRole('listitem').all(); // then iterate if needed
-```
-
-### 8. Never assert with `allTextContents()` when `toHaveText()` gives retryability
-
-**Why it is wrong:** `allTextContents()` is a snapshot that does not retry. `toHaveText()` retries until the condition is met or timeout expires.
-
-```typescript
-// BAD
-const texts = await page.getByRole('listitem').allTextContents();
-expect(texts).toEqual(['Apple', 'Banana', 'Cherry']);
-
-// GOOD
-await expect(page.getByRole('listitem')).toHaveText(['Apple', 'Banana', 'Cherry']);
-```
-
-### 9. Never test external dependencies you do not control
-
-**Why it is wrong:** Third-party services have their own uptime, rate limits, and UI changes. Tests that hit real external services are flaky by definition.
-
-```typescript
-// BAD -- hitting real Stripe checkout
-await page.goto('https://checkout.stripe.com/...');
-
-// GOOD -- mock the external integration
-await page.route('**/api/create-checkout-session', async (route) => {
-  await route.fulfill({ json: { sessionId: 'mock_session', url: '/success' } });
-});
-```
-
-### 10. Never leave `test.only` in committed code
-
-**Why it is wrong:** A single `test.only` silently skips every other test in the suite. In CI, you run one test and think everything passes.
-
-```typescript
-export default defineConfig({ forbidOnly: !!process.env.CI });
-```
 
 ---
 
@@ -170,16 +56,11 @@ project-root/
 ├── playwright.config.ts
 ├── e2e/
 │   ├── fixtures/              # base.fixture.ts, auth.fixture.ts, data.fixture.ts
-│   ├── pages/                 # Page objects organized by feature
+│   ├── pages/                 # Page objects by feature
 │   │   ├── base.page.ts
 │   │   ├── dashboard.page.ts
-│   │   └── components/        # Reusable component objects
-│   │       ├── data-table.component.ts
-│   │       └── modal.component.ts
-│   ├── tests/                 # Test files organized by feature
-│   │   ├── auth/
-│   │   ├── dashboard/
-│   │   └── settings/
+│   │   └── components/        # Reusable component objects (data-table, modal)
+│   ├── tests/                 # Test files by feature (auth/, dashboard/, settings/)
 │   ├── helpers/               # test-data.ts, api-client.ts
 │   └── global-setup.ts
 ├── .auth/                     # Git-ignored storageState files
@@ -201,15 +82,16 @@ export default defineConfig({
   retries: isCI ? 2 : 0,
   workers: isCI ? '50%' : undefined,
   reporter: isCI
-    ? [['html', { open: 'never' }], ['github'], ['json', { outputFile: 'test-results/results.json' }]]
+    ? [['blob'], ['github'], ['json', { outputFile: 'test-results/results.json' }]]
     : [['html', { open: 'on-failure' }]],
   use: {
     baseURL,
     trace: isCI ? 'on-first-retry' : 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: isCI ? 'on-first-retry' : 'off',
-    actionTimeout: 15_000,
     navigationTimeout: 30_000,
+    // Avoid a global actionTimeout — it can mask a genuinely slow auto-waited
+    // action. Set per-action only where a known-slow widget needs it.
   },
   projects: [
     { name: 'setup', testMatch: /global-setup\.ts/, teardown: 'teardown' },
@@ -219,12 +101,14 @@ export default defineConfig({
     { name: 'webkit', use: { ...devices['Desktop Safari'], storageState: '.auth/user.json' }, dependencies: ['setup'] },
   ],
   webServer: isCI ? undefined : {
-    command: 'npm run dev', url: baseURL, reuseExistingServer: true, timeout: 120_000,
+    command: 'npm run dev', url: baseURL, reuseExistingServer: !isCI, timeout: 120_000,
   },
 });
 ```
 
-### Global Setup
+The `blob` reporter in CI is what makes sharded runs mergeable — see the sharding section. The `setup` project writes `storageState` once before the browser projects depend on it.
+
+### Global setup (storageState)
 
 ```typescript
 import { test as setup, expect } from '@playwright/test';
@@ -239,11 +123,11 @@ setup('authenticate as default user', async ({ page }) => {
 });
 ```
 
+This is the `setup` project pattern: the setup project (or a `globalSetup` file) runs UI login once, and every browser project replays the saved cookies/localStorage via `storageState` in config. For multi-role auth (admin/user/guest) and token seeding, see `references/auth-patterns.md`.
+
 ---
 
 ## Page Object Model
-
-### Base Page
 
 ```typescript
 import { type Page, type Locator, expect } from '@playwright/test';
@@ -251,21 +135,14 @@ import { type Page, type Locator, expect } from '@playwright/test';
 export abstract class BasePage {
   constructor(protected readonly page: Page) {}
   abstract readonly path: string;
-
   async goto(): Promise<void> {
     await this.page.goto(this.path);
-    await this.waitForReady();
-  }
-
-  async waitForReady(): Promise<void> {
     await this.page.waitForLoadState('domcontentloaded');
   }
 }
 ```
 
-### Component Objects
-
-Component objects represent reusable UI fragments (modals, data tables, nav bars). They take a root `Locator`, not a `Page`.
+**Component objects** represent reusable UI fragments (modals, tables, nav). They take a root `Locator`, not a `Page`:
 
 ```typescript
 export class DataTable {
@@ -279,20 +156,7 @@ export class DataTable {
 }
 ```
 
-### Fixture-Based Injection
-
-Inject page objects via fixtures, not constructors in test files.
-
-```typescript
-export const test = base.extend<{ dashboardPage: DashboardPage }>({
-  dashboardPage: async ({ page }, use) => { await use(new DashboardPage(page)); },
-});
-export { expect } from '@playwright/test';
-```
-
-### Composition Over Inheritance
-
-Compose component objects rather than inherit from deep class hierarchies.
+**Compose, don't inherit deep.** A page holds its components; it does not extend a five-level hierarchy:
 
 ```typescript
 export class UsersPage extends BasePage {
@@ -305,17 +169,24 @@ export class UsersPage extends BasePage {
 }
 ```
 
+**Inject page objects via fixtures**, not constructors in test files:
+
+```typescript
+export const test = base.extend<{ usersPage: UsersPage }>({
+  usersPage: async ({ page }, use) => { await use(new UsersPage(page)); },
+});
+export { expect } from '@playwright/test';
+```
+
+POM methods return state (locators, values); they do not assert. Assertions live in the test so failures point at the test, not the page object.
+
 ---
 
 ## Test Patterns
 
-### Authentication (storageState reuse)
+### Form interactions with test.step
 
-Global setup logs in once and saves `storageState`. All test projects load it via config. For multi-role auth (admin/user/guest), see `references/auth-patterns.md`.
-
-### Form Interactions with test.step
-
-Wrap logical action groups in `test.step()` for better trace viewer output.
+Wrap logical action groups in `test.step()` for readable trace-viewer output:
 
 ```typescript
 test('submits a multi-step form', async ({ page }) => {
@@ -331,7 +202,7 @@ test('submits a multi-step form', async ({ page }) => {
 });
 ```
 
-### API Mocking
+### API mocking
 
 ```typescript
 // Mock a response
@@ -347,18 +218,38 @@ await page.route('**/api/feature-flags', async (route) => {
   await route.fulfill({ response, json: body });
 });
 
-// Simulate errors
+// Simulate an error
 await page.route('**/api/products*', (route) => route.fulfill({ status: 500 }));
 
 // WebSocket (v1.48+)
 await page.routeWebSocket('**/ws/notifications', (ws) => {
-  ws.onMessage((msg) => { ws.send(JSON.stringify({ type: 'alert', title: 'Deployed' })); });
+  ws.onMessage(() => ws.send(JSON.stringify({ type: 'alert', title: 'Deployed' })));
 });
 ```
 
-See `references/network-and-mocking.md` for HAR replay, conditional routing, and full patterns.
+See `references/network-and-mocking.md` for HAR replay and conditional routing.
 
-### Tags and Annotations
+### Authenticated APIRequestContext fixture
+
+For seeding data or asserting backend state without driving the UI, inject a pre-authenticated `APIRequestContext`. Acquire the token in the fixture; never hardcode it:
+
+```typescript
+import { test, request, type APIRequestContext } from '@playwright/test';
+
+// test.extend adds an `api` fixture to the base test object.
+export const apiTest = test.extend<{ api: APIRequestContext }>({
+  api: async ({ baseURL }, use) => {
+    const ctx = await request.newContext({
+      baseURL,
+      extraHTTPHeaders: { Authorization: `Bearer ${process.env.API_TOKEN!}` },
+    });
+    await use(ctx);
+    await ctx.dispose();
+  },
+});
+```
+
+### Tags and annotations
 
 ```typescript
 test('checkout @smoke', async ({ page }) => { /* npx playwright test --grep @smoke */ });
@@ -371,7 +262,7 @@ test.fixme('known issue tracked in JIRA-1234', async ({ page }) => { /* ... */ }
 
 ## Assertions
 
-### Web-First Assertions (auto-retry — always prefer these)
+Always prefer web-first assertions — they auto-retry until the condition holds or the timeout expires:
 
 ```typescript
 await expect(page.getByRole('alert')).toBeVisible();
@@ -382,18 +273,14 @@ await expect(page.getByRole('listitem')).toHaveCount(5);
 await expect(page.getByRole('listitem')).toHaveText(['Apple', 'Banana', 'Cherry']);
 ```
 
-### Soft Assertions
-
-Collect all failures instead of stopping at the first; all are reported at the end.
+**Soft assertions** collect all failures instead of stopping at the first:
 
 ```typescript
 await expect.soft(page.getByLabel('Name')).toHaveValue('Jane Doe');
 await expect.soft(page.getByLabel('Email')).toHaveValue('jane@example.com');
 ```
 
-### ARIA Snapshots
-
-Verify accessibility tree structure; catches semantic regressions.
+**ARIA snapshots** verify accessibility-tree structure and catch semantic regressions:
 
 ```typescript
 await expect(page.getByRole('navigation', { name: 'Main' })).toMatchAriaSnapshot(`
@@ -403,64 +290,41 @@ await expect(page.getByRole('navigation', { name: 'Main' })).toMatchAriaSnapshot
 `);
 ```
 
----
+### Visual regression (one-liner; defer the workflow)
 
-## New Features (2025-2026)
+Playwright's built-in `toHaveScreenshot` auto-retries and writes a baseline on first run. Mask dynamic regions; do not precede it with `waitForTimeout`:
 
-Current latest is **Playwright 1.59.1** (April 2026). Agents should be aware of these recent additions:
-
-| Version | Feature | What it does |
-|---------|---------|-------------|
-| v1.45 | Clock API | `page.clock.install()` / `page.clock.fastForward()` -- control time without monkey-patching `Date` |
-| v1.45 | `--fail-on-flaky-tests` | CI flag that fails the run if any test required a retry to pass |
-| v1.46 | `--only-changed` | Run only tests affected by changed files (git-diff-aware) |
-| v1.46 | Component testing `router` fixture | Mock Next.js/SvelteKit/etc. router in component tests |
-| v1.46 | ARIA snapshots | `toMatchAriaSnapshot()` for accessibility tree assertions |
-| v1.48 | `routeWebSocket` | First-class WebSocket interception (replaces CDP hacks) |
-| v1.51 | `expect.configure` | Per-block timeout/soft configuration |
-| v1.55 | **Test Migrator** | Automated Cypress→Playwright and Selenium→Playwright migration via `npx playwright migrate` |
-| v1.56 | **Test Agents** | `npx playwright init-agents --loop=claude\|vscode\|opencode` ships planner/generator/healer agents that run inside the coding agent's loop |
-| v1.57 | Chrome for Testing default | Chrome for Testing replaces bundled Chromium for headed/headless on most platforms |
-| v1.57 | Speedboard in HTML reporter | Performance timeline visualization in the built-in report |
-| v1.57 | `webServer.wait` regex | Wait for a specific stdout pattern instead of just a URL |
-| v1.57 | `toHaveScreenshot mode` | Color-comparison modes (`'rgb'`, `'cieLab'`) for color-accurate diffs |
-| v1.59 | **`page.screencast()`** | Replaces `recordVideo` for agent self-verification; supports overlays and "agentic video receipts" — built so a coding agent can produce a reviewable trace |
-| v1.59 | `--debug=cli` | Pause-and-attach for AI agents to step through a test |
-
-### AI-Augmented Authoring (Test Agents + MCP)
-
-Two distinct integration paths — pick based on whether the agent runs *inside* your editor loop or *drives* a real browser remotely.
-
-**Path A — Test Agents (`npx playwright init-agents`)**: scaffolds three custom agents (planner, generator, healer) that the coding agent loads and invokes during its loop. Token-efficient — no MCP server, no inter-process traffic. Best for "Claude/VS Code/opencode write Playwright tests for me" workflows. Setup:
-
-```bash
-npx playwright init-agents --loop=claude
-# or --loop=vscode | --loop=opencode
+```typescript
+await expect(page.getByTestId('product-card')).toHaveScreenshot('product-card.png', {
+  mask: [page.getByTestId('price')],
+});
 ```
 
-**Path B — `@playwright/mcp`** (32k+ stars, weekly releases): MCP server that exposes browser actions to any MCP-aware agent. Higher overhead (process boundary, JSON marshalling) but the right choice when the agent needs to *drive* a live browser interactively rather than author tests offline.
+For baseline management, thresholds (`maxDiffPixelRatio`, `maskColor`, `stylePath`), and review workflows, use `visual-testing` — that is where visual baselines belong.
 
-```jsonc
-// .mcp.json
-{ "mcpServers": { "playwright": { "command": "npx", "args": ["@playwright/mcp@latest"] } } }
+### Accessibility scan (axe; deep audits live elsewhere)
+
+ARIA snapshots above check structure, not WCAG rules. For rule-based scanning, add `@axe-core/playwright`:
+
+```typescript
+import AxeBuilder from '@axe-core/playwright';
+
+test('dashboard has no a11y violations', async ({ page }) => {
+  await page.goto('/dashboard');
+  const results = await new AxeBuilder({ page }).analyze();
+  expect(results.violations).toEqual([]);
+});
 ```
 
-For test-failure repair workflows, see `test-reliability`. For first-time test generation from PRDs/specs, see `ai-test-generation`.
+For WCAG levels, rule tuning, and remediation guidance, use `accessibility-testing`.
 
 ---
 
 ## Parallel Execution & CI
 
-### Worker Configuration
+### Sharding across CI nodes
 
-```typescript
-export default defineConfig({
-  fullyParallel: true,
-  workers: process.env.CI ? '50%' : undefined,
-});
-```
-
-### Sharding Across CI Nodes
+Split the suite across matrix jobs, then merge the shard reports into one HTML report. Sharding earns its place at `growing`+ maturity; a `startup` suite of 5–10 tests should not shard.
 
 ```yaml
 strategy:
@@ -471,60 +335,126 @@ steps:
   - run: npx playwright test --shard=${{ matrix.shard }}/4
 ```
 
-### Multiple Reporters
+Each shard uploads its `blob-report/`; a final job runs `npx playwright merge-reports --reporter=html ./all-blob-reports`. The `blob` reporter (set in the config above) is what makes merge work — `--shard` alone produces fragmented HTML reports. See `references/ci-recipes.md` for the full GitHub Actions workflow, blob upload/download, and artifact patterns.
 
-```typescript
-reporter: [
-  ['html', { open: 'never' }],
-  ['json', { outputFile: 'results.json' }],
-  ['github'],
-  ['junit', { outputFile: 'junit.xml' }],
-],
-```
+### Debugging
 
-See `references/ci-recipes.md` for complete GitHub Actions workflows, artifact upload patterns, and sharding with merge.
+- **Trace viewer:** `npx playwright show-trace test-results/.../trace.zip` — timeline of actions, network, DOM snapshots, console.
+- **UI mode:** `npx playwright test --ui` — live, step-by-step, time-travel.
+- **Debug flag:** `npx playwright test my-test.spec.ts --debug` — headed, pauses each action.
+- **VS Code extension** `ms-playwright.playwright` — run/debug from gutter, pick locators, watch mode.
+- **`page.pause()`** opens the Inspector mid-test. Local only — never commit it.
+
+See `references/debugging-and-triage.md` for flaky-test triage and artifact analysis.
 
 ---
 
-## Debugging
+## New Features (2025-2026)
 
-- **Trace viewer:** `npx playwright show-trace test-results/my-test/trace.zip` -- timeline of actions, network, DOM snapshots, console logs.
-- **UI mode:** `npx playwright test --ui` -- live browser, step-by-step, time-travel debugging.
-- **Debug flag:** `npx playwright test my-test.spec.ts --debug` -- headed browser, pauses at each action.
-- **VS Code extension:** `ms-playwright.playwright` -- run/debug from gutter icons, pick locators, watch mode.
-- **page.pause():** Opens the Playwright Inspector mid-test. For local debugging only. Never commit to CI code paths.
+Current latest is **Playwright 1.60.0** (May 2026). Pin the same version in `package.json` and your CI Docker image. Recent additions worth knowing:
 
-See `references/debugging-and-triage.md` for flaky test triage workflows and artifact analysis.
+| Version | Feature | What it does |
+|---------|---------|-------------|
+| v1.45 | Clock API | `page.clock.install()` / `fastForward()` — control time without monkey-patching `Date` |
+| v1.45 | `--fail-on-flaky-tests` | Fail the CI run if any test needed a retry to pass |
+| v1.46 | `--only-changed` | Run only tests affected by changed files (git-diff aware) |
+| v1.46 | ARIA snapshots | `toMatchAriaSnapshot()` for accessibility-tree assertions |
+| v1.48 | `routeWebSocket` | First-class WebSocket interception (replaces CDP hacks) |
+| v1.55 | Test Migrator | Automated Cypress→/Selenium→Playwright via `npx playwright migrate` |
+| v1.56 | Test Agents | `npx playwright init-agents --loop=claude\|vscode\|opencode` — planner/generator/healer agents inside the coding agent's loop |
+| v1.57 | Chrome for Testing default | Headed uses `chrome`, headless uses `chrome-headless-shell` instead of bundled Chromium. Caveat: a high-memory regression was reported (microsoft/playwright #38489) — pin a known-good image tag for CI. |
+| v1.57 | `toHaveScreenshot` options | `maskColor`, `stylePath`, `pathTemplate` for masking color, custom stylesheet, and output path control |
+| v1.59 | Screencast API | `page.screencast.start()` / `.stop()` for mid-test video with start/stop control — an alternative to `recordVideo`, not a replacement. Adds action annotations, chapter markers, custom HTML overlays, and `screencast.showOverlays()` / `hideOverlays()`. Useful for agent self-verification: a coding agent can hand off a reviewable video receipt. |
+| v1.59 | `--debug=cli` | Pause-and-attach so an agent can step through a test |
+| v1.60 | `locator.drop()` | Simulate an external file/clipboard drag-and-drop onto an element |
+| v1.60 | `tracing.startHar()` | HAR recording as a first-class tracing API |
+
+### AI-augmented authoring (Test Agents vs MCP)
+
+Two integration paths — pick based on whether the agent runs *inside* your editor loop or *drives* a real browser remotely.
+
+**Path A — Test Agents (`npx playwright init-agents --loop=claude`)**: scaffolds planner/generator/healer agents the coding agent loads during its loop. Token-efficient — no MCP server, no inter-process traffic. Best for "Claude/VS Code/opencode writes Playwright tests for me."
+
+**Path B — `@playwright/mcp`**: an MCP server exposing browser actions to any MCP-aware agent. Higher overhead (process boundary, JSON marshalling) but the right choice when the agent must *drive* a live browser interactively rather than author tests offline. Config: `{ "mcpServers": { "playwright": { "command": "npx", "args": ["@playwright/mcp@latest"] } } }` in `.mcp.json`.
+
+For test-failure repair, see `test-reliability`. For first-time generation from PRDs/specs, see `ai-test-generation`.
+
+---
+
+## Anti-Patterns
+
+Design-time mistakes that quietly rot a suite. The code-level "never do X" list lives in `references/anti-patterns.md` with BAD/GOOD pairs — load it when writing test bodies.
+
+### 1. The God Page Object
+One class for the whole app turns into a 2000-line file every test imports and nothing can refactor safely. Split by page/feature and compose component objects.
+
+### 2. POM methods that assert
+A page object whose methods call `expect` hides the assertion from the test. When it fails, the stack points at the page object, not the failing scenario. Return locators/state; assert in the test.
+
+### 3. Asserting on implementation detail
+Tests keyed to CSS classes, DOM nesting, or internal IDs break on every refactor without a real behavior change. Assert what the user perceives — visible text, roles, URLs.
+
+### 4. Fixtures that depend on test order
+A fixture that mutates shared module state, or assumes another test ran first, fails the moment tests parallelize or run in isolation. Each fixture must stand alone.
+
+### 5. `data-testid` where `getByRole` would work
+Sprinkling test ids onto buttons and headings that already have an accessible name skips the cheapest accessibility signal you get for free. Reserve `getByTestId` for elements with no stable role/label.
+
+The most damaging *runtime* mistake — synchronizing with `waitForTimeout` instead of an auto-waiting locator:
+
+```typescript
+// BAD — slow on fast machines, flaky on slow ones, hides the real condition
+await page.waitForTimeout(2000);
+await page.click('#submit');
+
+// GOOD — the action auto-waits for actionability
+await page.getByRole('button', { name: 'Submit' }).click();
+```
+
+The other nine code-level offenders (CSS over roles, `page.*` over locators, `force: true`, shared state, per-test login, `locator.all()` without a stability check, `allTextContents()` over `toHaveText()`, hitting real third-party services, committed `test.only`) are in `references/anti-patterns.md`.
+
+---
+
+## Verification
+
+Run these against the generated artifact, smallest first:
+
+```bash
+npx playwright test --list                 # tests are discovered and parse
+grep -rn 'waitForTimeout\|page.pause' e2e/  # must print nothing
+npx tsc --noEmit                            # locator/assertion types compile
+```
+
+Enforce the "never do X" rules in CI with `eslint-plugin-playwright` — rules `no-wait-for-timeout`, `no-force-option`, `no-element-handle`, `no-page-pause` turn this skill's prose bans into a failing lint.
 
 ---
 
 ## Done When
 
-- `playwright.config.ts` exists with `projects` defined for at least one target browser (Chromium minimum; Firefox and WebKit added for CI)
-- Page Object Model files live in the designated directory (`e2e/pages/` or equivalent) with component objects composed via root `Locator`
-- All locators in test code use `getByRole`, `getByLabel`, or `getByTestId` — no raw CSS selectors or XPath
-- CI workflow runs Playwright with `--shard` across matrix jobs and uploads the HTML report as an artifact on failure
-- No `waitForTimeout` calls exist anywhere in test code (`grep` or `forbidOnly`-style lint catches any regressions)
+- `playwright.config.ts` exists with `projects` for at least Chromium (Firefox + WebKit added when targeting CI), and `forbidOnly: !!process.env.CI`.
+- Page Object Model files live in `e2e/pages/` (or equivalent), with component objects composed via a root `Locator` and no `expect` inside POM methods.
+- `grep -rn 'waitForTimeout' e2e/` returns nothing, and `eslint-plugin-playwright`'s `no-wait-for-timeout` is enabled.
+- Every locator uses `getByRole` / `getByLabel` / `getByTestId` — `grep -rn 'page.locator(\|xpath=\|css=' e2e/` returns nothing (or only justified, commented exceptions).
+- CI runs the suite on PR; at `growing`+ maturity it shards across matrix jobs with the `blob` reporter and a `merge-reports` step, uploading the HTML report as an artifact on failure.
 
-## Related Skills and References
+## Related Skills
 
-### Reference Files (in `references/`)
+- **visual-testing** — screenshot baseline creation, threshold tuning, and review/approval workflows. Go here for anything beyond a single inline `toHaveScreenshot` check.
+- **accessibility-testing** — WCAG levels, axe rule tuning, and remediation. This skill only shows a minimal axe scan.
+- **api-testing** — backend API validation, schema/contract testing, and the full `APIRequestContext` patterns.
+- **ci-cd-integration** — pipeline config, parallelization, and reporting beyond Playwright's own.
+- **test-reliability** — runtime healing of a single flaky test (quarantine, retry strategy).
+- **selector-drift-recovery** — offline bulk regeneration of selectors after a UI refactor breaks many tests.
+
+### Reference files (in `references/`)
 
 | File | Purpose |
 |------|---------|
-| `anti-patterns.md` | BAD vs GOOD code pairs for every common mistake |
+| `anti-patterns.md` | BAD vs GOOD code pairs for every code-level mistake |
 | `fixtures-and-projects.md` | Auth fixtures, data fixtures, multi-env projects, composition |
-| `selector-strategies.md` | Locator decision tree, getByRole examples, stability scoring |
+| `selector-strategies.md` | Locator decision tree, `getByRole` examples, stability scoring |
 | `auth-patterns.md` | storageState, multi-role, token seeding, session expiry |
 | `multi-site-architecture.md` | Shared fixtures, per-site config, monorepo patterns |
-| `network-and-mocking.md` | page.route, route.fetch, HAR, WebSocket, conditional routing |
-| `debugging-and-triage.md` | Trace viewer, flaky test triage, retries, artifacts |
-| `ci-recipes.md` | Reporters, sharding, --only-changed, browser caching, artifacts |
-
-### Related Skills
-
-- **visual-testing** -- Screenshot comparison, threshold management, baseline workflows.
-- **ci-cd-integration** -- Pipeline configuration, parallelization, reporting beyond Playwright.
-- **api-testing** -- Backend API validation, contract testing, request/response schemas.
-- **test-reliability** -- Flaky test patterns, retry strategies, test stability metrics.
-- **accessibility-testing** -- WCAG compliance, axe-core integration, ARIA assertions.
+| `network-and-mocking.md` | `page.route`, `route.fetch`, HAR, WebSocket, conditional routing |
+| `debugging-and-triage.md` | Trace viewer, flaky-test triage, retries, artifacts |
+| `ci-recipes.md` | Reporters, sharding + merge, `--only-changed`, browser caching, Docker |

@@ -11,15 +11,27 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: process
 ---
 
 <objective>
-Get a new QA engineer productive or bootstrap QA for a new project. The goal is clear: reduce time to first merged test. Everything in this skill serves that objective -- environment setup, codebase orientation, framework walkthrough, and mentorship patterns that build confidence through progressive complexity.
+A new QA engineer pointed at the README and left to "figure it out" burns two weeks learning bad habits by trial and error, and an unaudited inherited suite hides flaky tests and coverage gaps that only surface in production. This skill reduces time to first merged test and produces three concrete artifacts: a 30-day ramp plan, a five-dimension test architecture audit, and a framework walkthrough doc. Every section serves the same metric — a real test merged to main and green in CI, fast.
 
-**Before starting:** Check for `.agents/qa-project-context.md` in the project root. If it exists, it already answers most discovery questions and provides the technical context needed for onboarding. If it does not exist, creating it is the first action item.
+**Before starting:** Check for `.agents/qa-project-context.md` in the project root. If it exists, it answers most discovery questions and provides the technical context for onboarding. If it does not, creating it is the first action item.
 </objective>
+
+## Quick Route
+
+This skill serves three distinct jobs. Identify yours, jump to the section, skip the rest.
+
+| Situation | Jump to | Output |
+|-----------|---------|--------|
+| Onboarding a **new person** to an existing team | First 30 Days Checklist → Mentorship Patterns | A 30-day ramp plan with owners and dates |
+| Inherited an **existing suite** with no onboarding/docs | Test Architecture Audit (scope by `team_maturity`) | A 1-2 page findings doc, five dimensions |
+| Need the **reference doc** for anyone writing tests | Framework Walkthrough Template | A project-specific walkthrough.md |
+
+A real onboarding usually needs all three; a quick health check needs only the audit.
 
 ---
 
@@ -95,7 +107,7 @@ If the correct way to write a test is harder than the wrong way, people will wri
 - [ ] Review the CI pipeline: what runs on PR, what runs nightly, what blocks merge
 - [ ] Identify the top 5 critical user flows (these will be the first testing targets)
 - [ ] Attend one Three Amigos or sprint planning session as an observer
-- [ ] **Working with the team's AI assistants:** Identify which coding agents the team uses (Claude Code, Codex, Cursor, Gemini CLI, etc.), where their context lives (`.agents/qa-project-context.md`, `CLAUDE.md`, `AGENTS.md`), which prompts/skills are house style, and which tasks the team explicitly does NOT delegate to AI. Produce a short "AI assistants we use, what they're good at, what to never let them do" doc as a Day 4 deliverable.
+- [ ] **Working with the team's AI assistants:** Identify which coding agents the team uses (Claude Code, Codex, Cursor, Gemini CLI, etc.), where their context lives (`.agents/qa-project-context.md`, `CLAUDE.md`, `AGENTS.md`), which prompts/skills are house style, and which tasks the team explicitly does NOT delegate to AI. Produce a short "AI assistants we use, what they're good at, what to never let them do" doc as a Day 4 deliverable. If the team automates Playwright via an agent, note that agent-driven Playwright now has its own `@playwright/cli` (daemon architecture, `playwright-cli` commands, token-efficient) — distinct from the `npx playwright test` runner the framework walkthrough documents.
 
 **Day 5: First Small Win**
 - [ ] Run a single test in debug/headed mode and understand what it does
@@ -132,6 +144,11 @@ If the correct way to write a test is harder than the wrong way, people will wri
 ## Test Architecture Audit
 
 When joining an existing project, assess the health of the test suite before writing new tests. This audit takes 2-4 hours and produces a clear picture of the current state.
+
+**Scope the audit by `team_maturity`** (from `.agents/qa-project-context.md`) — a one-size-fits-all audit wastes a startup's time and underserves an established team:
+- **startup** — Skip the full audit. Confirm one path is covered and one framework runs; spend the saved hours getting a first test merged.
+- **growing** — Run all five dimensions once to establish a baseline; defer recurring reviews.
+- **established** — Full five-dimension audit plus recurring quality reviews on a schedule (e.g. monthly), with the findings doc tracked over time.
 
 ### What to Assess
 
@@ -282,18 +299,33 @@ Not soliciting feedback from the person being onboarded. They experienced the pr
 The new person copies an existing test, changes the locators and URL, and calls it done. The test works but they do not understand why. Pairing and code review should focus on the "why" behind each pattern. If someone cannot explain why a fixture is structured a certain way, they will misuse it when the context differs.
 
 ---
-## Done When
 
-- Test architecture audit completed with findings documented (strengths, gaps, risks, and quick wins)
-- First 30 days checklist reviewed, all items assigned to a person, and blocking items escalated
-- `.agents/qa-project-context.md` created and populated with framework, critical paths, team structure, and risk areas
-- Test framework selected with rationale documented (evaluated alternatives, decision recorded)
-- At least one working test merged to the repo and passing in CI, proving the local and pipeline setup end-to-end
+## Verification
+
+Prove the artifacts hold before declaring onboarding complete. Cheapest check first.
+
+1. **The first merged test is stable, not lucky.** Run it repeated to rule out flakiness, then confirm CI is green.
+   - `npx playwright test <new-test> --repeat-each=3` exits 0 (3 consecutive passes locally)
+   - The PR's CI check is green on the same test
+2. **The audit doc is complete, not a stub.** Open the findings doc and confirm all five dimensions (coverage/distribution, reliability, CI health, technical debt, conventions) are filled, and findings are categorized into strengths / gaps / risks / quick wins / strategic work. A startup that scoped out the audit (see `team_maturity`) records that decision instead.
+3. **The context file parses and is populated.** `.agents/qa-project-context.md` exists and carries framework, critical paths, team structure, and risk areas — not a high-level placeholder.
+
+---
 
 ## Reference Files (in `references/`)
 
 - **framework-walkthrough.md** — The full framework walkthrough template: architecture overview, run commands, new-test step-by-step and template, debug playbooks, conventions, and help routing.
 - **audit-worksheets.md** — Copy-and-fill worksheets for the test architecture audit (coverage, reliability, CI health, technical debt, conventions).
+
+---
+
+## Done When
+
+- At least one working test merged to the repo, passing in CI, and stable across 3 local repeats (`--repeat-each=3` exits 0) — proves the local and pipeline setup end-to-end.
+- Test architecture audit doc exists with all five dimensions filled and findings categorized (strengths, gaps, risks, quick wins, strategic work) — or, for a startup `team_maturity`, the doc records the explicit decision to scope it out.
+- Every Week-1 Day-1/2 setup item has a recorded owner and a target date; blocking items are filed as tracked tickets.
+- `.agents/qa-project-context.md` exists and is populated with framework, critical paths, team structure, and risk areas (not a placeholder).
+- Test framework selected with rationale recorded (evaluated alternatives, decision written down) — or marked N/A when inheriting an existing framework.
 
 ## Related Skills
 

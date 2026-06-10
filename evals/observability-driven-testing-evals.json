@@ -1,6 +1,6 @@
 {
   "skill": "observability-driven-testing",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "odt-001",
@@ -10,13 +10,14 @@
         "OTLPTraceExporter",
         "resourceFromAttributes",
         "ATTR_SERVICE_NAME",
-        "process.on('beforeExit'",
-        "sdk.start() OR sdk.shutdown()"
+        "globalTeardown OR global teardown OR teardown hook",
+        "await sdk.shutdown()"
       ],
       "anti_patterns": [
         "new Resource( directly without resourceFromAttributes",
         "OpenTracing shim OR opentracing package",
-        "hardcoded trace endpoint without env variable"
+        "hardcoded trace endpoint without env variable",
+        "process.on('beforeExit'"
       ],
       "tags": [
         "setup",
@@ -50,11 +51,11 @@
       "id": "odt-003",
       "prompt": "Implement the error categorization workflow: analyze production errors and identify which ones are uncovered by tests",
       "expected_patterns": [
-        "ProductionError interface",
-        "testCoverage OR coverage map",
-        "coveredByTest boolean",
-        "suggestedTestType OR test layer",
-        "priority critical OR high OR medium OR low"
+        "interface ProductionError",
+        "testCoverage",
+        "coveredByTest",
+        "suggestedTestType",
+        "'critical' OR 'high' OR 'medium' OR 'low'"
       ],
       "anti_patterns": [
         "treating all errors as same priority",
@@ -71,11 +72,11 @@
       "id": "odt-004",
       "prompt": "Create a test from a production error: a null reference on POST /api/orders when user has no shipping address",
       "expected_patterns": [
-        "production error comment OR reference to Sentry OR error tracker",
-        "test name includes missing OR null address context",
-        "expect(response.status).toBe(400 OR 422)",
-        "expect.*error.*MISSING OR REQUIRED",
-        "test at correct layer: unit OR integration OR e2e"
+        "Sentry OR error tracker OR production error",
+        "missing shipping address OR address is null",
+        "status.*400 OR status.*422 OR toContain([400",
+        "MISSING_SHIPPING_ADDRESS OR error.*REQUIRED",
+        "describe OR it( OR unit OR integration OR e2e"
       ],
       "anti_patterns": [
         "test that only checks response.ok() without error structure",
@@ -113,12 +114,12 @@
       "id": "odt-006",
       "prompt": "Set up a trace assertion helper that validates distributed trace structure across microservices with expected spans in order",
       "expected_patterns": [
-        "ExpectedSpan interface OR type",
-        "service and operation fields",
-        "attributes optional parameter",
-        "maxDuration OR latency check",
-        "async function OR helper",
-        "for loop OR forEach over expected spans"
+        "interface ExpectedSpan OR ExpectedSpan",
+        "service: OR operation:",
+        "attributes?:",
+        "maxDuration",
+        "async function OR assertTraceStructure",
+        "for (const OR forEach"
       ],
       "anti_patterns": [
         "only checking presence of one span",
@@ -135,12 +136,12 @@
       "id": "odt-007",
       "prompt": "Create an end-to-end diagnosis workflow: given a trace ID from a failing test, walk the span tree and identify the root cause",
       "expected_patterns": [
-        "trace ID extraction",
-        "open trace in APM OR query APM",
-        "root span OR parent span",
-        "child spans OR service calls",
-        "error spans OR span status",
-        "correlate with logs OR filter logs by trace ID"
+        "Get the trace ID OR trace ID",
+        "Open the trace OR APM tool OR query by trace",
+        "Root span OR parent span OR parentSpanId",
+        "Child spans OR which services were called",
+        "Error spans OR span status OR status.*code",
+        "Correlate with logs OR Filter logs by trace ID"
       ],
       "anti_patterns": [
         "assuming error is in first span without walking tree",
@@ -157,11 +158,11 @@
       "id": "odt-008",
       "prompt": "Write a script to analyze hot paths: extract top endpoints by request volume and identify coverage gaps for each service boundary",
       "expected_patterns": [
-        "top endpoints OR top 20 OR request volume",
+        "top 20 endpoints OR request volume",
         "code path OR service-level span",
-        "trace through services OR span tree",
-        "coverage percentage OR test coverage data",
-        "identify gap OR low coverage service"
+        "trace the code path OR through services",
+        "coverage OR test coverage data",
+        "Gap: OR low test coverage OR zero or low"
       ],
       "anti_patterns": [
         "ignoring request volume",
@@ -178,16 +179,18 @@
       "id": "odt-009",
       "prompt": "Pin OpenTelemetry semantic conventions version and explain why version bumps are breaking for trace assertions",
       "expected_patterns": [
-        "@opentelemetry/semantic-conventions pinned version",
-        "sem-conv v1.41.0 OR April 2026",
+        "@opentelemetry/semantic-conventions",
+        "save-exact OR exact version OR no caret OR 1.41",
+        "v1.41.0 OR April 2026",
         "breaking changes OR attribute names drift",
         "graphql.document OR GenAI changes",
-        "reason: trace assertions written against attribute names"
+        "trace assertions written against attribute names"
       ],
       "anti_patterns": [
         "upgrading sem-conv freely without pinning",
         "no acknowledgment of breaking changes",
-        "ignoring attribute naming stability"
+        "ignoring attribute naming stability",
+        "caret range ^1.41"
       ],
       "tags": [
         "dependencies",
@@ -199,12 +202,12 @@
       "id": "odt-010",
       "prompt": "Establish a production-error-to-test feedback loop for your team: weekly error review with assigned owners and tests created before incident close",
       "expected_patterns": [
-        "weekly OR recurring review cadence",
-        "top 10 errors OR high-frequency errors",
-        "assigned owner",
-        "test created OR test gap identified",
-        "incident postmortem includes test question",
-        "error resolved OR marked acceptable"
+        "weekly OR recurring",
+        "top 10 OR by frequency",
+        "assign an owner OR assigned an owner OR owner",
+        "create a test OR test gap",
+        "postmortem OR What test would have prevented",
+        "known/acceptable OR mark as known OR marked acceptable"
       ],
       "anti_patterns": [
         "error tracker ignored OR growing unresolved errors",

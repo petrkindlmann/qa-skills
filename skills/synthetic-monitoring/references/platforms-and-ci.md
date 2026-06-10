@@ -87,3 +87,21 @@ routes:
     receivers: [slack-monitoring]
     repeat_interval: 4h
 ```
+
+For these routes to match, the probe must tag its result with a `severity` and `probe` label. Emit them when reporting results (e.g. in `report-synthetic-results.js`): map the probe file name to `probe` and the consecutive-failure count to `severity` (1 → info, 2 → warning, 2+ across regions → critical) before posting to the alert webhook. Without that tagging step the routes above never fire.
+
+## Probe runbook template
+
+Every probe links to a runbook (the `{link_to_runbook}` field in the alert template). Six lines, one per probe. Example for the payment-integration probe:
+
+```markdown
+# Runbook: checkout / payment-integration probe
+- What the probe tests: sandbox checkout — cart → Stripe test card → order confirmation page.
+- First check: status.stripe.com; then recent deploys to checkout-service (last 60 min); then payment error rate in APM.
+- Manual verification (reproduce): log in as synthetic@example.com, add item, pay with test card 4242…, confirm order page.
+- Escalate: page #payments-oncall (PagerDuty) if Stripe is green AND a recent deploy correlates.
+- Dashboard: https://grafana.example.com/d/checkout-synthetic
+- Runbook owner: payments team — review quarterly.
+```
+
+Keep the "first checks" line ordered by likelihood: third-party status, recent deploys, then app telemetry. The on-call engineer should be able to start investigating from this line alone.

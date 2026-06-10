@@ -3,30 +3,42 @@ name: cross-browser-testing
 description: >-
   Design analytics-driven browser test matrices and execute cross-browser tests.
   Covers BrowserStack/Sauce Labs configuration, Playwright browser channels, common
-  cross-browser CSS/JS issues, and progressive enhancement validation.
+  cross-browser CSS/JS divergences, a known-issues documentation log, and progressive
+  enhancement validation.
   Use when: "cross-browser," "browser matrix," "BrowserStack," "Safari issues,"
-  "browser compatibility," "IE/Edge."
-  Related: visual-testing, playwright-automation, ci-cd-integration.
+  "browser compatibility," "Edge," "works in Chrome but not Safari."
+  Not for: pixel-level baseline strategy and threshold tuning — use visual-testing;
+  device-farm testing of native/hybrid apps — use mobile-testing.
+  Related: visual-testing, playwright-automation, ci-cd-integration, mobile-testing.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: automation
 ---
 
 <objective>
-Design analytics-driven browser test matrices and catch cross-browser issues before users do.
-
-**Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains target browsers, analytics data, and platform priorities that drive matrix design.
+Chrome-only testing gives false confidence: a layout that works in Chromium can break in WebKit, a clipboard call that succeeds in Chrome silently no-ops in Firefox, and a partitioned-cookie flow can pass everywhere except the one engine your users are on. This skill produces an analytics-driven browser matrix, a Playwright (or cloud-platform) config that runs it, and a committed log of known browser divergences — each verified by a test that asserts the user outcome, not the CSS.
 </objective>
 
----
+## Quick Route
+
+| Situation | Go to |
+|-----------|-------|
+| Need to decide *which* browsers to test | Browser Matrix Design |
+| Already on Playwright, just add browsers | Playwright Browser Configuration → `references/playwright-and-cloud-config.md` |
+| Need real Safari/Windows/older OS, not engines | Cloud Platform Setup |
+| One browser misbehaves; want a test for it | Common Cross-Browser Issues + `browserName` branch in `references/testing-patterns.md` |
+| Need to record a divergence so it is not re-debugged | Known-Issues Log |
+| Pixel diffs / baseline thresholds | use `visual-testing` |
 
 ## Discovery Questions
 
+Check `.agents/qa-project-context.md` first — if it exists, use it and skip anything already answered there. Then:
+
 1. **Target browsers from analytics:** What do actual users use? Pull browser/OS data from your analytics tool. Testing browsers nobody uses is waste; missing a browser 15% of users rely on is a bug.
-2. **Desktop and mobile?** Mobile Safari on iOS and Chrome on Android have different rendering behaviors than their desktop counterparts. Treat them as separate matrix entries.
-3. **Cloud platform:** BrowserStack, Sauce Labs, LambdaTest, or local browsers only? Cloud platforms provide real browser instances; Playwright's built-in browsers cover Chromium, Firefox, and WebKit.
+2. **Desktop and mobile?** Mobile Safari on iOS and Chrome on Android render differently than their desktop counterparts. Treat them as separate matrix entries.
+3. **Cloud platform:** BrowserStack, Sauce Labs, LambdaTest, or local engines only? Cloud platforms provide real branded browsers and OSes; Playwright's bundled engines cover Chromium, Firefox, and WebKit (not Chrome/Safari themselves).
 4. **Progressive enhancement or pixel-perfect?** Progressive enhancement accepts graceful degradation. Pixel-perfect demands identical rendering. The answer determines pass/fail criteria.
 5. **Existing Playwright config?** If the project already uses Playwright, cross-browser testing is a configuration change, not a new tool.
 
@@ -34,15 +46,17 @@ Design analytics-driven browser test matrices and catch cross-browser issues bef
 
 ## Core Principles
 
-1. **Analytics-driven matrix.** Test what your users actually use. A browser at 0.3% traffic does not need the same investment as one at 40%. Check analytics quarterly -- browser share shifts.
+1. **Analytics-driven matrix.** Test what your users actually use. A browser at 0.3% traffic does not need the same investment as one at 40%. Check analytics quarterly — browser share shifts.
 
 2. **Progressive enhancement over pixel-perfect.** Identical rendering across all browsers is neither achievable nor necessary. Define what "works" means: core functionality operates, content is accessible, layout is usable. Visual differences in shadows, gradients, or animation timing are acceptable.
 
 3. **Safari and Firefox surface the most cross-browser bugs.** Chrome-only testing catches Chrome bugs. Safari's WebKit engine and Firefox's Gecko engine have the most behavioral differences from Chromium. Prioritize them.
 
-4. **Test functionality, not rendering engine internals.** A cross-browser test should verify that the user can complete a task, not that a CSS property renders identically. Visual comparison tools handle pixel-level differences.
+4. **Test functionality, not rendering-engine internals.** A cross-browser test should verify that the user can complete a task, not that a CSS property renders identically. Visual comparison tools handle pixel-level differences.
 
-5. **One test, multiple browsers.** Write tests once. Run them across browser configurations. Never duplicate test logic for different browsers.
+5. **Engines are not brands.** Playwright's WebKit is *not* Safari and its Chromium is *not* Chrome — they share an engine, not the shipped product (codecs, fonts, enterprise policy, update cadence all differ). Report "WebKit coverage," not "Safari coverage," unless you ran real Safari on a cloud grid.
+
+6. **One test, multiple browsers.** Write tests once. Run them across browser configurations. Never duplicate test logic for different browsers.
 
 ---
 
@@ -70,7 +84,7 @@ Step 5: Review quarterly
 ### Example Matrix (derived from analytics)
 
 ```markdown
-## Browser Matrix — Q1 2026
+## Browser Matrix — Q1 2026 (next-review: 2026-04-01)
 
 | Browser | Version | Platform | Traffic % | Tier | Notes |
 |---------|---------|----------|-----------|------|-------|
@@ -80,8 +94,8 @@ Step 5: Review quarterly
 | Chrome | Latest | Android | 15% | P0 | Mobile viewport |
 | Safari | Latest | iOS | 14% | P0 | Mobile Safari quirks |
 | Firefox | Latest | Windows | 5% | P1 | Gecko rendering |
-| Edge | Latest | Windows | 4% | P1 | Chromium-based but different UA |
-| Samsung Internet | Latest | Android | 3% | P1 | Chromium fork, older engine |
+| Edge | Latest | Windows | 4% | P1 | Chromium-based but different UA/policy |
+| Samsung Internet | Latest | Android | 3% | P1 | Chromium fork, lagging engine |
 | Firefox | Latest | macOS | 1.5% | P2 | |
 | Chrome | N-1 | Windows | 1.2% | P2 | Previous major version |
 ```
@@ -97,46 +111,64 @@ Step 5: Review quarterly
 
 ## Playwright Browser Configuration
 
-Playwright ships three browser engines (Chromium, Firefox, WebKit) — no cloud platform needed for basic cross-browser coverage. Define one project per matrix entry, map mobile devices via `devices[...]`, and drive locally installed branded browsers with the `channel` option.
+Playwright ships three browser *engines* — Chromium, Firefox, WebKit — so no cloud platform is needed for basic engine-level coverage. This is engine coverage, not brand coverage: bundled WebKit ≠ Safari and bundled Chromium ≠ Chrome (see Core Principle 5). Define one project per matrix entry, map mobile devices via `devices[...]`, and drive locally installed branded browsers with the `channel` option.
 
 See `references/playwright-and-cloud-config.md` for the full `playwright.config.ts` project list, branded-channel snippets, and `--project` run commands.
 
-**When to use channels:** When you need to test browser-specific behavior that differs between Chromium and Chrome (extensions support, enterprise policies, codec support). WebKit and Firefox are always Playwright's bundled versions (no channel option).
+**When to use channels:** When you need real branded behavior that differs from the bundled engine — installed Chrome (`channel: 'chrome'`) or Edge (`channel: 'msedge'`) for extension support, enterprise policy, or codecs. WebKit and Firefox have no channel option; they are always Playwright's bundled engines. Note the `edge` project in the config and the `msedge` channel snippet are illustrative alternatives, not two projects to merge — a config needs one `edge` project, not both.
 
-**Playwright 1.59+ adds `page.screencast()`** — capture annotated video of cross-browser test runs. Useful when a matrix failure needs human review across browsers; pair with `--debug=cli` for agent-driven re-runs.
+**`page.screencast()` (Playwright 1.59+, current in 1.60)** captures annotated video of a cross-browser run — useful when a matrix failure needs human review across engines. For agent-driven re-runs and stepping through a failure, use `--ui` (UI mode) or `--debug` (Inspector); `PWDEBUG=1` and `--headed` are the other real entry points. There is no `--debug=cli` flag.
 
 ---
 
 ## Cloud Platform Setup
 
-Cloud platforms (BrowserStack, Sauce Labs) provide real browser/OS instances Playwright connects to over a CDP/Playwright WebSocket endpoint. Pass credentials and capabilities via environment variables, and keep the platform's `playwrightVersion` aligned with `package.json`.
+Cloud platforms (BrowserStack, Sauce Labs) provide real branded-browser/OS instances Playwright connects to over a CDP/Playwright WebSocket endpoint. Pass credentials and capabilities via environment variables, and keep the platform's `playwrightVersion` aligned with the Playwright version in `package.json` (currently 1.60.x — a client/server mismatch causes socket errors).
 
-See `references/playwright-and-cloud-config.md` for the BrowserStack config, Sauce Labs config, and the GitHub Actions parallel matrix that fans out across cloud browsers.
+**BrowserStack now recommends** the `npx browserstack-node-sdk` runner plus a `client.playwrightVersion` capability (in addition to `browserstack.playwrightVersion`) to keep the client and grid sockets in lock-step. The raw `wsEndpoint`/CDP config below still works for direct connections; use the SDK path for new setups.
+
+See `references/playwright-and-cloud-config.md` for the BrowserStack config (with the `client.playwrightVersion` cap), the Sauce Labs config, and the GitHub Actions parallel matrix that fans out across cloud browsers.
 
 ---
 
 ## Common Cross-Browser Issues
 
-Real issues that surface in cross-browser testing, with detection patterns and fixes. The CSS workarounds and Playwright tests for each are in `references/common-browser-issues.md`, covering: CSS Grid/Flexbox `gap`, `scroll-behavior`, `<input type="date">`, the Clipboard API, `backdrop-filter`, the `<dialog>` element, and Web Animations timing.
+Real divergences that surface in cross-browser testing, with detection patterns and fixes. The CSS workarounds and Playwright tests for each are in `references/common-browser-issues.md`, covering: partitioned cookies / CHIPS in iframes, `<input type="date">`, the Clipboard API, `scroll-behavior`, `backdrop-filter`, the `<dialog>` element, View Transitions, and Web Animations timing.
 
 ### Modern Cross-Browser Gotchas (2026)
 
-The classic Safari laggard list is mostly resolved. Today's real divergences:
+The classic Safari-laggard list is mostly resolved (flexbox `gap`, `:has()` shipping, same-document View Transitions are all Baseline). Today's real divergences:
 
-- **Partitioned cookies / partitioned storage:** Chrome's CHIPS, Safari's ITP, and Firefox's State Partitioning each behave differently for embedded contexts. Test third-party cookies in iframes per browser, not just per "browser supports cookies."
-- **`:has()` selector edge cases:** Universal support but performance and specificity edge cases differ. Visual-regression a `:has()`-heavy page across all three engines.
-- **View Transitions API:** Chrome and Edge ship same-document and cross-document; Safari has partial support; Firefox is behind. Treat as progressive enhancement and verify the fallback path in Firefox/older Safari.
-- **WebDriver BiDi:** Production-ready in Selenium 4, partially supported in Playwright. For new cross-runner projects, BiDi is the convergence point.
+- **Partitioned cookies / partitioned storage:** Chrome's CHIPS (`Partitioned` attribute), Safari's ITP, and Firefox's State Partitioning each behave differently for embedded third-party contexts. Test third-party cookies *in an iframe per engine*, not just "the browser supports cookies." See the runnable per-engine iframe test in `references/common-browser-issues.md`.
+- **`:has()` selector performance:** Universally supported since 2023, but a `:has()`-heavy page can have very different style-recalc cost across engines. Watch list — profile if a page feels janky in one engine; visual-regression it in `visual-testing`.
+- **View Transitions API:** Same-document transitions are Baseline (Chrome 111, Safari 18, Firefox 144 — Oct 2025), so they are no longer a divergence. **Cross-document** transitions are still the gap: Chrome 126+, Safari 18.2+, Firefox behind a flag. Treat cross-document as progressive enhancement and verify the no-transition fallback.
+- **WebDriver BiDi:** Production-ready in Selenium 4, partially supported in Playwright. For new cross-runner projects, BiDi is the convergence point. Watch list.
+
+---
+
+## Known-Issues Log
+
+When a divergence is real and you cannot fix the app immediately, record it in a committed file (`docs/browser-issues.md`) so it is not re-debugged from scratch. The table is the artifact `Done When` checks for, and every row's test must assert the **user outcome, not the CSS property**:
+
+```markdown
+| Affected browser | Repro | Workaround / fallback / ticket | Test asserts (user outcome, not CSS) |
+|------------------|-------|--------------------------------|--------------------------------------|
+| Safari (WebKit) ≤17 | scroll-behavior: smooth is partial | rely on anchor nav; no JS scroll dependency | anchor link puts heading in viewport (`toBeInViewport`) |
+| Firefox ≤102 | backdrop-filter unsupported | -webkit- prefix + rgba background fallback | overlay readable; modal content visible |
+| Firefox (current) | cross-document View Transitions flagged off | progressive enhancement; instant nav fallback | navigation completes; target page heading visible |
+```
+
+Keep one row per divergence. A row with no ticket and no fallback is an open bug, not a documented issue.
 
 ---
 
 ## Testing Patterns
 
-The four core patterns and the rules that govern them:
+The core patterns and the rules that govern them:
 
 - **Same test, multiple browsers** — the default. Write the test once; configure projects to run it everywhere. Never duplicate test logic per browser.
-- **Browser-specific test logic** — branch on `browserName` only when behavior genuinely differs. **Rule:** this should be rare. Many browser branches signal application compatibility bugs to fix, not work around.
-- **Visual cross-browser comparison** — use `toHaveScreenshot` with a `maxDiffPixelRatio` tolerance; each browser project generates its own baseline.
+- **Browser-specific test logic** — branch on `browserName` only when behavior *genuinely* differs (the WebKit date-input fallback and Chromium-only clipboard permission are real cases). **Rule:** keep this rare. Many browser branches signal application compatibility bugs to fix, not work around.
+- **Visual cross-browser comparison** — `toHaveScreenshot` with a `maxDiffPixelRatio` tolerance; each browser project generates its own baseline (`homepage-chromium.png`, `homepage-webkit.png`, …). For threshold strategy and baseline management, use `visual-testing`.
 - **Progressive enhancement validation** — abort script requests (Chromium only) and verify core functionality still works via native HTML.
 
 See `references/testing-patterns.md` for the runnable code for all four patterns.
@@ -145,40 +177,57 @@ See `references/testing-patterns.md` for the runnable code for all four patterns
 
 ## Anti-Patterns
 
-**Testing only on Chrome.** Chrome is ~65% of desktop traffic but uses the same engine as Edge, Opera, and Brave. Safari (WebKit) and Firefox (Gecko) surface the real cross-browser issues. Chrome-only testing gives false confidence.
+**Testing only on Chrome.** Chrome is the largest desktop share but uses the same engine as Edge, Opera, and Brave. Safari (WebKit) and Firefox (Gecko) surface the real cross-browser issues. Chrome-only testing gives false confidence.
 
-**Testing every browser equally.** A browser at 1% traffic share does not need the same test investment as one at 30%. Use the tier system to allocate effort proportionally.
+**Reporting WebKit/Chromium as Safari/Chrome.** Bundled engines share rendering, not the shipped browser. Claiming "Safari coverage" off a WebKit project hides codec, font, and policy bugs that only real Safari shows.
 
-**Duplicating tests per browser.** Write tests once, run them across browser projects via configuration. If you have a `checkout.chrome.spec.ts` and a `checkout.safari.spec.ts` with the same test logic, you are doing it wrong.
+**Testing every browser equally.** A browser at 1% traffic share does not need the same investment as one at 30%. Use the tier system to allocate effort proportionally.
 
-**Using `browserName` checks everywhere.** Excessive browser branching in tests signals application compatibility issues. Fix the app, do not work around it in tests.
+**Duplicating tests per browser.** Write tests once, run them across browser projects via configuration. A `checkout.chrome.spec.ts` and `checkout.safari.spec.ts` with identical logic is the wrong shape.
+
+**`browserName` checks everywhere.** Excessive browser branching in tests signals application compatibility issues. Fix the app, do not work around it in tests.
 
 **Pixel-perfect assertions without tolerance.** Font rendering, anti-aliasing, and sub-pixel rounding differ between browsers and platforms. Use `maxDiffPixelRatio` or `maxDiffPixels` in visual comparisons.
 
-**Ignoring mobile browsers.** Mobile Chrome and mobile Safari are not the same as their desktop counterparts. They have different viewport behaviors, touch event handling, and CSS support. Test them as separate matrix entries.
+**Ignoring mobile browsers.** Mobile Chrome and mobile Safari are not their desktop counterparts — different viewport behavior, touch handling, and CSS support. Test them as separate matrix entries.
 
-**Static browser matrix.** Browser usage changes. If your matrix is based on data from 2 years ago, it is wrong. Review analytics data quarterly.
+**Static browser matrix.** Browser usage changes. A matrix based on data from two years ago is wrong. Review analytics quarterly and update the `next-review` date.
+
+**Documenting a divergence with no fallback or ticket.** A known-issues row that lists no workaround and no open ticket is an undocumented bug pretending to be documented.
+
+---
+
+## Failure Modes
+
+| Symptom | Likely cause | Fix or check |
+|---------|--------------|--------------|
+| Cloud tests fail with a socket/handshake error | Grid Playwright version ≠ local | Set `playwrightVersion`/`client.playwrightVersion` to match `npx playwright --version`; use the `browserstack-node-sdk` runner |
+| Clipboard test passes in Chromium, fails in Firefox/WebKit | `grantPermissions` only works in Chromium | Assert UI feedback (`Copied!`), not the clipboard API; gate `grantPermissions` on `browserName === 'chromium'` |
+| Progressive-enhancement test errors in Firefox/WebKit | Script-abort route interception is Chromium-only | Gate the route on `browserName === 'chromium'`; skip the JS-disabled assertion elsewhere |
+| WebKit project "passes" but real users on Safari report breakage | WebKit engine ≠ shipped Safari | Add a real-Safari row on a cloud grid for the affected flow |
+| Visual baseline diff explodes for one browser only | Single baseline shared across browsers | Generate per-project baselines; each browser keeps its own `*-<project>.png` |
+| `:has()`-heavy page janky in one engine only | Style-recalc cost differs by engine | Profile in that engine; reduce `:has()` scope; visual-regress in `visual-testing` |
 
 ---
 
 ## Done When
 
-- Browser matrix defined using real analytics data (last 90 days), with tier assignments (P0/P1/P2) documented and justified by traffic share.
-- Playwright project config (or BrowserStack/Sauce Labs config) reflects the defined matrix and runs P0 browsers on every PR.
-- Known browser-specific bugs documented with the affected browser, reproduction steps, and either a workaround or a linked open ticket.
-- Rendering issues checklist (flexbox gaps, scroll behavior, date inputs, clipboard API, dialog element) run against all P0 and P1 target browsers.
-- Browser matrix reviewed and signed off by the team, with a calendar reminder set for quarterly refresh against updated analytics data.
-
-## Reference Files (in `references/`)
-
-- **playwright-and-cloud-config.md** — `playwright.config.ts` project list, branded channels, `--project` run commands, and BrowserStack/Sauce Labs/CI matrix configs.
-- **common-browser-issues.md** — CSS workarounds and Playwright tests for flexbox `gap`, scroll behavior, date inputs, clipboard, backdrop-filter, `<dialog>`, and Web Animations.
-- **testing-patterns.md** — Same-test-multiple-browsers, `browserName` branching, visual comparison, and progressive-enhancement code.
+- Browser matrix defined using real analytics data (last 90 days), with tier assignments (P0/P1/P2) documented and justified by traffic share, committed to a file carrying a dated `next-review` field.
+- Playwright project config (or BrowserStack/Sauce Labs config) reflects the matrix and runs P0 browsers on every PR; cloud configs pin `playwrightVersion` to match `package.json`.
+- `docs/browser-issues.md` exists with one row per known divergence: affected browser, repro, workaround/fallback or linked ticket, and the test that asserts the user outcome (not the CSS).
+- Common-divergence checklist (partitioned cookies, date inputs, clipboard, scroll behavior, backdrop-filter, `<dialog>`, View Transitions) has a test or a known-issues row for each item relevant to P0/P1 browsers.
+- A tracked issue exists for the next quarterly matrix review (or the matrix file's `next-review` date is in the future), so the refresh is not lost.
 
 ## Related Skills
 
-- **visual-testing** -- Screenshot comparison, baseline management, and threshold strategies for pixel-level cross-browser validation.
-- **playwright-automation** -- Core Playwright patterns, fixtures, and CI configuration that cross-browser testing builds on.
-- **ci-cd-integration** -- Pipeline configuration for parallel browser matrix execution, artifact collection.
-- **accessibility-testing** -- Cross-browser accessibility differences (screen reader behavior, ARIA support) overlap with cross-browser testing.
-- **mobile-testing** -- Device-specific testing for native/hybrid apps extends the browser matrix to app-level concerns.
+- **visual-testing** — Owns pixel-level baseline strategy, threshold tables, and `toHaveScreenshot` config. Go there for *how tolerant* a screenshot diff should be; this skill only decides *which browsers* get a baseline.
+- **playwright-automation** — Core Playwright patterns, fixtures, and CI configuration that cross-browser testing builds on.
+- **ci-cd-integration** — Pipeline configuration for parallel browser-matrix execution and artifact collection.
+- **mobile-testing** — Device-farm and native/hybrid app testing (Appium/Detox); go there when the target is an app, not a browser viewport.
+- **accessibility-testing** — Cross-browser accessibility differences (screen-reader behavior, ARIA support) that overlap with this matrix.
+
+## Reference Files (in `references/`)
+
+- **playwright-and-cloud-config.md** — `playwright.config.ts` project list, branded channels, `--project` run commands, and BrowserStack (SDK + `client.playwrightVersion`)/Sauce Labs/CI matrix configs.
+- **common-browser-issues.md** — Per-engine partitioned-cookie iframe test, date-input WebKit fallback, clipboard, scroll behavior, backdrop-filter, `<dialog>`, View Transitions, and Web Animations.
+- **testing-patterns.md** — Same-test-multiple-browsers, `browserName` branching, visual comparison, and progressive-enhancement code.

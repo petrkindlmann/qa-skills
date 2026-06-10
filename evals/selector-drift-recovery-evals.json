@@ -1,6 +1,6 @@
 {
   "skill": "selector-drift-recovery",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "sdr-001",
@@ -56,11 +56,13 @@
       "expected_patterns": [
         "CI artifact OR trace extraction",
         "npx playwright show-trace OR trace files",
-        "page.content() OR innerHTML",
+        "page.content() OR ariaSnapshot OR innerHTML",
+        "DOM snapshot panel OR snapshot panel OR ariaSnapshot",
         ".drift-recovery/old OR snapshot directory",
         "per-page snapshots OR per-component"
       ],
       "anti_patterns": [
+        "Copy HTML at this step",
         "no reference to CI artifacts OR baseline",
         "manual DOM reconstruction",
         "skipping snapshot phase"
@@ -88,6 +90,8 @@
         "recommending score-1 as primary candidate",
         "no confidence scoring",
         "xpath OR css= selectors in replacement",
+        ":near(",
+        ":right-of(",
         "not preferring getByRole"
       ],
       "tags": [

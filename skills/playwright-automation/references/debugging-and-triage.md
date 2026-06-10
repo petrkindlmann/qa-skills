@@ -252,14 +252,14 @@ Install `ms-playwright.playwright` from the VS Code marketplace.
 
 ## page.pause() Usage
 
-`page.pause()` opens the Playwright Inspector mid-test. Use it for interactive debugging during development.
+`page.pause()` opens the Playwright Inspector mid-test, for local debugging only — never commit it. Use it for interactive debugging during development.
 
 ```typescript
 test('debug this flow', async ({ page }) => {
   await page.goto('/checkout');
   await page.getByLabel('Card number').fill('4242424242424242');
 
-  // Opens the Inspector: step through actions, inspect elements, try locators
+  // Local debugging only, never commit: opens the Inspector to step through actions
   await page.pause();
 
   await page.getByRole('button', { name: 'Pay' }).click();
@@ -316,4 +316,4 @@ When a test fails, work through this checklist:
 7. **Check if the test depends on another test's state.** Run it in isolation.
 8. **Check if it is browser-specific.** Run with --project=firefox or --project=webkit.
 9. **Check recent code changes.** Did a UI change break a locator?
-10. **If all else fails,** add `await page.pause()` before the failing line and inspect interactively.
+10. **If all else fails,** add `await page.pause()` locally — never commit it — before the failing line and inspect interactively.

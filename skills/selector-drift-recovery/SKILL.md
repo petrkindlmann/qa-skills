@@ -2,226 +2,254 @@
 name: selector-drift-recovery
 description: >-
   Bulk-regenerate broken test selectors after a UI refactor or redesign. Detects
-  drift between old and new DOM, maps old locators to new equivalents using
-  role-first + neighbor context, validates against the new build, and produces a
-  single PR with grouped per-file selector updates and per-change evidence. Use
-  when: "UI refactor broke tests," "redesign broke tests," "bulk update
-  selectors," "regenerate selectors after refactor," "selector drift," "fix N
-  broken tests after redesign." Not for: healing one flaky test at runtime — use
-  `test-reliability`. Not for: writing a new test suite from scratch — use
-  `playwright-automation`.
-  Related: test-reliability, playwright-automation, ci-cd-integration, ai-bug-triage, visual-testing.
+  drift between old and new DOM with an aria-snapshot diff, maps old locators to
+  new equivalents using role-first + region scoping, validates against the new
+  build, and produces a single PR with grouped per-file selector updates and
+  per-change evidence. Assumes Playwright >= 1.50 (trace viewer DOM-snapshot
+  panel, getByRole filtering, ariaSnapshot). Use when: "UI refactor broke tests,"
+  "redesign broke tests," "bulk update selectors," "regenerate selectors after
+  refactor," "selector drift," "fix N broken tests after redesign." Not for:
+  healing one flaky test at runtime — use test-reliability. Not for: writing a new
+  test suite from scratch — use playwright-automation. Not for: re-recording tests
+  after a framework switch (Selenium to Playwright) — use test-migration.
+  Related: test-reliability, playwright-automation, test-migration, ci-cd-integration, visual-testing.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: automation
 ---
 
 <objective>
-Close the maintenance loop between a UI refactor and the test suite that depended on the old DOM. The trigger is an event (a redesign shipped, a component library migrated, a Tailwind upgrade), not a flaky test. The output is a single PR that updates many selectors at once with per-change evidence — not a runtime auto-heal.
+A redesign shipped and 23 tests now fail with `TimeoutError: locator.* exceeded` — the DOM moved, not the product. This skill closes that maintenance loop: it diffs the old DOM against the new one, regenerates the broken selectors role-first against the new build, validates the whole suite, and ships the diff as one reviewable PR with a confidence score and screenshot per change. The trigger is an event (a refactor merged), not a flake. The output is a PR a human signs off on — not a silent runtime auto-heal.
 
-This skill is the bulk, offline, batch counterpart to `test-reliability`. They share the multi-attribute locator + confidence scoring primitives but apply them in opposite directions:
-
-- `test-reliability` reacts to a single test flake at runtime, heals one selector with a guarded confidence threshold, runs the test, and decides whether to keep the repair.
-- `selector-drift-recovery` reacts to a refactor event, regenerates N selectors offline against the new DOM, validates the whole suite, and ships the diff as a reviewable PR.
-
-If you find yourself doing the second workflow inside `test-reliability`, switch to this skill.
-
-**Before starting:** Check for `.agents/qa-project-context.md` in the project root. It identifies your E2E framework, selector strategy, and known fragile areas.
+This is the bulk, offline, batch counterpart to `test-reliability`. They share the multi-attribute locator + confidence scoring primitives but run in opposite directions: `test-reliability` heals one selector at runtime behind a guarded threshold; `selector-drift-recovery` regenerates N selectors offline against the new DOM and bundles them into a PR. If you are doing the second workflow inside `test-reliability`, switch here.
 </objective>
+
+## Quick Route
+
+| Situation | Go to |
+|-----------|-------|
+| One broken test, not a refactor | Stop — use `test-reliability` instead |
+| 200+ broken selectors across many files | Split by area first (one PR per page/dir), then Phase 1 |
+| Refactor changed flows/semantics, not just structure | Stop — rewrite from specs with `playwright-automation` |
+| Framework switch (Selenium → Playwright) | Stop — use `test-migration`, not drift recovery |
+| No old-DOM reference exists anywhere | Capture one (Phase 1) or scope down — without it this is "rewrite tests" |
+| Have old + new DOM, ready to map | Phase 1 → 6 below |
 
 ---
 
 ## Discovery Questions
 
-1. **What triggered the drift?** A planned refactor (Storybook can show the new DOM before merge), a shipped redesign (the new DOM is in main), a dependency upgrade (component library bumped), or a Tailwind/CSS framework migration? The trigger determines whether you run pre-emptively or react to CI failures.
+Check `.agents/qa-project-context.md` first — if it exists, use it and skip anything answered there. It identifies your E2E framework, selector strategy, and known fragile areas. Then:
 
-2. **What is the blast radius?** A single component, a page, or the whole app? If a single component: scope the recovery to test files that touch it. If global: budget for a half-day to a day, and consider whether some tests should be rewritten rather than re-selected.
-
-3. **What is your current selector strategy?** If selectors are mostly `data-testid` and the refactor preserved testids, the recovery is trivial. If selectors are CSS class-based or XPath, expect 30-60% of selectors to need new strategies, not just new locators.
-
-4. **Is there a passing baseline?** You need *somewhere* the old DOM still exists: a previous CI artifact, a deployed staging build, a Storybook story, or the git history of the components. Without an old DOM reference, this skill degrades to "rewrite tests."
-
-5. **Who reviews the resulting PR?** Confidence-scored automated updates need a human signoff. Decide before you start whether the PR goes to the test author, the engineer who did the refactor, or the QA lead.
+1. **What triggered the drift?** A planned refactor (Storybook can show the new DOM before merge), a shipped redesign (new DOM is in main), a dependency upgrade, or a Tailwind/CSS migration? The trigger decides whether you run pre-emptively or react to CI failures.
+2. **What is the blast radius?** A single component, a page, or the whole app? Single component: scope recovery to the test files that touch it. Global: budget half a day to a day, and decide which tests should be rewritten rather than re-selected.
+3. **What is your current selector strategy?** If selectors are mostly `data-testid` and the refactor preserved testids, recovery is trivial. If they are CSS-class or XPath based, expect 30–60% to need a new *strategy*, not just a new locator.
+4. **Is there a passing baseline?** You need the old DOM *somewhere*: a previous CI trace artifact, a deployed staging build, a Storybook story, or git history of the components. No old-DOM reference means this degrades to "rewrite tests."
+5. **Are the broken locators inline or wrapped in a Page Object?** The JSON reporter's `error.location` points at the *failing line*. For inline locators that is the locator itself; for POM-wrapped locators it points at the POM helper, not the test. Know this before you trust the auto-extracted line numbers (see Failure Modes).
+6. **Who reviews the resulting PR?** Confidence-scored updates need a human signoff. Decide upfront whether the PR goes to the test author, the engineer who did the refactor, or the QA lead.
 
 ---
 
 ## Core Principles
 
-1. **Recovery is event-driven, not failure-driven.** Run this when a refactor is planned or just shipped, not when one test goes flaky. If you have one broken test, use `test-reliability`. If you have ten, this is the right tool.
+1. **Recovery is event-driven, not failure-driven.** Run this when a refactor is planned or just shipped, not when one test goes flaky. One broken test → `test-reliability`. Ten or more from the same event → this skill.
 
-2. **Old DOM, new DOM, mapped pair.** The whole skill rests on having a snapshot of the DOM before the refactor and a snapshot after. Everything else is bookkeeping around that pair. If you cannot produce both snapshots, fix that first.
+2. **Old DOM, new DOM, mapped pair.** The whole skill rests on a snapshot before the refactor and one after. Everything else is bookkeeping around that pair. Capture both as **aria snapshots** (`await page.locator('body').ariaSnapshot()`), not raw HTML — a role-tree diff is exactly the signal role-first recovery needs and ignores the cosmetic churn (class renames, wrapper divs) that a raw-HTML diff drowns in. If you cannot produce both snapshots, fix that first.
 
-3. **Role-first replacement, every time.** Even if the old test used CSS selectors, the regenerated selector should prefer `getByRole` + accessible name, with neighbor context as the disambiguator. The recovery PR is a chance to ratchet up the average selector stability score (see `test-reliability` for the 0-5 rubric).
+3. **Role-first replacement, every time.** Even when the old test used CSS, the regenerated selector should prefer `getByRole` + accessible name, then `getByLabel` for form fields, then `getByTestId` when the refactor added one. The recovery PR is your chance to ratchet the average selector stability score up (0–5 rubric below, shared with `test-reliability`).
 
-4. **One PR, grouped by file, with per-change evidence.** Reviewers cannot eyeball 47 selector changes spread across 30 commits. Bundle the update into one PR, group hunks by test file, and attach a confidence score + DOM screenshot per change.
+4. **Disambiguate by region scoping, not layout selectors.** When role+name is ambiguous (two "Submit" buttons), narrow with `getByRole('region', { name }).getByRole('button', …)` or `getByRole(...).filter({ hasText })`. Do **not** reach for `:near()` / `:right-of()` — see the Avoid note. A score-3 candidate is one where region scoping has been *applied* and the locator now matches exactly one element.
 
-5. **The suite must pass before merge.** A confidence-scored auto-regenerated selector that doesn't run, or runs and fails, is not a recovery — it's a worse version of the original problem. The skill ends with a green CI run, not a generated diff.
+5. **One PR, grouped by file, with per-change evidence.** Reviewers cannot eyeball 47 selector changes spread across 30 commits. Bundle into one PR, group hunks by test file, attach a confidence score + DOM screenshot per change.
 
-6. **Tests that no longer make sense should be deleted, not patched.** If a refactor removed a feature, the tests for that feature are dead. Treat the recovery as an opportunity to prune, not just to translate.
+6. **The suite must pass before merge, and dead tests get deleted.** A regenerated selector that doesn't run is a worse version of the original problem; the skill ends with green CI, not a generated diff. And if the refactor removed a feature, prune its tests — do not regenerate selectors for elements that no longer exist.
+
+> **Avoid:** Playwright layout selectors `:near()`, `:right-of()`, `:left-of()`, `:above()`, `:below()` as disambiguators — officially deprecated and "may be removed," because a 1px layout shift changes the match (Playwright docs, 2026). They also contradict the role-first thesis. Use region scoping / `getByRole().filter()` instead.
 
 ---
 
 ## Workflow
 
-The workflow has six phases. Each phase has a check that gates progression to the next.
+Six phases, each gated by a check before the next.
 
 ### Phase 1 — Snapshot the old DOM
 
-You need a snapshot of every page or component the affected tests touch, in its pre-refactor state.
+You need a snapshot of every page or component the affected tests touch, in its pre-refactor state. **Sources, in preference order:**
 
-**Sources, in preference order:**
+1. **Last green CI trace artifact.** Most teams save Playwright traces on failure (`trace: 'on-first-retry'`). Download the green-run artifact, open a trace with `npx playwright show-trace traces/checkout.zip`, select an action, and read the per-action **DOM snapshot panel** for each surface. (The viewer no longer has a "Copy HTML at this step" menu item; you read the snapshot panel or, for a programmatic dump, replay with `page.content()` / `ariaSnapshot()`.)
+2. **Storybook at a pre-refactor commit.** `git checkout <PRE_REFACTOR_SHA>`, start Storybook, and dump each story with a tiny `page.content()` / `ariaSnapshot()` script.
+3. **A staging build still on the old version.** Navigate the same flows and snapshot.
+4. **Git history of the components.** Reconstructable but the most expensive — render in isolation.
 
-1. **Last green CI artifact.** Most teams configure Playwright to save traces on failure. If you have a green-run artifact with traces from before the refactor, you have the old DOM for every test that ran. Extract `*.zip` traces, open them with `npx playwright show-trace`, and snapshot the relevant frames.
-2. **Storybook stories at a pre-refactor commit.** Check out the commit immediately before the refactor and start Storybook. Use `page.content()` to dump HTML per story.
-3. **A staged-on-staging build.** If staging still runs the old version, navigate the same flows and snapshot.
-4. **Git history of the components.** Reconstructable, but the most expensive option — render components in isolation.
+Output: `.drift-recovery/old/<page-or-component>.aria.yml` (and `.html` if you also need raw markup) per affected unit.
 
-Output of this phase: a directory `/.drift-recovery/old/<page-or-component>.html` for each affected unit.
-
-**Gate:** You can answer "what did the page look like when these tests last passed?" with HTML, not from memory.
+**Gate:** You can answer "what did this page look like when the tests last passed?" from a snapshot file, not from memory.
 
 ### Phase 2 — Snapshot the new DOM
 
-Run the same surfaces in the post-refactor build. Use the deployed preview (Vercel preview deploys are ideal), a local dev server, or the PR branch in CI.
+Run the same surfaces in the post-refactor build — a Vercel/Netlify preview deploy is ideal, or a local dev server / the PR branch in CI. Wait for hydration (`await page.waitForLoadState('networkidle')`) before snapshotting, or SSR pages give you the pre-hydration tree and you miss client-rendered elements.
 
-Output: `/.drift-recovery/new/<page-or-component>.html` matching the old set.
+Output: `.drift-recovery/new/<page-or-component>.aria.yml` matching the old set.
 
-**Gate:** For every old snapshot, there is a matching new snapshot. If the page was deleted, mark its test files for the deletion pile in Phase 6.
+**Gate:** Every old snapshot has a matching new one. If a route 404s in the new build, that flow was deleted — mark its tests for the deletion pile in Phase 6.
 
-### Phase 3 — Identify broken selectors
+### Phase 3 — Identify broken selectors and infer intent
 
-For each test file:
+For each test file, run against the new build with the JSON reporter, then parse it. Capture, per failure: **file, line, old locator string, error type (timeout vs assertion), and inferred intent**. Group the results by test file.
 
-1. Run the test against the new build. Capture every locator that throws `TimeoutError: locator.* exceeded`.
-2. For each broken locator, extract its source line and the locator string.
-3. Map the locator's intended target by reading the surrounding code — what assertion follows, what action is being taken.
+- **Error classification:** a drift failure is `TimeoutError: locator.* exceeded`. Distinguish it from an assertion failure (`expect(...).toBe`) so you don't try to re-select a locator that resolved fine but failed a value check.
+- **Inferred intent is mandatory and not in the reporter.** Read the surrounding test code — what action is taken on the locator, what assertion follows — and store a short intent string ("submit the order", "read the order total"). The candidate generator keys off intent, so this step is load-bearing, not commentary.
+- **Page route is also not in the reporter.** Map each locator to the snapshot it should resolve against (which `.drift-recovery/new/*.aria.yml`) so Phase 4 can load the right new DOM.
 
-A short script that consumes a Playwright JSON report and groups failures by file is the right form factor. The output is a table:
+The result is a per-file table:
 
-| Test file | Line | Old locator | Inferred intent |
-|---|---|---|---|
-| `tests/checkout.spec.ts` | 42 | `getByTestId('submit-btn')` | Submit the order |
-| `tests/checkout.spec.ts` | 87 | `locator('.summary > h2')` | Read the summary heading |
+| Test file | Line | Old locator | Error type | Page route | Inferred intent |
+|---|---|---|---|---|---|
+| `tests/checkout.spec.ts` | 42 | `getByTestId('submit-btn')` | timeout | `/checkout` | Submit the order |
+| `tests/checkout.spec.ts` | 87 | `locator('.summary > h2')` | timeout | `/checkout` | Read the order total |
 
-**Gate:** Every broken locator has an inferred intent. If you cannot infer the intent, ask the test author or read the original PR — do not guess.
+See `references/recovery-scripts.md` for `identify-drift.ts`, which produces exactly these rows (with the intent/route fields populated, not stubbed).
+
+**Gate:** Every broken locator has an inferred intent and a page route. If you cannot infer intent, ask the test author or read the original PR — do not guess.
 
 ### Phase 4 — Generate replacement candidates
 
-For each row in the table, generate replacement selectors against the new DOM:
+For each row, generate candidates against the **new** DOM snapshot and score each on the 0–5 rubric (shared with `test-reliability`). Strategy ladder, best first:
 
-1. **Role-first.** Find an element in the new DOM matching the inferred intent that has a role + accessible name. Score 4-5 on the stability rubric.
-2. **Neighbor context.** If role alone is ambiguous (multiple buttons named "Submit"), add a nearby-text disambiguator (e.g. `near=` or scoped within a region role).
-3. **Test ID, if added during refactor.** If the new DOM has a `data-testid` that wasn't in the old DOM, prefer it — that's the most stable choice the refactor team made.
-4. **Fall back to neighbor + tag** only when no role exists.
+1. **New `data-testid`** added by the refactor team — the most stable choice they made. Score 5.
+2. **`getByRole` + accessible name, unique on the page.** Score 4.
+3. **`getByLabel` for a form field**, when the intent is an input and a label exists. Score 4 (use over a bare role when the field has no name otherwise).
+4. **Role + name, region-scoped to a single match.** If role+name alone returns >1 element, wrap it — `getByRole('region', { name }).getByRole(role, { name })` or `.filter({ hasText })` — and confirm the scoped locator now matches exactly one. Only score 3 **after** scoping makes it unambiguous.
+5. **Visible text only** (`getByText`). Score 2 — fragile to copy changes.
+6. **CSS class on the changed structure.** Score 1 — usually still broken.
+7. **No safe replacement.** Score 0 — flag for human.
 
-For each candidate, compute a confidence score (reuses the rubric from `test-reliability`):
+| Score | Replacement strategy | Auto-apply? |
+|---|---|---|
+| 5 | New `data-testid` exists | yes |
+| 4 | `getByRole` + accessible name (or `getByLabel`), unique on page | yes |
+| 3 | `getByRole` + name, region-scoped to exactly one match | yes |
+| 2 | Visible-text-only | no |
+| 1 | CSS class on changed structure | no |
+| 0 | No safe replacement found | no — flag for human |
 
-| Score | Replacement strategy |
-|---|---|
-| 5 | New `data-testid` exists |
-| 4 | `getByRole` + accessible name, unique on page |
-| 3 | `getByRole` + name + region-scoped |
-| 2 | Visible-text-only |
-| 1 | CSS class on changed structure |
-| 0 | No safe replacement found — flag for human |
+A candidate is **score 3 only if scoping already resolved it to a single element**. A still-ambiguous multi-match (`count > 1`, "needs scoping") is not a 3 — it is unfinished, and must not be auto-applied.
 
-Output: a CSV or JSON with `file, line, old, new, score, screenshot_path` for every change.
+Output: `.drift-recovery/candidates.json` with `{ file, line, oldLocator, selector, score, rationale, screenshotPath }` per change. See `references/recovery-scripts.md` for `generate-candidates.ts`.
 
-**Gate:** Every row has a candidate with score ≥ 3, or is flagged for human review. Score-0 and score-1 candidates do not get auto-applied.
+**Gate:** Every row has a candidate scored ≥ 3 (and confirmed unique), or is flagged for human review. Score-0/1/2 are never auto-applied.
 
-### Phase 5 — Validate
+### Phase 5 — Apply, validate, iterate
 
-1. Apply the replacements to a feature branch.
-2. Run the full affected test suite (not just the previously-failing tests — replacements can break passing tests if the new selector matches unintended elements).
-3. For each test:
-   - **Passed:** keep the replacement.
-   - **Failed:** revert that one replacement, mark the test for human review.
-4. Generate a summary: N tests recovered automatically, M flagged for review.
+1. Apply the score-≥3 replacements to a feature branch. Replace by `(file, line)`, not a content-wide string replace — the reporter's locator string is a *rendered* form (`locator('.summary > h2')`) that rarely matches the source expression verbatim, and a naive `String.replace` hits only the first occurrence and collides on identical locators. Edit the specific line; set `applied: true` on each candidate you actually wrote.
+2. Run the **full affected suite**, not just the previously-failing tests — a new selector can match an unintended element and break a previously-passing test.
+3. Per test: **passed** → keep the replacement. **failed** → revert that one line, mark the test for human review.
+4. Emit a summary: N recovered automatically, M flagged.
 
 **Gate:** Recovered tests pass the suite. Flagged tests are clearly marked, not silently included.
 
 ### Phase 6 — Ship the PR
 
-The PR is the actual deliverable. Structure:
-
-**Title:** `chore(tests): selector recovery after <refactor description>`
-
-**Body:**
+The PR is the deliverable. **Title:** `chore(tests): selector recovery after <refactor description>`. **Body** (generated from `candidates.json`, filtering on `applied`):
 
 ```markdown
 ## Trigger
-<Link to the refactor PR or describe the redesign>
+<Link to the refactor PR / describe the redesign>
 
 ## Summary
-- N test files updated
-- M selectors changed
-- K tests deleted (no longer applicable)
-- L tests flagged for manual review
+- N test files updated   - M selectors changed
+- K tests deleted (feature removed)   - L tests flagged for manual review
 
 ## Per-file changes
-<For each file, a table of: line, old, new, score, screenshot URL>
+<For each file: a table of line, old, new, score, screenshot URL>
 
 ## Flagged for review
-<List of tests where no candidate scored ≥ 3, with the inferred intent>
+<Tests where no candidate scored >= 3, with the inferred intent>
 
 ## How to review
-- Check the screenshots: does each `new` selector point at the element the `old` selector pointed at?
-- For tests with score 3 candidates, verify the neighbor-context disambiguator is meaningful in the new design.
+- Check each screenshot: does `new` point at the element `old` pointed at?
+- For score-3 candidates, verify the region scope is meaningful in the new design.
 - For flagged tests, decide: rewrite, delete, or accept a manual selector update.
 ```
 
-Attach the screenshots inline using the CI artifact URL pattern your team uses.
+Attach screenshots inline via your team's CI artifact URL pattern. See `references/recovery-scripts.md` for `apply-recovery.ts` (line-anchored) and `build-pr-body.ts`.
 
-**Gate:** PR is reviewable in one sitting. If the diff is too large to review, split by area (one PR per page / per component / per test directory).
-
----
-
-## When to NOT use this skill
-
-- **One broken test.** Use `test-reliability`. The overhead of snapshotting old and new DOM is not worth it for a single locator.
-- **No DOM snapshot available.** If you cannot produce a "before" reference, this becomes "rewrite tests." Either capture a snapshot first or scope down the recovery.
-- **The refactor was a rewrite, not a refactor.** If the UI is entirely different — new flows, new components, new mental model — the tests should be rewritten from the new specs, not regenerated against the new DOM.
-- **The team practices visual regression testing on every PR.** If you have `visual-testing` running on every PR, you should never have reached the "47 broken tests" state — the visual diffs would have caught the refactor at PR time. If this skill keeps getting used, the upstream problem is missing visual coverage.
+**Gate:** PR is reviewable in one sitting. Too large → split by area (one PR per page / component / test directory).
 
 ---
 
-## Anti-patterns
+## Anti-Patterns
 
-1. **Skipping the screenshots.** Confidence scores are necessary but not sufficient. A score-4 candidate can point at the wrong element if the page has two regions with the same role + name. The screenshot per change is the only check that catches semantic drift.
+1. **Auto-applying score-0, -1, or -2 candidates.** A score-2 is "we found *some* element." That is gambling, not recovery — and it is the usual cause of a suite-wide stability score *dropping* after a recovery. Auto-apply only score ≥ 3.
 
-2. **Auto-applying score-1 and score-2 candidates.** A score-1 candidate is "we found something that might be the right element." That is not recovery — that is gambling.
+2. **Calling an ambiguous multi-match "score 3."** If `getByRole(...)` returns >1 element it is not a 3 until region scoping narrows it to exactly one. Scoring it 3 and auto-applying ships a locator that resolves to the wrong element.
 
-3. **Running this skill in CI without a human reviewer.** The PR is the artifact. Auto-merging a recovery PR defeats the purpose; the whole point is that a reviewer eyeballs the per-change evidence.
+3. **Skipping the screenshots.** A score-4 candidate can still point at the wrong element when the page has two regions with the same role + name. The per-change screenshot is the only check that catches semantic drift; confidence scores alone do not.
 
-4. **Treating the PR as urgent.** A failed test suite feels urgent. A *correctly* recovered test suite is what matters. Time-pressure on this workflow produces score-2 replacements that erode trust in the suite.
+4. **Content-wide string replace instead of line-anchored edits.** `content.replace(oldLocator, …)` hits the first occurrence only, collides on duplicate locators, and silently no-ops when the reporter's rendered string differs from the source expression. Edit the specific `(file, line)`.
 
-5. **Recovering tests for deleted features.** The refactor may have removed flows. Map deleted flows during Phase 2 and prune the tests, do not regenerate selectors for elements that no longer exist.
+5. **Trusting auto-extracted line numbers for POM-wrapped locators.** The JSON reporter's `error.location` points at the failing line, which for a Page Object is the helper, not the test. Re-read the locator from the trace action or grep the POM source before applying.
 
-6. **Not updating the average selector stability score after.** The recovery is an opportunity to ratchet the suite-wide average up. If you regenerated 47 selectors and the new average isn't higher, you spent the budget poorly.
+6. **Recovering tests for deleted features.** The refactor may have removed flows. Map deleted routes in Phase 2 and prune those tests — do not regenerate selectors for elements that no longer exist.
+
+7. **Auto-merging the recovery PR in CI.** The PR *is* the artifact; the whole point is a human eyeballing the per-change evidence. Auto-merge once tests pass defeats the purpose — a green suite with a selector pointing at the wrong-but-present element passes and erodes trust. Require a reviewer.
+
+8. **Treating the PR as urgent.** A failed suite feels urgent; a *correctly* recovered one is what matters. Time pressure produces score-2 replacements that quietly degrade the suite.
+
+---
+
+## Failure Modes
+
+| Symptom | Likely cause | Fix or check |
+|---|---|---|
+| `identify-drift.ts` finds 0 failures despite red CI | Suite errored before producing the JSON report, or you parsed the wrong file | `jq '.stats' .drift-recovery/results.json`; confirm `--reporter=json` redirected to the file |
+| Extracted line points at a POM file, not the test | Locator is wrapped in a Page Object | Read the locator from the trace action, or grep the POM source for the rendered string |
+| `generate-candidates.ts` reads `undefined` for intent/route | Phase 3 output missing the inferred-intent / page-route fields | Populate them in Phase 3 — they are not in the reporter; the generator cannot infer them |
+| New-DOM snapshot is missing client-rendered elements | Snapshotted before hydration | Add `await page.waitForLoadState('networkidle')` before `ariaSnapshot()` |
+| Average stability score dropped after recovery | Score-2/CSS candidates auto-applied | Revert candidates with score < 3 in `candidates.json`; only role/label/testid should land (see scorer below) |
+
+---
+
+## Verification
+
+Run these on the recovery branch before opening the PR, smallest first:
+
+```bash
+# 1. No applied candidate is below the stability floor (machine-checkable proxy for "ratcheted up")
+node references/score-candidates.mjs .drift-recovery/candidates.json
+# prints average score + count of applied rows with score < 3 — that count MUST be 0
+
+# 2. The recovered suite is green against the new build
+PLAYWRIGHT_TEST_BASE_URL=$PREVIEW_URL npx playwright test --reporter=json \
+  | jq '.stats.unexpected'        # must be 0 (flagged tests excluded via grep/skip)
+
+# 3. The PR exists with the evidence body
+gh pr view --json title,body -q '.title'   # contains "selector recovery"
+```
+
+`references/score-candidates.mjs` reads `candidates.json`, prints the average applied score and the count of `applied && score < 3` rows; a non-zero count means a low-confidence selector leaked in. Step 1 passing + step 2 returning `0` is the proof the recovery worked.
 
 ---
 
 ## Done When
 
-- All tests in scope either pass on the new build, are flagged for human review with a clear reason, or are deleted because the feature they covered is gone.
-- The PR is open with per-change evidence (screenshots + confidence scores).
-- The average selector stability score for the recovered files is ≥ 3.5.
+- Every in-scope test passes on the new build, is flagged for human review with a clear reason, or is deleted because its feature is gone.
+- `references/score-candidates.mjs candidates.json` reports **0** applied candidates with score < 3.
+- The PR is open (`gh pr view` succeeds) with per-change evidence: confidence score and screenshot per change, grouped by file.
+- `npx playwright test --reporter=json | jq '.stats.unexpected'` returns `0` on the recovery branch.
 - A short note is added to `.agents/qa-project-context.md` describing the refactor and any new test patterns introduced.
 
----
+## Reference Files (in `references/`)
+
+- **recovery-scripts.md** — the full playbook with corrected, runnable scripts: aria-snapshot capture, `identify-drift.ts` (populates intent + route), `generate-candidates.ts` (region-scoping ladder, true score-3), line-anchored `apply-recovery.ts`, and `build-pr-body.ts`. Includes the Cypress-adaptation note.
+- **score-candidates.mjs** — tiny stability scorer; prints the average applied score and the count of applied rows below score 3. Used by Verification and Done When.
 
 ## Related Skills
 
-- **`test-reliability`** — runtime per-test healing. Use for one flaky test, not a refactor-driven mass update.
-- **`playwright-automation`** — writing new tests from scratch. Use when the refactor removed enough features that the tests should be rewritten, not patched.
-- **`visual-testing`** — if you had this running on every PR, the refactor would have flagged the visual diff before merge. Recovery is the workflow you fall back on when this is missing.
-- **`ci-cd-integration`** — to wire the recovery PR's validation step into your CI.
-- **`ai-bug-triage`** — to classify the original failure stream that triggered the recovery, separating selector drift from real product regressions.
-
----
-
-## References
-
-- See `references/refactor-recovery-workflow.md` for the full step-by-step playbook with example scripts.
+- **test-reliability** — runtime per-test healing. Use for one flaky test, not a refactor-driven mass update. Shares the 0–5 stability rubric.
+- **playwright-automation** — writing new tests from scratch. Use when the refactor removed enough features that tests should be rewritten, not patched.
+- **test-migration** — switching frameworks (Selenium → Playwright). A migration re-records tests; it is not selector drift, even though both touch many tests at once.
+- **visual-testing** — had this run on every PR, the refactor's visual diff would have flagged before merge. Recovery is the fallback when that coverage is missing.
+- **ci-cd-integration** — wires the recovery PR's validation step into CI.

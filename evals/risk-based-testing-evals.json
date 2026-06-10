@@ -1,23 +1,21 @@
 {
   "skill": "risk-based-testing",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "rbt-001",
       "prompt": "Build a risk matrix for an e-commerce checkout feature. List the failure modes and score each on impact (1-5) and probability (1-5), then place them in the correct zone.",
       "expected_patterns": [
-        "Impact score (1-5)",
-        "Probability score (1-5)",
-        "Composite score (impact × probability)",
-        "Risk zone (CRITICAL OR HIGH OR MEDIUM OR LOW)",
-        "Failure modes (at least 2)",
-        "Trigger OR Blast Radius OR Detection Method"
+        "Impact",
+        "Probability",
+        "Impact × Probability OR Impact x Probability",
+        "CRITICAL OR HIGH OR MEDIUM OR LOW",
+        "Trigger",
+        "Blast Radius OR Detection Method"
       ],
       "anti_patterns": [
-        "Using gut feeling instead of systematic scoring",
-        "Same coverage target across all features",
-        "No blast radius assessment",
-        "Scoring without justification"
+        "gut feeling",
+        "same coverage target across all features"
       ],
       "tags": [
         "risk-matrix",
@@ -30,19 +28,16 @@
       "id": "rbt-002",
       "prompt": "You have a production incident where a third-party payment API timeout cascaded through your checkout flow. Walk through the risk reassessment process: what questions would you ask, what would you update in the risk model, and on what timeline?",
       "expected_patterns": [
-        "Reassessment trigger (post-incident)",
-        "Stakeholder questions OR interview",
-        "Code churn analysis OR git log",
-        "Dependency health monitoring",
-        "Updated probability OR impact score",
-        "Coverage gap analysis",
+        "post-incident OR production incident",
+        "git log",
+        "dependency health",
+        "probability OR impact",
+        "coverage gap",
         "48 hours OR within 48 hours"
       ],
       "anti_patterns": [
-        "One-time risk assessment",
-        "Ignoring near-misses",
-        "No timeline for reassessment",
-        "Treating incident as pure success rather than signal"
+        "one-time risk assessment",
+        "ignoring near-misses"
       ],
       "tags": [
         "incident-response",
@@ -55,19 +50,17 @@
       "id": "rbt-003",
       "prompt": "For a feature with a CRITICAL risk score (15+), define the complete test coverage requirements across unit, integration, E2E, manual, and monitoring. Justify each requirement based on risk zone.",
       "expected_patterns": [
-        "Unit tests with coverage target (90%+)",
-        "Integration tests with scope",
-        "E2E tests with full user journey",
-        "Error paths OR edge cases",
-        "Manual exploratory testing",
-        "Real-time alerts OR synthetic checks",
-        "Coverage Requirements table OR equivalent"
+        "90%+ OR 90% branch coverage",
+        "integration",
+        "full user journey OR E2E",
+        "error path OR edge case",
+        "exploratory",
+        "real-time alert OR synthetic check",
+        "CRITICAL"
       ],
       "anti_patterns": [
-        "Same coverage across all risk zones",
-        "No monitoring requirements for critical features",
-        "E2E tests only; missing unit/integration",
-        "Manual testing only, no automation"
+        "same coverage across all risk zones",
+        "manual testing only"
       ],
       "tags": [
         "critical",
@@ -80,17 +73,16 @@
       "id": "rbt-004",
       "prompt": "A feature has a moderate impact (3) but very high probability (5) due to frequent code churn. What is the risk score, which zone does it fall into, and why is it still important despite 'only' moderate impact?",
       "expected_patterns": [
-        "Risk score: 15",
-        "CRITICAL zone",
-        "Risk = Impact × Probability",
-        "Frequent changes indicate defect probability",
-        "Composite score drives priority, not impact alone",
-        "Code churn indicator OR git log analysis"
+        "15",
+        "CRITICAL",
+        "Impact × Probability OR Impact x Probability",
+        "churn",
+        "composite score OR priority, not impact alone",
+        "git log"
       ],
       "anti_patterns": [
-        "Confusing severity with priority",
-        "Anchoring on impact only",
-        "Ignoring probability dimension"
+        "confusing severity with priority",
+        "ignoring probability"
       ],
       "tags": [
         "scoring",
@@ -103,18 +95,17 @@
       "id": "rbt-005",
       "prompt": "Conduct a failure mode analysis for authentication flows (login, logout, password reset, MFA). For each mode, identify the trigger, blast radius, detection method, current mitigation, and gap.",
       "expected_patterns": [
-        "Failure Mode Analysis Template OR equivalent sections",
-        "Trigger (what causes this failure)",
-        "Blast Radius (users/systems/data affected)",
-        "Detection Method (test/monitoring/user report)",
-        "Current Mitigation (existing tests/flags/fallbacks)",
-        "Gap (what is missing)",
-        "At least 3 failure modes"
+        "Trigger",
+        "Blast Radius",
+        "Detection Method",
+        "Current Mitigation",
+        "Gap",
+        "MFA",
+        "session"
       ],
       "anti_patterns": [
-        "No trigger or root cause analysis",
-        "Vague blast radius ('users affected')",
-        "Gap analysis missing or trivial"
+        "vague blast radius",
+        "gap analysis missing"
       ],
       "tags": [
         "auth",
@@ -127,19 +118,18 @@
       "id": "rbt-006",
       "prompt": "Map test coverage gaps for a HIGH-risk feature (score 10-14). Compare required vs. actual coverage in unit, integration, E2E, and monitoring. Show the gap analysis worksheet with priority and effort estimate.",
       "expected_patterns": [
-        "Gap Analysis Worksheet OR equivalent structure",
-        "Current coverage percentage",
-        "Required coverage percentage",
-        "Gap delta (target - current)",
-        "Missing scenarios OR missing alerts",
-        "Priority (P0 OR P1 OR P2 OR P3)",
-        "Estimated effort (hours OR story points)",
-        "Owner AND Target Sprint"
+        "Gap Analysis Worksheet OR Gap",
+        "Current",
+        "Required",
+        "Gap",
+        "P0 OR P1 OR P2 OR P3",
+        "hours OR story points",
+        "Owner",
+        "Target Sprint"
       ],
       "anti_patterns": [
-        "No quantified gap",
-        "Missing effort estimate",
-        "No owner assignment"
+        "no effort estimate",
+        "no owner"
       ],
       "tags": [
         "coverage",
@@ -150,19 +140,18 @@
     },
     {
       "id": "rbt-007",
-      "prompt": "You discover that a module changed 47 times in the last 3 months (via git log --stat) but has only 40% branch coverage and no integration tests. Use the code churn signal to justify a risk reassessment and coverage increase.",
+      "prompt": "You discover that a module changed 47 times in the last 3 months (via git log) but has only 40% branch coverage and no integration tests. Use the code churn signal to justify a risk reassessment and coverage increase.",
       "expected_patterns": [
-        "Code churn data (git log OR similar)",
-        "Defect probability correlation",
-        "Current coverage (40%) vs. required",
-        "Reassessment trigger (code changes)",
-        "Risk zone elevation (e.g., MEDIUM → HIGH)",
-        "New coverage target justified by churn"
+        "git log",
+        "churn",
+        "defect probability",
+        "40%",
+        "MEDIUM → HIGH OR zone",
+        "coverage target"
       ],
       "anti_patterns": [
-        "Ignoring code churn signals",
-        "Not correlating churn to defect probability",
-        "Coverage target unchanged despite signal"
+        "ignoring code churn",
+        "coverage target unchanged"
       ],
       "tags": [
         "monitoring",
@@ -175,19 +164,18 @@
       "id": "rbt-008",
       "prompt": "For an AI/LLM feature (e.g., content recommendation), identify the AI-specific failure classes from CT-GenAI v1.1 (hallucination, bias, prompt injection, privacy leak, regulatory non-compliance). For each, define the risk score, detection method, and mitigation.",
       "expected_patterns": [
-        "Hallucination OR Reasoning error",
-        "Bias (demographic-parity OR counterfactual evals)",
+        "Hallucination OR reasoning error",
+        "Bias",
         "Prompt injection OR Jailbreak",
-        "Privacy leak (PII scanning)",
-        "AI Act OR Regulatory compliance",
-        "Golden-dataset evals OR Garak OR PyRIT OR Promptfoo",
-        "Impact and Probability scored independently",
-        "Automated eval suite as mitigation"
+        "Privacy leak OR PII",
+        "AI Act OR regulatory",
+        "Garak OR PyRIT OR Promptfoo OR golden-dataset",
+        "Impact",
+        "eval suite"
       ],
       "anti_patterns": [
-        "Treating LLM risks like traditional bugs",
-        "Manual testing as sole mitigation for AI risks",
-        "No PII or regulatory scanning"
+        "treating LLM risks like traditional bugs",
+        "Azure/PyRIT"
       ],
       "tags": [
         "ai",
@@ -201,19 +189,18 @@
       "id": "rbt-009",
       "prompt": "Describe the complete risk assessment workflow from identification through reassessment. What are the 6 phases, what happens at each, and what are the reassessment triggers?",
       "expected_patterns": [
-        "Phase 1: Identification",
-        "Phase 2: Classification",
-        "Phase 3: Failure Mode Analysis",
-        "Phase 4: Heatmap",
-        "Phase 5: Coverage Alignment",
-        "Phase 6: Reassessment OR Monitoring",
-        "Reassessment trigger (production incident OR new feature OR dependency change OR team change OR quarterly)",
-        "Continuous risk signals (code churn, defect clustering, near-miss frequency)"
+        "Identification",
+        "Classification",
+        "Failure Mode Analysis",
+        "Heatmap",
+        "Coverage",
+        "Reassessment OR Monitoring",
+        "production incident OR quarterly OR dependency change",
+        "code churn OR defect clustering OR near-miss"
       ],
       "anti_patterns": [
-        "Skipping phases",
-        "No reassessment cadence",
-        "Treating risk assessment as one-time activity"
+        "skipping phases",
+        "one-time activity"
       ],
       "tags": [
         "workflow",
@@ -226,16 +213,16 @@
       "id": "rbt-010",
       "prompt": "Evaluate this statement: 'We ran a risk assessment workshop last year and created a heatmap. Our test coverage is solid.' What are the potential anti-patterns or false confidence signals here?",
       "expected_patterns": [
-        "Risk theater (going through motions without changing allocation)",
-        "One-time assessment out of date",
-        "No alignment verification",
-        "No reassessment cadence",
-        "Assume risk has changed (product, dependencies, team, incidents)",
-        "Verify quarterly OR post-incident that heatmap is still accurate"
+        "Risk theater OR going through the motions",
+        "out of date OR outdated",
+        "alignment",
+        "reassessment OR cadence",
+        "product OR dependencies OR team OR incidents",
+        "quarterly OR post-incident"
       ],
       "anti_patterns": [
-        "Accepting outdated risk model as current truth",
-        "Confusing process completion with actual risk reduction"
+        "accepting outdated risk model as current",
+        "process completion equals risk reduction"
       ],
       "tags": [
         "anti-patterns",

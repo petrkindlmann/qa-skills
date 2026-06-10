@@ -70,10 +70,11 @@ describe('Login Flow', () => {
 
 ## Detox Device APIs
 
-> Detox 20.51+ added `by.type()` semantic matching — use it to relax brittle exact-class assertions. Detox 20.51 also confirms support for React Native 0.83 + iOS 26.
+> Detox supports React Native 0.77–0.84, including the New Architecture. Prefer `by.id`/`by.text` matchers; use `by.type()` only to relax a brittle exact-class assertion.
 
 ```javascript
 // Biometric authentication
+// Enroll BEFORE matching — matchBiometric() with no prior enrollment is a no-op.
 await device.setBiometricEnrollment(true);
 await device.matchBiometric();  // Simulate successful Face ID / fingerprint
 await device.unmatchBiometric(); // Simulate failed biometric
@@ -91,7 +92,9 @@ await device.setLocation(37.7749, -122.4194); // San Francisco
 // Open URL (deep link)
 await device.openURL({ url: 'myapp://profile/settings' });
 
-// Send user notification (iOS)
+// Send user notification — iOS only. On Android, Detox push handling is limited
+// and sendUserNotification behavior differs; drive Android push via FCM + the
+// notification shade (see mobile-patterns.md, Push Notification Testing) instead.
 await device.sendUserNotification({
   trigger: { type: 'push' },
   title: 'New message',
@@ -114,7 +117,9 @@ detox test --configuration ios.sim.debug --workers 3
 ## Maestro (Cross-Platform YAML)
 
 ```bash
-# Install
+# Install — macOS preferred (brew-managed, lower friction):
+brew tap mobile-dev-inc/tap && brew install mobile-dev-inc/tap/maestro
+# Cross-platform curl one-liner (still the official endpoint):
 curl -Ls "https://get.maestro.mobile.dev" | bash
 
 # Run a flow

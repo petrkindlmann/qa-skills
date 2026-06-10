@@ -6,17 +6,32 @@ description: >-
   FactoryBot (Ruby), Factory Boy (Python), database seeding, cleanup strategies,
   and GDPR-compliant data handling. Use when: "test data," "fixtures," "factories,"
   "seed data," "synthetic data," "test database," "data anonymization."
+  Not for: migration/integrity testing of the DB itself — use database-testing;
+  environment provisioning and database branching strategy — use test-environments.
   Related: test-environments, database-testing, api-testing, unit-testing.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: infrastructure
 ---
 
 <objective>
-Create, maintain, and clean up test data that is deterministic, isolated, realistic, and safe. Good test data is the foundation of reliable tests -- without it, tests are either flaky (shared mutable state), unrealistic (hardcoded nonsense values), or dangerous (production PII in test environments).
+Create, maintain, and clean up test data that is deterministic, isolated, realistic, and safe. Good test data is the foundation of reliable tests -- without it, tests are either flaky (shared mutable state), unrealistic (hardcoded nonsense values), or dangerous (production PII in test environments). This skill delivers factories, fixtures, idempotent seeds, anonymization pipelines, and cleanup strategies that survive parallel execution.
 </objective>
+
+---
+
+## Quick Route
+
+| Situation | Go to |
+|-----------|-------|
+| Need fresh entity data with per-test overrides | Factory Patterns → `references/factories.md` |
+| Mocking an API response or golden file | Fixture Strategies → `references/factories.md` |
+| Copying production data anywhere non-prod | Data Anonymization |
+| Populating a test DB / reference data idempotently | Database Seeding → `references/seeding-and-synthetic.md` |
+| Cleaning up after tests / parallel isolation | Cleanup Strategies → `references/seeding-and-synthetic.md` |
+| Generating edge cases and boundary values | Synthetic Data → `references/seeding-and-synthetic.md` |
 
 ---
 
@@ -54,7 +69,7 @@ Static fixtures (JSON/YAML files) are appropriate for reference data that does n
 Production databases contain the most realistic data, but they also contain real user information. Never copy production data to test environments without anonymization. Replace PII with synthetic equivalents while preserving data distributions and relationships.
 
 ### 4. Deterministic Data Enables Reproducible Tests
-Tests should produce the same results regardless of when or where they run. Avoid `Math.random()`, `Date.now()`, or auto-increment IDs in assertions. Use seeded random generators, fixed timestamps, and explicit IDs where possible.
+Tests should produce the same results regardless of when or where they run. Avoid `Math.random()`, `Date.now()`, or auto-increment IDs in assertions. Use seeded random generators (`faker.seed(n)`), fixed timestamps, factory sequences, and -- when an ID must be a UUID you assert on -- a seeded `faker.string.uuid()` so it stays stable across runs.
 
 ### 5. Minimize Data, Maximize Signal
 Create only the data each test needs. A test for user search does not need a complete user profile with billing address, payment method, and order history. Over-specified test data obscures the intent of the test and increases maintenance burden.
@@ -63,123 +78,14 @@ Create only the data each test needs. A test for user search does not need a com
 
 ## Factory Patterns
 
-Factories are functions that produce test data with sensible defaults, allowing individual tests to override only what matters for their scenario.
+Factories are functions that produce test data with sensible defaults, allowing individual tests to override only what matters for their scenario. **Fishery** (2.4.0) is the default for TypeScript, **FactoryBot** (6.6.0) for Ruby, **factory-boy** (3.3.3) for Python; all pair with **faker** (v10.4.0) for realistic field values.
 
-### Fishery (TypeScript)
+See `references/factories.md` for the full Fishery (with associations and deterministic UUIDs), FactoryBot (User + Product `out_of_stock`/`discounted` traits), Factory Boy (`class Params` + `Trait`), and Playwright fixture implementations. The shape every factory follows:
 
-Fishery is the recommended factory library for TypeScript projects. It provides type safety, traits, sequences, associations, and transient parameters.
-
-```bash
-npm install --save-dev fishery @faker-js/faker
-```
-
-> **Faker v10 (Aug 2025) is ESM-only.** If your project still uses CommonJS (`require('@faker-js/faker')`), v10 will silently break — pin `@faker-js/faker@^9` until you migrate to ESM, or set `"type": "module"` in `package.json` and convert imports. Faker v9 remains supported for the CJS path.
-
-```typescript
-// tests/factories/user.factory.ts
-import { Factory } from 'fishery';
-import { faker } from '@faker-js/faker';
-
-interface User {
-  id: string;
-  email: string;
-  name: string;
-  role: 'admin' | 'member' | 'viewer';
-  organizationId: string;
-  createdAt: Date;
-  isActive: boolean;
-}
-
-export const userFactory = Factory.define<User>(({ sequence, params }) => ({
-  id: `user-${sequence}`,
-  email: `user-${sequence}@test.example.com`,
-  name: faker.person.fullName(),
-  role: params.role ?? 'member',
-  organizationId: params.organizationId ?? `org-${sequence}`,
-  createdAt: new Date('2025-01-15T10:00:00Z'),
-  isActive: true,
-}));
-
-// Trait variants
-const adminUser = userFactory.params({ role: 'admin' });
-const orgMembers = userFactory.params({ organizationId: 'org-shared' });
-```
-
-#### Using in Tests
-
-```typescript
-import { userFactory } from '../factories/user.factory';
-
-const user = userFactory.build();                                        // Sensible defaults
-const admin = userFactory.build({ role: 'admin' });                      // Override specific fields
-const users = userFactory.buildList(5);                                   // Build multiple
-const orgMembers = userFactory.buildList(3, { organizationId: 'org-1' }); // With associations
-```
-
-#### Associations Between Factories
-
-```typescript
-// tests/factories/order.factory.ts
-import { Factory } from 'fishery';
-import { userFactory } from './user.factory';
-
-interface Order {
-  id: string;
-  userId: string;
-  items: Array<{ productId: string; quantity: number; unitPrice: number }>;
-  totalCents: number;
-  status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
-}
-
-export const orderFactory = Factory.define<Order>(({ sequence }) => {
-  const items = [{ productId: `prod-${sequence}`, quantity: 2, unitPrice: 1999 }];
-  return {
-    id: `order-${sequence}`,
-    userId: userFactory.build().id,
-    items,
-    totalCents: items.reduce((sum, i) => sum + i.quantity * i.unitPrice, 0),
-    status: 'pending',
-  };
-});
-```
-
-### FactoryBot (Ruby)
-
-```ruby
-# spec/factories/users.rb
-FactoryBot.define do
-  factory :user do
-    sequence(:email) { |n| "user-#{n}@test.example.com" }
-    name { Faker::Name.name }
-    role { :member }
-    organization
-    trait :admin do role { :admin } end
-    trait :inactive do is_active { false } end
-  end
-end
-
-# Usage: create(:user), create(:user, :admin), create_list(:user, 3, :inactive)
-```
-
-### Factory Boy (Python)
-
-```python
-# tests/factories.py
-import factory
-from myapp.models import User
-
-class UserFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = User
-    email = factory.Sequence(lambda n: f"user-{n}@test.example.com")
-    name = factory.Faker("name")
-    role = "member"
-    class Params:
-        admin = factory.Trait(role="admin")
-        inactive = factory.Trait(is_active=False)
-
-# Usage: UserFactory(), UserFactory(admin=True), UserFactory.create_batch(3, inactive=True)
-```
+- **Defaults + overrides** — `Factory.define` produces sensible defaults; tests pass overrides for the one field they care about (`userFactory.build({ role: 'admin' })`).
+- **Sequences for unique fields** — `sequence` (Fishery), `sequence(:email)` (FactoryBot), `factory.Sequence` (Factory Boy) — never hardcode IDs or emails.
+- **Traits for variants** — name common states (`:admin`, `:inactive`, `out_of_stock`, `discounted`) instead of spawning a fixture file per combination.
+- **Associations** — one factory builds another (an order builds its user), keeping referential structure without manual wiring.
 
 ### When to Use Factories vs Fixtures
 
@@ -198,65 +104,11 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 ## Fixture Strategies
 
-### Static Fixtures (JSON/YAML)
+Three fixture shapes, all in `references/factories.md`:
 
-Best for API response mocks, configuration data, and golden file comparisons.
-
-```typescript
-// Using JSON fixtures in Playwright tests
-import productsResponse from '../fixtures/data/api-responses/products.json';
-
-test('displays products from API', async ({ page }) => {
-  await page.route('**/api/products*', async (route) => {
-    await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(productsResponse) });
-  });
-  await page.goto('/products');
-  await expect(page.getByText('Widget')).toBeVisible();
-});
-```
-
-### Dynamic Fixtures (Playwright)
-
-Use Playwright fixtures to create and clean up data per test:
-
-```typescript
-// e2e/fixtures/data.fixture.ts
-import { test as base, expect } from '@playwright/test';
-
-export const test = base.extend<{ testOrder: { id: string; userId: string } }>({
-  testOrder: async ({ request }, use) => {
-    const response = await request.post('/api/test/orders', {
-      data: { userId: `test-user-${Date.now()}`, items: [{ productId: 'prod-1', quantity: 1 }] },
-    });
-    expect(response.ok()).toBeTruthy();
-    const order = await response.json();
-    await use(order);
-    await request.delete(`/api/test/orders/${order.id}`);
-  },
-});
-```
-
-### Fixture Composition
-
-Compose fixtures from smaller, reusable pieces by combining factory-generated data with Playwright fixtures:
-
-```typescript
-// e2e/fixtures/composed.fixture.ts
-import { test as base } from '@playwright/test';
-import { userFactory } from '../factories/user.factory';
-import { orderFactory } from '../factories/order.factory';
-
-export const test = base.extend<{ seedData: { user: { id: string }; orders: Array<{ id: string }> } }>({
-  seedData: async ({ request }, use) => {
-    const resp = await request.post('/api/test/seed', {
-      data: { user: userFactory.build(), orders: orderFactory.buildList(3) },
-    });
-    const seedData = await resp.json();
-    await use(seedData);
-    await request.post('/api/test/cleanup', { data: { userId: seedData.user.id } });
-  },
-});
-```
+- **Static fixtures (JSON/YAML)** — best for API response mocks (`page.route` + `route.fulfill`), config data, and golden file comparisons.
+- **Dynamic fixtures (Playwright)** — `test.extend` creates data via API before the test and deletes it after `await use(...)`. The standard per-test setup/teardown.
+- **Fixture composition** — combine factory-built data (`userFactory.build()`, `orderFactory.buildList(3)`) inside a single `test.extend` that seeds and cleans up in one step.
 
 ---
 
@@ -276,33 +128,7 @@ When production data is needed for realistic testing, anonymize it before use.
 | Credit card | Test card numbers | `4111-...` -> `4242-4242-4242-4242` |
 | Date of birth | Shift by fixed offset | `1990-03-15` -> `1987-07-22` |
 
-### Anonymization with Faker.js
-
-```typescript
-// scripts/anonymize.ts
-import { faker } from '@faker-js/faker';
-faker.seed(42); // Deterministic output across runs
-
-function anonymizeUser(user: Record<string, unknown>, index: number) {
-  return {
-    ...user,
-    email: `user-${index + 1}@test.example.com`,
-    name: faker.person.fullName(),
-    phone: faker.phone.number(),
-    dateOfBirth: faker.date.birthdate({ min: 18, max: 80, mode: 'age' }),
-    ssn: `000-00-${String(index + 1).padStart(4, '0')}`,
-  };
-}
-```
-
-### Referential Integrity During Anonymization
-
-Anonymizing a user's email must also update their email in orders, comments, audit logs, and every other table that references it. Build an anonymization pipeline that:
-
-1. Maps original values to anonymized values in a lookup table
-2. Processes parent records first, then child records using the same lookup
-3. Validates referential integrity after anonymization
-4. Runs in a transaction so partial anonymization cannot occur
+The anonymization pipeline -- seeded Faker for determinism, an in-memory lookup table, parent-records-first ordering, and a wrapping transaction -- is in `references/seeding-and-synthetic.md` (Anonymization with Faker.js, Referential Integrity During Anonymization). Anonymizing a user's email must also update that email everywhere it is referenced (orders, comments, audit logs); process parents first, children second, using the same lookup, all inside one transaction.
 
 ### GDPR Compliance Checklist
 
@@ -319,17 +145,22 @@ Anonymizing a user's email must also update their email in orders, comments, aud
 
 ### Idempotent Seed Scripts
 
-Seed scripts should be safe to run multiple times without duplicating data. Use upsert patterns (`ON CONFLICT ... DO UPDATE`) for idempotency.
+Seed scripts must be safe to run multiple times without duplicating data. Use upsert -- `INSERT ... ON CONFLICT (natural_key) DO UPDATE SET ...` -- keyed on a stable natural key, not the primary key. A `DELETE`-then-`INSERT` "reset" is **not** idempotent: it breaks foreign keys and reassigns serial IDs. See `references/seeding-and-synthetic.md` (Idempotent Seed Scripts) for the full `INSERT ... ON CONFLICT (code) DO UPDATE` countries/currencies example and the reasoning.
 
-### Database Branching (Postgres-as-a-Service)
+### Database Branching (DB-as-a-Service)
 
-If your prod DB lives on **Supabase**, **Neon**, or **PlanetScale** (MySQL), use built-in branching to give each PR its own database copy without seeding from scratch:
+If your prod DB lives on **Neon**, **Supabase**, or **PlanetScale**, branching can give a PR its own database instead of seeding from scratch -- but the providers differ on whether the branch carries data:
 
-- **Supabase Branching** — `supabase branches create pr-123` clones schema + (optionally) data; preview env points at the branch URL.
-- **Neon Branching** — copy-on-write Postgres branches in seconds; ideal for ephemeral preview envs.
-- **PlanetScale Branching** — schema-only by default; use rewinds for safe migration testing.
+- **Neon Branching** — copy-on-write Postgres branches in seconds, **with data**; ideal for ephemeral preview envs. The strongest "PR gets a real DB copy" story.
+- **Supabase Branching** — `supabase branches create pr-123` clones schema and (optionally, from a backup) data; preview env points at the branch URL.
+- **PlanetScale Branching** — MySQL branches are **schema-only by default (no data)**, so you still seed the branch. Note: PlanetScale removed its free Hobby tier (April 2024); MySQL now starts at ~$39/mo, Postgres ~$5/mo.
 
-Pair with the Preview Environments pattern in `test-environments`. **Snaplet** showed signs of inactivity in late 2024 — verify project status before adopting; the database-branching providers above cover most of what Snaplet was used for.
+Pair with the Preview Environments pattern in `test-environments`.
+
+> **Avoid: Snaplet (hosted)** — shut down 31 Aug 2024; the team joined Supabase. `@snaplet/seed`
+> lives on as `supabase-community/seed` (community-maintained, last meaningful release v0.98.0,
+> July 2024, no feature work since). For new projects, prefer the DB-branching providers above
+> plus factory-generated seeds.
 
 ### Per-Test vs Per-Suite Data
 
@@ -340,80 +171,23 @@ Pair with the Preview Environments pattern in `test-environments`. **Snaplet** s
 | Per-worker seed | Playwright parallel workers | Balances speed and isolation | Requires worker-scoped fixtures |
 | Global seed | Environment bootstrap | Runs once, sets up baseline | Must be idempotent, shared state risk |
 
+For the worker-scoped fixture (`test.extend` with `{ scope: 'worker' }`) that powers per-worker seeding, see `references/factories.md` (Worker-Scoped Seeding).
+
 ### Cleanup Strategies
 
-**Transaction Rollback (Fastest):** Wrap each test in a transaction and roll back after. Works for unit and integration tests with direct DB access.
+| Strategy | When to use | Speed |
+|----------|------------|-------|
+| **Transaction rollback** | Unit/integration tests with direct DB access | Fastest |
+| **Truncation** (`TRUNCATE ... CASCADE`) | Resetting tables between suites | Medium |
+| **API-based cleanup** | E2E tests with no direct DB access | Slowest |
 
-```typescript
-let tx: Transaction;
-beforeEach(async () => { tx = await db.beginTransaction(); });
-afterEach(async () => { await tx.rollback(); });
-```
-
-**Truncation (Thorough):** Delete all data from test tables between suites. Use `TRUNCATE TABLE ... CASCADE` for efficiency.
-
-**API-Based Cleanup (E2E Tests):** For E2E tests that cannot access the database directly, register resources for cleanup via a fixture:
-
-```typescript
-export const test = base.extend<{ cleanup: (id: string, type: string) => void }>({
-  cleanup: async ({ request }, use) => {
-    const toClean: Array<{ id: string; type: string }> = [];
-    await use((id, type) => toClean.push({ id, type }));
-    for (const r of toClean.reverse()) {
-      await request.delete(`/api/test/${r.type}/${r.id}`);
-    }
-  },
-});
-```
+Transaction rollback cannot clean up E2E tests -- the app opens its own DB connections, so a test-side transaction can't undo the app's writes; use API-based cleanup (delete in reverse creation order) there. All three implementations are in `references/seeding-and-synthetic.md` (Cleanup Strategies).
 
 ---
 
 ## Synthetic Data Generation
 
-### Edge Case Distributions
-
-Factories should make it easy to generate edge case data:
-
-```typescript
-// tests/factories/edge-cases.ts
-export const edgeCaseStrings = [
-  '',                               // Empty string
-  '  leading and trailing  ',       // Whitespace
-  'a'.repeat(10_000),               // Very long string
-  '<script>alert("xss")</script>',  // XSS attempt
-  "Robert'); DROP TABLE users;--",  // SQL injection
-  '\u0000\u0001\u0002',             // Null/control characters
-  '\u202Eoverride\u202C',           // RTL override
-];
-
-export const edgeCaseDates = [
-  new Date('1970-01-01T00:00:00Z'), // Unix epoch
-  new Date('2038-01-19T03:14:07Z'), // 32-bit overflow
-  new Date('2024-02-29T00:00:00Z'), // Leap day
-  new Date('2025-03-09T02:30:00-05:00'), // During DST transition
-];
-```
-
-### Boundary Value Generation
-
-```typescript
-export function boundaryValues(min: number, max: number): number[] {
-  return [min - 1, min, min + 1, Math.floor((min + max) / 2), max - 1, max, max + 1];
-}
-
-// Usage
-test.each(boundaryValues(1, 100).map(v => [v]))(
-  'validates quantity %i correctly',
-  (quantity) => {
-    const result = validateQuantity(quantity);
-    if (quantity >= 1 && quantity <= 100) {
-      expect(result.valid).toBe(true);
-    } else {
-      expect(result.valid).toBe(false);
-    }
-  }
-);
-```
+Factories should make it easy to generate edge cases and boundary values without hand-writing them per test. The reusable arrays and helpers -- `edgeCaseStrings` (empty, whitespace, very long, XSS, SQL injection, null/control chars, RTL override), `edgeCaseDates`, and `boundaryValues(min, max)` driving a `test.each` -- are in `references/seeding-and-synthetic.md` (Synthetic Data Generation).
 
 ---
 
@@ -438,19 +212,24 @@ Creating a separate JSON fixture file for every test variation. Instead of `user
 Creating a complete user object with 30 fields when the test only cares about `role`. This obscures intent and makes tests brittle. Factories with sensible defaults solve this: override only what the test cares about.
 
 ### Hard-Coded IDs
-Using `userId: '1'` in tests. This couples tests to database state and breaks when running in parallel (ID collision) or against a database with existing data. Use factory sequences or UUIDs.
+Using `userId: '1'` in tests. This couples tests to database state and breaks when running in parallel (ID collision) or against a database with existing data. Use factory sequences or seeded UUIDs (see Core Principle 4).
 
 ---
 
 ## Done When
 
-- Factory or fixture functions cover all entity types needed by the test suite
-- Test data isolated per test — no shared mutable state between tests
-- Seed scripts runnable in CI without manual intervention
-- No real PII used in test fixtures — all sensitive data anonymized or synthetic
-- Data cleanup verified after each test run (no orphaned records accumulate)
+- Every entity type the suite creates has a factory or fixture (no inline ad-hoc object literals in tests for shared entities -- grep the test dir for hand-built fixtures and confirm none remain).
+- Test data is isolated per test -- the suite passes with parallelism on (`--workers=N` / `pytest -n auto`) **and** under randomized order (`--shuffle` / `-p randomly`), proving no shared mutable state or ordering dependency.
+- Seed scripts are idempotent -- running the seed twice in a row produces the same row count and exits 0; the CI job runs them with no manual intervention.
+- No real PII used in test fixtures -- all sensitive data anonymized or synthetic (grep for production domains / real-looking SSNs returns nothing).
+- Data cleanup verified -- row counts in the test DB return to baseline after the suite (no orphaned records accumulate across runs).
 
 ---
+
+## Reference Files (in `references/`)
+
+- **factories.md** — Full Fishery (associations, deterministic UUIDs), FactoryBot (User + Product traits), Factory Boy (`Params`/`Trait`), static/dynamic/composed Playwright fixtures, and the worker-scoped seeding fixture.
+- **seeding-and-synthetic.md** — Idempotent `ON CONFLICT` seed script, Faker.js anonymization + referential-integrity pipeline, cleanup strategies (rollback / truncate / API), and synthetic edge-case + boundary-value generators.
 
 ## Related Skills
 
@@ -458,6 +237,6 @@ Using `userId: '1'` in tests. This couples tests to database state and breaks wh
 - **api-testing** -- API tests use both factories (for request bodies) and fixtures (for mocked responses).
 - **playwright-automation** -- E2E tests need test data seeded via API or fixtures before browser interaction.
 - **test-reliability** -- Deterministic test data eliminates a major source of test flakiness.
-- **test-environments** -- Database branching (Supabase, Neon, PlanetScale) gives each preview env its own DB without re-seeding.
-- **database-testing** -- Migration testing and Testcontainers patterns for the database layer specifically.
+- **test-environments** -- Owns environment provisioning and database-branching strategy (Neon, Supabase, PlanetScale) for preview envs; this skill owns the data that fills them.
+- **database-testing** -- Migration testing, data-integrity assertions, and Testcontainers for the database layer specifically -- go there to test the DB, come here to populate it.
 - **ci-cd-integration** -- Database seeding and cleanup must be integrated into CI pipeline stages.

@@ -1,62 +1,69 @@
 ---
 name: risk-based-testing
 description: >-
-  Produce a risk matrix or heatmap that feeds into `test-strategy` and
-  `test-planning`. Identifies high-risk areas via failure mode analysis,
-  prioritizes by business impact × likelihood, and aligns test coverage to risk
-  levels. Includes stakeholder interview frameworks and continuous risk
-  reassessment. Use when: "risk assessment," "risk matrix," "risk heatmap," "what
-  could break," "critical paths," "failure modes," "where to focus testing." Run
-  this BEFORE `test-strategy` or `test-planning`.
+  Produce a risk matrix or heatmap that quantifies what could break by business
+  impact × probability, runs failure mode analysis on the top items, and maps test
+  coverage to risk zones. Includes stakeholder interview frameworks and continuous
+  reassessment. Run this BEFORE test-strategy or test-planning. Use when: "risk
+  assessment," "risk matrix," "risk heatmap," "what could break," "critical paths,"
+  "failure modes," "where to focus testing."
+  Not for: multi-quarter QA direction — use test-strategy. Not for: a single
+  sprint/release test plan — use test-planning. Not for: hands-on session-based
+  bug hunting — use exploratory-testing.
   Related: test-strategy, test-planning, release-readiness, qa-metrics.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: strategy
 ---
 
 <objective>
-Identify what matters most, test it first, and allocate effort proportional to business risk. This skill provides a systematic framework for discovering risk, quantifying it, mapping test coverage to risk levels, and keeping the assessment current as the product evolves.
+Equal coverage across all features wastes effort on low-risk areas while leaving critical paths under-tested — a 90% coverage target on a settings page is effort stolen from checkout. This skill discovers risk, quantifies it as impact × probability, maps test density to risk zones, and keeps the assessment current as the product evolves. Output is a scored risk matrix that feeds `test-strategy` and `test-planning`.
 </objective>
+
+## Quick Route
+
+| Situation | Start at |
+|-----------|----------|
+| New product, no risk model yet | Phase 1 (Identification) → run the full 6 phases |
+| Post-incident reassessment | Phase 6 (Reassessment triggers), then re-score the affected items in Phase 2 |
+| AI/LLM feature to assess | Phase 3 (AI/LLM failure classes), score each class in Phase 2 |
+| Sprint refresh of an existing matrix | Phases 4–5 (Heatmap + Coverage alignment) on changed features |
+| Verify an old heatmap is still true | Phase 6 signals + Anti-Pattern "Risk Theater" |
 
 ---
 
 ## Discovery Questions
 
-Before building a risk model, gather context from stakeholders across engineering, product, and operations. Check `.agents/qa-project-context.md` first -- if it exists, use it as the foundation and skip questions already answered there.
+Check `.agents/qa-project-context.md` first — if it exists, use it as the foundation and skip questions already answered there. Gather the rest from stakeholders across engineering, product, and operations.
 
 ### Revenue-Critical Flows
-
 - Which user flows directly generate revenue? (checkout, subscription, billing, upgrades)
 - What is the revenue impact per hour of downtime for each flow?
 - Are there time-sensitive flows? (flash sales, market-hours trading, payroll deadlines)
 - Which flows have contractual SLAs with financial penalties?
 
 ### Recent Failures
-
 - What broke in the last 3 releases? What escaped to production?
 - What were the root causes? (code defect, config error, third-party failure, data migration)
 - What was the blast radius of each incident? (users affected, revenue lost, reputation impact)
 - Were there near-misses caught late in testing that could have escaped?
 
 ### Fragile Areas
-
 - Which parts of the codebase change most frequently? (high churn = high risk)
 - Which modules have the lowest test coverage today?
 - Which areas have the most complex business logic or the most conditional branches?
 - Which code was written by engineers who have since left the team?
 
 ### Third-Party Dependencies
-
 - Which external services does the product depend on? (payment processors, auth providers, CDNs, APIs)
 - What is the historical reliability of each dependency?
 - What happens when each dependency goes down? (graceful degradation or hard failure?)
 - Are there single points of failure with no fallback?
 
 ### Compliance and Data
-
-- What regulatory requirements apply? (GDPR, PCI-DSS, HIPAA, SOC2, SOX)
+- What regulatory requirements apply? (GDPR, PCI-DSS, HIPAA, SOC2, SOX, EU AI Act)
 - What data is most sensitive? (PII, financial, health, credentials)
 - What are the legal consequences of a data breach or compliance violation?
 - Are there audit requirements that mandate specific testing evidence?
@@ -65,25 +72,11 @@ Before building a risk model, gather context from stakeholders across engineerin
 
 ## Core Principles
 
-### 1. Not All Features Are Equal
-
-A bug in the checkout flow that prevents purchases is categorically different from a misaligned icon on a settings page. Testing effort must reflect this reality. Equal coverage across all features wastes resources on low-risk areas while leaving critical paths under-tested.
-
-### 2. Risk = Impact x Probability
-
-Risk is not a gut feeling. It is a product of two measurable dimensions: how bad is it if this fails (impact), and how likely is it to fail (probability). Both must be assessed independently and scored consistently across the product.
-
-### 3. Risk Assessment Is Continuous
-
-A risk model created once and never updated is dangerous because it creates false confidence. Risk changes when the product changes, when dependencies change, when the team changes, and after every production incident. Build reassessment into the development rhythm.
-
-### 4. Near-Misses Are Data
-
-A bug caught in staging that would have been catastrophic in production is not a success story -- it is a signal that the risk model underestimated that area. Track near-misses with the same rigor as production incidents.
-
-### 5. Risk Informs Coverage, Not the Other Way Around
-
-Do not start with "we need 80% coverage everywhere." Start with "where would a failure hurt most?" and let the risk model drive coverage targets per module.
+1. **Not all features are equal.** A bug in checkout that blocks purchases is categorically different from a misaligned icon on a settings page. Equal coverage everywhere wastes resources on low-risk areas while leaving critical paths under-tested.
+2. **Risk = Impact × Probability.** Risk is not a gut feeling. It is a product of two dimensions scored independently: how bad if this fails (impact), and how likely to fail (probability). Score both consistently across the product, then multiply.
+3. **Risk assessment is continuous.** A risk model created once and never updated creates false confidence. Risk changes when the product changes, when dependencies change, when the team changes, and after every production incident. Build reassessment into the rhythm.
+4. **Near-misses are data.** A catastrophic bug caught in staging is not a success story — it is a signal that the model underestimated that area. Track near-misses with the same rigor as production incidents.
+5. **Risk informs coverage, not the other way around.** Do not start with "we need 80% coverage everywhere." Start with "where would a failure hurt most?" and let the model drive coverage targets per module.
 
 ---
 
@@ -100,12 +93,14 @@ Do not start with "we need 80% coverage everywhere." Start with "where would a f
 Enumerate everything that could go wrong. Cast a wide net. Sources include:
 
 - **Stakeholder interviews:** Product managers know business-critical flows. Engineers know fragile code. Support knows recurring user complaints.
-- **Incident history:** Past failures predict future failures. Review post-mortems from the last 6-12 months.
+- **Incident history:** Past failures predict future failures. Review post-mortems from the last 6–12 months.
 - **Dependency mapping:** List every external service, database, message queue, and third-party API. Each is a risk vector.
-- **Change analysis:** Areas with frequent code changes (use `git log --stat`) have higher defect probability.
+- **Change analysis:** Areas with frequent code changes have higher defect probability. Use the ranked churn command in Phase 6 to find them; `git log --stat <file>` is for per-commit inspection of a specific suspect, not for ranking.
 - **Architecture review:** Shared databases, single points of failure, synchronous chains, and tightly coupled modules amplify blast radius.
 
-Output: A raw list of risk items, each describing what could fail and what the consequence would be.
+Use **HTSM v6.3** (Heuristic Test Strategy Model, Bach) as a Phase-1 lens — its state-based and boundary heuristics surface risks a pure feature-list misses. Download: https://www.satisfice.com/download/heuristic-test-strategy-model
+
+Output: a raw list of risk items, each describing what could fail and what the consequence would be.
 
 ### Phase 2: Risk Classification
 
@@ -131,74 +126,69 @@ Categorize each risk item along two axes.
 | 2 | Unlikely | Improbable but not impossible | Stable code, good coverage, simple logic |
 | 1 | Rare | Requires exceptional circumstances | Well-tested, rarely changed, simple |
 
+Composite score = Impact × Probability. Frequent changes indicate defect probability, so a Moderate-impact (3) feature under heavy churn scores Probability 5 → **Risk score: 15 → CRITICAL zone**, despite "only" moderate impact. The composite score drives priority, not impact alone.
+
 ### Phase 3: Failure Mode Analysis
 
-For each high-risk item (score >= 10), perform a detailed failure mode analysis.
-
-> **AI/LLM-specific failure classes** (from ISTQB CT-GenAI v1.1, April 2026):
-> - **Hallucination / reasoning error** — Impact: moderate to major; Probability: high without explicit prompt-eval coverage. Detection: golden-dataset evals, fact-check assertions (see `ai-system-testing`).
-> - **Bias** — Impact: catastrophic in regulated industries (finance, healthcare, hiring). Probability: dataset-dependent. Detection: counterfactual evals, demographic-parity checks.
-> - **Prompt injection / jailbreak** — Impact: major (data exfiltration, prompt extraction). Probability: high for any externally-facing LLM feature. Detection: Garak, PyRIT, Promptfoo redteam.
-> - **Privacy leak** — Impact: catastrophic under GDPR/CCPA/EU AI Act. Probability: dataset-dependent. Detection: PII scanning of training and prompts.
-> - **AI Act / regulatory non-compliance** — Impact: catastrophic (fines, ban). Probability: high for EU-facing AI features. Detection: see `compliance-testing`.
-
-For these classes, treat the existence of an automated eval suite as the mitigation, not a single test.
-
-#### Reference Frameworks
-
-- **HTSM v6.3** (Heuristic Test Strategy Model, Bach) — emphasizes state-based testing and boundary heuristics. Use as a Phase-1 lens when enumerating risks. https://www.satisfice.com/download/heuristic-test-strategy-model
-- **CT-GenAI v1.1** (ISTQB, April 2026) — codifies the AI/LLM risk classes above.
-- **WQR 2025-26** (Capgemini) — adoption-stage framing for AI risk planning.
-
-**Failure Mode Analysis Template:**
+For each high-risk item (score ≥ 10), perform a detailed failure mode analysis.
 
 ```
 Feature/Component: [name]
-Risk Score: [impact x probability]
+Risk Score: [impact × probability]
 
 Failure Mode 1: [what specifically can fail]
-  Trigger:          [what causes this failure]
-  Blast Radius:     [users affected, systems affected, data affected]
-  Detection Method: [how would we know this happened -- monitoring, user report, test]
+  Trigger:            [what causes this failure]
+  Blast Radius:       [users affected, systems affected, data affected]
+  Detection Method:   [how would we know -- monitoring, user report, test]
   Current Mitigation: [existing tests, monitoring, feature flags, fallbacks]
-  Gap:              [what is missing from current mitigation]
+  Gap:                [what is missing from current mitigation]
 
 Failure Mode 2: ...
 ```
 
-**Example -- E-commerce Checkout:**
+**Example — E-commerce Checkout (Risk Score 20, Impact 5 × Probability 4):**
 
 ```
-Feature/Component: Checkout Flow
-Risk Score: 20 (Impact: 5, Probability: 4)
-
 Failure Mode 1: Payment charge succeeds but order not recorded
-  Trigger:          Race condition between payment API callback and order write
-  Blast Radius:     Individual users; money charged but no order confirmation
-  Detection Method: Payment reconciliation job (runs hourly), user complaint
+  Trigger:            Race condition between payment API callback and order write
+  Blast Radius:       Individual users; money charged but no order confirmation
+  Detection Method:   Payment reconciliation job (runs hourly), user complaint
   Current Mitigation: Idempotency key on payment, retry on order write
-  Gap:              No automated test for the race condition; reconciliation delay is 1 hour
+  Gap:                No automated test for the race condition; reconciliation delay is 1 hour
 
 Failure Mode 2: Discount code applies incorrect amount
-  Trigger:          Percentage discount on already-discounted item
-  Blast Radius:     All users with stacked discounts; revenue leakage
-  Detection Method: Margin monitoring alert (>5% deviation)
+  Trigger:            Percentage discount on already-discounted item
+  Blast Radius:       All users with stacked discounts; revenue leakage
+  Detection Method:   Margin monitoring alert (>5% deviation)
   Current Mitigation: Unit tests for single discounts
-  Gap:              No tests for discount stacking; no tests for rounding edge cases
+  Gap:                No tests for discount stacking; no tests for rounding edge cases
 
 Failure Mode 3: Inventory not reserved during checkout
-  Trigger:          Concurrent purchases of last-stock item
-  Blast Radius:     Oversold items, fulfillment failure, customer trust
-  Detection Method: Fulfillment team discovers during packing
+  Trigger:            Concurrent purchases of last-stock item
+  Blast Radius:       Oversold items, fulfillment failure, customer trust
+  Detection Method:   Fulfillment team discovers during packing
   Current Mitigation: Database-level stock check on order creation
-  Gap:              No load test simulating concurrent last-item purchases
+  Gap:                No load test simulating concurrent last-item purchases
 ```
+
+#### AI/LLM failure classes
+
+For AI/LLM features, classify against these CT-GenAI classes and score Impact and Probability independently like any other risk. The mitigation is the existence of an automated **eval suite**, not a single manual test.
+
+> **AI/LLM-specific failure classes** (from ISTQB CT-GenAI v1.1, effective 27 April 2026):
+> - **Hallucination / reasoning error** — Impact: moderate to major; Probability: high without explicit prompt-eval coverage. Detection: golden-dataset evals, fact-check assertions (see `ai-system-testing`).
+> - **Bias** — Impact: catastrophic in regulated industries (finance, healthcare, hiring). Probability: dataset-dependent. Detection: counterfactual evals, demographic-parity checks.
+> - **Prompt injection / jailbreak** — Impact: major (data exfiltration, prompt extraction). Probability: high for any externally-facing LLM feature. Detection: Garak, PyRIT, Promptfoo redteam.
+> - **Privacy leak** — Impact: catastrophic under GDPR/CCPA/EU AI Act. Probability: dataset-dependent. Detection: PII scanning of training data and prompts.
+> - **AI Act / regulatory non-compliance** — Impact: catastrophic (fines, ban). Probability: high for EU-facing AI features. Detection: see `compliance-testing`.
+>
+> Tool freshness (mid-2026): PyRIT now lives at **microsoft/PyRIT** — the old Azure-hosted repo was archived March 2026, so do not point new redteam work at the legacy Azure path. Promptfoo was acquired by OpenAI (March 2026) but remains MIT-licensed. Garak is current and unchanged.
+
+**Reference frameworks:** **CT-GenAI v1.1** (ISTQB, effective 27 April 2026) codifies the AI/LLM classes above. **WQR 2025-26** (Capgemini, 17th edition, Nov 2025) gives the adoption-stage framing for AI risk planning.
 
 ### Phase 4: Risk Heatmap
 
-Visualize all risk items on a 5x5 matrix to communicate priorities to stakeholders and drive coverage decisions.
-
-#### Risk Heatmap Template
+Plot all risk items on a 5×5 matrix to communicate priorities and drive coverage decisions.
 
 ```
                     PROBABILITY
@@ -216,7 +206,7 @@ T  Negligible(1)   |  1  LOW  |  2  LOW   |  3  LOW   |  4 LOW   |  5  MED   |
                    +----------+-----------+-----------+----------+-----------+
 ```
 
-**Color coding and action mapping:**
+**Zone boundaries and action mapping:**
 
 | Zone | Score Range | Color | Testing Action |
 |------|------------|-------|---------------|
@@ -225,33 +215,20 @@ T  Negligible(1)   |  1  LOW  |  2  LOW   |  3  LOW   |  4 LOW   |  5  MED   |
 | MEDIUM | 5-9 | Yellow | Automate happy path + key error cases |
 | LOW | 1-4 | Green | Manual testing on release or skip entirely |
 
-#### Populated Heatmap Example
+Populated example (where each named risk lands):
 
 ```
                     Rare(1)   Unlikely(2)  Possible(3)  Likely(4)   Frequent(5)
-                   +----------+-----------+-----------+----------+-----------+
-  Catastrophic(5)  |          | Auth      | Payments  | Checkout |           |
-                   |          | bypass    | fail      | crash    |           |
-                   +----------+-----------+-----------+----------+-----------+
-  Major(4)         |          |           | Data      | Search   | User      |
-                   |          |           | export    | broken   | upload    |
-                   +----------+-----------+-----------+----------+-----------+
-  Moderate(3)      |          | Report    | Email     | Profile  |           |
-                   |          | format    | delivery  | edit     |           |
-                   +----------+-----------+-----------+----------+-----------+
-  Minor(2)         | Footer   | Tooltip   | Theme     |          |           |
-                   | link     | text      | switch    |          |           |
-                   +----------+-----------+-----------+----------+-----------+
-  Negligible(1)    | Admin    |           |           |          |           |
-                   | label    |           |           |          |           |
-                   +----------+-----------+-----------+----------+-----------+
+  Catastrophic(5)             Auth bypass   Payments fail  Checkout crash
+  Major(4)                                  Data export    Search broken  User upload
+  Moderate(3)                  Report fmt    Email deliver  Profile edit
+  Minor(2)         Footer link Tooltip text  Theme switch
+  Negligible(1)    Admin label
 ```
 
 ### Phase 5: Test Coverage Alignment
 
-Map test density to risk level. Every risk zone gets a prescribed testing approach.
-
-#### Coverage Requirements by Risk Zone
+Map test density to risk level. Every zone gets a prescribed approach.
 
 | Risk Zone | Unit Tests | Integration Tests | E2E Tests | Manual Testing | Monitoring |
 |-----------|-----------|------------------|-----------|---------------|-----------|
@@ -260,16 +237,13 @@ Map test density to risk level. Every risk zone gets a prescribed testing approa
 | MEDIUM (5-9) | 70%+ branch coverage | Happy path only | Happy path only | On major changes | Weekly review |
 | LOW (1-4) | Basic happy path | None required | None required | On initial build | None required |
 
-#### Gap Identification
+#### Gap Analysis Worksheet
 
 Compare current coverage against required coverage per risk zone:
 
 ```
-Gap Analysis Worksheet:
-
 Feature: [name]
-Risk Zone: [CRITICAL / HIGH / MEDIUM / LOW]
-Risk Score: [number]
+Risk Zone: [CRITICAL / HIGH / MEDIUM / LOW]      Risk Score: [number]
 
 Required Coverage:
   Unit:        [target %]     Current: [actual %]     Gap: [delta]
@@ -279,25 +253,29 @@ Required Coverage:
 
 Priority: [P0 / P1 / P2 / P3]
 Estimated Effort: [hours / story points]
-Owner: [name]
-Target Sprint: [sprint number]
+Owner: [name]                Target Sprint: [sprint number]
 ```
+
+A churn signal forces this worksheet open: a module that changed 47 times in 3 months (Probability → 5) with only 40% branch coverage and no integration tests jumps zones (e.g. MEDIUM → HIGH), and the new coverage target is justified by the churn, not picked arbitrarily.
+
+See `references/examples.md` for four fully-scored examples (checkout, media platform, third-party API, auth) showing the path from risk score to prescribed coverage.
 
 ### Phase 6: Monitoring and Reassessment
 
 Risk assessment is not a one-time activity. Build reassessment into the team's rhythm.
 
 **Reassessment triggers:**
-
-- After every production incident (within 48 hours)
+- After every production incident (within 48 hours): re-score the affected items, check dependency health, and re-run the Phase-5 gap analysis to expose any coverage gap the incident revealed
 - When a new feature area is introduced
 - When a critical dependency changes (API version, provider switch)
 - When team composition changes significantly
 - Quarterly at minimum, even without triggers
 
 **Continuous risk signals to monitor:**
-
-- **Code churn by module:** `git log --since="3 months ago" --format='' --name-only | sort | uniq -c | sort -rn | head -20`
+- **Code churn by module** (ranked frequency table):
+  ```bash
+  git log --since="3 months ago" --name-only --format= | grep -v '^$' | sort | uniq -c | sort -rn | head -20
+  ```
 - **Defect clustering:** Which modules produce the most bugs? Track with issue labels.
 - **Near-miss frequency:** How often do staging/QA catches prevent production incidents?
 - **Dependency health:** Monitor status pages and uptime of critical third-party services.
@@ -305,119 +283,55 @@ Risk assessment is not a one-time activity. Build reassessment into the team's r
 
 ---
 
-## Real-World Examples
-
-### Example 1: E-commerce Checkout
-
-**Risk profile:** Impact 5, Probability 4, Score 20 (CRITICAL)
-
-**Failure modes identified:**
-- Payment charged but order not created (race condition)
-- Discount stacking applies incorrect total
-- Inventory oversold under concurrent load
-- Shipping calculator returns wrong rate for international addresses
-- Tax calculation wrong for specific jurisdictions
-
-**Test coverage prescribed:**
-- Unit tests: discount calculation (all combinations), tax rules (per jurisdiction), inventory decrement logic
-- Integration tests: payment gateway communication (success, failure, timeout, duplicate), order creation pipeline, inventory reservation under concurrency
-- E2E tests: full checkout flow (guest + logged in), checkout with discount, checkout with international shipping, checkout retry after payment failure
-- Load tests: 100 concurrent checkouts for last-stock item
-- Monitoring: real-time order completion rate, payment-to-order reconciliation every 5 minutes, revenue anomaly detection
-
-### Example 2: Content Loading (Media Platform)
-
-**Risk profile:** Impact 4, Probability 3, Score 12 (HIGH)
-
-**Failure modes identified:**
-- CDN cache miss causes origin overload
-- Video transcoding fails silently for specific codecs
-- Thumbnail generation timeout leaves blank images
-- Content recommendation engine returns stale or empty results
-
-**Test coverage prescribed:**
-- Unit tests: transcoding pipeline input validation, recommendation scoring algorithm
-- Integration tests: CDN purge/refresh flow, transcoding job queue processing, thumbnail generation for each supported format
-- E2E tests: content upload through playback, content discovery through recommendation click
-- Monitoring: CDN hit ratio, transcoding failure rate, thumbnail generation latency p99
-
-### Example 3: Third-Party API Integration
-
-**Risk profile:** Impact 4, Probability 4, Score 16 (CRITICAL)
-
-**Failure modes identified:**
-- API rate limit exceeded during peak traffic
-- API response schema changes without notice (breaking deserialization)
-- API timeout causes cascade failure in synchronous call chain
-- API returns 200 with error body (non-standard error handling)
-
-**Test coverage prescribed:**
-- Unit tests: response parser for all known response shapes including malformed responses, rate limit backoff calculation, circuit breaker state transitions
-- Integration tests: API contract tests (validate response schema against expected shape), timeout handling, retry behavior, circuit breaker activation
-- E2E tests: user flow when API is slow (degraded but functional), user flow when API is down (graceful fallback)
-- Monitoring: API response time p50/p95/p99, error rate, rate limit proximity, circuit breaker state
-
-### Example 4: Authentication Flows
-
-**Risk profile:** Impact 5, Probability 2, Score 10 (HIGH)
-
-**Failure modes identified:**
-- Session token not invalidated on password change
-- OAuth callback race condition allows account takeover
-- MFA bypass through API endpoint that skips MFA check
-- Rate limiting not enforced on login endpoint (brute force)
-
-**Test coverage prescribed:**
-- Unit tests: token generation and validation, password hashing, MFA code verification, rate limit counter logic
-- Integration tests: full auth flow (register, login, logout, password reset), session invalidation on credential change, OAuth flow with all supported providers, MFA enrollment and verification
-- E2E tests: login flow (valid credentials, invalid, locked account), password reset flow, MFA flow
-- Security tests: brute force attempt (verify rate limiting), session fixation, token reuse after logout
-- Monitoring: failed login rate spike, unusual session patterns, MFA bypass attempts
-
----
-
 ## Anti-Patterns
 
-### Testing Everything Equally
+### Testing everything equally
+Applying the same coverage target to every feature regardless of risk. A 90% target on a settings page wastes effort that should go to payments or auth. Let the risk model drive allocation.
 
-Applying the same coverage targets and test density to every feature regardless of risk. A 90% coverage target on a settings page wastes effort that should go toward payment processing or authentication. Let the risk model drive allocation.
+### One-time risk assessment
+Creating a matrix during planning and never updating it. The product, team, and dependencies all change. A model from 6 months ago is outdated and out of date the moment a dependency, feature, or incident shifts the picture — it does not reflect today. Schedule reassessment and enforce it.
 
-### One-Time Risk Assessment
+### Ignoring near-misses
+Treating bugs caught in staging as pure successes. If a critical bug was caught only by manual testing, the automated safety net has a gap. Document near-misses and adjust the model.
 
-Creating a risk matrix during planning and never updating it. The product, team, and dependencies all change continuously. A risk model from 6 months ago does not reflect today's reality. Schedule reassessment and enforce it.
+### Risk theater
+Going through the motions (filling matrices, drawing heatmaps) without changing test allocation. If the heatmap exists but coverage does not align to it, the exercise was wasted. Verify alignment quarterly. Bolton's "Quality Engineering Is Not Testing" (2026-04-20) warns of exactly this — building a heatmap and calling it "QE done." Reference: https://developsense.com/blog/2026/04/quality-engineering-is-not-testing
 
-### Ignoring Near-Misses
+### Anchoring on historical risk
+Over-weighting past incidents and under-weighting new vectors. A module that failed 2 years ago and was since rewritten may no longer be high risk; a brand-new third-party integration has unknown risk that deserves attention.
 
-Treating bugs caught in staging or QA as pure successes. Near-misses are risk signals. If a critical bug was caught only by manual testing in staging, that means the automated safety net has a gap. Document near-misses and adjust the risk model.
-
-### Risk Theater
-
-Going through the motions of risk assessment (filling in matrices, creating heatmaps) without actually changing test allocation. If the risk heatmap exists but test coverage does not align to it, the exercise was wasted. Verify alignment quarterly.
-
-> Related framing: Bolton's "Quality Engineering Is Not Testing" (2026-04-20) argues that conflating quality engineering with testing distorts how teams think about risk — building a heatmap and calling it "QE done" is exactly the failure mode the post warns about. Reference: https://developsense.com/blog/2026/04/quality-engineering-is-not-testing
-
-### Anchoring on Historical Risk
-
-Over-weighting past incidents and under-weighting new risk vectors. A module that failed 2 years ago and has since been rewritten may no longer be high risk. Conversely, a new integration with a third party has unknown risk that deserves attention.
-
-### Confusing Severity with Priority
-
-Severity measures how bad a failure is. Priority measures how urgently to test it. A catastrophic but extremely rare failure (earthquake destroys data center) might be lower priority than a moderate but frequent failure (search results occasionally wrong). The risk matrix accounts for both dimensions -- use the composite score, not impact alone.
+### Confusing severity with priority
+Severity is how bad a failure is; priority is how urgently to test it. A catastrophic-but-rare failure (earthquake destroys data center) can be lower priority than a moderate-but-frequent one (search occasionally wrong). Use the composite score, not impact alone.
 
 ---
+
+## Verification
+
+Prove the matrix is real and aligned before calling it done — smallest check first:
+
+- **Artifact exists and is tracked:** `git ls-files | grep -E 'risk-matrix|qa-project-context'` returns the file. An untracked draft on someone's laptop is not a risk model.
+- **Every in-scope feature is scored:** grep the artifact for rows missing an impact or probability number. A feature with a name but no score is a gap, not a low risk.
+- **Top items have failure mode analysis:** every item scoring ≥ 10 has a block with all five fields (Trigger, Blast Radius, Detection Method, Current Mitigation, Gap). A failure mode with an empty Gap line was not actually analyzed.
+- **Coverage aligns to the heatmap:** for each CRITICAL/HIGH feature, confirm the prescribed coverage from the Phase-5 table actually exists (run the suite, check the coverage report's per-module numbers against the target). If the heatmap says CRITICAL but the module has 40% branch coverage and no E2E, the exercise was Risk Theater.
+- **Churn signal is current:** re-run the Phase-6 churn command; any module in the top 10 that is not scored ≥ Probability 4 is a model that has drifted from reality.
 
 ## Done When
 
-- A risk matrix exists with every in-scope feature scored on both impact (1-5) and probability (1-5) axes
-- Each feature's composite risk score places it in a named zone (CRITICAL, HIGH, MEDIUM, or LOW) with a corresponding testing action assigned
-- Features scoring 10+ have a completed failure mode analysis with blast radius, detection method, and coverage gap documented
-- Test coverage requirements per risk zone are mapped against current coverage, with gaps explicitly listed and assigned to an owner and target sprint
-- Reassessment triggers and cadence are documented (quarterly minimum, plus post-incident)
+- A scored risk matrix exists as a tracked artifact (`.agents/qa-project-context.md` risk section or a committed `risk-matrix.md`), with every in-scope feature scored on impact (1-5) and probability (1-5)
+- Each feature's composite score places it in a named zone (CRITICAL, HIGH, MEDIUM, or LOW) with a corresponding testing action assigned
+- Every feature scoring ≥ 10 has a completed failure mode analysis with trigger, blast radius, detection method, current mitigation, and gap documented
+- Coverage requirements per zone are mapped against current coverage, with each gap assigned a Priority (P0-P3), an Owner, and a Target Sprint
+- Reassessment triggers and cadence are recorded in the same artifact (quarterly minimum, plus within 48 hours of any production incident)
+
+## Reference Files (in `references/`)
+
+- **examples.md** — Four fully-scored worked examples (checkout, media platform, third-party API, auth): risk profile → failure modes → prescribed coverage.
 
 ## Related Skills
 
-- **test-strategy** -- The overall QA strategy document that risk-based testing feeds into; risk assessment is one component of a broader strategy.
-- **test-planning** -- Sprint-level test planning uses risk priorities to decide what to test in each iteration.
-- **release-readiness** -- Release go/no-go decisions should reference the risk heatmap to ensure critical areas are covered.
-- **qa-metrics** -- Defect escape rate and defect clustering metrics feed back into risk reassessment.
-- **qa-project-context** -- The project context file captures risk-relevant information (critical flows, known fragile areas, dependencies) that this skill consumes.
+- **test-strategy** — The multi-quarter QA strategy this risk matrix feeds into; risk assessment is one input to a broader strategy.
+- **test-planning** — Single-sprint/release planning uses risk priorities to decide what to test this iteration.
+- **release-readiness** — Go/no-go decisions reference the heatmap to confirm critical areas are covered.
+- **qa-metrics** — Defect escape rate and defect clustering feed back into risk reassessment.
+- **ai-system-testing** — Building the eval suites that mitigate the Phase-3 AI/LLM failure classes.
+- **qa-project-context** — Captures the critical flows, fragile areas, and dependencies this skill consumes and writes the risk matrix back into.

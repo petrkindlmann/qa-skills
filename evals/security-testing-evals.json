@@ -1,6 +1,6 @@
 {
   "skill": "security-testing",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "sec-001",
@@ -25,18 +25,19 @@
     },
     {
       "id": "sec-002",
-      "prompt": "Configure a GitHub Actions workflow to run npm audit with high severity threshold as a build gate",
+      "prompt": "Configure a GitHub Actions workflow that fails the build on high-severity dependency vulnerabilities (npm audit or OSV-Scanner)",
       "expected_patterns": [
-        "npm audit OR npm ci",
-        "--audit-level=high",
-        "continue-on-error OR exit 1",
+        "npm audit OR npm ci OR osv-scanner",
+        "--audit-level=high OR --severity-threshold OR fail-on-severity",
+        "exit 1 OR continue-on-error: false",
         "actions/checkout",
-        "name: npm audit OR dependency-check"
+        "name: npm audit OR dependency-check OR osv-scan"
       ],
       "anti_patterns": [
         "npm install instead of npm ci",
         "audit with --audit-level=moderate or below",
-        "no failure on high vulnerabilities"
+        "no failure on high vulnerabilities",
+        "continue-on-error: true with no exit 1 gate"
       ],
       "tags": [
         "CI/CD",
@@ -52,7 +53,7 @@
         "set-cookie",
         "toContain('Secure')",
         "toContain('HttpOnly')",
-        "toMatch(/SameSite=(Strict|Lax)/)"
+        "SameSite=(Strict OR SameSite"
       ],
       "anti_patterns": [
         "SameSite=None in production",
@@ -72,9 +73,9 @@
       "expected_patterns": [
         "request.post OR page.request.post",
         "Cookie OR session",
-        "expect(response.status()).toBeOneOf([403, 422])",
+        "expect([403, 422]).toContain(response.status()) OR toBe(403)",
         "state-changing operation OR /api/account OR /api/change",
-        "deliberately omitting token OR no csrf-token header"
+        "Deliberately omitting CSRF token OR no csrf-token header"
       ],
       "anti_patterns": [
         "test passes without token",
@@ -113,8 +114,8 @@
       "prompt": "Write a test to detect SQL injection vulnerabilities with payloads like ' OR '1'='1 and verify error handling doesn't leak internals",
       "expected_patterns": [
         "sqlPayloads OR injectionPayloads",
-        "' OR '1'='1 OR DROP TABLE OR UNION SELECT",
-        "response.status().not.toBe(500)",
+        "DROP TABLE OR UNION SELECT OR OR '1'='1",
+        "status()).not.toBe(500)",
         "expect(body).not.toContain('SQL')",
         "expect(body).not.toContain('syntax error')"
       ],
@@ -136,8 +137,8 @@
         "169.254.169.254 OR metadata.google.internal OR localhost:6379 OR file:///",
         "ssrfPayloads OR payloads",
         "callbackUrl OR user-supplied URL",
-        "expect(response.status()).toBeOneOf([400, 403, 422])",
-        "for...of loop OR forEach"
+        "expect([400, 403, 422]).toContain(response.status())",
+        "for (const OR forEach"
       ],
       "anti_patterns": [
         "test accepts internal metadata endpoints",
@@ -152,19 +153,20 @@
     },
     {
       "id": "sec-008",
-      "prompt": "Configure ESLint with security plugins and rules to detect unsafe patterns in code (eval, object injection, unsafe regex)",
+      "prompt": "Configure SAST for a TypeScript repo to detect unsafe patterns (eval, object injection, unsafe regex), and explain what the real SAST gate should be",
       "expected_patterns": [
         "eslint-plugin-security OR eslint-plugin-no-unsanitized",
         "configs.recommended",
         "security/detect-eval-with-expression OR detect-object-injection OR detect-unsafe-regex",
-        "error OR warn",
-        "eslint.config.js OR .eslintrc.js"
+        "semgrep OR p/owasp-top-ten",
+        "eslint.config.js"
       ],
       "anti_patterns": [
         "no security plugin configured",
         "security rules set to off",
         "only using default ESLint rules",
-        "unsafe-inline allowed in CSP"
+        "eslint-plugin-security as sole SAST gate",
+        ".eslintrc.js as the recommended config for a new project"
       ],
       "tags": [
         "SAST",
@@ -178,7 +180,7 @@
       "expected_patterns": [
         "jose.SignJWT OR JWT library",
         "alg: 'none' OR setExpirationTime('-1h')",
-        "Authorization: Bearer",
+        "Authorization OR Bearer",
         "expect(response.status()).toBe(401)",
         "noneToken OR expiredToken"
       ],
@@ -200,8 +202,8 @@
       "expected_patterns": [
         "request.post.*logout",
         "sessionCookie OR set-cookie",
-        "response.status().toBe(401) OR toBe(403)",
-        "expect after logout",
+        "status()).toBe(401) OR toBe(403)",
+        "Attempt to use old session OR Cookie: sessionCookie",
         "/api/user/profile OR /api/auth"
       ],
       "anti_patterns": [
@@ -214,6 +216,70 @@
         "OWASP-A07",
         "auth",
         "session-management"
+      ]
+    },
+    {
+      "id": "sec-011",
+      "prompt": "Write a Playwright test that asserts the response carries HSTS, X-Content-Type-Options nosniff, and X-Frame-Options security headers",
+      "expected_patterns": [
+        "response.headers()",
+        "strict-transport-security",
+        "x-content-type-options",
+        "toBe('nosniff') OR nosniff",
+        "x-frame-options"
+      ],
+      "anti_patterns": [
+        "no assertion on security headers",
+        "checking only one header",
+        "asserting header value is undefined"
+      ],
+      "tags": [
+        "OWASP-A04",
+        "headers",
+        "security-headers"
+      ]
+    },
+    {
+      "id": "sec-012",
+      "prompt": "Write a test that verifies rate limiting on the login endpoint: fire 15 concurrent login attempts and expect a 429 response (OWASP A06 insecure design)",
+      "expected_patterns": [
+        "Promise.all OR for (const OR Array.from",
+        "/api/auth/login OR /api/login",
+        "429",
+        "some((s) => s === 429) OR toContain(429) OR === 429",
+        "15 OR concurrent"
+      ],
+      "anti_patterns": [
+        "single login attempt only",
+        "no 429 assertion",
+        "expects all attempts to succeed"
+      ],
+      "tags": [
+        "OWASP-A06",
+        "insecure-design",
+        "rate-limiting"
+      ]
+    },
+    {
+      "id": "sec-013",
+      "prompt": "Configure a GitHub Actions supply-chain job that generates an SBOM and produces a signed build provenance attestation (OWASP A03)",
+      "expected_patterns": [
+        "anchore/sbom-action OR syft OR cyclonedx",
+        "actions/attest-build-provenance OR cosign OR slsa",
+        "id-token: write",
+        "actions/dependency-review-action OR fail-on-severity",
+        "npm ci"
+      ],
+      "anti_patterns": [
+        "npm install instead of npm ci",
+        "no SBOM generation",
+        "no provenance or signing step",
+        "only npm audit with no supply-chain provenance"
+      ],
+      "tags": [
+        "OWASP-A03",
+        "supply-chain",
+        "provenance"
       ]
     }
   ]

@@ -1,6 +1,6 @@
 {
   "skill": "qa-do",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "qado-001",
@@ -60,12 +60,12 @@
       "id": "qado-004",
       "prompt": "We got a critical bug in production last night. How do we prevent this next time?",
       "expected_patterns": [
-        "ai-bug-triage",
+        "bug-reproduction",
         "quality-postmortem",
-        "triage OR understand first"
+        "reproduce first OR understand first"
       ],
       "anti_patterns": [
-        "immediately suggesting test-strategy without understanding root cause",
+        "ai-bug-triage",
         "skipping postmortem"
       ],
       "tags": [
@@ -178,6 +178,108 @@
         "routing",
         "api",
         "direct"
+      ]
+    },
+    {
+      "id": "qado-011",
+      "prompt": "A UI redesign just shipped and it broke about a hundred of our test selectors. How do we fix them all?",
+      "expected_patterns": [
+        "selector-drift-recovery",
+        "bulk OR regenerate"
+      ],
+      "anti_patterns": [
+        "test-reliability",
+        "fixing each test by hand one at a time"
+      ],
+      "tags": [
+        "routing",
+        "selector-drift",
+        "disambiguation"
+      ]
+    },
+    {
+      "id": "qado-012",
+      "prompt": "Our suite is bloated with hundreds of redundant tests. Which ones can we safely delete?",
+      "expected_patterns": [
+        "test-suite-curation",
+        "audit OR prune"
+      ],
+      "anti_patterns": [
+        "test-reliability",
+        "deleting tests without evidence or quarantine"
+      ],
+      "tags": [
+        "routing",
+        "suite-curation",
+        "direct"
+      ]
+    },
+    {
+      "id": "qado-013",
+      "prompt": "We need to test our Stripe checkout including the 3DS challenge and a subscription renewal.",
+      "expected_patterns": [
+        "payment-testing",
+        "direct OR single skill"
+      ],
+      "anti_patterns": [
+        "api-testing",
+        "using real card numbers"
+      ],
+      "tags": [
+        "routing",
+        "payment",
+        "precise-match"
+      ]
+    },
+    {
+      "id": "qado-014",
+      "prompt": "How do we verify our password-reset email actually arrives and the magic link works?",
+      "expected_patterns": [
+        "email-testing",
+        "direct OR single skill"
+      ],
+      "anti_patterns": [
+        "api-testing",
+        "fixed sleeps OR waitForTimeout"
+      ],
+      "tags": [
+        "routing",
+        "email",
+        "precise-match"
+      ]
+    },
+    {
+      "id": "qado-015",
+      "prompt": "A new QA engineer is joining and needs to ramp up on our existing codebase and test suite. Where do they start?",
+      "expected_patterns": [
+        "qa-project-bootstrap",
+        "direct OR single skill"
+      ],
+      "anti_patterns": [
+        "qa-start",
+        "qa-project-context"
+      ],
+      "tags": [
+        "routing",
+        "onboarding",
+        "disambiguation"
+      ]
+    },
+    {
+      "id": "qado-016",
+      "prompt": "We want to verify our GA4 dataLayer events and the Meta pixel fire correctly on every page.",
+      "expected_patterns": [
+        "analytics-tracking-testing",
+        "direct OR single skill"
+      ],
+      "anti_patterns": [
+        "performance-testing",
+        "api-testing"
+      ],
+      "tags": [
+        "routing",
+        "analytics",
+        "precise-match"
       ]
     }
   ]

@@ -1,55 +1,92 @@
 ---
 name: service-virtualization
 description: >-
-  Decision framework for dependency isolation in tests. When to use mocks, stubs,
-  fakes, record-replay, or ephemeral real services. Covers WireMock, MSW (Mock
-  Service Worker), toxiproxy, and test containers. Helps choose the right isolation
-  strategy for each testing scenario. Use when: "mock service," "stub API," "fake
-  service," "WireMock," "MSW," "test isolation," "dependency management."
-  Related: contract-testing, test-environments, api-testing, test-data-management.
+  Decision framework for isolating every external dependency in a test suite: when to use
+  in-process mocks, HTTP stubs (MSW, WireMock), record-replay, fault injection (Toxiproxy), or
+  ephemeral real services (Testcontainers), and how to enforce that no real calls escape in CI.
+  Use when: "mock service," "stub API," "fake service," "WireMock," "MSW," "Toxiproxy,"
+  "test isolation," "dependency management," "stub an external API in CI."
+  Not for: consumer-driven contract verification (Pact, broker) — use contract-testing; standing
+  up a full Docker Compose env or seed data — use test-environments; broad resilience/game-day
+  fault campaigns — use chaos-engineering.
+  Related: contract-testing, test-environments, api-testing, test-data-management, chaos-engineering.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: infrastructure
 ---
 
 <objective>
-Choose the right isolation strategy for every dependency in your test suite.
+Mock Stripe at the SDK layer and your tests pass green while production 500s the moment Stripe
+changes a response field — because the stub was never tied to a contract. This skill picks the
+right isolation strategy per dependency (in-process mock, HTTP stub, record-replay, fault
+injection, or ephemeral real service), stubs at the HTTP layer so tests survive SDK upgrades, and
+makes the CI run fail when any real call escapes the stubs.
 </objective>
+
+## Quick Route
+
+| Situation | Go to |
+|-----------|-------|
+| Node/browser test hitting an external HTTP API | MSW → `references/msw.md` |
+| Polyglot CI, complex matching, or you need a standalone stub server | WireMock → `references/wiremock.md` |
+| Dependency is a DB / cache / queue | Testcontainers → `references/testcontainers.md` |
+| Testing timeouts, latency, connection resets | Toxiproxy → `references/toxiproxy.md` |
+| Bootstrapping stubs from a real API, or a multi-step baseline | Record-replay → `references/record-replay.md` |
+| Wiring any of these into GitHub Actions | `references/ci.md` |
+| Not sure which to reach for | Decision Tree (below) |
 
 ---
 
 ## Discovery Questions
 
-1. **How many external dependencies does your system call?** List them: payment APIs, email services, auth providers, third-party data sources. Each needs a strategy.
-2. **Which dependencies are unreliable in tests?** Rate-limited, slow, flaky, or expensive? These are the highest-priority candidates for virtualization.
-3. **What testing levels need isolation?** Unit tests need fast in-process mocks. Integration tests may need HTTP-level stubs. E2E tests might use real or containerized services.
-4. **Do you have contracts with your dependencies?** If yes, contract tests can validate that your stubs stay in sync with reality. See `contract-testing`.
-5. **What is the team's experience level?** Simple MSW handlers are easier to maintain than a full WireMock deployment.
-6. **Check `.agents/qa-project-context.md` first.** Respect existing mocking conventions and infrastructure.
+Check `.agents/qa-project-context.md` first — if it exists, use it, respect existing mocking
+conventions, and skip anything answered there. Then:
+
+- **How many external dependencies does the system call, and which are painful in tests?**
+  Rate-limited, slow, flaky, or paid dependencies are the highest-priority virtualization
+  candidates; list payment, email, auth, and third-party data sources.
+- **What testing levels need isolation?** Unit tests want fast in-process mocks; integration tests
+  want HTTP-level stubs; E2E wants real or containerized services — the level sets the strategy.
+- **Does the provider offer an official test mode or sandbox?** Stripe test mode, Twilio test
+  creds, etc. beat any home-grown stub for fidelity — prefer them where they exist.
+- **Do you have contracts with these dependencies?** If yes, contract tests keep stubs in sync;
+  see `contract-testing`. If no, mocking what you don't own is a known risk (Core Principle 3).
+- **Docker available in CI?** No Docker steers you to MSW (in-process); Docker unlocks WireMock,
+  Testcontainers, and Toxiproxy.
 
 ---
 
 ## Core Principles
 
-**1. Match the isolation level to the confidence you need.** Unit tests can mock aggressively because they test internal logic. Integration tests should use realistic stubs or real services because they test boundaries. E2E tests should use the closest thing to production that is still reliable.
+**1. Match the isolation level to the confidence you need.** Unit tests can mock aggressively —
+they test internal logic. Integration tests should use realistic stubs or real services because
+they test boundaries. E2E should run the closest thing to production that is still reliable.
 
-**2. Real services give more confidence than fakes.** When a real dependency is fast, reliable, and free to use in tests (e.g., a local PostgreSQL container), prefer it over a fake. Reserve fakes for dependencies that are slow, unreliable, or expensive.
+**2. Real services beat fakes when they're fast, free, and reliable.** A local PostgreSQL
+container gives more confidence than a fake and costs little — prefer it. Reserve fakes for
+dependencies that are slow, unreliable, or paid.
 
-**3. Never mock what you do not own without a contract.** If you mock Stripe's API and Stripe changes their response format, your tests still pass but production breaks. Either use contract tests to validate your mocks, or use Stripe's official test mode.
+**3. Never mock what you don't own without a contract — and prefer the provider's test mode.** If
+you stub Stripe and Stripe changes its response shape, your tests stay green while production
+breaks. In order of preference: use the provider's official test mode/sandbox (Stripe test mode,
+Twilio test creds) → an HTTP stub validated by a contract test for drift → a bare stub only when
+nothing better exists. See `contract-testing`.
 
-**4. Stubs must fail realistically.** If your stub always returns 200 OK, you never test error handling. Include failure scenarios: 429 rate limits, 500 errors, timeouts, malformed responses.
+**4. Stubs must fail realistically.** A stub that always returns 200 never exercises error
+handling. Every stub needs error variants: 429 rate limits, 500s, timeouts, malformed bodies.
 
-**5. One abstraction layer between test and virtualization tool.** Wrap MSW handlers, WireMock stubs, and Testcontainers setup behind a consistent interface. Switching tools should not require rewriting tests.
+**5. One abstraction layer between test and tool.** Wrap MSW handlers, WireMock stubs, and
+Testcontainers setup behind a consistent interface so switching tools doesn't mean rewriting tests.
 
 ---
 
 ## Decision Framework
 
-### When to Use Each Isolation Strategy
+### When to use each isolation strategy
 
-| Strategy | Speed | Fidelity | Complexity | Best For |
+| Strategy | Speed | Fidelity | Complexity | Best for |
 |----------|-------|----------|------------|----------|
 | **In-process mock** | Fastest | Lowest | Trivial | Unit tests, isolating internal modules |
 | **HTTP stub (MSW)** | Fast | Medium | Low | Frontend/Node tests hitting external APIs |
@@ -59,7 +96,7 @@ Choose the right isolation strategy for every dependency in your test suite.
 | **Ephemeral real (Testcontainers)** | Slower | Highest | Medium | Databases, message queues, caches |
 | **Shared real service** | Slow | Production-level | Low (to set up) | Staging validation, final pre-deploy check |
 
-### Decision Tree
+### Decision tree
 
 ```
 Is the dependency internal to your codebase?
@@ -79,412 +116,194 @@ Is the dependency internal to your codebase?
 
 ## Tools
 
+Pick **MSW** as the default for in-process Node/browser tests; **WireMock** for cross-language CI
+or standalone stub servers; **Prism** when the OpenAPI spec is the contract; **Mockoon** for
+dev-time exploratory mocking. Heavy code for each lives in `references/` — pointers below.
+
 ### MSW (Mock Service Worker)
 
-Intercepts HTTP requests at the network level. Works in both browser (Service Worker) and Node.js (request interception). The best choice for JavaScript/TypeScript projects.
+MSW 2.x intercepts HTTP at the network layer (Service Worker in the browser, request interception
+in Node). The default for JS/TS projects. Stub at the HTTP layer (`POST /v1/payment_intents`),
+never at the SDK method — that decouples the test from the SDK version.
 
-**Setup:**
+The strongest enforcement seam this skill offers: `setupServer(...).listen({ onUnhandledRequest })`.
+Set it to `"error"` in CI so any escaped real call fails the run; `"warn"` is fine locally while
+iterating.
 
-```bash
-npm i -D msw
-```
-
-**Handlers with realistic behavior:**
-
-```typescript
-// test/mocks/handlers.ts
-import { http, HttpResponse, delay } from "msw";
-
-// Stateful handler: maintains state across requests within a test
-function createPaymentHandlers() {
-  const payments = new Map<string, { id: string; status: string; amount: number }>();
-
-  return [
-    // Create payment
-    http.post("https://api.stripe.com/v1/payment_intents", async ({ request }) => {
-      const body = await request.text();
-      const params = new URLSearchParams(body);
-
-      const id = `pi_test_${Date.now()}`;
-      const payment = {
-        id,
-        status: "requires_confirmation",
-        amount: Number(params.get("amount")),
-      };
-      payments.set(id, payment);
-
-      return HttpResponse.json(payment, { status: 201 });
-    }),
-
-    // Confirm payment
-    http.post<{ id: string }>(
-      "https://api.stripe.com/v1/payment_intents/:id/confirm",
-      async ({ params }) => {
-        const payment = payments.get(params.id);
-        if (!payment) {
-          return HttpResponse.json(
-            { error: { type: "invalid_request_error", message: "No such payment intent" } },
-            { status: 404 }
-          );
-        }
-        payment.status = "succeeded";
-        return HttpResponse.json(payment);
-      }
-    ),
-
-    // Retrieve payment
-    http.get<{ id: string }>(
-      "https://api.stripe.com/v1/payment_intents/:id",
-      async ({ params }) => {
-        const payment = payments.get(params.id);
-        if (!payment) {
-          return HttpResponse.json(
-            { error: { type: "invalid_request_error", message: "No such payment intent" } },
-            { status: 404 }
-          );
-        }
-        return HttpResponse.json(payment);
-      }
-    ),
-  ];
-}
-
-// Error simulation handlers
-const errorHandlers = [
-  // Rate limiting
-  http.all("https://api.stripe.com/*", async ({ request }) => {
-    // Only activate when the test sets this header
-    if (request.headers.get("x-test-scenario") === "rate-limit") {
-      await delay(100);
-      return HttpResponse.json(
-        { error: { type: "rate_limit_error", message: "Too many requests" } },
-        { status: 429, headers: { "Retry-After": "1" } }
-      );
-    }
-    // Fall through to other handlers
-    return undefined;
-  }),
-];
-
-export const handlers = [...createPaymentHandlers(), ...errorHandlers];
-```
-
-**Test setup (Vitest):**
-
-```typescript
-// vitest.setup.ts
-import { setupServer } from "msw/node";
-import { handlers } from "./mocks/handlers";
-
-export const server = setupServer(...handlers);
-
-beforeAll(() =>
-  server.listen({
-    onUnhandledRequest: "error", // Fail if any request hits a real API
-  })
-);
-
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-```
-
-**Per-test overrides:**
-
-```typescript
-import { http, HttpResponse } from "msw";
-import { server } from "../vitest.setup";
-
-it("should handle payment API timeout", async () => {
-  // Override the default handler for this test only
-  server.use(
-    http.post("https://api.stripe.com/v1/payment_intents", async () => {
-      await new Promise((resolve) => setTimeout(resolve, 10_000)); // Simulate timeout
-      return HttpResponse.json({});
-    })
-  );
-
-  await expect(paymentService.createPayment(5000)).rejects.toThrow("Payment service timeout");
-});
-
-it("should retry on 503", async () => {
-  let callCount = 0;
-  server.use(
-    http.post("https://api.stripe.com/v1/payment_intents", async () => {
-      callCount++;
-      if (callCount < 3) {
-        return HttpResponse.json({ error: "Service unavailable" }, { status: 503 });
-      }
-      return HttpResponse.json({ id: "pi_success", status: "created" }, { status: 201 });
-    })
-  );
-
-  const result = await paymentService.createPayment(5000);
-  expect(result.id).toBe("pi_success");
-  expect(callCount).toBe(3);
-});
-```
+See `references/msw.md` for centralized stateful handlers (payments), the Vitest setup with the
+CI/local `onUnhandledRequest` switch, per-test timeout/retry overrides, and a full stateful auth
+flow (create / verify / refresh / **revoke via `http.delete`**) keyed on a `Bearer` token.
 
 ### WireMock
 
-Language-agnostic HTTP stub server. Runs as a standalone process or Docker container. Best for polyglot environments or complex matching rules.
+Language-agnostic HTTP stub server (current stable **3.13.2** — 4.0 is beta-only as of mid-2026,
+stay on 3.x for CI). Runs standalone or as a Docker container. Best for polyglot environments or
+complex matching rules.
 
-**Docker setup:**
+Use **priority-based mappings** for error scenarios: a `priority: 1` mapping that matches an
+opt-in header (`X-Test-Scenario: rate-limit`) and returns 429 shadows the default happy-path
+mapping only when the test asks for it. WireMock also exposes an admin API for programmatic stub
+creation (`POST /__admin/mappings`), verification (`POST /__admin/requests/count`), and reset
+(`POST /__admin/mappings/reset`).
 
-```yaml
-# In docker-compose.test.yml
-wiremock:
-  image: wiremock/wiremock:3.13.2
-  ports:
-    - "8080:8080"
-  volumes:
-    - ./wiremock/mappings:/home/wiremock/mappings
-    - ./wiremock/__files:/home/wiremock/__files
-  command: ["--verbose", "--global-response-templating"]
-```
+See `references/wiremock.md` for the Docker setup, a response-templated paginated mapping, the
+priority error mapping JSON, and the drift-detection seam to `contract-testing` (replay a Pact or
+validate the stub against the OpenAPI spec via Prism).
 
-**Stub mapping files:**
-
-```json
-// wiremock/mappings/get-user.json
-{
-  "request": {
-    "method": "GET",
-    "urlPathPattern": "/api/users/[0-9]+",
-    "headers": {
-      "Authorization": { "matches": "Bearer .+" }
-    }
-  },
-  "response": {
-    "status": 200,
-    "headers": { "Content-Type": "application/json" },
-    "jsonBody": {
-      "id": "{{request.pathSegments.[2]}}",
-      "name": "Test User",
-      "email": "user-{{request.pathSegments.[2]}}@example.com"
-    },
-    "transformers": ["response-template"]
-  }
-}
-```
-
-Use priority-based mappings for error scenarios (e.g., a priority-1 mapping that matches `X-Test-Scenario: rate-limit` header and returns 429 with `Retry-After` header). Tests opt-in to error scenarios by setting the header.
-
-WireMock also supports programmatic stub creation via its admin API (`POST /__admin/mappings`), verification (`POST /__admin/requests/count`), and reset (`POST /__admin/mappings/reset`). Wrap these in helper functions for cleaner test setup.
-
-### Other HTTP Mock Servers
+### Other HTTP mock servers
 
 | Tool | Strengths | When to use |
 |------|-----------|-------------|
 | **Mockoon** | Desktop UI + CLI; OpenAPI import; rule-based responses; lightweight | Dev-time mocking and quick CLI mocks in CI |
-| **Hoverfly** | Capture-replay (record real traffic, replay deterministically); simulation modes (capture, simulate, modify, synthesize) | Migrating from a real dependency to a mock — record once, replay forever |
-| **Prism** | OpenAPI-driven mock server (Stoplight); validates requests + generates responses from spec | OpenAPI-first projects that already have a published spec |
-| **MockServer** | Java-based; rich expectation matching; multi-protocol | JVM teams already on the MockServer ecosystem |
-
-Pick **WireMock** as the default for cross-language CI; **MSW** for in-process Node/browser tests; **Prism** when the OpenAPI spec is the contract; **Mockoon** for dev-time exploratory mocking.
+| **Hoverfly** | Capture-replay (record real traffic, replay deterministically); capture/simulate/modify/synthesize modes | Migrating from a real dependency to a mock — record once, replay forever |
+| **Prism** | OpenAPI-driven mock server (Stoplight); validates requests + generates responses from spec | OpenAPI-first projects with a published spec |
+| **MockServer** | Java-based; rich expectation matching; multi-protocol | JVM teams already on MockServer |
 
 ### Testcontainers
 
-Spin up real services in Docker containers for integration tests. Containers start before the test suite and are destroyed after.
+Spin up **real** services in Docker for integration tests — containers start before the suite and
+are destroyed after. Use `@testcontainers/postgresql` 11.x and friends. Ports are **random**;
+always read them via `getMappedPort()` / `getConnectionUri()`, never hardcode 5432/6379.
 
-```bash
-npm i -D testcontainers
-```
+See `references/testcontainers.md` for parallel PostgreSQL + Redis + Elasticsearch startup with
+wait strategies, the Vitest `globalSetup` wiring (`process.env.DATABASE_URL`, `testTimeout: 30_000`),
+and the note on refreshing aging image tags (`elasticsearch:8.12.0` is behind Elastic 9.x).
 
-```typescript
-// test/helpers/containers.ts
-import { PostgreSqlContainer, StartedPostgreSqlContainer } from "@testcontainers/postgresql";
-import { RedisContainer, StartedRedisContainer } from "@testcontainers/redis";
-import { GenericContainer, StartedTestContainer, Wait } from "testcontainers";
+### Toxiproxy (fault injection)
 
-let postgres: StartedPostgreSqlContainer;
-let redis: StartedRedisContainer;
-let elasticsearch: StartedTestContainer;
+`ghcr.io/shopify/toxiproxy:2.12.0` sits between your app and a dependency as a TCP proxy and
+injects latency, bandwidth limits, and connection resets. Point your app at the **proxy** port,
+not the real service. Always remove toxics in `afterEach` — they leak across tests otherwise.
 
-export async function startContainers() {
-  // Start all containers in parallel
-  [postgres, redis, elasticsearch] = await Promise.all([
-    new PostgreSqlContainer("postgres:17-alpine")
-      .withDatabase("testdb")
-      .withUsername("test")
-      .withPassword("test")
-      .start(),
-
-    new RedisContainer("redis:8-alpine").start(),
-
-    new GenericContainer("elasticsearch:8.12.0")
-      .withEnvironment({
-        "discovery.type": "single-node",
-        "xpack.security.enabled": "false",
-      })
-      .withExposedPorts(9200)
-      .withWaitStrategy(Wait.forHttp("/", 9200).forStatusCode(200))
-      .start(),
-  ]);
-
-  return {
-    databaseUrl: postgres.getConnectionUri(),
-    redisUrl: `redis://${redis.getHost()}:${redis.getMappedPort(6379)}`,
-    elasticsearchUrl: `http://${elasticsearch.getHost()}:${elasticsearch.getMappedPort(9200)}`,
-  };
-}
-
-export async function stopContainers() {
-  await Promise.all([
-    postgres?.stop(),
-    redis?.stop(),
-    elasticsearch?.stop(),
-  ]);
-}
-```
-
-Wire into Vitest via `globalSetup` that calls `startContainers()` in `setup()` and `stopContainers()` in `teardown()`, setting `process.env.DATABASE_URL` etc. Set `testTimeout: 30_000` to account for container startup.
-
-### Toxiproxy (Fault Injection)
-
-Simulate network failures, latency, and bandwidth constraints. Sits between your app and its dependencies as a TCP proxy.
-
-```yaml
-# In docker-compose.test.yml
-toxiproxy:
-  image: ghcr.io/shopify/toxiproxy:2.12.0
-  ports:
-    - "8474:8474"   # API
-    - "15432:15432"  # Proxied PostgreSQL
-    - "16379:16379"  # Proxied Redis
-```
-
-```typescript
-// test/helpers/toxiproxy.ts
-const TOXIPROXY_API = "http://localhost:8474";
-
-export async function createProxy(name: string, listen: string, upstream: string) {
-  await fetch(`${TOXIPROXY_API}/proxies`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, listen, upstream }),
-  });
-}
-
-export async function addLatency(proxyName: string, latencyMs: number) {
-  await fetch(`${TOXIPROXY_API}/proxies/${proxyName}/toxics`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: "latency",
-      type: "latency",
-      attributes: { latency: latencyMs, jitter: Math.floor(latencyMs * 0.1) },
-    }),
-  });
-}
-
-export async function severeConnection(proxyName: string) {
-  await fetch(`${TOXIPROXY_API}/proxies/${proxyName}/toxics`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: "reset_peer",
-      type: "reset_peer",
-      attributes: { timeout: 0 },
-    }),
-  });
-}
-
-export async function removeToxics(proxyName: string) {
-  const res = await fetch(`${TOXIPROXY_API}/proxies/${proxyName}/toxics`);
-  const toxics = await res.json();
-  for (const toxic of toxics) {
-    await fetch(`${TOXIPROXY_API}/proxies/${proxyName}/toxics/${toxic.name}`, {
-      method: "DELETE",
-    });
-  }
-}
-```
-
-Use the helper functions in tests to inject latency (`addLatency("postgres", 5000)`) before asserting that the service handles timeouts, or sever connections (`severeConnection("postgres")`) to verify reconnection behavior. Always call `removeToxics` in `afterEach`.
-
----
-
-## CI Integration
-
-### MSW in CI (Zero Infrastructure)
-
-MSW requires no additional services -- it intercepts requests in-process. No Docker, no ports, no health checks.
-
-```yaml
-# GitHub Actions -- MSW tests run exactly like local
-- name: Run tests with MSW stubs
-  run: npm run test:integration
-```
-
-### WireMock + Testcontainers in CI
-
-```yaml
-# GitHub Actions with Docker Compose for test infrastructure
-- name: Start test infrastructure
-  run: docker compose -f docker-compose.test.yml up -d --wait --wait-timeout 120
-
-- name: Run integration tests
-  env:
-    WIREMOCK_URL: http://localhost:8080
-    DATABASE_URL: postgres://test:test@localhost:5432/testdb
-  run: npm run test:integration
-
-- name: Teardown
-  if: always()
-  run: docker compose -f docker-compose.test.yml down -v
-```
-
-### Choosing the Right Tool for CI
-
-| Constraint | Recommended Tool |
-|-----------|-----------------|
-| No Docker in CI runners | MSW (in-process) |
-| Multi-language services | WireMock (language-agnostic) |
-| Need real database behavior | Testcontainers or GitHub Actions services |
-| Testing network failures | Toxiproxy + real/containerized services |
-| Browser-based API mocking | MSW (browser mode with Service Worker) |
+See `references/toxiproxy.md` for the compose port mapping, the `createProxy(name, listen,
+upstream)` wiring (including how the compose `15432`/`16379` proxy ports map to the real upstream),
+the helpers with `response.ok` checks on every call, and a latency + connection-reset usage example.
+For broad resilience/game-day work, go to `chaos-engineering` instead.
 
 ---
 
 ## Record-Replay
 
-Record-replay captures real API responses and replays them in tests. Useful for bootstrapping stubs quickly when integrating a new third-party API.
+Record-replay captures real API responses once and replays them deterministically — good for
+bootstrapping stubs and for a regression baseline of a multi-step interaction. Implement it with a
+record-replay library (**Hoverfly**, **Polly.JS**, or **VCR**-style cassettes), not a hand-rolled
+recorder.
 
-**When it works:** Bootstrapping initial stubs, creating regression baselines for API responses.
+It breaks on dynamic data (timestamps, UUIDs), stateful sequences, and age — recordings go stale
+within weeks. Always stamp a `recordedAt` and **fail the test when a recording is older than 30
+days**, forcing a re-record.
 
-**When it does not work:** APIs with dynamic data (timestamps, UUIDs), APIs that require stateful sequences, long-term maintenance (recordings go stale within weeks). Always add a `recordedAt` timestamp and fail tests when recordings are older than 30 days.
+See `references/record-replay.md` for the cassette format, the `assertFresh()` 30-day expiry check,
+and a replay harness driving a multi-step flow (create order → add items → apply coupon → checkout).
+
+---
+
+## CI Integration
+
+MSW needs zero infrastructure — it intercepts in-process, so CI runs exactly like local; the only
+rule is to set `onUnhandledRequest: error` in CI (quoted `"error"` in JS) so an escaped real call
+hard-fails the run. WireMock and Testcontainers need Docker.
+
+Two **incompatible port models** coexist and must not be mixed in one suite: the docker-compose
+model publishes **fixed** ports (a hardcoded `DATABASE_URL=...localhost:5432...` works), while the
+Testcontainers model uses **random** ports read via `getMappedPort()` and injected into
+`process.env`. Pick one per suite.
+
+See `references/ci.md` for the MSW step, the docker-compose GitHub Actions job (`up -d --wait
+--wait-timeout 120`, `if: always()` teardown), and the tool-by-constraint table.
 
 ---
 
 ## Anti-Patterns
 
-**Mocking everything.** If every dependency is mocked, your tests verify that your mocks work, not that your system works. Use real services for databases and caches (via Testcontainers), and only stub external HTTP APIs.
+### 1. Mocking everything
+If every dependency is mocked, your tests verify that your mocks work, not that your system works.
+Use real services for databases and caches (via Testcontainers); only stub external HTTP APIs.
 
-**Inconsistent mock behavior across tests.** If one test stubs Stripe to return `{ id: "pi_123" }` and another stubs it to return `{ paymentIntentId: "pi_123" }`, you have two conflicting versions of reality. Centralize handlers and share them across the test suite.
+### 2. Inconsistent mock behavior across tests
+One test stubs Stripe as `{ id: "pi_123" }`, another as `{ paymentIntentId: "pi_123" }` — now you
+have two conflicting versions of reality. Centralize handlers and reuse one response shape across
+the whole suite (see the shared shape in `references/msw.md`).
 
-**Not updating stubs when APIs change.** Your WireMock mapping says Stripe returns `{ amount: 1000 }` but the real API now returns `{ amount: 1000, currency: "usd" }`. Your code works in tests but fails in production. Use contract tests to detect drift. See `contract-testing`.
+### 3. Not updating stubs when the API changes
+Your mapping says Stripe returns `{ amount: 1000 }` but the real API now returns
+`{ amount: 1000, currency: "usd" }`. Tests pass, production fails. Use contract tests to detect
+drift — see `contract-testing` and the drift seam in `references/wiremock.md`.
 
-**Stubbing the wrong layer.** Mocking `stripe.paymentIntents.create` (the SDK method) couples your test to the SDK version. Stub at the HTTP layer (`POST /v1/payment_intents`) so your test works regardless of which HTTP client or SDK version you use.
+### 4. Stubbing the wrong layer
+Mocking `stripe.paymentIntents.create` (the SDK method) couples the test to the SDK version. Stub
+at the HTTP layer (`POST /v1/payment_intents`) so the test works regardless of HTTP client or SDK
+version.
 
-**No error scenario coverage.** If your stubs always return 200, you never test retry logic, timeout handling, rate limit backoff, or error parsing. Every stub should have a corresponding error variant.
+### 5. No error-scenario coverage
+Stubs that always return 200 never exercise retry logic, timeout handling, rate-limit backoff, or
+error parsing. Every stub needs a corresponding error variant.
 
-**Using shared, long-lived mock servers.** A shared WireMock instance that multiple CI jobs hit introduces coupling and state leakage. Each test run should start its own isolated stub server.
+### 6. Shared, long-lived mock servers
+A shared WireMock instance that multiple CI jobs hit introduces coupling and state leakage. Each
+test run starts its own isolated stub server.
 
-**Record-replay without expiration.** Recordings from 6 months ago reflect an API that no longer exists. Add a `recordedAt` timestamp and fail tests when recordings are older than 30 days, forcing a re-record.
+### 7. Record-replay without expiration
+Recordings from six months ago reflect an API that no longer exists. Stamp `recordedAt` and fail
+the test when recordings exceed 30 days, forcing a re-record (see `references/record-replay.md`).
+
+---
+
+## Verification
+
+Prove no real call escaped, smallest check first:
+
+```bash
+# 1. MSW: any unhandled request must hard-fail the suite in CI
+CI=1 npm run test:integration            # onUnhandledRequest:"error" → exit 0 means nothing escaped
+
+# 2. WireMock/Testcontainers: confirm containers are reachable, then teardown leaves nothing
+docker compose -f docker-compose.test.yml up -d --wait --wait-timeout 120 && echo OK
+docker compose -f docker-compose.test.yml down -v
+
+# 3. Grep CI logs for outbound calls to the real provider's host (should print nothing)
+grep -iE "api\.stripe\.com|api\.twilio\.com" ci-run.log && echo "LEAK" || echo "clean"
+```
+
+A green run under `CI=1` with `onUnhandledRequest:"error"` plus an empty grep for the real host is
+the proof that the suite ran fully virtualized.
 
 ---
 
 ## Done When
 
-- Dependency isolation strategy is decided and documented for each external dependency (which get WireMock/MSW stubs, which use Testcontainers, which use sandbox modes).
-- WireMock or MSW stubs cover all critical external dependency scenarios including at least one error path (4xx/5xx, timeout, rate limit) per dependency.
-- Stubs and stub mapping files are versioned alongside test code in the same repository.
-- Tests run successfully in CI without any real external service calls (verified by `onUnhandledRequest: "error"` in MSW or equivalent WireMock enforcement).
-- Record-replay baseline is captured for any complex multi-step interaction sequences, with a `recordedAt` timestamp and a 30-day expiry check enforced in CI.
+- A dependency isolation strategy is decided and documented for each external dependency (which get
+  MSW/WireMock stubs, which use Testcontainers, which use the provider's sandbox mode).
+- Stubs cover all critical external dependencies with at least one error path each (4xx/5xx,
+  timeout, or rate limit).
+- Stubs and mapping files are versioned alongside test code in the same repository.
+- The suite runs green in CI with `onUnhandledRequest: "error"` (or the WireMock equivalent), and a
+  grep of CI logs for the real provider host returns nothing.
+- Any record-replay baseline carries a `recordedAt` stamp and a 30-day expiry check that fails the
+  test when stale.
+
+## Reference Files (in `references/`)
+
+- **msw.md** — centralized stateful handlers, Vitest setup with the CI/local `onUnhandledRequest`
+  switch, per-test timeout/retry overrides, and the full create/verify/refresh/revoke auth flow.
+- **wiremock.md** — Docker setup, response-templated and paginated mappings, the priority-based
+  error mapping, the admin API, and the contract-drift seam (Pact/Prism).
+- **testcontainers.md** — parallel PostgreSQL/Redis/Elasticsearch startup, `globalSetup` wiring,
+  and the image-tag refresh note.
+- **toxiproxy.md** — compose ports, `createProxy` upstream wiring, helpers with `response.ok`
+  checks, and a latency + reset usage example.
+- **record-replay.md** — tooling choices, the cassette format, the 30-day `assertFresh` check, and
+  a multi-step replay harness.
+- **ci.md** — MSW (zero-infra), the docker-compose GitHub Actions job, the two port models, and the
+  tool-by-constraint table.
 
 ## Related Skills
 
-- **contract-testing** -- Consumer-driven contracts with Pact.js that validate stubs match real APIs.
-- **test-environments** -- Docker Compose infrastructure, environment strategy, and seed data management.
-- **api-testing** -- REST/GraphQL testing patterns, schema validation, and auth flow testing.
-- **test-data-management** -- Factory patterns and data seeding for stub state setup.
+- **contract-testing** — Consumer-driven contract verification with Pact/broker; go there to prove
+  a stub matches a real provider, not just to detect drift against a shared schema.
+- **test-environments** — Full Docker Compose env strategy, preview environments, and seed data; go
+  there for standing up the environment, not for isolating a single dependency.
+- **chaos-engineering** — Broad fault-injection campaigns, game days, and blast-radius limits; go
+  there when resilience itself is the goal rather than making one dependency misbehave in a test.
+- **api-testing** — REST/GraphQL testing patterns, schema validation, and auth flow testing.
+- **test-data-management** — Factory patterns and data seeding for stub state setup.

@@ -1,33 +1,55 @@
 ---
 name: qa-dashboard
 description: >-
-  Set up QA dashboards and reporting with Allure Report, Grafana, and ReportPortal.
-  Covers test execution visualization, stakeholder-facing quality reports, trend
-  analysis panels, and CI integration for automated report generation.
-  Use when: "test dashboard," "Allure," "test report," "quality dashboard," "Grafana
-  testing," "ReportPortal," "test results visualization."
+  Build and visualize QA dashboards and reports with Allure Report, Grafana, and
+  ReportPortal. Covers test execution visualization, stakeholder-facing quality
+  reports, trend/flakiness panels, release-readiness gates, alerting, and CI
+  integration for automated report generation.
+  Use when: "test dashboard," "Allure," "test report," "quality dashboard,"
+  "Grafana," "ReportPortal," "test results visualization."
+  Not for: defining which KPIs to measure or how to interpret them — use qa-metrics
+  (this skill builds the panels; qa-metrics decides what they should show).
   Related: qa-metrics, ci-cd-integration, ai-bug-triage.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: metrics
 ---
 
 <objective>
-Build dashboards that drive decisions, not dashboards that display data.
+Build dashboards that drive decisions, not dashboards that display data. The failure
+mode this prevents: a wall of panels showing "5 failures" with no link to the failures,
+no target, and no trend — a notification dressed up as a tool that everyone stops opening
+by week three. This skill delivers audience-specific QA reporting — rich HTML reports
+(Allure), real-time trend panels with regression alerts (Grafana/InfluxDB), self-hosted
+AI-assisted aggregation (ReportPortal), and automated stakeholder summaries — each panel
+mapped to a question someone actually asks and every red indicator drilling down to the
+failing test.
 </objective>
+
+## Quick Route
+
+| Situation | Go to |
+|-----------|-------|
+| Already on Grafana for infra metrics | **Grafana Dashboards** — add test metrics alongside prod |
+| Test runner has a hosted dashboard (Cypress/Playwright) | **SaaS-Native Dashboards** — least plumbing |
+| Need rich HTML report, no infra to run | **Allure Report** — generate in CI, publish artifact |
+| Need self-hosted aggregation across frameworks + AI triage | **ReportPortal** |
+| Need a single view across multiple runners | **Grafana** or **Allure** (cross-runner aggregation) |
+| Need a weekly summary / release verdict for stakeholders | **Stakeholder Reports** |
 
 ---
 
 ## Discovery Questions
 
-1. **What tool do you use for test reporting today?** Console output, JUnit XML, HTML reports, or a dedicated platform? Identify the starting point.
-2. **Who will look at the dashboard?** Developers need failure details and traces. QA leads need trends and flakiness. Leadership needs release confidence and defect rates. Each audience needs a different view.
+Check `.agents/qa-project-context.md` first — if it exists, use it and skip anything answered there. Then:
+
+1. **What tool do you use for test reporting today?** Console output, JUnit XML, HTML reports, or a dedicated platform? Identifies the starting point and how much plumbing is left.
+2. **Who will look at the dashboard?** Developers need failure details and traces; QA leads need trends and flakiness; leadership needs release confidence and defect rates. Each audience needs a different view.
 3. **What decisions should the dashboard drive?** "Is this build safe to release?" "Which tests need fixing?" "Is quality improving sprint over sprint?" Dashboards without a decision context become shelfware.
 4. **Where do test results live?** GitHub Actions artifacts, S3, a database? The storage location determines which dashboard tool is practical.
 5. **What CI platform?** GitHub Actions, GitLab CI, Jenkins? Each has different artifact and reporting integrations.
-6. **Check `.agents/qa-project-context.md` first.** Respect existing reporting conventions and infrastructure.
 
 ---
 
@@ -47,448 +69,234 @@ Build dashboards that drive decisions, not dashboards that display data.
 
 ## Allure Report
 
-Allure generates rich HTML reports from test results with history, categories, and retries built in. It works with Playwright, Jest, Vitest, pytest, and most test frameworks.
+Allure generates rich HTML reports from test results with history, categories, and retries built in. It works with Playwright, Jest, Vitest, pytest, and most frameworks.
 
-> **Allure 2 vs Allure 3.** Allure Report 3 (current v3.7.0, May 2026) is a TypeScript rewrite with a plugin system, single-file `allurerc` config, real-time `allure watch`, project-wide quality gates, multi-environment reports, and **Allure Service** for cloud history (replaces the manual artifact dance). The framework adapters (`allure-playwright`, `allure-vitest`, `allure-jest`) shown below currently target Allure 2; v3-native readers and plugins are landing across the v3.x line.
->
-> **For new projects:** if your test framework has a v3-ready adapter, generate with `allure run` and add an `allurerc.mjs`. Otherwise stick with the Allure 2 CLI shown below — it remains supported (2.40.0, May 2026, mostly dependency bumps now).
->
-> Reference: https://allurereport.org/docs/v3/
+**Allure 2 vs Allure 3.** Two paths, and they are easy to mix up because the framework adapters (`allure-playwright`, `allure-vitest`, `allure-jest`) emit the same Allure 2 result files; only the reader differs:
 
-### Allure with Playwright
+- **Allure 2 path** — `allure-commandline` (2.42.1, Jun 2026). `brew install allure` installs **this**, not v3. Commands: `allure generate` / `allure open` / `allure serve`; categories via a `categories.json` dropped into `allure-results/`. Stable, frozen, dependency-bump-only now.
+- **Allure 3 path** — `allure` npm package + `allurerc.mjs` (3.9.0, May 2026). TypeScript rewrite: plugins, single-file config, real-time `allure watch`, project-wide quality gates, multi-environment reports, and **Allure Service** for server-side history. Commands: `npx allure run` / `npx allure generate` / `npx allure watch`; categories move into `allurerc.mjs` (the dropped-in `categories.json` is a v2 concept).
 
-```bash
-npm i -D allure-playwright
-```
+Choose Allure 3 for new projects. If you follow only the `brew install allure` / `allure generate` commands you are on the **v2** path — that is fine and fully supported; just know which one you are running.
+
+Minimal Playwright reporter wiring — register the adapter as `reporter: ["allure-playwright", { outputFolder, environmentInfo }]` so every run drops results into `allure-results/` with the environment captured:
 
 ```typescript
 // playwright.config.ts
-import { defineConfig } from "@playwright/test";
-
-export default defineConfig({
-  reporter: [
-    ["list"],
-    ["allure-playwright", {
-      outputFolder: "allure-results",
-      detail: true,
-      suiteTitle: true,
-      environmentInfo: {
-        Browser: "Chromium",
-        Environment: process.env.TEST_ENV ?? "local",
-        BaseURL: process.env.BASE_URL ?? "http://localhost:3000",
-      },
-    }],
-  ],
-});
+reporter: [
+  ["list"],
+  ["allure-playwright", {
+    outputFolder: "allure-results",
+    environmentInfo: {
+      Environment: process.env.TEST_ENV ?? "local",
+      BaseURL: process.env.BASE_URL ?? "http://localhost:3000",
+    },
+  }],
+],
 ```
 
-**Adding metadata to tests:**
-
-```typescript
-import { test, expect } from "@playwright/test";
-import { allure } from "allure-playwright";
-
-test.describe("Checkout Flow", () => {
-  test("should complete purchase with valid card", async ({ page }) => {
-    await allure.severity("critical");
-    await allure.feature("Checkout");
-    await allure.story("Payment Processing");
-    await allure.tag("smoke");
-
-    // Attach custom data to report
-    await allure.attachment("Test Config", JSON.stringify({
-      paymentProvider: "stripe-test",
-      currency: "USD",
-    }), "application/json");
-
-    await page.goto("/checkout");
-    await page.fill('[data-testid="card-number"]', "4242424242424242");
-    await page.fill('[data-testid="card-expiry"]', "12/28");
-    await page.fill('[data-testid="card-cvc"]', "123");
-    await page.click('[data-testid="pay-button"]');
-
-    await expect(page.locator('[data-testid="confirmation"]')).toBeVisible();
-  });
-});
-```
-
-### Allure with Jest/Vitest
-
-```bash
-# Jest
-npm i -D jest-allure2-reporter allure-jest
-
-# Vitest
-npm i -D allure-vitest
-```
-
-**Vitest configuration:**
-
-```typescript
-// vitest.config.ts
-import { defineConfig } from "vitest/config";
-
-export default defineConfig({
-  test: {
-    reporters: [
-      "default",
-      ["allure-vitest/reporter", {
-        resultsDir: "allure-results",
-        environmentInfo: {
-          Node: process.version,
-          OS: process.platform,
-        },
-      }],
-    ],
-    setupFiles: ["allure-vitest/setup"],
-  },
-});
-```
-
-### Generating Allure Reports
-
-```bash
-# Install Allure CLI
-brew install allure  # macOS
-# or: npm i -D allure-commandline
-
-# Generate HTML report from results
-npx allure generate allure-results --clean -o allure-report
-
-# Open report in browser
-npx allure open allure-report
-
-# Serve report (for CI artifact viewing)
-npx allure serve allure-results
-```
-
-### History and Trends
-
-Allure tracks test history across runs when you preserve the `allure-report/history` directory.
-
-```yaml
-# GitHub Actions: preserve Allure history across runs
-- name: Download previous Allure history
-  uses: actions/download-artifact@v4
-  with:
-    name: allure-history
-    path: allure-history
-  continue-on-error: true  # First run has no history
-
-- name: Run tests
-  run: npx playwright test
-
-- name: Copy history to results
-  run: |
-    mkdir -p allure-results/history
-    cp -r allure-history/history/* allure-results/history/ 2>/dev/null || true
-
-- name: Generate Allure report
-  run: npx allure generate allure-results --clean -o allure-report
-
-- name: Upload Allure report
-  uses: actions/upload-artifact@v4
-  with:
-    name: allure-report
-    path: allure-report/
-    retention-days: 30
-
-- name: Upload Allure history
-  uses: actions/upload-artifact@v4
-  with:
-    name: allure-history
-    path: allure-report/history/
-    retention-days: 90
-```
-
-### Custom Categories
-
-Define categories to group failures by type instead of showing a flat list.
-
-```json
-// allure-results/categories.json
-[
-  {
-    "name": "Product Bugs",
-    "matchedStatuses": ["failed"],
-    "messageRegex": ".*Expected.*but received.*"
-  },
-  {
-    "name": "Test Infrastructure",
-    "matchedStatuses": ["broken"],
-    "messageRegex": ".*(ECONNREFUSED|timeout|navigation).*"
-  },
-  {
-    "name": "Flaky Tests",
-    "matchedStatuses": ["failed"],
-    "messageRegex": ".*(intermittent|race condition|retry).*"
-  },
-  {
-    "name": "Missing Test Data",
-    "matchedStatuses": ["broken"],
-    "messageRegex": ".*(seed|fixture|not found in database).*"
-  }
-]
-```
+Add per-test metadata (`allure.severity` / `feature` / `story` / `tag`) to drive grouping, define failure
+`categories` to split product bugs from infra breakage, and preserve `history/` across CI runs so trends
+exist at all. **Without history an Allure report is a single snapshot — no trends, no intermittent-failure
+detection.** See `references/allure.md` for the full Playwright/Vitest configs, the v2 `categories.json`,
+the v3 `allurerc.mjs` + `allure run` runnable path, and the GitHub Actions history-preservation steps.
 
 ---
 
 ## Grafana Dashboards
 
-Grafana provides real-time dashboards with alerting. Best for teams that already use Grafana for infrastructure monitoring and want to add test metrics alongside production metrics.
+Grafana gives real-time dashboards with alerting. Best when the team already runs Grafana for infrastructure and wants test metrics next to production metrics.
 
-### Data Pipeline: CI to Grafana
+**Data pipeline:** a post-test CI step parses results (JUnit XML, coverage JSON, timing) and pushes points to a time-series DB (InfluxDB or a Prometheus pushgateway); Grafana queries those. The push script writes two measurements — `test_execution` (one point per test, tagged by `suite`/`test_name`/`status`/`branch`/`run_id`) and `test_run_summary` (one point per run with `pass_rate`, `total`, `failed`, `avg_duration_ms`). Tag every point with `branch` and `run_id` so panels can filter to `main` and link back to a specific run.
 
-```
-CI Pipeline Run
-  ├── Test results (JUnit XML)
-  ├── Coverage report (JSON)
-  └── Timing data (JSON)
-        │
-        ▼
-  Parser script (post-test CI step)
-        │
-        ▼
-  Time-series DB (InfluxDB / Prometheus pushgateway)
-        │
-        ▼
-  Grafana queries + panels
-```
+The script runs under `if: always()`, so wrap the write loop in try/flush/close — a throw mid-loop otherwise loses every buffered point. See `references/grafana.md` for the full `push-test-metrics.ts` (with the flush guard) and the GitHub Actions step.
 
-### Pushing Test Metrics to InfluxDB
+### Recommended panels
 
-```typescript
-// scripts/push-test-metrics.ts
-import { InfluxDB, Point } from "@influxdata/influxdb-client";
+| Panel | Question | Query shape |
+|-------|----------|-------------|
+| **Pass Rate Trend** (time series) | Is quality improving? | `SELECT mean("pass_rate") FROM "test_run_summary" WHERE "branch"='main' GROUP BY time(1d)`, thresholds at 95% (yellow) / 99% (green) |
+| **Release Readiness** (stat) | Is main ready to release? | `SELECT last("pass_rate") FROM "test_run_summary" WHERE "branch"='main'`, red <95 / yellow 95–99 / green ≥99 — pair with a coverage stat ≥80 |
+| **Flakiness Top 10** (table) | Which tests waste the most time? | `SELECT "test_name", count("retries") AS retry_count FROM "test_execution" WHERE "retries">0 AND time>now()-14d GROUP BY "test_name" ORDER BY retry_count DESC LIMIT 10` |
+| **CI Duration Trend** | Is the pipeline getting slower? | `avg_duration_ms` over time with a target line at 600s |
 
-interface TestResult {
-  name: string;
-  suite: string;
-  status: "passed" | "failed" | "skipped";
-  duration: number;
-  retries: number;
-}
+Full queries plus Coverage Trend and Duration Distribution panels are in `references/grafana.md`.
 
-async function pushMetrics(results: TestResult[], runId: string, branch: string) {
-  const client = new InfluxDB({
-    url: process.env.INFLUXDB_URL!,
-    token: process.env.INFLUXDB_TOKEN!,
-  });
+### Alerting
 
-  const writeApi = client.getWriteApi("qa", "test-results", "ms");
-
-  for (const result of results) {
-    const point = new Point("test_execution")
-      .tag("suite", result.suite)
-      .tag("test_name", result.name)
-      .tag("status", result.status)
-      .tag("branch", branch)
-      .tag("run_id", runId)
-      .floatField("duration_ms", result.duration)
-      .intField("retries", result.retries)
-      .intField("passed", result.status === "passed" ? 1 : 0)
-      .intField("failed", result.status === "failed" ? 1 : 0);
-
-    writeApi.writePoint(point);
-  }
-
-  // Push summary metrics
-  const total = results.length;
-  const passed = results.filter((r) => r.status === "passed").length;
-  const failed = results.filter((r) => r.status === "failed").length;
-  const avgDuration = results.reduce((sum, r) => sum + r.duration, 0) / total;
-
-  const summary = new Point("test_run_summary")
-    .tag("branch", branch)
-    .tag("run_id", runId)
-    .intField("total", total)
-    .intField("passed", passed)
-    .intField("failed", failed)
-    .floatField("pass_rate", (passed / total) * 100)
-    .floatField("avg_duration_ms", avgDuration);
-
-  writeApi.writePoint(summary);
-  await writeApi.close();
-}
-```
-
-```yaml
-# GitHub Actions: push metrics after tests
-- name: Push test metrics to Grafana
-  if: always()
-  env:
-    INFLUXDB_URL: ${{ secrets.INFLUXDB_URL }}
-    INFLUXDB_TOKEN: ${{ secrets.INFLUXDB_TOKEN }}
-  run: |
-    npx tsx scripts/push-test-metrics.ts \
-      --results-file test-results/results.json \
-      --run-id "${{ github.run_id }}" \
-      --branch "${{ github.head_ref || github.ref_name }}"
-```
-
-### Recommended Grafana Panels
-
-**Panel 1: Pass Rate Trend (time series)**
-
-```
-Query: SELECT mean("pass_rate") FROM "test_run_summary"
-       WHERE "branch" = 'main'
-       GROUP BY time(1d)
-Visualization: Time series, thresholds at 95% (yellow) and 99% (green)
-```
-
-**Panel 2: Flakiness Top 10 (table)**
-
-```
-Query: SELECT "test_name", count("retries") as retry_count
-       FROM "test_execution"
-       WHERE "retries" > 0 AND time > now() - 14d
-       GROUP BY "test_name"
-       ORDER BY retry_count DESC
-       LIMIT 10
-Visualization: Table with sortable columns
-```
-
-Additional panels: **Test Duration Distribution** (histogram, buckets at 1s/5s/10s/30s/60s), **Coverage Trend** (line + branch coverage over time), **CI Duration Trend** (with target line at 600s).
-
-### Grafana Alerting
-
-Set up alerts for: pass rate below 95% (warning, 10m window), CI duration above 15 min (warning), and coverage drop of more than 2% in a week (info). Route to the QA team's Slack channel.
+Provision alert rules as YAML under `provisioning/alerting/` (Grafana 11+). The one the Done When
+requires: **main pass rate drops more than 2 percentage points in a single day.** Build it from two
+queries (mean `pass_rate` over the last `1d` vs the day before) feeding a math expression
+`$yesterday - $today > 2`, then route via a Slack contact point (incoming-webhook URL). The full
+provisioned rule + contact point is in `references/grafana.md`. Also alert on: pass rate below 95%
+(10m window), CI duration above 15 min, coverage drop >2% in a week. **Dashboards are for
+investigation; alerts are for detection** — a dashboard no one opens catches nothing.
 
 ---
 
 ## ReportPortal
 
-ReportPortal is a self-hosted test reporting platform with AI-powered failure analysis, test result aggregation across frameworks, and real-time dashboards.
-
-### Setup with Docker Compose
+Self-hosted test reporting platform with ML-powered failure analysis, cross-framework aggregation, and real-time dashboards.
 
 ```bash
-# Pin to a tagged release (current: 26.0.2). The `master` branch may not match
-# the supported 26.x line.
-curl -LO https://raw.githubusercontent.com/reportportal/reportportal/26.0.2/docker-compose.yml
+# Pin to a tagged release (current 26.0.x line: 26.0.3). The `master` branch may not
+# match the supported 26.x line.
+curl -LO https://raw.githubusercontent.com/reportportal/reportportal/26.0.3/docker-compose.yml
 docker compose up -d
 # Access at http://localhost:8080 (default: superadmin/erebus)
-# ML-based failure classification: ensure the `service-auto-analyzer` container
-# is running — it provides the AI auto-analysis ReportPortal advertises.
+# ML auto-analysis lives in the `service-auto-analyzer` container — confirm it is running.
 ```
 
-### Allure TestOps (managed alternative)
+As of 26.0.3 ReportPortal also ingests **agentic** test results (launches carry an `AGENTIC` vs
+`AUTOMATION` execution-type badge) — relevant if part of your suite runs through Claude Code or another agent.
 
-If self-hosting feels heavy, **Allure TestOps** (current 26.2.1.4, May 2026) is the SaaS path: it adds Allure 3 quality gates, named environments, global attachments, and Allure 3-style flaky detection (≥3 status transitions in last 10 runs). An MCP server is in open beta (26.1.1, March 2026), letting AI agents query launches and quality gates directly — relevant if your QA workflow runs through Claude Code / Codex / Cursor.
-
-### Integration with Playwright
-
-```bash
-npm i -D @reportportal/agent-js-playwright
-```
+### Playwright integration
 
 ```typescript
 // playwright.config.ts
-import { defineConfig } from "@playwright/test";
-
-export default defineConfig({
-  reporter: [
-    ["list"],
-    ["@reportportal/agent-js-playwright", {
-      apiKey: process.env.RP_API_KEY,
-      endpoint: process.env.RP_ENDPOINT ?? "http://localhost:8080/api/v1",
-      project: "my-project",
-      launch: `E2E Tests - ${process.env.CI ? "CI" : "local"}`,
-      attributes: [
-        { key: "branch", value: process.env.GITHUB_HEAD_REF ?? "local" },
-        { key: "build", value: process.env.GITHUB_RUN_ID ?? "dev" },
-      ],
-      description: `Playwright E2E suite run on ${new Date().toISOString()}`,
-    }],
-  ],
-});
+reporter: [
+  ["list"],
+  ["@reportportal/agent-js-playwright", {
+    apiKey: process.env.RP_API_KEY,
+    endpoint: process.env.RP_ENDPOINT ?? "http://localhost:8080/api/v1",
+    project: "my-project",
+    launch: `E2E Tests - ${process.env.CI ? "CI" : "local"}`,
+    attributes: [
+      { key: "branch", value: process.env.GITHUB_HEAD_REF ?? "local" },
+      { key: "build", value: process.env.GITHUB_RUN_ID ?? "dev" },
+    ],
+  }],
+],
 ```
 
-### ReportPortal Features
+Install with `npm i -D @reportportal/agent-js-playwright`.
 
-| Feature | What It Does |
-|---------|-------------|
-| **Auto-analysis** | ML-based failure classification: product bug, test bug, system issue, or to investigate |
+| Feature | What it does |
+|---------|--------------|
+| **Auto-analysis** | ML failure classification: product bug, test bug, system issue, or to-investigate |
 | **Defect type mapping** | Custom defect categories with sub-types for your project |
-| **Flaky test detection** | Identifies tests that flip between pass/fail across launches |
-| **Merge launches** | Combine results from sharded CI runs into one unified view |
-| **Quality gates** | Define pass/fail criteria for launches (max failures, min pass rate) |
-| **Comparison** | Side-by-side comparison of two launches to spot regressions |
+| **Flaky test detection** | Tests that flip pass/fail across launches |
+| **Merge launches** | Combine sharded CI runs into one unified view |
+| **Quality gates** | Pass/fail criteria per launch (max failures, min pass rate) |
+| **Comparison** | Side-by-side of two launches to spot regressions |
 
-ReportPortal quality gates can be queried via API after test completion (`GET /api/v1/$PROJECT/launch/$LAUNCH_ID/quality-gate`) and used as a CI gate -- fail the pipeline if the gate status is not `PASSED`.
+Quality gates are queryable after a run (`GET /api/v1/$PROJECT/launch/$LAUNCH_ID/quality-gate`) — use the
+status as a CI gate and fail the pipeline if it is not `PASSED`.
+
+### Allure TestOps (managed alternative)
+
+If self-hosting feels heavy, **Allure TestOps** (26.2.x line, 2026) is the SaaS path: Allure 3 quality
+gates, named environments, global attachments, and Allure 3-style flaky detection. Its **MCP server is in
+public beta (26.1.1)**, letting AI agents query launches and quality gates directly — relevant when your QA
+workflow runs through Claude Code / Cursor.
 
 ---
 
 ## SaaS-Native Test Dashboards
 
-If your test runner has a first-class hosted dashboard, prefer it over Allure/Grafana for the runner's native data — less plumbing, more retention, built-in PR comments. Cross-pollinate with Allure/Grafana only for cross-runner aggregation.
+If your test runner has a first-class hosted dashboard, prefer it over Allure/Grafana for that runner's native data — less plumbing, more retention, built-in PR comments. Cross-pollinate with Allure/Grafana only for cross-runner aggregation.
 
 | Platform | Test runner | Native data + PR comments |
 |----------|-------------|---------------------------|
 | **Cypress Cloud** | Cypress | Test replay, parallelization, flake detection; AI add-on (Auto Heal, Bug Triage) |
 | **Currents.dev** | Cypress, Playwright | OSS-friendly Cypress Cloud alternative; lower price point |
-| **Playwright HTML report + `--reporter=blob`** | Playwright | Free, self-hosted; combine shards with `npx playwright merge-reports` |
-| **Datadog Test Optimization** | Any (CI-side) | Flaky Test Management, TIA, native APM integration |
+| **Playwright HTML + `--reporter=blob`** | Playwright | Free, self-hosted; combine shards with `merge-reports` |
+| **Datadog Test Optimization** | Any (CI-side) | Flaky Test Management (now with Bits AI auto-fix), TIA, native APM |
 | **Allure TestOps** | Any | Allure 3 quality gates, named environments, MCP server beta |
 
-Use Allure or Grafana when you need a single dashboard across multiple test runners or when the SaaS option's pricing/data-residency doesn't fit. Otherwise, the SaaS-native dashboard is usually the cheapest path to PR-level signal.
+**Combining sharded Playwright runs (free, native).** Have each shard emit a blob report, then merge into
+one HTML report — the no-cost answer to "combine sharded CI runs":
+
+```bash
+# each shard: npx playwright test --reporter=blob   (uploads blob-report/ as an artifact)
+npx playwright merge-reports --reporter html ./blob-reports
+```
+
+Use Allure or Grafana when you need one dashboard across multiple runners, or when a SaaS option's pricing/data-residency does not fit. Otherwise the SaaS-native dashboard is usually the cheapest path to PR-level signal.
 
 ---
 
 ## Stakeholder Reports
 
-**Weekly QA Summary** -- Automate via scheduled CI job. Include: pass rate + trend, new vs fixed failures, top 5 flaky tests, coverage delta, avg CI duration. Classify health: STABLE (>= 98%), NEEDS ATTENTION (>= 95%), CRITICAL (< 95%). Post to Slack automatically.
+**Weekly QA Summary** — automate via a scheduled CI job. Include: pass rate + trend, new vs fixed failures, top 5 flaky tests, coverage delta, avg CI duration. Classify health: STABLE (>= 98%), NEEDS ATTENTION (>= 95%), CRITICAL (< 95%). Post to Slack automatically.
 
-**Release Quality Report** -- Generate before each release. Gate on: E2E pass rate >= 99%, unit pass rate 100%, branch coverage >= 80%, zero critical bugs, major bugs <= 2, performance budget (LCP < 2500ms, FID < 100ms, CLS < 0.1). Output a READY/NOT READY verdict with per-gate pass/fail breakdown.
+**Release Quality Report** — generate before each release. Gate on: E2E pass rate >= 99%, unit pass rate 100%, branch coverage >= 80%, zero critical bugs, major bugs <= 2, and the Core Web Vitals budget. Output a READY / NOT READY verdict with a per-gate pass/fail breakdown.
+
+Core Web Vitals "good" thresholds for the perf gate (current as of 2026): **LCP < 2500ms, INP < 200ms, CLS < 0.1.** Gate on INP, not FID — INP replaced FID as a Core Web Vital on 2024-03-12 and FID was fully retired on 2024-09-09.
 
 ---
 
 ## Recommended Dashboard Panels
 
-A practical set of panels that cover the most common questions teams ask.
+A practical set covering the most common questions teams ask.
 
 | Panel | Question It Answers | Data Source | Audience |
 |-------|-------------------|-------------|----------|
 | **Pass/Fail Trend** | Is quality improving or degrading? | CI test results over time | Everyone |
 | **Flakiness Top 10** | Which tests waste the most time? | Tests with retries in last 14 days | Developers, QA |
 | **Coverage Heatmap** | Where are we blind? | Coverage by module/directory | Developers |
-| **Defect Escape Trend** | Are bugs reaching production? | Production incidents tagged as test escapes | QA leads, Leadership |
+| **Defect Escape Trend** | Are bugs reaching production? | Incidents tagged as test escapes | QA leads, Leadership |
 | **CI Duration** | Is the pipeline getting slower? | Pipeline duration over time | DevOps, Developers |
-| **Test Velocity** | Are we writing tests proportional to features? | New tests added per sprint | QA leads |
-| **Failure Categories** | Are failures product bugs or test infra? | Categorized failure reasons | QA leads |
+| **Test Velocity** | Tests proportional to features? | New tests added per sprint | QA leads |
+| **Failure Categories** | Product bugs or test infra? | Categorized failure reasons | QA leads |
 | **Release Readiness** | Can we ship? | Composite score from all gates | Leadership |
 
 ---
 
 ## Anti-Patterns
 
-**Dashboard with 30 panels.** No one reads a dashboard with 30 panels. Start with 5-6 panels that answer the most urgent questions. Add panels only when someone asks a question the dashboard cannot answer.
+**Dashboard with 30 panels.** No one reads it. Start with 5–6 panels that answer the most urgent questions; add panels only when someone asks one the dashboard cannot answer.
 
 **Metrics without context.** "Pass rate: 97%" means nothing without "target: 99%" and "last week: 98.5%." Every metric needs a target and a trend to be actionable.
 
-**Manual report generation.** If generating the weekly QA summary requires someone to SSH into a server, run queries, and paste into a slide deck, it will stop happening by week 3. Automate everything into the CI pipeline.
+**Manual report generation.** If the weekly summary needs someone to SSH in, run queries, and paste into slides, it stops happening by week 3. Automate it into CI.
 
-**Same dashboard for developers and leadership.** Developers need failure details, stack traces, and reproduction steps. Leadership needs a single traffic light: green/yellow/red. Build separate views.
+**Same dashboard for developers and leadership.** Developers need failure details, stack traces, and repro steps; leadership needs one traffic light. Build separate views.
 
-**Reporting test counts as progress.** "We added 200 tests this sprint" says nothing about quality. Report coverage of critical paths, defect escape rate, and mean time to detect regressions instead.
+**Reporting test counts as progress.** "We added 200 tests" says nothing about quality. Report critical-path coverage, defect escape rate, and mean time to detect regressions instead.
 
-**No alerting on regressions.** A dashboard that no one checks is useless. Set up Grafana alerts or Slack notifications for pass rate drops, coverage decreases, and CI duration increases. Dashboards are for investigation; alerts are for detection.
+**No alerting on regressions.** A dashboard no one checks is useless. Alert on pass-rate drops, coverage decreases, and CI-duration increases. Dashboards are for investigation; alerts are for detection.
 
-**Allure without history.** A single Allure report is a snapshot. Without history, you cannot see trends, identify intermittent failures, or measure improvement. Always preserve the `history/` directory across CI runs.
+**Allure without history.** A single Allure report is a snapshot — no trends, no intermittent-failure detection, no measure of improvement. Always preserve `history/` across CI runs (or use Allure 3 / Allure Service for server-side history).
+
+**Mixing the Allure 2 and 3 code paths.** Following the v3 callout in prose but copying `brew install allure` + `allure generate` + a dropped-in `categories.json` lands you on v2 with v2 categories. Pick one path and use its commands end to end.
+
+---
+
+## Verification
+
+Prove the report/dashboard actually renders before calling it done. Smallest checks first:
+
+```bash
+# Allure: a report builds and the trend widget shows >1 run (history preserved)
+npx allure generate allure-results --clean -o allure-report && npx allure open allure-report
+#   -> Overview page loads; the "Trend" widget shows more than one run.
+
+# Grafana push: the summary point landed in InfluxDB
+influx query 'from(bucket:"test-results") |> range(start:-1d) |> filter(fn:(r)=> r._measurement=="test_run_summary")'
+#   -> returns at least one row with a pass_rate field for branch=main.
+
+# Grafana alert: the provisioned rule loaded
+curl -s http://localhost:3000/api/v1/provisioning/alert-rules -u admin:admin | jq '.[].title'
+#   -> includes "Main pass rate dropped >2pp in a day".
+```
 
 ---
 
 ## Done When
 
-- Dashboard is deployed and accessible to the full team without requiring local setup or manual report generation.
+- Dashboard is published to a known location that returns HTTP 200 for the team (CI artifact URL, Grafana URL, or hosted SaaS link) — no local setup or manual report run required.
 - Test execution trends (pass rate, failure count, duration) are visible over at least 2 weeks of historical data.
-- Flakiness trend chart is configured showing the top flaky tests with retry counts over a rolling 14-day window.
-- Stakeholder-facing report template is created and generating automatically (weekly summary or per-release quality report with a clear READY/NOT READY verdict).
-- Alert is configured to notify the team (via Slack or equivalent) when the main branch pass rate drops by more than 2 percentage points in a single day.
+- Flakiness panel is configured showing the top flaky tests with retry counts over a rolling 14-day window.
+- A stakeholder report template is generating automatically — **either** a weekly summary with a STABLE/NEEDS ATTENTION/CRITICAL health label **or** a per-release quality report with a READY/NOT READY verdict and per-gate breakdown (one or both is acceptable).
+- An alert is configured and routed (Slack or equivalent) that fires when the main-branch pass rate drops by more than 2 percentage points in a single day.
 
 ## Related Skills
 
-- **qa-metrics** -- Defining quality KPIs, measurement frameworks, and metric interpretation.
-- **ci-cd-integration** -- Pipeline configuration for automated report generation and artifact management.
-- **ai-bug-triage** -- AI-powered failure classification that feeds into dashboard categories.
+- **qa-metrics** — Defining quality KPIs, measurement frameworks, and metric interpretation. Go there to decide *what* to measure; come here to *visualize* it.
+- **ci-cd-integration** — Pipeline configuration for automated report generation and artifact management.
+- **ai-bug-triage** — AI-powered failure classification that feeds into dashboard failure categories.
+
+## Reference Files (in `references/`)
+
+- **allure.md** — full Playwright/Vitest adapter configs, per-test metadata, the v2 `categories.json`, the v3 `allurerc.mjs` + `allure run` runnable path, and the CI history-preservation workflow.
+- **grafana.md** — the `push-test-metrics.ts` script (with flush guard), all panel queries, and the provisioned ">2pp pass-rate drop" alert rule + Slack contact point.

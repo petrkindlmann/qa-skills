@@ -36,6 +36,12 @@ After each sprint, feed these data points back into future planning:
 Estimation accuracy: Estimated 40h | Actual 46h | Variance +15%
   Cause: Bug verification took 6h more than buffered
 
+Actual vs estimated by test type (feeds Step 3 calibration):
+  Unit:        est  4h | actual  4h | +0%   (estimate good)
+  E2E:         est 12h | actual 14h | +17%  (page objects slower than assumed)
+  Exploratory: est  6h | actual  6h | +0%
+  Setup/data:  est  2h | actual  6h | +200% (was under-budgeted — raise next sprint)
+
 Coverage: Planned 22 scenarios | Tested 20 | Skipped 2 (low risk, time pressure)
   Gap: accessibility review deferred
 
@@ -43,6 +49,7 @@ Bugs: Total 7 | P0: 0 | P1: 2 | P2: 3 | P3: 2 | Escaped: 0
 
 Lessons:
   - Buffer was too low for this complexity (increase to 30%)
-  - E2E estimation accurate; unit test estimation too low
+  - Setup/data was the worst miss — give it a real line next sprint
+  - E2E write time runs high with page objects; bump to 3h/test
   - Start testing Day 2 instead of Day 3
 ```

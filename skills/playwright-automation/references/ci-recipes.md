@@ -325,7 +325,8 @@ export default defineConfig({
   },
 
   use: {
-    // Action timeout (click, fill, etc.)
+    // Action timeout (click, fill, etc.) — set this only if a known-slow widget
+    // needs it; a global actionTimeout can mask a genuinely slow auto-waited action.
     actionTimeout: 15_000,
 
     // Navigation timeout (goto, waitForURL)
@@ -487,7 +488,7 @@ jobs:
   e2e:
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.52.0-noble
+      image: mcr.microsoft.com/playwright:v1.60.0-noble  # pin to the version in package.json
       options: --user 1001  # Non-root user
     steps:
       - uses: actions/checkout@v4

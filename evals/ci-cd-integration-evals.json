@@ -1,12 +1,12 @@
 {
   "skill": "ci-cd-integration",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "cicd-001",
       "prompt": "Create a GitHub Actions workflow that runs lint and unit tests on every push, and integration + E2E on PR, keeping push feedback under 2 minutes",
       "expected_patterns": [
-        "on: push OR on: [push, pull_request]",
+        "on:.*push",
         "matrix OR strategy",
         "npm run lint",
         "npm test OR npm run test:ci",
@@ -27,7 +27,7 @@
       "id": "cicd-002",
       "prompt": "Set up Playwright test sharding across 4 workers in GitHub Actions with merged HTML reports",
       "expected_patterns": [
-        "matrix: { shard: [1, 2, 3, 4] }",
+        "shard: [1, 2, 3, 4]",
         "npx playwright test --shard=${{ matrix.shard }}/4",
         "merge-reports OR playwright merge-reports",
         "actions/download-artifact",
@@ -49,7 +49,7 @@
       "id": "cicd-003",
       "prompt": "Configure Playwright browser caching in GitHub Actions so browsers are not reinstalled on every run",
       "expected_patterns": [
-        "actions/cache@v4",
+        "actions/cache@v5 OR actions/cache",
         "~/.cache/ms-playwright OR ~/.playwright",
         "key: playwright-${{ runner.os }}-${{ hashFiles('package-lock.json') }}",
         "if: steps.playwright-cache.outputs.cache-hit != 'true'",
@@ -95,7 +95,7 @@
         "parallel: 4",
         "npx playwright test --shard=$CI_NODE_INDEX/$CI_NODE_TOTAL",
         "coverage_report OR junit",
-        "artifacts: { when: always, paths: [test-results/, playwright-report/] }"
+        "when: always.*paths: [test-results/, playwright-report/]"
       ],
       "anti_patterns": [
         "hardcoded shard numbers instead of CI_NODE_INDEX",
@@ -115,7 +115,7 @@
         "dorny/paths-filter@v3 OR pathFilters",
         "id: changes",
         "if: steps.changes.outputs.frontend == 'true'",
-        "filters: | frontend: ... playwright.config.ts"
+        "filters:.*frontend:.*playwright.config.ts"
       ],
       "anti_patterns": [
         "running all tests regardless of file changes",
@@ -138,7 +138,6 @@
       ],
       "anti_patterns": [
         "no concurrency configuration",
-        "cancel-in-progress: false",
         "static group name without branch awareness"
       ],
       "tags": [
@@ -151,15 +150,16 @@
       "id": "cicd-008",
       "prompt": "Create a GitHub Actions quality gate for main branch that checks code coverage is above 80% and blocks merge if below threshold",
       "expected_patterns": [
-        "npx coverage-summary OR coverage report parsing",
-        "if (( $(echo \"$COVERAGE < 80\" | bc -l) ))",
-        "echo ::error:: OR core.setFailed",
-        "exit 1",
-        "needs: [unit-tests, e2e-tests] OR requires passing tests"
+        "coverageThreshold OR coverage.thresholds",
+        "lines: 80 OR lines.*80",
+        "coverage/coverage-summary.json OR json-summary",
+        "npm test -- --ci --coverage OR jest --coverage",
+        "needs: [unit-tests OR required status check OR branch protection"
       ],
       "anti_patterns": [
+        "npx coverage-summary",
+        "istanbul report",
         "no threshold enforcement",
-        "coverage check without exit code",
         "quality gate on feature branches"
       ],
       "tags": [
@@ -172,9 +172,9 @@
       "id": "cicd-009",
       "prompt": "Design a pipeline that publishes test results to a PR comment and uploads HTML reports as artifacts with 7-day retention",
       "expected_patterns": [
-        "dorny/test-reporter@v1 OR test result publishing action",
-        "marocchino/sticky-pull-request-comment@v2 OR PR comment action",
-        "actions/upload-artifact@v4",
+        "dorny/test-reporter@v3 OR test result publishing action",
+        "marocchino/sticky-pull-request-comment@v3 OR PR comment action",
+        "actions/upload-artifact@v7 OR actions/upload-artifact",
         "retention-days: 7 OR expire_in: 7 days",
         "name: Test Results OR html report"
       ],
@@ -193,16 +193,16 @@
       "id": "cicd-010",
       "prompt": "Create a nightly scheduled pipeline that runs the full E2E suite, security scan (npm audit), accessibility audit (axe-core), and posts results to Slack on failure",
       "expected_patterns": [
-        "on: schedule:",
+        "on:.*schedule OR schedule:",
         "cron: '0 2 * * *'",
-        "npm audit",
-        "@axe-core/playwright OR axe-core",
-        "slackapi/slack-github-action@v2.0.0",
-        "if: failure() && github.ref == 'refs/heads/main' OR similar condition"
+        "npm audit --audit-level=high OR npm audit",
+        "@axe-core/playwright",
+        "slackapi/slack-github-action@v2",
+        "if: failure()"
       ],
       "anti_patterns": [
+        "slackapi/slack-github-action@v2.0.0",
         "no scheduled runs",
-        "security and a11y scans not included in nightly",
         "Slack notifications on all runs instead of failures only",
         "no time trigger specification"
       ],

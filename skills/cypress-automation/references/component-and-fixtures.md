@@ -64,7 +64,7 @@ describe('Role-based access', () => {
 
 ### Dynamic Test Data via cy.task
 
-Use `cy.task` for operations that need Node.js context (API calls, database seeding):
+Use `cy.task` for operations that need Node.js context (API calls, database seeding). The task body runs in the Node process, so `fetch` below is Node's global fetch (available on Node 18+, fine for Cypress 15's Node 20+ baseline) -- not a Cypress API:
 
 ```typescript
 // cypress.config.ts -- register tasks in setupNodeEvents

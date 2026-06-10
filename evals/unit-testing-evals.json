@@ -1,6 +1,6 @@
 {
   "skill": "unit-testing",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "ut-001",
@@ -29,17 +29,18 @@
     },
     {
       "id": "ut-002",
-      "prompt": "Configure Jest coverage thresholds in jest.config.js with branch, line, and statement minimums",
+      "prompt": "Configure Jest coverage thresholds in jest.config.js with branch, line, and statement minimums, and make CI fail when coverage drops below them",
       "expected_patterns": [
-        "coverageThresholds",
+        "coverageThreshold:",
         "branches: 80 OR branches >= 80",
         "lines: 80 OR lines >= 80",
         "statements: 80 OR statements >= 80",
         "collectCoverageFrom",
-        "coverageProvider: v8 OR provider: v8"
+        "coverageProvider OR provider: \"v8\" OR provider: v8",
+        "non-zero OR exit OR --coverage"
       ],
       "anti_patterns": [
-        "coverageThresholds with 100 globally",
+        "coverageThresholds:",
         "including generated code in collectCoverageFrom",
         "coverage only on lines, not branches"
       ],
@@ -143,9 +144,10 @@
       "id": "ut-007",
       "prompt": "Set up Stryker mutation testing for a JavaScript project and interpret the score",
       "expected_patterns": [
-        "stryker.config.mjs OR stryker.config.mts",
-        "testRunner: jest OR testRunner: vitest",
-        "thresholds: { high:",
+        "stryker.config.json OR stryker.config.mjs OR stryker.config.mts",
+        "testRunner.*jest OR testRunner.*vitest",
+        "high.*80 OR high: 80",
+        "break",
         "coverageAnalysis",
         "mutate",
         "90%+ OR 70-89% OR <70%",
@@ -163,15 +165,36 @@
       ]
     },
     {
+      "id": "ut-011",
+      "prompt": "Set up mutmut mutation testing for a Python project: configure the paths, run it, and inspect surviving mutants",
+      "expected_patterns": [
+        "[mutmut] OR [tool.mutmut]",
+        "paths_to_mutate OR source_paths",
+        "mutmut run",
+        "mutmut browse",
+        "mutmut apply"
+      ],
+      "anti_patterns": [
+        "--paths-to-mutate",
+        "mutmut results",
+        "mutmut show"
+      ],
+      "tags": [
+        "mutation-testing",
+        "mutmut",
+        "python"
+      ]
+    },
+    {
       "id": "ut-008",
       "prompt": "Write a pytest parametrized test for a title_case function with multiple input-output pairs",
       "expected_patterns": [
         "@pytest.mark.parametrize",
         "def test_",
         "assert",
-        "input_val",
+        "input_val,expected OR input_val",
         "expected",
-        "\",\" separated tuples OR list of tuples"
+        "\"), (\" OR list of tuples OR [\n"
       ],
       "anti_patterns": [
         "separate test function for each case",
@@ -213,7 +236,7 @@
         "await expect",
         ".resolves.toEqual OR .resolves.toBe",
         ".rejects.toThrow",
-        "async it",
+        "async () => OR async ({ OR async function",
         "mockResolvedValue OR mockRejectedValue"
       ],
       "anti_patterns": [
@@ -225,6 +248,27 @@
         "vitest",
         "async",
         "promises"
+      ]
+    },
+    {
+      "id": "ut-012",
+      "prompt": "How do I make CI actually fail when unit coverage drops below threshold, and stop snapshot tests from silently writing new baselines in CI?",
+      "expected_patterns": [
+        "--coverage",
+        "non-zero OR exit code OR fail",
+        "--ci",
+        "coverageThreshold OR fail_under OR cov-fail-under",
+        "unknown snapshot OR new snapshot OR --updateSnapshot"
+      ],
+      "anti_patterns": [
+        "coverageThresholds:",
+        "--updateSnapshot in CI",
+        "--ci-update OR auto-write snapshots in CI"
+      ],
+      "tags": [
+        "coverage",
+        "ci-gate",
+        "snapshot-safety"
       ]
     }
   ]

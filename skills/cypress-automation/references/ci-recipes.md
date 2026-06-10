@@ -2,6 +2,8 @@
 
 GitHub Actions workflows for Cypress, with and without Cypress Cloud. The decision prose on when to use Cloud and version-pinning guidance lives in `SKILL.md`.
 
+**Action version:** pin to `cypress-io/github-action@v7` (latest is 7.2.0, May 2026; v7 runs under Node 24, removes the legacy Node 20 path). Use `@v6` only if your runner is still on Node 20 — v6 is the Node-20 legacy branch, not "current LTS".
+
 ## With Cypress Cloud
 
 Set `projectId` in `cypress.config.ts`. Run with `npx cypress run --record --key $CYPRESS_RECORD_KEY`. Cloud provides parallelization, flake detection, test replay, and analytics.
@@ -17,7 +19,7 @@ jobs:
         containers: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
-      - uses: cypress-io/github-action@v6
+      - uses: cypress-io/github-action@v7
         with:
           record: true
           parallel: true
@@ -32,7 +34,7 @@ jobs:
 # GitHub Actions -- standalone
 steps:
   - uses: actions/checkout@v4
-  - uses: cypress-io/github-action@v6
+  - uses: cypress-io/github-action@v7
     with:
       build: npm run build
       start: npm run start

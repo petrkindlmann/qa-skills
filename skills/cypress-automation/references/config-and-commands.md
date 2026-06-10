@@ -76,16 +76,26 @@ Custom commands encapsulate repeated actions and provide a clean API. Always typ
 
 // Login command -- avoid UI login in every test
 Cypress.Commands.add('login', (email: string, password: string) => {
-  cy.session([email, password], () => {
-    cy.request({
-      method: 'POST',
-      url: '/api/auth/login',
-      body: { email, password },
-    }).then((response) => {
-      expect(response.status).to.eq(200);
-      window.localStorage.setItem('auth_token', response.body.token);
-    });
-  });
+  cy.session(
+    [email, password],
+    () => {
+      cy.request({
+        method: 'POST',
+        url: '/api/auth/login',
+        body: { email, password },
+      }).then((response) => {
+        expect(response.status).to.eq(200);
+        window.localStorage.setItem('auth_token', response.body.token);
+      });
+    },
+    {
+      // Re-verify the cached session before reusing it. Without validate(),
+      // a stale/expired token silently reuses a dead session.
+      validate() {
+        cy.request('/api/me').its('status').should('eq', 200);
+      },
+    },
+  );
 });
 
 // Data attribute selector shorthand
@@ -130,4 +140,16 @@ declare namespace Cypress {
 }
 ```
 
-For retryable element lookups, use `Cypress.Commands.addQuery()` (Cypress 12+) instead of `Cypress.Commands.add()` -- custom queries retry automatically like built-in queries.
+### Retryable Custom Queries
+
+For retryable element lookups, use `Cypress.Commands.addQuery()` instead of `Cypress.Commands.add()` -- custom queries retry automatically like built-in queries. The query callback **must** be a non-arrow `function () {}`: Cypress binds `this` to apply the command timeout, and an arrow function silently breaks retry-ability.
+
+```typescript
+// cypress/support/commands.ts
+Cypress.Commands.addQuery('getByTestId', function (testId: string) {
+  const getFn = cy.now('get', `[data-testid="${testId}"]`);
+  return (subject) => getFn(subject);
+});
+```
+
+This is the opposite rule from `cy.intercept` handlers, where an arrow function `(req) => { ... }` is fine -- intercept handlers do not rely on `this`.

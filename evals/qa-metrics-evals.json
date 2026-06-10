@@ -1,6 +1,6 @@
 {
   "skill": "qa-metrics",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "qam-001",
@@ -221,6 +221,27 @@
         "health-metrics",
         "test-debt",
         "enforcement"
+      ]
+    },
+    {
+      "id": "qam-011",
+      "prompt": "Leadership wants DORA metrics on the dashboard alongside our QA metrics. How do the two relate, and what are the current benchmarks?",
+      "expected_patterns": [
+        "Change Failure Rate",
+        "Failed Deployment Recovery Time",
+        "Lead Time for Changes OR Deployment Frequency",
+        "DORA tracks delivery throughput OR QA metrics track delivery quality",
+        "~5% OR percentile"
+      ],
+      "anti_patterns": [
+        "Mean Time to Recovery (MTTR) as the DORA metric name",
+        "Change Failure Rate target of <15% as elite",
+        "Elite tier OR four-tier classification"
+      ],
+      "tags": [
+        "dora",
+        "leadership-view",
+        "currency"
       ]
     }
   ]

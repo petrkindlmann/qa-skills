@@ -6,17 +6,34 @@ description: >-
   FEW HICCUPS), bug discovery patterns, note-taking templates, and conversion of
   findings to automated tests. Use when: "exploratory testing," "SBTM," "manual testing,"
   "bug hunting," "test charter," "heuristic testing."
-  Related: test-planning, ai-bug-triage, risk-based-testing.
+  Not for: an AI browser agent autonomously exploring the app from a natural-language
+  goal — use agentic-browser-testing. Not for: testing your product's own AI/LLM
+  features — use ai-system-testing.
+  Related: test-planning, ai-bug-triage, risk-based-testing, agentic-browser-testing.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: strategy
 ---
 
 <objective>
 Structured exploration that finds bugs scripted tests miss. Exploratory testing is simultaneous learning, test design, and execution -- the tester adapts in real time based on what the application reveals. This skill provides the frameworks to make that exploration systematic, repeatable, and documentable.
 </objective>
+
+---
+
+## Quick Route
+
+Match the situation to a charter pattern and the reference section to open.
+
+| Situation | Charter pattern | Open in references |
+|-----------|-----------------|--------------------|
+| **New feature** — learn it, find requirement gaps | "Explore [feature] with various roles/data to discover requirement gaps and unexpected behaviors" | Charter examples + session flow in `session-templates.md`; boundary/"what if" banks in `heuristics-and-automation.md` |
+| **Regression** — a change just landed | "Explore [area] after [change] to discover regressions at integration points" | State-transition heuristics in `heuristics-and-automation.md` |
+| **Bug investigation** — vague report ("sometimes slow") | "Explore [area] with [reported conditions] to discover exact reproduction steps" | Session flow + session-log template in `session-templates.md`; error-handling heuristics in `heuristics-and-automation.md` |
+
+Full time splits for each row are in **Session Planning by Context** below.
 
 ---
 
@@ -161,7 +178,7 @@ Use a session log to capture observations in real time. The session-log table fo
 
 Not all testing should be exploratory, and not all testing should be automated. Use this decision framework:
 
-### Explore When
+### Explore When:
 
 - The feature is new and requirements are still evolving
 - You are investigating a vague bug report ("sometimes it is slow")
@@ -170,7 +187,7 @@ Not all testing should be exploratory, and not all testing should be automated. 
 - You need to evaluate subjective qualities (UX, intuitiveness, visual polish)
 - You are trying to find bugs, not confirm behavior
 
-### Automate When
+### Automate When:
 
 - The behavior is stable and well-defined
 - The test needs to run on every commit/PR (regression)
@@ -182,6 +199,8 @@ Not all testing should be exploratory, and not all testing should be automated. 
 ### The Exploration-to-Automation Pipeline
 
 Every reproducible bug found through exploration should become an automated regression test, so future sessions focus on new areas instead of re-checking old bugs. See `references/heuristics-and-automation.md` for the full pipeline diagram, the conversion steps, and a worked Playwright regression example (BUG-456 email validation).
+
+When an exploratory *smoke* charter stabilizes ("the happy path still works at all"), graduate it in two steps rather than one: first hand the charter to `agentic-browser-testing` as a natural-language goal run to confirm the flow is stable without writing a script, then promote the stabilized flow to a scripted `playwright-automation` test once it earns a maintained selector.
 
 ---
 
@@ -197,7 +216,7 @@ Every reproducible bug found through exploration should become an automated regr
 
 ## Assisted Exploration (LLM as Companion, Not Replacement)
 
-CTAL-AT v2.0 (May 2026) formalizes "Assisted Testing" as a sibling to Exploratory Testing — a tester running a session with an LLM as oracle and idea-generator, while keeping critical-thinking ownership. Done well, an LLM expands your charter coverage; done badly, it replaces your judgment with confident-sounding hallucination.
+You can run a session with an LLM as oracle and idea-generator while keeping critical-thinking ownership. This maps cleanly onto the testing-vs-checking distinction in Bach & Bolton's *Taking Testing Seriously* (Wiley 2025): the LLM can help with *checking* (does this match a known reference?) but the *testing* — the human judgment about what to explore and what counts as a problem — stays yours. Done well, an LLM expands your charter coverage; done badly, it replaces your judgment with confident-sounding hallucination.
 
 **How to use an LLM during a session:**
 
@@ -206,7 +225,7 @@ CTAL-AT v2.0 (May 2026) formalizes "Assisted Testing" as a sibling to Explorator
 - **As a fact-checker on findings, not a writer of bug reports.** You write the bug; the LLM reviews for clarity. The reverse — LLM writes, you review — produces template-shaped reports that lose the specific details a human noticed.
 - **For coverage gap suggestions during debrief.** "Given these notes, what charter should I run next?"
 
-**The Productivity Paradox warning** (Bolton, 2026-01): AI tooling can make tester output *look* faster while quietly hollowing out the critical thinking that produced the value. If your debrief notes start sounding like an LLM wrote them, the LLM is now driving — stop and run the next session unassisted.
+**The productivity-paradox warning:** AI tooling can make tester output *look* faster while quietly hollowing out the critical thinking that produced the value. (Michael Bolton has argued this line in DevelopSense talks and posts; treat it as a working principle, not a cited finding.) If your debrief notes start sounding like an LLM wrote them, the LLM is now driving — stop and run the next session unassisted.
 
 **What never to delegate to an LLM:**
 
@@ -215,6 +234,20 @@ CTAL-AT v2.0 (May 2026) formalizes "Assisted Testing" as a sibling to Explorator
 - Writing the testing story. Specific, situated detail is the point of exploratory testing — generic LLM prose is the opposite.
 
 For testing AI features themselves (not just using AI to test), see `ai-system-testing`.
+
+---
+
+## Tester Roles in Modern Teams
+
+Useful vocabulary for staffing and self-positioning conversations. These are common industry archetypes, not a formal taxonomy:
+
+- **Embedded testers** — testers fully embedded inside delivery teams, contributing to development conversations end-to-end rather than acting as a separate gate. The most common model on cross-functional teams.
+- **Specialist testers** — deep skills in a domain (security, accessibility, performance) called in across teams.
+- **Coach testers** — senior testers who teach craft (heuristics, charter writing, exploratory thinking) to developers and junior testers; rarely test end-to-end themselves.
+
+If your org is moving toward embedded testers, exploratory testing is one of the highest-leverage skills to demonstrate — it is hard for developers to pick up without coaching, and it is where the testing mindset shows up most clearly.
+
+For background on the testing-vs-checking distinction and AI's role, see "What Is Testing? A Conversation with Bach and Bolton" (DevelopSense, Feb 2026): https://developsense.com/blog/2026/02/what-is-testing-a-conversation-with-james-bach-and-michael-bolton
 
 ---
 
@@ -246,25 +279,23 @@ Viewing exploratory testing as less rigorous than scripted testing. SBTM with ch
 
 ---
 
+## Verification
+
+Prove the session produced real, accountable artifacts — not just a feeling that you "tested it" — smallest check first:
+
+- **Each charter is a real charter:** every session has a written `Explore [target] with [resources] to discover [information]` line where the target is more specific than "the app." A session with no charter line is unchartered exploration, not SBTM.
+- **The session log has timestamps and tags:** open the log and confirm observations carry a time column and a tag (BUG, QUESTION, IDEA, RISK, NOTE). An untimed, untagged wall of prose cannot be debriefed.
+- **Every filed bug traces back to a charter and reproduces:** for each bug ID, follow its reproduction steps in a clean environment and confirm it still happens. A bug you can't reproduce is a note, not a filed defect.
+- **Converted regression tests actually run red-then-green:** for any exploratory finding promoted to automation, run the new test against the buggy build (`npx playwright test path/to/spec` should fail) and against the fix (should pass). A regression test that was never seen failing is not proven to guard the bug.
+- **Coverage is stated honestly:** the debrief marks each charter area covered, partial, or unexplored. "100% covered" with unexplored areas listed below it is the gap to catch.
+
 ## Done When
 
 - Session charters are written for each target area, each following the "Explore [target] with [resources] to discover [information]" pattern
-- All planned sessions have been executed and debriefed using the debrief template, with coverage percentage and unexplored areas noted
+- All planned sessions have been executed and debriefed using the debrief template, with each charter area marked covered, partial, or unexplored
 - Every bug found during sessions is logged with a reference to the originating charter and reproduction steps
 - Session logs exist with time-stamped observations tagged as BUG, QUESTION, IDEA, RISK, or NOTE
 - A findings summary captures total session count, bugs filed (by severity), test ideas identified, and follow-up sessions scheduled or explicitly deferred
-
-## Tester Roles in Modern Teams
-
-CTAL-AT v2.0 (May 2026) names several tester archetypes worth knowing for staffing and self-positioning conversations:
-
-- **Embedded testers** ("Tissue Testers") — testers fully embedded inside delivery teams, contributing to development conversations end-to-end rather than acting as a separate gate. Most common 2026 model.
-- **Specialist testers** — deep skills in a domain (security, accessibility, performance) called in across teams.
-- **Coach testers** — senior testers who teach craft (heuristics, charter writing, exploratory thinking) to developers and junior testers; rarely test end-to-end themselves.
-
-If your org is moving toward embedded testers, exploratory testing is one of the highest-leverage skills to demonstrate — it's hard for developers to pick up without coaching, and it's where the testing mindset shows up most clearly.
-
-For background on the broader testing-vs-checking distinction and AI's role, see "What Is Testing? A Conversation with Bach and Bolton" (DevelopSense, Feb 2026): https://developsense.com/blog/2026/02/what-is-testing-a-conversation-with-james-bach-and-michael-bolton
 
 ## Reference Files (in `references/`)
 
@@ -273,6 +304,8 @@ For background on the broader testing-vs-checking distinction and AI's role, see
 
 ## Related Skills
 
+- **agentic-browser-testing** -- The automated cousin: a browser agent explores the app from a natural-language goal with no script. Use it for unattended exploratory smoke; use exploratory-testing for human, charter-driven SBTM sessions and bug hunting.
+- **playwright-automation** -- Where stabilized exploratory findings graduate into maintained, deterministic regression tests.
 - **test-planning** -- Sprint test plans allocate time for exploratory sessions and reference charters.
 - **risk-based-testing** -- Risk assessment identifies which areas deserve exploratory attention.
 - **test-reliability** -- Flaky or unreliable areas identified through exploration feed into test reliability improvements.

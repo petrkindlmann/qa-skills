@@ -1,460 +1,119 @@
 ---
 name: qa-project-context
 description: >-
-  Set up your QA project context. Creates and fills .agents/qa-project-context.md
-  with your tech stack, test frameworks, CI/CD pipeline, environments, coverage goals,
-  risk areas, and team structure. Every other QA skill reads this file first to skip
-  redundant questions and give context-aware recommendations. Use when: "set up QA context,"
-  "configure testing," first use of any QA skill, "initialize project."
+  Create and fill .agents/qa-project-context.md with the project's tech stack, test
+  frameworks, CI/CD pipeline, environments, quality goals, risk areas, team structure,
+  and conventions. This is the one file every other QA skill reads first, so they skip
+  redundant discovery and give context-aware advice.
+  Use when: "set up QA context," "configure testing," "initialize project," first use of any QA skill.
+  Not for: bootstrapping a brand-new project's QA end-to-end — use qa-start (which calls this skill as its first step).
+  Related: qa-start, risk-based-testing, test-strategy, qa-metrics, playwright-automation.
 license: MIT
-compatibility: Cross-tool. Tested with Claude Code, Codex, Cursor, Gemini CLI. Reads/writes the user's project root; no network access required. The `.agents/qa-project-context.md` location is a qaskills convention chosen so non-Claude tools can read it without depending on a Claude-specific path.
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: foundation
 ---
 
 <objective>
-Universal QA context file. Creates .agents/qa-project-context.md capturing tech stack, test frameworks, CI/CD, environments, coverage goals, risk areas, and team structure. Every other skill reads this first — run qa-project-context before any other skill to avoid redundant discovery questions.
+This skill writes the single file every other QA skill reads. Without it, each skill
+re-asks "what framework? what CI? where do tests live?" from scratch and gives generic
+advice. It produces `.agents/qa-project-context.md` in the project root, capturing product,
+tech stack, test stack, CI/CD, environments, quality goals, risk areas, team, and
+conventions — with no `[bracketed placeholders]` left behind.
 </objective>
 
-## What Is This File
-
-Every QA skill in this collection depends on a single context file: `.agents/qa-project-context.md` in your project root. This file captures everything about your product, tech stack, test infrastructure, quality goals, and team structure in one place.
-
-**Why it matters:**
-
-- **No repeated questions.** Without context, every skill starts from scratch: "What framework do you use? What's your CI pipeline? Where do tests live?" With context, skills already know.
-- **Better recommendations.** A Playwright skill that knows you use Next.js on Cloudflare with GitHub Actions gives different advice than one that assumes a generic React SPA on Vercel.
-- **Cross-skill consistency.** When `test-strategy` recommends a coverage target and `qa-metrics` tracks it, they both reference the same goals from the same file.
-- **Onboarding accelerator.** New team members (human or AI) read one file and understand the entire QA landscape.
-
-**Location:** `.agents/qa-project-context.md` in your project root (not in the qaskills repo itself). A blank template ships with qaskills at `.agents/qa-project-context.md` for reference.
-
-## How To Fill It Out
-
-### If `.agents/qa-project-context.md` Does Not Exist
-
-1. Create the `.agents/` directory in the user's project root if it does not exist
-2. Copy the template from the qaskills repo's `.agents/qa-project-context.md`
-3. Walk through each section interactively using the discovery questions below
-4. Write the completed file
-
-### If `.agents/qa-project-context.md` Already Exists
-
-1. Read the existing file
-2. Identify sections that still contain `[bracketed placeholders]` or are empty
-3. Ask the user about unfilled sections only
-4. Ask if anything has changed since the file was last updated (stack migrations, new tools, team changes)
-5. Update the file with new information
-
-### General Approach
-
-- Ask questions **section by section**, not all at once
-- Start with Product and Tech Stack (these inform everything else)
-- For each section, provide smart defaults based on what you already know
-- If the user says "I don't know" or "we don't have that yet," record it as-is and move on
-- After completing all sections, read the file back and confirm
+Downstream skills consume specific sections: Risk Areas feeds `risk-based-testing` and
+`test-strategy`; Conventions → Selectors feeds `playwright-automation` and `test-reliability`;
+Quality Goals feeds `qa-metrics`; Tech Stack feeds every automation skill. Fill those sections
+well and the rest of the library gets sharper for free.
 
 ## Discovery Questions
 
-Walk through these in order. Skip any question already answered by existing context.
-
-### Product Discovery
-
-- What is the product called, and what does it do in one sentence?
-- What type of product is it? (SaaS, e-commerce, media site, mobile app, API service, internal tool)
-- What are the URLs for production, staging, and development?
-- What are the 5-10 most critical user journeys? (Think: "If this breaks, we get paged at 2am.")
-
-### Tech Stack Discovery
-
-- What frontend framework and language do you use?
-- What backend framework, language, and API style? (REST, GraphQL, tRPC)
-- What database, cache layer, and ORM?
-- Where is it hosted, and what CDN and monitoring tools do you use?
-
-### Test Stack Discovery
-
-- Do you have E2E tests today? If yes, what framework and where do they live?
-- Do you have unit tests? What framework, and where do they live?
-- Do you do API testing separately from E2E?
-- Do you do visual regression testing or performance testing?
-- If you have no test framework yet: recommend **Playwright** for E2E and **Vitest** for unit tests as modern defaults. Both have excellent TypeScript support, fast execution, and active communities.
-
-### CI/CD Discovery
-
-- What CI/CD platform do you use?
-- When do tests run? (Every push, PR only, nightly, manual)
-- Do you use parallelism or sharding for test execution?
-- What artifacts do you save? (Screenshots, reports, coverage)
-- How does deployment work? (Auto-deploy to staging, manual promotion to production)
-
-### Environment Discovery
-
-- How many environments do you have, and what are their URLs?
-- How close is staging to production? (Same infra, same data shape, same third-party integrations?)
-- Do you use mock services in development or connect to real APIs?
-
-### Quality Goals Discovery
-
-- Do you have coverage targets today? If not, suggest realistic starting points:
-  - **Early-stage startup:** 60% unit coverage on business logic, E2E for the top 5 critical flows
-  - **Growth-stage:** 80% unit coverage, E2E for all critical paths, <3% flakiness
-  - **Enterprise:** 90%+ unit coverage, comprehensive E2E, <1% flakiness, performance budgets
-- What is your tolerance for flaky tests? (Suggested threshold: <2%)
-- How long should your test suites take? (Suggested: unit <3 min, E2E <15 min)
-- What quality metrics do you track or want to track?
-
-### Risk Areas Discovery
-
-- Which parts of the system cause the most production incidents?
-- Which integrations are flakiest? (Payment gateways, email services, third-party APIs)
-- Are there areas of the codebase with high churn and low test coverage?
-- Use the **Impact x Likelihood** framework to prioritize:
-  - **Critical risk (test first):** High impact + high likelihood (e.g., payment flow with known edge cases)
-  - **Important risk:** High impact + low likelihood (e.g., auth system -- catastrophic if broken, but rarely changes)
-  - **Monitor:** Low impact + high likelihood (e.g., notification formatting -- breaks often, low severity)
-  - **Backlog:** Low impact + low likelihood (e.g., admin settings page -- stable, rarely used)
-
-### Team Discovery
-
-- How many QA engineers do you have, and what are their specializations?
-- What is the developer-to-QA ratio?
-- What development methodology do you follow? (Scrum, Kanban, Shape Up)
-- When does QA get involved? (Shift-left: during spec writing, or traditional: after development)
-- This affects automation strategy:
-  - **High dev/QA ratio (8:1+):** Developers must write tests. QA focuses on strategy, critical path automation, and exploratory testing.
-  - **Balanced ratio (4:1):** QA owns E2E automation, developers own unit tests. Shared responsibility for integration tests.
-  - **QA-heavy (<3:1):** Dedicated automation engineers, comprehensive regression suites, manual exploratory testing cadence.
-
-### Conventions Discovery
-
-- What is your test file naming pattern? (e.g., `*.spec.ts` for E2E, `*.test.ts` for unit)
-- Are tests co-located with source code or in a separate directory?
-- What selector strategy do you use for E2E tests? (Recommended: `data-testid` attributes for stability, ARIA roles for accessibility-aware testing)
-- What is your branching strategy and PR requirements?
-- How do you handle test data? (Factories, fixtures, seeded databases, API-generated per test)
-
-## Template Sections Reference
-
-The context file `.agents/qa-project-context.md` contains these sections. Each section is described here with guidance on what makes a good entry.
+First, check whether `.agents/qa-project-context.md` already exists — if it does, read it and
+skip every section already filled (no `[brackets]`). Then scan the repo for config files (see
+Codebase Detection) and present detected values for confirmation rather than asking blind.
+Walk the remaining questions **section by section**, never all at once.
 
 ### Product
-
-Captures what you are building and who uses it. The key user flows list is especially important -- this is what every test-related skill uses to prioritize automation coverage.
-
-Good key user flows are specific and testable:
-- "User signs up with email, verifies account, completes onboarding wizard"
-- "Buyer searches products, adds to cart, checks out with Stripe, receives confirmation email"
-- "Editor creates article, adds media, previews, publishes, verifies it appears on the public site"
-
-Bad key user flows are vague:
-- "User uses the app"
-- "Things work correctly"
+- What is the product called, and what does it do in one sentence?
+- What type is it? (SaaS, e-commerce, media, mobile app, API service, internal tool) — changes which flows matter.
+- What are the production, staging, and development URLs?
+- What are the 5–10 most critical user journeys? ("If this breaks, we get paged at 2am.") This list drives every other skill's coverage priorities.
 
 ### Tech Stack
-
-Determines which test frameworks and patterns are compatible with your project. A Next.js app on Vercel gets different test configuration advice than a Django app on AWS.
-
-Record frontend, backend, database, and hosting separately. Include specific versions if they matter (e.g., "Next.js 14 with App Router" vs. "Next.js 12 with Pages Router" leads to very different testing approaches).
+- Frontend framework and language? Backend framework, language, and API style (REST, GraphQL, tRPC, gRPC)?
+- Database, cache layer, ORM? Hosting, CDN, monitoring?
+- Monorepo? If yes, list each app separately (see Monorepo note) — sharding and detection differ.
 
 ### Test Stack
-
-What testing tools you already use (or plan to use). For each tool, record:
-- The framework name and version
-- The config file location
-- The test directory
-
-If you have no testing infrastructure yet, that is a valid answer. The skill will recommend a modern starting stack and other skills like `playwright-automation` and `unit-testing` will help you set it up.
+- E2E tests today? Framework, config location, test directory. Same for unit, API, visual, performance.
+- If a framework is detected from config files, populate Test Stack with its name + version + path — don't re-ask.
+- Zero test infrastructure? That's a valid answer; record "None selected yet" and note a default (see Core Principle 3).
 
 ### CI/CD
-
-How and when tests execute in your pipeline. Key questions other skills need answered:
-- What blocks a deploy? (All tests must pass? Only unit tests? Nothing?)
-- How fast is feedback? (Tests on every push vs. nightly runs)
-- What evidence is preserved? (Screenshots, video, coverage reports, Allure reports)
+- Platform? When do tests run (every push, PR only, nightly, manual)? Sharding/parallelism?
+- What blocks a deploy, and what artifacts are saved (screenshots, reports, coverage)?
 
 ### Environments
-
-Where your application runs and how environments differ. Environment parity directly affects test reliability -- if staging uses a different database engine than production, tests that pass in staging may fail in production.
+- How many environments, with URLs? How close is staging to production (infra, data shape, third-party integrations)?
+- Mock services or real APIs in development? — environment parity drives test reliability.
 
 ### Quality Goals
-
-Concrete, measurable targets. Avoid aspirational statements like "we want great quality." Instead:
-- "80% line coverage for unit tests measured by Istanbul"
-- "E2E tests cover all 8 critical user flows"
-- "Test suite flake rate below 2% measured over a rolling 30-day window"
-- "Full E2E suite completes in under 15 minutes with 4 shards"
+- Coverage targets today? Flake tolerance? Suite-duration budgets? Metrics tracked or wanted?
+- No targets yet? Suggest realistic ones by maturity (see Quality Goals section).
 
 ### Risk Areas
-
-Use the risk table format with columns for Area, Risk Level, Business Impact, and Notes. This is the input for `test-strategy` when building a prioritized test plan.
+- Which parts cause the most production incidents? Which integrations are flakiest (payment, email, third-party APIs)?
+- Where is churn high and coverage low? Score everything with Impact × Likelihood (see Risk Areas section).
 
 ### Team
-
-Team size and process directly affect what kind of QA strategy is realistic. A solo developer cannot maintain 500 E2E tests. A team with no QA engineers needs a developer-first testing culture.
+- How many QA engineers, and their specializations? Developer-to-QA ratio? Methodology (Scrum, Kanban, Shape Up)?
+- When does QA engage (shift-left during spec, or after dev)? — sets the automation ownership model.
 
 ### Conventions
+- Test file naming pattern? Co-located or separate? Branching strategy and PR requirements?
+- Selector strategy for E2E? Test-data strategy (factories, fixtures, seeded DB, API-per-test)?
 
-Consistency rules that keep the test suite maintainable as it grows. Selector strategy is especially important for E2E stability -- skills like `playwright-automation` and `test-reliability` read this to generate selectors that match your conventions.
+## Core Principles
 
-## Example: SaaS Product Context
+1. **One file is the source of truth for the whole library.** Every skill reads
+   `.agents/qa-project-context.md` first. Duplicating its facts into other docs guarantees
+   drift — keep stack, goals, and risks here and let other skills reference them.
 
-```markdown
-# QA Project Context
+2. **Capture the real state, not the aspiration.** If there are no E2E tests, write "None
+   selected yet," not a wish. Downstream skills route on what's true: a missing framework
+   triggers a setup suggestion; a fake one sends them building on sand.
 
-## Product
-- **Name:** InvoiceCloud
-- **Type:** SaaS
-- **Description:** Invoicing and payment platform for freelancers and small businesses
-- **URLs:**
-  - Production: https://invoicecloud.io
-  - Staging: https://staging.invoicecloud.io
-  - Development: http://localhost:3000
-- **Key User Flows:**
-  - Sign up with email, verify account, complete onboarding
-  - Create invoice, add line items, send to client
-  - Client receives invoice email, views invoice, pays with Stripe
-  - Connect bank account for payouts via Plaid
-  - Generate monthly revenue report, export as PDF
+3. **Detect before you ask; recommend a default only when there's nothing to detect.**
+   Read `package.json` and config files first and confirm what you find. Tool *recommendations*
+   belong to the specialized skills — the one exception is a project with zero test
+   infrastructure, where you note **Playwright** (E2E) and **Vitest** (unit) as defaults in the
+   Test Stack and hand off to `playwright-automation` / `unit-testing`. This is the single
+   carve-out to the "no recommendations" rule; everywhere else, just record.
 
-## Tech Stack
-### Frontend
-- **Framework:** Next.js 14 (App Router)
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **State Management:** Zustand + React Query
-
-### Backend
-- **Framework:** Next.js API routes + tRPC
-- **Language:** TypeScript
-- **API Style:** tRPC (internal), REST webhooks (Stripe, Plaid)
-
-### Database
-- **Primary:** PostgreSQL 15 on Supabase
-- **Cache:** Redis (Upstash)
-- **ORM:** Drizzle
-
-### Hosting
-- **Platform:** Vercel
-- **CDN:** Vercel Edge
-- **Monitoring:** Sentry (errors), Vercel Analytics (performance)
-
-## Test Stack
-### E2E / Integration
-- **Framework:** Playwright 1.42
-- **Config Location:** playwright.config.ts
-- **Test Directory:** tests/e2e/
-
-### Unit / Component
-- **Framework:** Vitest 1.3
-- **Config Location:** vitest.config.ts
-- **Test Directory:** src/__tests__/
-
-### API Testing
-- **Framework:** Playwright API testing (shared with E2E)
-- **Test Directory:** tests/api/
-
-### Visual Testing
-- **Tool:** Playwright screenshot comparisons
-- **Baseline Location:** tests/e2e/__screenshots__/
-
-### Performance
-- **Tool:** Lighthouse CI
-- **Test Directory:** N/A (runs in CI only)
-
-## CI/CD
-- **Platform:** GitHub Actions
-- **Config Location:** .github/workflows/
-- **Test Pipeline:**
-  - Unit tests run on: every push
-  - E2E tests run on: PR to main
-  - Parallelism: 3 Playwright shards
-  - Artifacts: screenshots on failure, coverage report, Playwright HTML report
-- **Deployment:**
-  - Staging: auto-deploy on merge to develop
-  - Production: auto-deploy on merge to main (with required CI checks)
-
-## Environments
-### Development
-- **URL:** http://localhost:3000
-- **Characteristics:** Local Supabase, Stripe test mode, mock Plaid
-
-### Staging
-- **URL:** https://staging.invoicecloud.io
-- **Characteristics:** Supabase staging project, Stripe test mode, Plaid sandbox
-
-### Production
-- **URL:** https://invoicecloud.io
-- **Characteristics:** Production Supabase, Stripe live mode, Plaid production
-
-## Quality Goals
-- **Unit Test Coverage Target:** 80%
-- **E2E Coverage:** All 5 critical user flows + payment edge cases
-- **Flakiness Threshold:** <2%
-- **Max Test Suite Duration:**
-  - Unit: 2 minutes
-  - E2E: 12 minutes (3 shards)
-- **Key Metrics:**
-  - Test pass rate > 98%
-  - Zero P0 payment bugs in production per quarter
-  - Mean time to detect regression < 30 minutes
-
-## Risk Areas
-| Area | Risk Level | Business Impact | Notes |
-|------|-----------|----------------|-------|
-| Stripe payment flow | Critical | Revenue loss, compliance | Currency edge cases, webhook reliability |
-| Plaid bank connection | High | User onboarding blocked | Third-party sandbox differs from production |
-| Invoice PDF generation | Medium | Client trust | Large invoices (100+ line items) can timeout |
-| Email delivery | Medium | User engagement | Relies on Resend, template rendering edge cases |
-
-## Team
-- **QA Engineers:** 1 (automation-focused)
-- **Total Developers:** 4
-- **Dev/QA Ratio:** 4:1
-- **Process:** Kanban with weekly releases
-- **QA Involvement:** Shift-left -- QA reviews specs and writes E2E for critical paths, devs own unit tests
-
-## Conventions
-### Test Files
-- **Naming Pattern:** *.spec.ts for E2E, *.test.ts for unit
-- **Co-located or Separate:** Unit tests co-located in src/__tests__/, E2E in tests/e2e/
-
-### Selectors (E2E)
-- **Strategy:** data-testid attributes for interactive elements, ARIA roles for navigation
-- **Naming Convention:** data-testid="invoice-create-button" (kebab-case, descriptive)
-
-### Branching
-- **Strategy:** Feature branches -> develop -> main
-- **PR Requirements:** All CI checks pass, 1 code review, QA sign-off for payment-related changes
-
-### Test Data
-- **Strategy:** Factory functions using @faker-js/faker, API-generated per test
-- **Cleanup:** Each test creates its own data via API, no shared state between tests
-```
-
-## Example: Media Site Context
-
-A condensed example showing how the same template works for a different product type.
-
-```markdown
-# QA Project Context
-
-## Product
-- **Name:** PulseMedia Network
-- **Type:** Media (multi-site publisher)
-- **Description:** Network of 4 news and lifestyle sites serving 12M monthly visitors
-- **URLs:**
-  - Production: https://pulsemedia.com (+ techpulse.com, lifepulse.com, sportspulse.com)
-  - Staging: https://staging.pulsemedia.com
-- **Key User Flows:**
-  - Reader lands from Google, reads article, scrolls to related content
-  - Editor creates article in CMS, adds images and embeds, previews, publishes
-  - Ad manager configures placements, verifies rendering across breakpoints
-
-## Tech Stack
-- **Frontend:** Next.js 14 (App Router), TypeScript, Tailwind CSS, multi-tenant routing
-- **Backend:** Next.js API routes + headless WordPress, REST + GraphQL
-- **Database:** MySQL 8 (WordPress), PostgreSQL (analytics), Redis (cache)
-- **Hosting:** AWS (ECS, RDS, S3), CloudFront CDN, Datadog + Sentry monitoring
-
-## Test Stack
-- **E2E:** Playwright 1.42 (tests/e2e/, per-site subdirectories)
-- **Unit:** Vitest 1.3 (src/__tests__/)
-- **Visual:** Chromatic (Storybook) + Playwright screenshots (full pages)
-- **Performance:** Lighthouse CI + k6 (tests/performance/)
-
-## CI/CD
-- **Platform:** GitHub Actions
-- **Pipeline:** Unit on every push, E2E on PR to main + nightly, visual on PR (Chromatic), perf weekly
-- **Parallelism:** 6 Playwright shards (one per site + cross-site)
-- **Deploy:** Auto to staging on merge to develop, manual promotion to production
-
-## Environments
-- **Dev:** localhost:3000 -- local WordPress, mock ad server, content fixtures
-- **Staging:** staging.pulsemedia.com -- production content snapshot (weekly refresh), sandbox ads
-- **Production:** pulsemedia.com -- live WordPress, live ads, CDN caching (5-min TTL)
-
-## Quality Goals
-- **Coverage:** 75% unit (business logic), critical reader flows on all 4 sites
-- **Flakiness:** <3% (ad-related tests excluded from flake tracking)
-- **Speed:** Unit <3 min, E2E <20 min (6 shards)
-- **Key Metrics:** Core Web Vitals pass rate >90%, zero broken article pages, ad viewability >70%
-
-## Risk Areas
-| Area | Risk Level | Business Impact | Notes |
-|------|-----------|----------------|-------|
-| Article rendering | Critical | SEO rankings | Rich embeds break frequently |
-| Ad placements | High | Revenue ($400K/mo) | Third-party scripts cause layout shift |
-| CMS publish flow | High | Editorial velocity | WordPress API + ISR cache invalidation |
-| Cross-site navigation | Medium | Reader engagement | Multi-tenant routing edge cases |
-
-## Team
-- **QA:** 3 (1 automation lead, 1 manual/exploratory, 1 performance), 12 devs (4:1 ratio)
-- **Process:** Scrum (2-week sprints), mixed shift-left approach
-
-## Conventions
-- **Test files:** *.spec.ts (E2E), *.test.ts (unit), E2E organized by site in tests/e2e/{site}/
-- **Selectors:** data-testid for interactive, semantic selectors (article, nav) for content
-- **Branching:** Feature -> develop -> main, QA sign-off for ad and CMS changes
-- **Test data:** WordPress fixtures via WP-CLI, staging reset weekly from production
-```
-
-## Workflow: Creating the Context File
-
-> If installed via the qaskills plugin, this skill is auto-discovered by Claude Code. To disable model-driven activation and keep it as a manual `/qa-project-context` command, add `skillOverrides` in `.claude/settings.local.json` or set `disable-model-invocation: true` in this skill's frontmatter. For local plugin development, run `claude --plugin-dir ./qaskills` and validate with `skills-ref validate`.
-
-When an agent activates this skill, follow this sequence:
-
-1. **Check for existing context:** Look for `.agents/qa-project-context.md` in the user's project root.
-
-2. **If it does not exist:**
-   - Create `.agents/` directory if needed
-   - Copy the template from the qaskills repo
-   - Begin the discovery questions, starting with Product
-   - Fill in each section as the user provides answers
-   - Write the completed file
-
-3. **If it exists but has placeholders:**
-   - Read the file and identify unfilled sections
-   - Tell the user which sections are complete and which need input
-   - Ask discovery questions only for unfilled sections
-   - Update the file
-
-4. **If it exists and is fully filled in:**
-   - Read the file and summarize the current context
-   - Ask if anything has changed (new tools, team changes, shifted goals)
-   - Update only what has changed
-
-5. **After completion:**
-   - Confirm the file is saved at `.agents/qa-project-context.md`
-   - Suggest which skill to use next based on the context (e.g., if no E2E tests exist, suggest `playwright-automation`; if no strategy document, suggest `test-strategy`)
-
-## Anti-Patterns
-
-- **Do not ask all questions at once.** Walk through section by section. Dumping 30 questions is overwhelming.
-- **Do not leave placeholders in the final file.** If the user does not have an answer, record the actual state (e.g., "None -- no E2E framework selected yet") rather than leaving `[brackets]`.
-- **Do not invent information.** If you can detect the tech stack from `package.json`, `requirements.txt`, or config files, use that. But confirm with the user before writing.
-- **Do not skip risk areas.** This is the most valuable section for downstream skills. Push the user to identify at least 3-4 risk areas even if they say "everything is fine."
-- **Do not recommend tools in this skill.** This skill captures current state. Tool recommendations come from `playwright-automation`, `unit-testing`, and other specialized skills.
-  - Exception: if the user has zero test infrastructure, briefly suggest Playwright + Vitest as starting defaults and note it in the Test Stack section.
+4. **Risk Areas is the highest-leverage section — never skip it.** It is the direct input to
+   `risk-based-testing` and `test-strategy`. Push for at least 3–4 entries scored by impact and
+   likelihood even when the user says "everything's fine."
 
 ## Codebase Detection
 
-Before asking about tech stack, scan the project for common configuration files to pre-fill answers:
+Scan for these before asking about the stack. Present detected values for confirmation; when a
+test config is found, write the framework name into Test Stack rather than re-asking.
 
 | File | Indicates |
 |------|-----------|
-| `package.json` | Node.js project, check `dependencies` for framework |
+| `package.json` | Node.js project — check `dependencies` for the framework |
 | `next.config.*` | Next.js |
 | `nuxt.config.*` | Nuxt/Vue |
 | `angular.json` | Angular |
+| `astro.config.*` | Astro |
+| `react-router.config.ts` | React Router 7 / Remix |
 | `requirements.txt` / `pyproject.toml` | Python project |
 | `go.mod` | Go project |
-| `playwright.config.*` | Playwright is set up |
-| `cypress.config.*` | Cypress is set up |
-| `vitest.config.*` / `jest.config.*` | Unit test framework |
+| `playwright.config.*` | Playwright is set up → populate Test Stack E2E |
+| `cypress.config.*` | Cypress is set up → populate Test Stack E2E |
+| `vitest.config.*` / `jest.config.*` | Unit test framework → populate Test Stack Unit |
 | `.github/workflows/` | GitHub Actions CI |
 | `.gitlab-ci.yml` | GitLab CI |
 | `Jenkinsfile` | Jenkins |
@@ -462,30 +121,169 @@ Before asking about tech stack, scan the project for common configuration files 
 | `wrangler.*` | Cloudflare Workers |
 | `vercel.json` | Vercel hosting |
 | `bun.lock` / `bun.lockb` | Bun runtime |
-| `pnpm-workspace.yaml` | pnpm monorepo |
-| `turbo.json` | Turborepo monorepo |
-| `astro.config.*` | Astro |
-| `react-router.config.ts` | React Router 7 / Remix |
+| `pnpm-workspace.yaml` / `turbo.json` / `nx.json` | Monorepo — handle per the Monorepo note |
 | `src-tauri/tauri.conf.json` | Tauri desktop app |
 | `.claude/` | Project uses Claude Code skills/agents |
 | `.claude-plugin/plugin.json` | Project ships a Claude Code plugin |
 | `AGENTS.md` | Codex / multi-agent workflow conventions |
 
-Present detected values to the user for confirmation rather than asking from scratch.
+## Workflow: Creating the Context File
+
+1. **Check for existing context.** Look for `.agents/qa-project-context.md` in the project root.
+2. **If absent:** create `.agents/` if needed, scaffold the section structure, run the Discovery
+   Questions starting with Product, and write the file once filled.
+3. **If present with placeholders:** read it, list which sections are complete vs. unfilled, ask
+   only about the unfilled sections, then update — preserve completed sections untouched.
+4. **If present and complete:** summarize the current context, ask what changed (new tools, team
+   changes, shifted goals), and update only the deltas.
+5. **After completion:** confirm the file path, run Verification (below), and suggest the next
+   skill from the context (no E2E → `playwright-automation`; no strategy → `test-strategy`;
+   no unit tests → `unit-testing`).
+
+For two full filled-in files (SaaS and a multi-site publisher) plus the monorepo layout, see
+`references/examples.md`. One short illustrative snippet:
+
+```markdown
+## Test Stack
+### E2E / Integration
+- **Framework:** Playwright 1.60
+- **Config Location:** playwright.config.ts
+- **Test Directory:** tests/e2e/
+### Unit / Component
+- **Framework:** None selected yet — Vitest recommended (see unit-testing)
+```
+
+## Section Guidance
+
+What makes a good entry in each section. The blank template ships at
+`.agents/qa-project-context.md` in the qaskills repo.
+
+**Product.** Key user flows must be specific and testable: "Buyer searches products, adds to
+cart, checks out with Stripe, receives confirmation email" — not "user uses the app." This list
+is what every test skill uses to prioritize. Aim for 5–10.
+
+**Tech Stack.** Record frontend, backend, database, hosting separately. Pin versions only when
+they change the testing approach (App Router vs. Pages Router differ materially). Don't copy a
+version just because an example shows one — read it from `package.json`.
+
+**Test Stack.** For each tool: framework name + version, config location, test directory. No
+infrastructure yet is valid — write "None selected yet" and the recommended default (Principle 3).
+
+**Monorepo.** List each frontend app as its own Tech Stack and Test Stack entry; keep the
+shared API/backend as one entry. Shard E2E **per app** (a change in `apps/admin` shouldn't run
+`apps/storefront` E2E), and note in CI/CD which path filters gate which app's suite. Detection
+hint: `turbo.json` / `pnpm-workspace.yaml` / `nx.json`. See `references/examples.md`.
+
+**CI/CD.** Answer what other skills need: what blocks a deploy, how fast feedback is, what
+evidence is preserved.
+
+**Environments.** Note how staging diverges from production — a different DB engine in staging
+means staging-green tests can still fail in prod.
+
+**Quality Goals.** Concrete and measurable only. Pick starting targets by maturity:
+
+| Maturity | Unit coverage | E2E | Flakiness | Suite duration |
+|----------|--------------|-----|-----------|----------------|
+| Early-stage startup | 60% on business logic | Top 5 critical flows | <2% | Unit <3 min, E2E <15 min |
+| Growth-stage | 80% | All critical paths | <2% | Unit <3 min, E2E <15 min |
+| Enterprise | 90%+ | Comprehensive + perf budgets | <1% | Unit <3 min, E2E <15 min |
+
+Write them as numbers: "80% line coverage measured by Istanbul," "flake rate <2% over a rolling
+30-day window," "full E2E under 15 min with 4 shards." Never "we want great quality."
+
+**Risk Areas.** Use the table — columns Area, Risk Level, Business Impact, Notes — and score with
+**Impact × Likelihood**:
+
+- **Critical (test first):** high impact + high likelihood (payment flow with known edge cases).
+- **Important:** high impact + low likelihood (auth — catastrophic if broken, rarely changes).
+- **Monitor:** low impact + high likelihood (notification formatting — breaks often, low severity).
+- **Backlog:** low impact + low likelihood (admin settings — stable, rarely used).
+
+At least 3 entries, never vague ("everything breaks").
+
+**Team.** Record actual headcount and the dev:QA ratio — it sets the automation ownership model:
+
+| Dev:QA ratio | Ownership model |
+|--------------|-----------------|
+| Solo / zero QA (effectively infinite) | Devs own all tests. No manual regression suite; lean on low-barrier automation (Playwright + Vitest) and CI gates. QA "role" = strategy + critical-path E2E, done by the dev. |
+| High (8:1+) | Developers write tests; QA focuses on strategy, critical-path automation, exploratory testing. |
+| Balanced (4:1) | QA owns E2E, devs own unit, integration shared. |
+| QA-heavy (<3:1) | Dedicated automation engineers, comprehensive regression suites, scheduled exploratory cadence. |
+
+**Conventions.** Selector strategy especially — `playwright-automation` and `test-reliability`
+read it to generate matching selectors. Default to `data-testid` for stability
+(`data-testid="invoice-create-button"`, kebab-case). If the team prefers semantic/ARIA selectors
+for accessibility-aware testing, record concrete tokens — `role="button"`, `role="heading"`,
+`getByRole('link', { name: ... })` — and the tradeoff: ARIA roles double as a11y assertions and
+survive markup churn, but are less stable than `data-testid` when copy or roles change, so pin a
+`name`/`level` to keep them unambiguous.
+
+## Anti-Patterns
+
+### 1. Asking all questions at once
+Dumping 30 questions is overwhelming and gets shallow answers. Walk section by section, Product first.
+
+### 2. Leaving `[brackets]` in the final file
+If the user has no answer, record the actual state ("None — no E2E framework selected yet"), not a
+placeholder. Placeholders left in the file silently break every downstream skill that parses it.
+
+### 3. Inventing information
+Detect the stack from `package.json`, `requirements.txt`, or config files — then confirm with the
+user before writing. Don't guess a database or hosting provider.
+
+### 4. Skipping Risk Areas
+The single most valuable section for downstream skills. Push for at least 3–4 scored entries even
+when the user insists everything is fine.
+
+### 5. Recommending tools beyond the zero-infra default
+This skill records current state; tool selection belongs to `playwright-automation`,
+`unit-testing`, and the other specialized skills. The *only* recommendation you make here is the
+Playwright + Vitest default when there is no test infrastructure at all (Principle 3).
+
+## Verification
+
+Prove the produced file is complete, smallest check first. From the project root:
+
+```bash
+test -f .agents/qa-project-context.md \
+  && ! grep -q '\[.*\]' .agents/qa-project-context.md \
+  && echo "context complete: file exists, no placeholders"
+```
+
+Exit 0 with the message means the file exists and every `[bracketed placeholder]` is gone. A
+non-zero exit means either the file is missing or placeholders remain — fix those before handing
+off to any other skill. Then eyeball that all nine section headers are present:
+
+```bash
+grep -c '^## ' .agents/qa-project-context.md   # expect >= 9
+```
 
 ## Done When
 
-- `.agents/qa-project-context.md` exists in the project root with no `[bracketed placeholders]` remaining
-- All sections are filled with real values: product name, URLs, key user flows, tech stack, test stack, CI/CD config, environments, and quality goals
-- The Team section reflects actual headcount, dev/QA ratio, and QA involvement model
-- The Risk Areas section contains at least 3 risk entries scored by impact and likelihood
-- The Test Stack section names the actual frameworks in use (or explicitly states "none selected yet" with a recommendation noted)
+- `.agents/qa-project-context.md` exists in the project root and `grep -q '\[.*\]'` returns
+  non-zero (no bracketed placeholders remain).
+- All nine sections are present: Product, Tech Stack, Test Stack, CI/CD, Environments, Quality
+  Goals, Risk Areas, Team, Conventions.
+- Product lists at least 5 specific, testable key user flows (no "user uses the app").
+- Test Stack names the actual frameworks + versions + paths in use, or states "None selected yet"
+  with the recommended default noted.
+- Risk Areas table has at least 3 entries scored by impact and business impact.
+- Quality Goals are concrete numbers (coverage %, flake %, durations) — not aspirational prose.
+- Team section shows actual headcount and the dev:QA ratio (or "solo").
 
 ## Related Skills
 
-- Every other skill in this collection reads `.agents/qa-project-context.md` as its first step
-- For setting up Playwright after filling in context, see `playwright-automation`
-- For setting up unit tests, see `unit-testing`
-- For building a test strategy based on this context, see `test-strategy`
-- For CI/CD pipeline configuration, see `ci-cd-integration`
-- For defining and tracking quality metrics, see `qa-metrics`
+- **qa-start** — bootstraps QA on a brand-new project end-to-end and calls this skill as its
+  first step. Use qa-start when no QA exists yet; use this skill directly to (re)fill context.
+- **risk-based-testing** — turns the Risk Areas section into a prioritized risk matrix. Run it
+  after this skill when the question is "where do we focus testing?"
+- **test-strategy** — consumes Risk Areas, Quality Goals, and Team to set multi-quarter direction.
+- **qa-metrics** — tracks the Quality Goals defined here; both reference the same targets.
+- **playwright-automation** / **unit-testing** — set up E2E / unit frameworks after the Test Stack
+  section is filled; they read Conventions for selector and naming strategy.
+- **ci-cd-integration** — wires the pipeline described in the CI/CD section.
+
+## Reference Files (in `references/`)
+
+- **examples.md** — two complete filled-in context files (SaaS and a multi-site publisher) plus
+  the monorepo Tech/Test Stack layout.

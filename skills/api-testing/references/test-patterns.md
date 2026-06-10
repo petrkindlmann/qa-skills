@@ -126,6 +126,39 @@ test.describe('Error responses', () => {
 });
 ```
 
+## Response Header Validation
+
+Headers carry the contract too: `content-type`, cache directives, and rate-limit info. Assert them directly — don't gate the assertion behind an `if` that may never fire.
+
+```typescript
+test('GET /api/users sets expected response headers', async ({ request }) => {
+  const response = await request.get('/api/users');
+  const headers = response.headers();
+
+  expect(headers).toBeDefined();
+  expect(headers['content-type']).toContain('application/json');
+  expect(headers['cache-control']).toBeDefined();      // e.g. "no-store" or "max-age=60"
+});
+
+test('rate-limited endpoint exposes limit headers', async ({ request }) => {
+  const response = await request.get('/api/status');
+  const headers = response.headers();
+
+  // Assert the headers exist on every response, not only on a 429.
+  expect(headers['x-ratelimit-limit']).toBeDefined();
+  expect(headers['x-ratelimit-remaining']).toBeDefined();
+});
+
+test('429 returns a retry-after header', async ({ request }) => {
+  const responses = await Promise.all(
+    Array.from({ length: 50 }, () => request.get('/api/status')),
+  );
+  const limited = responses.find((r) => r.status() === 429);
+  expect(limited, 'expected at least one 429 from the burst').toBeDefined();
+  expect(limited!.headers()['retry-after']).toBeDefined();
+});
+```
+
 ## Pagination Testing
 
 ```typescript
@@ -198,6 +231,23 @@ test.describe('GraphQL API', () => {
     expect(body.errors[0]).toHaveProperty('message');
   });
 
+});
+```
+
+### GraphQL Introspection-Diff Snapshot
+
+The highest-value GraphQL API test: assert that fields and resolvers didn't disappear without a migration note. Snapshot the introspected type map and fail when it shrinks unexpectedly — a removed field is a breaking change for every consumer.
+
+```typescript
+test('schema has not lost public fields', async ({ request }) => {
+  const introspection = `
+    { __schema { types { name fields { name } } } }`;
+  const body = await (await gql(request, introspection)).json();
+  const userType = body.data.__schema.types.find((t: any) => t.name === 'User');
+  const fields = userType.fields.map((f: any) => f.name).sort();
+
+  // Snapshot serializes to a committed file; a removed field fails the diff.
+  expect(fields).toMatchSnapshot('user-type-fields.json');
 });
 ```
 

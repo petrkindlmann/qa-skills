@@ -1,6 +1,6 @@
 {
   "skill": "ai-bug-triage",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "abt-001",
@@ -10,7 +10,7 @@
         "\\d{4}-\\d{2}-\\d{2}[T ]\\d{2}:\\d{2}:\\d{2} OR timestamp regex",
         "[0-9a-f]{8}-[0-9a-f]{4} OR UUID regex",
         "pid[=: ]\\d+ OR process ID regex",
-        ":\\d{4,5}(?=[\\s/]) OR port regex",
+        ":\\d{4,5}(?= OR port regex",
         "strip OR replace OR substitute"
       ],
       "anti_patterns": [

@@ -3,20 +3,33 @@ name: chaos-engineering
 description: >-
   Validate system resilience through controlled fault injection. Covers hypothesis-driven
   chaos experiments, failure injection types (network, service, infrastructure, dependency),
-  LitmusChaos/Gremlin/toxiproxy tooling, game day planning, and progressive chaos
-  adoption. Use when: "chaos engineering," "fault injection," "resilience test,"
-  "game day," "failure recovery," "system reliability."
-  Related: performance-testing, release-readiness, test-environments.
+  LitmusChaos/Chaos Mesh/AWS FIS/Gremlin/toxiproxy tooling, automated abort gating, game day
+  planning, and progressive chaos adoption. Use when: "chaos engineering," "fault injection,"
+  "resilience test," "game day," "failure recovery," "system reliability," "blast radius."
+  Not for: safe rollout flags/canary/dark launch during a release — use testing-in-production;
+  designing new tests from production telemetry — use observability-driven-testing.
+  Related: testing-in-production, observability-driven-testing, performance-testing, release-readiness, test-environments.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: knowledge
 ---
 
 <objective>
-Chaos engineering is the discipline of experimenting on a system to build confidence in its ability to withstand turbulent conditions. It is not random destruction -- it is hypothesis-driven, controlled experimentation that reveals weaknesses before they cause outages.
+Chaos engineering is the discipline of experimenting on a system to build confidence in its ability to withstand turbulent conditions. It is not random destruction -- it is hypothesis-driven, controlled experimentation that reveals weaknesses before they cause outages. A retry that "works in the demo" silently double-charges customers when the payment API times out; the only way to know is to inject the timeout and watch.
 </objective>
+
+## Quick Route
+
+| Situation | Go to |
+|-----------|-------|
+| First experiment ever, team is new | Starting Small → First Three Experiments |
+| Designing one experiment | Chaos Experiment Workflow (5 steps) |
+| Picking a tool for your environment | Tools → Choosing a tool decision tree |
+| Running a team session | Game Day Planning |
+| Need runnable injection commands/configs | `references/fault-injection.md` |
+| Want the abort to fire without a human | `references/fault-injection.md` → Automated abort |
 
 ---
 
@@ -53,9 +66,9 @@ Check `.agents/qa-project-context.md` first. If it exists, use it as context and
 
 ### 1. Hypothesis-driven: define expected behavior before injecting
 
-Every chaos experiment starts with a hypothesis: "We believe that if [failure X occurs], the system will [expected behavior Y]." Without a hypothesis, you are just breaking things.
+Every chaos experiment starts with a hypothesis: "We believe that if [failure X occurs], the system will [expected behavior Y]." Without a hypothesis, you are just breaking things. The hypothesis names concrete steady-state metrics (baseline metrics) — error rate, latency, throughput — and the bound each may move to.
 
-Example hypothesis: "We believe that if the primary database becomes unavailable, the application will serve cached data for read requests and queue write requests for up to 5 minutes without user-visible errors."
+Example hypothesis: "We believe that if the primary database becomes unavailable, the application will serve cached data for read requests and queue write requests for up to 5 minutes without user-visible errors. Blast radius: staging, one service. Steady-state baseline: error rate <0.1%, P95 latency <300ms."
 
 ### 2. Start small: one service, controlled blast radius
 
@@ -146,16 +159,20 @@ Document findings, fix resilience gaps, and schedule a re-run to verify the fix.
 Findings document:
   Experiment: Database failover (2026-03-20)
   Hypothesis: Confirmed / Partially confirmed / Disproved
+  Recovery time: 45s (expected vs actual: expected <10s, actual 45s)
+  Data integrity: no rows lost; 3 writes returned 500 instead of queueing
 
   Findings:
     - Connection pool did not detect stale connections for 45 seconds (expected: <10s)
     - Retry logic worked correctly for read operations
     - Write operations returned 500 errors for 38 seconds (expected: queued)
 
-  Action items:
-    - [ ] Configure connection pool health checks (idle connection validation)
-    - [ ] Implement write queue with 5-minute buffer for database unavailability
-    - [ ] Re-run experiment after fixes deployed (target: 2026-04-03)
+  Action items (every one has an owner and a due date — no item is deferred):
+    - [ ] Configure connection pool health checks — assigned to @maria, due 2026-03-31
+    - [ ] Implement write queue with 5-minute buffer — assigned to @dan, due 2026-04-02
+    - [ ] Re-run experiment after fixes deployed (re-run scheduled 2026-04-03);
+          specific metrics to check on re-run: stale-connection detection <10s,
+          zero write 500s, error rate <2%
 ```
 
 ---
@@ -213,18 +230,19 @@ See `references/fault-injection.md` for the programmatic toxiproxy integration t
 
 | Tool | Type | Best For |
 |------|------|----------|
-| LitmusChaos (3.28.x) | Kubernetes-native, CNCF | K8s environments, CI/CD integration; ChaosCenter UI; Workflows for GameDay-as-code |
+| LitmusChaos (3.29.x) | Kubernetes-native, CNCF | K8s environments, CI/CD integration; ChaosCenter UI; Workflows for GameDay-as-code; MCP Server (Oct 2025) drives experiments from an AI assistant |
 | Chaos Mesh (2.8.x) | Kubernetes-native, CNCF | K8s with fine-grained control; eBPF chaos via `bpfki` runtime for kernel-precision faults |
-| AWS FIS | Managed AWS service | Cloud-chaos for AWS workloads (EC2, ECS, RDS, EKS) — primary cloud-native option |
-| Gremlin | Managed platform | Teams wanting guided experiments + compliance reporting |
+| AWS FIS | Managed AWS service | Cloud-chaos for AWS workloads (EC2, ECS, RDS, EKS); CloudWatch-alarm stop-conditions for auto-abort — primary cloud-native option |
+| Gremlin | Managed platform | Teams wanting guided experiments + compliance reporting; Health Checks halt-and-rollback on SLO breach |
 | Steadybit | Managed platform | Reliability hub spanning Kubernetes + cloud + on-prem; direct alternative to Gremlin |
 | kube-monkey | Open source | Lightweight K8s alternative when Litmus/Chaos Mesh feel heavy |
 | Pumba | Open source | Docker-only chaos (containers, networks); pre-K8s and edge |
-| Chaos Monkey (Netflix) | Service-level, open source | **Maintenance mode** — Spinnaker-only path; new projects should pick Chaos Mesh, Litmus, or AWS FIS |
 | toxiproxy | Network proxy, open source | Network fault injection in integration tests |
 | tc (traffic control) | Linux kernel | Network latency and packet loss |
 | stress-ng | Linux utility | CPU, memory, disk stress testing |
 | k6 (+ xk6-disruptor) | Load testing tool | Combined load + chaos scenarios |
+
+**Avoid: Chaos Monkey (Netflix) for new projects — low activity, Spinnaker-only path (as of mid-2026).** It still works and the repo is not archived, but it only injects instance termination and requires a Spinnaker deployment pipeline. Greenfield work should pick Chaos Mesh, LitmusChaos, or AWS FIS. (The older SimianArmy repo was archived in 2021; don't confuse the two.)
 
 ### Choosing a tool
 
@@ -252,7 +270,9 @@ Decision tree:
 
 ### GameDay-as-code
 
-The 2026 trend is treating chaos as scheduled CI jobs rather than ad-hoc events: Litmus Workflows, Steadybit reliability hub, and Gremlin Scenarios all let you define a chaos run as YAML and trigger it from CI on a cron. Pair with the Game Day Planning section below — the human practice still matters; the automation just removes the bottleneck of "we never had time to schedule one."
+The 2026 trend is treating chaos as scheduled CI jobs rather than ad-hoc events: Litmus Workflows, Steadybit reliability hub, and Gremlin Scenarios all let you define a chaos run as YAML and trigger it from CI on a cron. Pair with the Game Day Planning section below — the human practice still matters; the automation just removes the bottleneck of "we never had time to schedule one." For a concrete cron-gated pipeline (nightly pod-delete on an off-peak window) plus automated abort/stop-condition examples, see `references/fault-injection.md`.
+
+LitmusChaos shipped an MCP Server in October 2025 that connects an AI assistant such as Claude directly to ChaosCenter: you can list, run, and stop experiments in natural language ("run pod-delete on the frontend pods," "stop the network latency experiment") instead of hand-writing YAML. Relevant if your team already drives ops through an AI agent.
 
 ---
 
@@ -366,7 +386,7 @@ What to observe:
 
 Injecting failures without the ability to observe their impact is not chaos engineering -- it is sabotage. You will not know if the experiment revealed a problem until a user complains.
 
-**Fix:** Before any chaos experiment, verify that you can see error rates, latency, throughput, and dependency health in real time. If you cannot, invest in monitoring first.
+**Fix:** Before any chaos experiment, verify that you can see error rates, latency, throughput, and dependency health in real time. If you cannot, invest in monitoring first. Go one step further and wire the monitor into the experiment so it auto-aborts on breach — AWS FIS CloudWatch stop-conditions, Gremlin Health Checks, or a Litmus `promProbe` in `mode: Continuous` (see `references/fault-injection.md`).
 
 ### Starting too big
 
@@ -376,15 +396,15 @@ The first chaos experiment should not be "kill the production database." Startin
 
 ### No rollback plan
 
-"The experiment is only 60 seconds, we don't need a rollback plan." Then the fault injection tool crashes and the failure persists indefinitely.
+"The experiment is only 60 seconds, we don't need a rollback plan." Then the fault injection tool crashes and the failure persists indefinitely (exactly how a 5-minute `tc` latency injection becomes a 2-hour outage when the command fails midway).
 
-**Fix:** Every experiment must have a documented rollback procedure that can be executed in under 30 seconds. Test the rollback before running the experiment. Have a second person ready to abort if the experiment owner is unable to.
+**Fix:** Every experiment must have a documented rollback procedure that can be executed in under 30 seconds. Test the rollback before running the experiment, and have a second person ready to abort if the experiment owner is unable to. Prefer a tool-enforced stop-condition over a human finger on the kill switch (see Automated abort in `references/fault-injection.md`) — and pick injections with a built-in timeout (`stress-ng --timeout`, Litmus `TOTAL_CHAOS_DURATION`) so the fault self-clears even if nobody is watching.
 
 ### Chaos in production without approval
 
 Running chaos experiments in production without explicit approval from engineering leadership and affected teams destroys trust and careers.
 
-**Fix:** Production chaos requires explicit, documented approval. Start with staging. Communicate broadly before production experiments. Get buy-in from all affected teams. Make the scope, duration, and abort criteria clear to everyone.
+**Fix:** Before any production run: get explicit, documented engineering leadership approval; send affected teams notification and brief the on-call team and support team; communicate scope and duration and share the abort criteria with named abort authority; and confirm the blast radius is bounded to the smallest viable target. Start with staging first. Anything skipped here is what turns a controlled experiment into an incident.
 
 ### Running chaos experiments during incidents
 
@@ -402,23 +422,21 @@ The experiment revealed that the circuit breaker does not work correctly. The te
 
 ## Done When
 
-- Every experiment has a written hypothesis stating the expected system behavior before any fault is injected
-- Blast radius is explicitly bounded (target scope, duration, and abort conditions defined) and experiments are not run directly in production until staging results are stable
-- Steady-state baseline metrics are measured immediately before each injection so results have a valid comparison point
-- Experiment results are documented with actual vs. expected behavior, recovery time, and whether data integrity was maintained
-- Each weakness found has a remediation action item with an assigned owner, due date, and a scheduled re-run to verify the fix
+- Every experiment has a written hypothesis ("We believe that if [failure X], the system will [expected behavior Y]") recorded before any fault is injected
+- Blast radius is explicitly bounded — target scope, duration, and abort conditions are written in the experiment record, and no experiment runs in production before at least one passing run of the same experiment in staging
+- A steady-state snapshot (dashboard link or the actual baseline metric values) is attached to each experiment record, captured immediately before injection
+- A findings doc exists per experiment with baseline-vs-actual numbers, recovery time, and an explicit data-integrity check (lost/corrupted: yes/no)
+- Each weakness found has a tracked ticket with a named owner, a due date, and a scheduled re-run of the same experiment to verify the fix
 
 ## Reference Files (in `references/`)
 
-- **fault-injection.md** — Runnable commands, configs, and test code for injecting each failure class: `tc netem` and toxiproxy network faults, `kubectl`/LitmusChaos service faults, `fallocate`/`stress-ng` infrastructure faults, and the programmatic toxiproxy dependency-failure test.
+- **fault-injection.md** — Runnable commands, configs, and test code for injecting each failure class: `tc netem` and toxiproxy network faults, `kubectl`/LitmusChaos service faults (ChaosEngine with `engineState: active`), `fallocate`/`stress-ng` infrastructure faults, the programmatic toxiproxy dependency-failure test, plus automated abort / stop-condition examples (AWS FIS, Gremlin, Litmus probes, Litmus MCP) and a cron-gated continuous-chaos CI job.
 
 ## Related Skills
 
-| Skill | Relationship |
-|-------|-------------|
-| `performance-testing` | Load testing complements chaos engineering; combine for realistic failure scenarios |
-| `release-readiness` | Chaos experiment results feed into release confidence assessments |
-| `test-environments` | Pre-production environments are the safe starting point for chaos experiments |
-| `testing-in-production` | Production chaos is the advanced stage of testing in production |
-| `observability-driven-testing` | Observability is a prerequisite for chaos engineering |
-| `qa-metrics` | Chaos experiment results (recovery time, error impact) are quality metrics |
+- **testing-in-production** — for safe-rollout mechanics *during* a release (feature flags, canary, dark launch). Chaos engineering deliberately breaks things to find weaknesses; testing-in-production controls exposure so a breakage stays contained. Go there for the rollout, here for the fault injection.
+- **observability-driven-testing** — when production telemetry (traces, logs, error patterns) is the *input* that tells you which tests or experiments to design. It feeds the hypothesis; chaos engineering then proves or disproves it. Observability is also a hard prerequisite for safe chaos.
+- **performance-testing** — load testing complements chaos; combine load + fault for realistic failure scenarios (see k6 + xk6-disruptor).
+- **release-readiness** — chaos experiment results feed into go/no-go release confidence assessments.
+- **test-environments** — pre-production environments are the safe starting point for chaos experiments.
+- **qa-metrics** — chaos experiment results (recovery time, error impact) are quality metrics worth tracking.

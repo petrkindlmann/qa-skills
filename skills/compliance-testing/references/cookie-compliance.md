@@ -51,7 +51,11 @@ test('all cookies match inventory attributes', async ({ page, context }) => {
 
     if (def.secure && !cookie.secure) violations.push(`${cookie.name}: missing Secure flag`);
     if (def.httpOnly && !cookie.httpOnly) violations.push(`${cookie.name}: missing HttpOnly flag`);
-    if (cookie.sameSite !== def.sameSite) violations.push(`${cookie.name}: SameSite "${cookie.sameSite}" != "${def.sameSite}"`);
+    // Normalize: Playwright omits/varies SameSite when the server doesn't set it.
+    // Treat unset as 'None' (browser default for unset) so a missing attribute
+    // doesn't silently pass or spuriously fail across Playwright versions.
+    const observedSameSite = cookie.sameSite ?? 'None';
+    if (observedSameSite !== def.sameSite) violations.push(`${cookie.name}: SameSite "${observedSameSite}" != "${def.sameSite}"`);
 
     if (cookie.expires > 0) {
       const days = (cookie.expires - Date.now() / 1000) / 86400;

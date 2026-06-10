@@ -1,6 +1,6 @@
 {
   "skill": "compliance-testing",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "ct-001",
@@ -44,17 +44,18 @@
     },
     {
       "id": "ct-003",
-      "prompt": "Verify that a site honors Global Privacy Control (Sec-GPC: 1) header by blocking marketing cookies and registering the opt-out",
+      "prompt": "Verify that a site honors Global Privacy Control (Sec-GPC: 1) header: the browser exposes navigator.globalPrivacyControl and no marketing cookies are present",
       "expected_patterns": [
         "extraHTTPHeaders: { 'Sec-GPC': '1' }",
         "context.cookies()",
         "filter",
         "_fbp OR _fbc OR _gcl OR marketing cookie names",
-        "gpcStatus OR __cmp"
+        "navigator.globalPrivacyControl"
       ],
       "anti_patterns": [
         "ignoring Sec-GPC header",
-        "no marketing cookie detection"
+        "no marketing cookie detection",
+        "__cmp?.gpcStatus OR __cmp.gpcStatus"
       ],
       "tags": [
         "privacy-control",
@@ -151,17 +152,18 @@
     },
     {
       "id": "ct-008",
-      "prompt": "Test for Better Ads Standards compliance: verify that no auto-playing video ads have sound (i.e., have autoplay but lack muted attribute)",
+      "prompt": "Test for Better Ads Standards compliance: verify that no auto-playing video ads have sound. Read the live DOM properties (el.autoplay, el.muted) rather than the HTML attributes, since player scripts mute videos via JS without setting the muted attribute.",
       "expected_patterns": [
         "page.locator('video')",
-        "getAttribute('autoplay')",
-        "getAttribute('muted')",
-        "autoplay !== null && muted === null",
+        "el.autoplay OR video.evaluate",
+        "el.muted",
+        "autoplay && !muted OR autoplay && muted === false",
         "throw new Error"
       ],
       "anti_patterns": [
         "no video element inspection",
-        "checking only for autoplay without muted requirement"
+        "checking only for autoplay without muted requirement",
+        "getAttribute('muted')"
       ],
       "tags": [
         "better-ads",

@@ -1,6 +1,6 @@
 {
   "skill": "cypress-automation",
-  "version": "1.0",
+  "version": "2.0",
   "evals": [
     {
       "id": "cy-001",
@@ -31,6 +31,7 @@
         "Cypress.Commands.add",
         "cy.session",
         "cy.request",
+        "validate",
         "declare namespace Cypress",
         "interface Chainable",
         "cypress/support/commands.ts",
@@ -183,20 +184,20 @@
     },
     {
       "id": "cy-009",
-      "prompt": "Configure Cypress Cloud parallelization with 4 parallel containers in GitHub Actions using cypress-io/github-action@v6",
+      "prompt": "Configure Cypress Cloud parallelization with 4 parallel containers in GitHub Actions using the current cypress-io/github-action",
       "expected_patterns": [
         "strategy.matrix.containers: [1, 2, 3, 4]",
-        "uses: cypress-io/github-action@v6",
+        "uses: cypress-io/github-action@v7 OR uses: cypress-io/github-action@v6",
         "record: true",
         "parallel: true",
         "group: 'E2E Tests'",
         "CYPRESS_RECORD_KEY"
       ],
       "anti_patterns": [
-        "using outdated action version",
-        "not pinning to specific tag",
+        "cypress-io/github-action@v5",
+        "cypress-io/github-action@master",
         "missing CYPRESS_RECORD_KEY env var",
-        "fail-fast: true in matrix (should be false)"
+        "fail-fast: true"
       ],
       "tags": [
         "ci",

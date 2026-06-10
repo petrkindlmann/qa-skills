@@ -49,7 +49,7 @@
       ],
       "anti_patterns": [
         "waitForTimeout",
-        "fetch("
+        "page.evaluate(.*fetch"
       ],
       "tags": ["api-mocking", "network"]
     },

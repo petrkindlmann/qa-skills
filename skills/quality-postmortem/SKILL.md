@@ -3,26 +3,40 @@ name: quality-postmortem
 description: >-
   Analyze escaped defects and test suite health through blameless postmortems.
   Covers bug pattern analysis, test suite health reviews, 5 Whys root cause analysis,
-  process improvement cycles, and postmortem meeting templates with action item tracking.
-  Use when: "QA retro," "test review," "escaped bugs," "postmortem," "quality incident,"
-  "improvement," "defect analysis."
+  process improvement cycles, and postmortem/retro meeting templates with action item tracking.
+  Use when: "QA retro," "escaped bugs," "postmortem," "quality incident," "defect analysis,"
+  "improvement cycle."
+  Not for: live release go/no-go decisions — use release-readiness. Not for ongoing metric
+  dashboards — use qa-metrics. Not for reviewing existing test code quality — use ai-qa-review.
   Related: qa-metrics, test-reliability, test-strategy.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "2.0"
   category: process
 ---
 
 <objective>
 Analyze escaped defects, test suite health, and quality process gaps through structured, blameless postmortems. Every postmortem produces 1-3 concrete, tracked action items -- not vague commitments to "be more careful." The goal is systemic improvement, not individual blame.
-
-**Before starting:** Check for `.agents/qa-project-context.md` in the project root. It contains quality goals, risk areas, and test suite details that provide essential context for any postmortem analysis.
 </objective>
 
 ---
 
+## Quick Route
+
+| You have... | Go to | Template |
+|-------------|-------|----------|
+| One escaped bug to dissect | Bug Pattern Analysis | Escaped Bug Analysis (`references/templates.md`) |
+| 10+ escaped bugs, looking for themes | Aggregating Patterns Over Time | — |
+| A proactive quarterly check (no incident) | Test Suite Health Review | — |
+| A P0/P1 production incident | Postmortem Template for Quality Incidents | `references/templates.md` |
+| A recurring sprint/monthly review | Retro Meeting Template | `references/templates.md` |
+
+---
+
 ## Discovery Questions
+
+Check `.agents/qa-project-context.md` in the project root first — it carries quality goals, risk areas, and test suite details that anchor any postmortem. Use it and skip anything already answered there. Then clarify:
 
 1. **Do you have a regular retro cadence?** Per-sprint, monthly, or only after incidents? Regular cadence catches slow-burn problems. Incident-only cadence misses patterns until they explode.
 
@@ -32,7 +46,7 @@ Analyze escaped defects, test suite health, and quality process gaps through str
 
 4. **What happened with previous postmortem action items?** Were they completed? Tracked? Forgotten? If past action items are abandoned, the team has learned that postmortems do not matter. Fix the follow-through before running another postmortem.
 
-5. **Who should participate?** Engineers who worked on the affected area. QA who tested (or did not test) the affected area. Product owner if the impact was user-facing. Engineering manager if systemic changes are needed. Keep the group to 4-8 people.
+5. **Who should participate?** Engineers who worked on the affected area. QA who tested (or did not test) it. Product owner if the impact was user-facing. Engineering manager if systemic changes are needed. Keep the group to 4-8 people.
 
 6. **What are the current test suite health concerns?** Rising flakiness? Slow execution? Coverage gaps in critical areas? Stale quarantine? Health reviews are proactive postmortems -- they prevent incidents instead of reacting to them.
 
@@ -56,19 +70,19 @@ An action item is concrete when it has: a specific deliverable ("add integration
 
 Action items that are not tracked are not completed. Use the team's existing work tracker (Jira, Linear, GitHub Issues). Tag them (`postmortem-action` or equivalent). Review completion status at the start of the next postmortem. If items are consistently abandoned, either the items are too large (break them down) or they are not prioritized (make them sprint commitments).
 
-### 5. Measure Improvement
+### 5. Measure Improvement With Two Metrics, Not One
 
-After implementing action items, measure whether the problem recurred. If the postmortem identified a gap in payment testing and the action was to add integration tests, track: did another payment bug escape? If yes, the action was insufficient. If no, the postmortem worked. Without measurement, postmortems are rituals, not tools.
+After implementing action items, measure whether the problem recurred. If the postmortem identified a gap in payment testing and the action was to add integration tests, track: did another payment bug escape? Without measurement, postmortems are rituals, not tools.
 
-Two metrics together — not one alone:
+Track two metrics together:
 - **Defect escape rate** (did similar bugs reappear?)
 - **Action-item-closure rate** (what fraction of action items shipped within their committed window?)
 
-A high closure rate with rising escape rate means the team is doing the work but doing the wrong work. A low closure rate means the postmortems are theater. Modern incident response platforms (incident.io, Rootly, FireHydrant) emit closure-rate as a built-in metric — use what's there before building dashboards.
+A high closure rate with rising escape rate means the team is doing the work but doing the wrong work. A low closure rate means the postmortems are theater. Modern incident response platforms (incident.io, Rootly, FireHydrant) track action-item follow-through natively — owner, due date, completion status — so derive both numbers from what's already there before building a dashboard.
 
-### 6. AI-Assisted RCA Drafts the Timeline; Humans Own the Judgment
+### 6. AI Drafts the Timeline; a Human Owns the Judgment
 
-If your team uses AI SRE tooling (Rootly AI SRE, incident.io's AI features), let it draft the incident timeline and propose candidate root causes from logs/traces. Then a human runs the 5 Whys, picks the real root cause, and writes the action items. AI is good at correlation across noisy data; it is bad at deciding what mattered. Treat AI output as a starting deck, not the conclusion.
+If your team uses AI SRE tooling (Rootly AI SRE, incident.io's AI SRE / auto-drafted post-mortems), let it draft the incident timeline and propose candidate root causes from logs and traces. Then a named **blameless RCA owner** — distinct from the incident commander who managed the response — runs the 5 Whys, picks the real root cause, and writes the action items. AI is good at correlation across noisy data; it is bad at deciding what mattered. Treat AI output as a starting deck, not the conclusion. For cheap timeline drafting, Sonnet 4.6 is sufficient; reserve heavier models for ambiguous causation.
 
 ---
 
@@ -76,7 +90,7 @@ If your team uses AI SRE tooling (Rootly AI SRE, incident.io's AI features), let
 
 ### Categorizing Escaped Defects
 
-When a bug reaches production, classify it along three dimensions to identify prevention opportunities.
+When a bug reaches production, classify it along three dimensions to identify prevention opportunities. The single-bug worksheet (Escaped Bug Analysis) lives in `references/templates.md`.
 
 #### Dimension 1: Root Cause Category
 
@@ -112,40 +126,6 @@ When a bug reaches production, classify it along three dimensions to identify pr
 | **Add monitoring** | Detect sooner even if not prevented | Add alert for error rate > 1% on payment endpoint |
 | **Training/Process** | Knowledge gap or process gap | Run a session on defensive coding for nullable fields |
 
-### Bug Pattern Analysis Template
-
-```
-Escaped Bug Analysis: [BUG-ID] [Title]
-═══════════════════════════════════════
-
-Timeline:
-  Introduced:    [commit/PR/date]
-  Released:      [release version/date]
-  Detected:      [date, by whom — user report, monitoring, internal]
-  Resolved:      [date]
-  Time to detect: [hours/days]
-  Time to fix:    [hours]
-
-Classification:
-  Root cause:         [logic error / integration / data / race condition / ...]
-  Should-catch level: [unit / integration / E2E / monitoring]
-  Prevention:         [add test / improve test / add gate / improve spec / ...]
-
-Existing Coverage:
-  Were there tests for this area?    [yes / no / partial]
-  If yes, why did they miss it?      [edge case not covered / wrong assertion / ...]
-  If no, why not?                    [area not identified as risky / time pressure / ...]
-
-Impact:
-  Users affected:    [count or estimate]
-  Revenue impact:    [none / minor / significant / critical]
-  Brand impact:      [none / minor / significant / critical]
-
-Action Items:
-  1. [Action] — Owner: [name] — Due: [date]
-  2. [Action] — Owner: [name] — Due: [date]
-```
-
 ### Aggregating Patterns Over Time
 
 After analyzing 10+ escaped bugs, look for patterns:
@@ -180,7 +160,7 @@ Top action themes:
   3. Add currency and encoding edge cases to test data fixtures (covers 3 of 14)
 ```
 
-This aggregation reveals where investment has the highest return: fixing one systemic issue (integration tests for checkout) would have prevented 29% of all escaped bugs.
+This aggregation reveals where investment has the highest return: fixing one systemic issue (integration tests for checkout) would have prevented 29% of all escaped bugs. **Patterns that recur across multiple quarters belong in the `test-strategy` doc, not just the next sprint's action items** — promote them so the strategy reflects where defects actually escape.
 
 ---
 
@@ -220,11 +200,11 @@ Track current full suite duration, 3-month trend, and the 5 slowest tests. If du
 
 ### Coverage Gap Review
 
-Track overall coverage (lines/branches), critical paths with insufficient coverage (payments, auth, data export should be 90%+), recently changed code without test updates (cross-reference `git log --since="30 days"` with coverage report), and features shipped without E2E coverage.
+Track overall coverage (lines/branches), critical paths with insufficient coverage (payments, auth, data export should be 90%+), recently changed code without test updates (cross-reference `git log --since="30 days ago"` with the coverage report), and features shipped without E2E coverage.
 
 ### Disabled/Skipped Test Inventory
 
-Audit all skipped/disabled tests by age and reason. Tests skipped < 1 week are likely in progress. Tests skipped 1-4 weeks need a ticket and timeline. Tests skipped 1-3 months are overdue -- fix or delete. Tests skipped > 3 months should be deleted -- they will never be fixed. For each: fix and unskip, delete (obsolete), or move to quarantine with ticket link.
+Audit all skipped/disabled tests by age and reason. Tests skipped < 1 week are likely in progress. Tests skipped 1-4 weeks need a ticket and timeline. Tests skipped 1-3 months are overdue -- fix or delete. Tests skipped > 3 months should be deleted -- they will never be fixed. For each: fix and unskip, delete (obsolete), or move to quarantine with a ticket link.
 
 ---
 
@@ -278,27 +258,28 @@ Owner: [Product Manager] — Due: [Next sprint]
 
 ### Proposing Solutions with Effort Estimates
 
-For each root cause, propose 1-3 solutions at different effort levels:
+For each root cause, propose 1-3 solutions at different effort levels. Example for a recurring flaky-test problem:
 
 ```
-Root Cause: Payment stories not reviewed for edge cases
+Root Cause: E2E tests fail intermittently on async-loaded content
 
 Solution A (Small — 1 day):
-  Add payment safety checklist to story template.
-  + Quick to implement, low maintenance
-  − Relies on manual adherence, may be skipped under pressure
+  Replace fixed waitForTimeout calls with explicit wait-for-condition
+  assertions in the 5 flakiest specs.
+  + Quick to implement, kills the most common flake source
+  − Manual, one spec at a time; new flakes can creep back in
 
 Solution B (Medium — 1 sprint):
-  Add payment safety checklist + automated linting rule that
-  flags PRs touching payment code without corresponding tests.
-  + Automated enforcement, catches gaps in CI
-  − Requires CI config change, may have false positives
+  Solution A across the suite + add a flaky-test detector to CI that
+  reruns failures once and tags any test that passes on retry.
+  + Automated detection, surfaces flakes before they erode trust
+  − Requires CI config change; reruns add pipeline time
 
 Solution C (Large — 2 sprints):
-  Solution B + add integration test suite for all payment
-  edge cases (idempotency, timeout, partial failure).
-  + Comprehensive protection, catches regressions automatically
-  − Significant effort, needs test data and mock infrastructure
+  Solution B + auto-quarantine tagged tests and route them to an
+  owner-assigned backlog with a 14-day fix-or-delete SLA.
+  + Self-healing trust in the green build; flakes can't block releases silently
+  − Needs quarantine infrastructure and ownership process buy-in
 
 Recommendation: Start with A immediately, implement B this sprint,
 plan C for next quarter as strategic work.
@@ -306,134 +287,14 @@ plan C for next quarter as strategic work.
 
 ---
 
-## Postmortem Template for Quality Incidents
+## Postmortem & Retro Templates
 
-Use this template when a significant quality incident occurs (P0/P1 production bug, data loss, security issue, extended outage caused by code change).
+Two heavy, copy-paste formats live in `references/templates.md`:
 
-```markdown
-# Quality Incident Postmortem: [INCIDENT-ID]
+- **Postmortem Template for Quality Incidents** — for P0/P1 production bugs, data loss, security issues, or outages from a code change. Summary, severity/impact, UTC timeline table, root cause, 5 Whys, what tests existed / were missing, detection, immediate/short-term/long-term action tables, lessons learned.
+- **Retro Meeting Template** — for recurring sprint/monthly quality retros: a 7-section, 30-60 minute agenda (previous action item review → data review → went well → needs improvement → root cause discussion → new action items → close) plus facilitator notes.
 
-## Summary
-[One paragraph: what happened, who was affected, how it was resolved]
-
-## Severity and Impact
-- **Severity:** [P0 / P1 / P2]
-- **Users affected:** [count or percentage]
-- **Duration:** [from detection to resolution]
-- **Business impact:** [revenue, reputation, compliance]
-
-## Timeline (all times in UTC)
-| Time | Event |
-|------|-------|
-| HH:MM | [Code change deployed / feature flag enabled] |
-| HH:MM | [First user report / monitoring alert] |
-| HH:MM | [Incident acknowledged by on-call] |
-| HH:MM | [Root cause identified] |
-| HH:MM | [Fix deployed / rollback completed] |
-| HH:MM | [Incident resolved, monitoring confirms recovery] |
-
-## Root Cause
-[Technical description of what went wrong]
-
-## 5 Whys
-1. Why did [symptom]? Because [cause 1].
-2. Why [cause 1]? Because [cause 2].
-3. Why [cause 2]? Because [cause 3].
-4. Why [cause 3]? Because [cause 4].
-5. Why [cause 4]? Because [root cause].
-
-## What Tests Existed
-- [List relevant existing tests and why they did not catch this]
-
-## What Tests Were Missing
-- [Specific test scenarios that would have prevented this]
-
-## Detection
-- **How was it detected?** [User report / monitoring / internal testing]
-- **Could it have been detected earlier?** [Yes/No — how?]
-- **Time from deploy to detection:** [duration]
-
-## Prevention Measures
-
-### Immediate (this sprint)
-| Action | Owner | Due | Status |
-|--------|-------|-----|--------|
-| [Write regression test for this specific scenario] | [name] | [date] | [ ] |
-| [Add monitoring alert for this error pattern] | [name] | [date] | [ ] |
-
-### Short-term (next 2 sprints)
-| Action | Owner | Due | Status |
-|--------|-------|-----|--------|
-| [Add integration tests for related edge cases] | [name] | [date] | [ ] |
-| [Update deployment checklist] | [name] | [date] | [ ] |
-
-### Long-term (this quarter)
-| Action | Owner | Due | Status |
-|--------|-------|-----|--------|
-| [Improve test coverage for entire area] | [name] | [date] | [ ] |
-| [Process change to prevent similar gaps] | [name] | [date] | [ ] |
-
-## Lessons Learned
-- [What went well in detection and response]
-- [What could have been better]
-- [What systemic issue does this reveal]
-```
-
----
-
-## Retro Meeting Template
-
-Use this format for regular quality retrospectives (as opposed to incident-specific postmortems). Conduct per-sprint or monthly.
-
-### Agenda (30-60 minutes)
-
-```
-Quality Retro: Sprint [N] / [Month Year]
-═════════════════════════════════════════
-
-1. Previous Action Items Review (5 min)
-   - Review status of action items from last retro
-   - Mark completed, carry forward incomplete, escalate blocked
-
-2. Data Review (10 min)
-   Present metrics since last retro:
-   - Escaped bug count and classification
-   - Flaky test rate trend
-   - CI pass rate trend
-   - Coverage change
-   - Test suite duration change
-   - Quarantine inventory
-
-3. What Went Well (5 min)
-   - Quality wins: bugs caught early, smooth releases, good test coverage
-   - Process improvements that paid off
-
-4. What Needs Improvement (10 min)
-   - Quality pain points: escaped bugs, flaky tests, slow pipeline, gaps
-   - Process friction: review bottlenecks, unclear ownership, tooling issues
-
-5. Root Cause Discussion (10-15 min)
-   - Pick the top 1-2 issues from "Needs Improvement"
-   - Run 5 Whys or group brainstorming
-   - Identify systemic causes
-
-6. Action Items (5-10 min)
-   - Define 1-3 specific, assigned, time-bound action items
-   - Each item: what, who, when, how to verify
-   - Add to team's work tracker with "retro-action" tag
-
-7. Close (2 min)
-   - Confirm next retro date
-   - Thank participants
-```
-
-### Facilitator Notes
-
-- **Prepare data in advance.** Do not spend meeting time pulling up dashboards. Have metrics ready in a shared doc.
-- **Timebox strictly.** Quality retros expand to fill available time. 30 minutes is sufficient for a sprint retro. 60 minutes for monthly or incident-triggered.
-- **Rotate facilitation.** Different facilitators bring different perspectives. Rotate among QA engineers, developers, and tech leads.
-- **Follow up within 24 hours.** Send a summary with action items to the team channel. Link to tracker tickets. This signals that the retro was real work, not a talking exercise.
-- **Review action items at the START of the next retro.** This is the accountability mechanism. If items are consistently incomplete, reduce the number of items or reduce their scope.
+Both open by reviewing the previous retro's action items — that closed loop is the accountability mechanism; without it, items vanish silently.
 
 ---
 
@@ -449,21 +310,19 @@ A cathartic discussion that produces understanding but no change. If the meeting
 
 ### Action Items Without Follow-Through
 
-Generating action items that go into a backlog and are never prioritized. This is worse than no action items because it creates the illusion of improvement. If postmortem actions are not completed within 2 sprints, escalate. If they are consistently deprioritized, either the items are too ambitious or the team does not value them — both need addressing.
+Generating action items that go into a backlog and are never prioritized. This is worse than no action items because it creates the illusion of improvement. If postmortem actions are not completed within 2 sprints, escalate. Action items die for predictable reasons — audit your closure rate against this checklist before blaming "we forgot":
 
-Action items die for predictable reasons. Audit your closure rate against this checklist before blaming "we forgot":
-
-- **No owner.** Items assigned to a team rather than a person become nobody's job.
-- **No due date.** "Soon" is not a date. A specific date is the difference between a commitment and a wish.
-- **Scope too big.** "Refactor the test framework" cannot land in a sprint. Break it into items that each fit a single PR.
-- **No review at the start of the next retro.** Without a forced check-in, items vanish silently. Open the next retro with a closed-loop review of the previous action items.
+- **No owner.** Items assigned to a team rather than a person become nobody's job. Fix: assign to a named person with enough context to start.
+- **No due date.** "Soon" is not a date. Fix: a specific sprint or calendar date.
+- **Scope too big.** "Refactor the test framework" cannot land in a sprint. Fix: break it into items that each fit a single PR.
+- **No review at the start of the next retro.** Without a forced check-in, items vanish silently. Fix: a standing calendar slot that opens every retro with a closed-loop review.
 - **No metric attached.** If completing the item doesn't move a number you can name, you can't tell whether it worked.
 
-Counter-pattern: open every retro with a 5-minute "previous action items" review. Mark each as Done / In Progress (with current ETA) / Dropped (with reason). Items dropped silently teach the team that retros are theater.
+Counter-pattern: open every retro with a 5-minute "previous action items" review. Mark each as Done / In Progress (with current ETA) / Dropped (with reason).
 
 ### Postmortems Only After Incidents
 
-Waiting for a production fire to conduct a quality review. Proactive health reviews (test suite health, coverage trends, flaky test inventory) prevent incidents. Conduct proactive reviews monthly. Reactive postmortems for incidents only supplements the proactive cadence.
+Waiting for a production fire to conduct a quality review. Proactive health reviews (test suite health, coverage trends, flaky test inventory) prevent incidents. Conduct proactive reviews monthly. Reactive incident postmortems supplement the proactive cadence — they do not replace it.
 
 ### Root Cause Analysis That Stops Too Early
 
@@ -481,18 +340,22 @@ Running quality retrospectives based on feelings and opinions rather than data. 
 
 ## Done When
 
-- Escaped defect timeline reconstructed (introduced, released, detected, resolved) with supporting evidence from commit history and bug tracker
-- 5 Whys root cause analysis completed and stopped at a systemic cause, not at "developer didn't write a test"
-- Test gap identified and mapped to a specific coverage hole (missing test type, missing scenario, or missing area)
-- Action items assigned with named owners and due dates, added to the team's work tracker with a postmortem tag
-- Findings shared with the team in a written summary — not siloed in QA or lost in a private document
-- Action-item-closure-rate tracked alongside escaped-defect rate (both metrics, not one) — modern incident platforms (incident.io, Rootly, FireHydrant) emit closure rate natively
-- If AI SRE tooling is in use, AI-drafted timeline and candidate root causes are documented as input but the human-authored 5 Whys + action items are the conclusion
+- Escaped defect timeline reconstructed (introduced, released, detected, resolved) with supporting evidence from commit history and bug tracker.
+- 5 Whys root cause analysis completed and stopped at a systemic cause (process / tool / structure), not at "developer didn't write a test."
+- Test gap identified and mapped to a specific coverage hole (missing test type, missing scenario, or missing area).
+- Action items assigned with named owners and due dates, added to the team's work tracker with a postmortem tag.
+- Findings shared with the team in a written summary — not siloed in QA or lost in a private document.
+- Action-item-closure-rate tracked alongside escaped-defect rate (both metrics, not one); for incident postmortems, both are derivable from the incident platform's native follow-through tracking.
+- If AI SRE tooling is in use, the AI-drafted timeline and candidate root causes are recorded as input, and a named blameless RCA owner (not the incident commander) signed off on the human-authored 5 Whys and action items.
 
 ## Related Skills
 
-- **qa-metrics** -- Provides the data (defect escape rate, flakiness rate, coverage trends) that postmortems analyze and act upon.
-- **test-reliability** -- Flaky test classification and quarantine management, which feeds into test suite health reviews.
-- **test-strategy** -- When postmortems reveal systemic gaps, the test strategy is the document that gets updated.
-- **shift-left-testing** -- Many postmortem action items are shift-left practices: earlier testing, better requirements, dev/QA pairing.
-- **release-readiness** -- Quality gates and release criteria should be updated based on postmortem findings.
+- **qa-metrics** — Provides the data (defect escape rate, flakiness rate, coverage trends) that postmortems analyze and act upon. Use it for the ongoing dashboard; use this skill for the analysis session.
+- **test-reliability** — Flaky test classification and quarantine management, which feeds into test suite health reviews.
+- **test-strategy** — When postmortems reveal systemic gaps that recur across quarters, the test strategy is the document that gets updated.
+- **shift-left-testing** — Many postmortem action items are shift-left practices: earlier testing, better requirements, dev/QA pairing.
+- **release-readiness** — Quality gates and release criteria should be updated based on postmortem findings; use it for live go/no-go, not retrospective analysis.
+
+## Reference Files (in `references/`)
+
+- **templates.md** — Copy-paste Postmortem Template for Quality Incidents, Retro Meeting Template + facilitator notes, and the single-bug Escaped Bug Analysis worksheet.

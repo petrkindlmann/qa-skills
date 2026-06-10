@@ -166,6 +166,8 @@ test.describe('Script Blocking', () => {
 
 GPC is a browser/extension signal that communicates a universal opt-out. It is a required honored signal under CCPA/CPRA and most active US state laws. Sites that ignore it are non-compliant in those jurisdictions.
 
+Assert two things: the browser exposes `navigator.globalPrivacyControl === true` (the standard client-side signal — this is the real global, not an invented one), and no marketing cookies are present. There is **no** standard `window.__cmp.gpcStatus` global — TCF v1's `__cmp` is legacy and TCF v2 uses `__tcfapi` (see below). The CMP-specific opt-out flag, if you read one, is a placeholder you must replace with your CMP's actual API.
+
 ```typescript
 test.describe('Global Privacy Control', () => {
   test.use({
@@ -173,9 +175,13 @@ test.describe('Global Privacy Control', () => {
     extraHTTPHeaders: { 'Sec-GPC': '1' },
   });
 
-  test('site honors Sec-GPC: no marketing cookies, opt-out registered', async ({ page, context }) => {
+  test('site honors Sec-GPC: signal exposed, no marketing cookies', async ({ page, context }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
+
+    // The standard, browser-exposed GPC signal — closes the loop on the Sec-GPC header.
+    const gpc = await page.evaluate(() => (navigator as any).globalPrivacyControl);
+    expect(gpc, 'navigator.globalPrivacyControl not set despite Sec-GPC: 1').toBe(true);
 
     const cookies = await context.cookies();
     const marketing = cookies.filter((c) =>
@@ -183,16 +189,44 @@ test.describe('Global Privacy Control', () => {
     );
     expect(marketing.map((c) => c.name), 'Marketing cookies present despite Sec-GPC: 1').toHaveLength(0);
 
-    // Site should expose the recorded opt-out (CMP-specific — adapt to your CMP API)
-    const optedOut = await page.evaluate(() => (window as any).__cmp?.gpcStatus === 'opted-out');
-    expect(optedOut, 'CMP did not register Sec-GPC opt-out').toBe(true);
+    // Optional: your CMP's recorded opt-out. This flag name is a PLACEHOLDER —
+    // replace `window.__myCmp.optedOut` with your CMP's documented API. Do NOT
+    // assume a `__cmp.gpcStatus` global exists; it does not.
+    // const optedOut = await page.evaluate(() => (window as any).__myCmp?.optedOut === true);
+    // expect(optedOut, 'CMP did not register the opt-out').toBe(true);
   });
+});
+```
+
+## TCF v2 Consent State (vendor/purpose)
+
+Every IAB TCF-certified CMP (the kind you must use to serve EU/UK ads) exposes `window.__tcfapi`. Read consent state directly through it instead of guessing at CMP-private globals. This is the certified-CMP-agnostic way to assert that a given purpose or vendor is consented.
+
+```typescript
+test('TCF: analytics purpose consented only after accept', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('dialog', { name: /consent/i }).getByRole('button', { name: /accept/i }).click();
+  await page.waitForTimeout(1000);
+
+  const tcData = await page.evaluate(() => new Promise<any>((resolve) => {
+    (window as any).__tcfapi('getTCData', 2, (data: any, success: boolean) =>
+      resolve(success ? data : null));
+  }));
+  expect(tcData, '__tcfapi getTCData failed — CMP not TCF v2 certified?').not.toBeNull();
+  // Purpose 1 = "Store and/or access information on a device" in the TCF purpose list.
+  expect(tcData.purpose.consents['1'], 'Purpose 1 consent not granted after accept').toBe(true);
+
+  // TCF v2.3 string-version guard: as of 28 Feb 2026 a v2.2-format TC string is
+  // treated as unconsented by Google demand. tcfPolicyVersion >= 4 == TCF v2.2+/2.3.
+  expect(tcData.tcfPolicyVersion, 'Stale TCF policy version — TC string may be pre-v2.3').toBeGreaterThanOrEqual(4);
 });
 ```
 
 ## Google Consent Mode v2
 
 Required since March 2024 for sites serving Google ads in the EEA/UK. Verify default state is "denied" and that update signals fire correctly after consent choices.
+
+> **Note:** the interception below assumes the site calls `gtag('consent', 'default', {...})`, whose pushes arrive as a gtag `arguments` array (`args[0]` is `['consent','default',{...}]`). If the site instead does `dataLayer.push({ event: 'consent_default', ... })` in object form, read `args[0].event` / `args[0]` properties instead — the array-index access (`e[1]`, `e[2]`) will not match.
 
 ```typescript
 test.describe('Google Consent Mode v2', () => {

@@ -73,9 +73,10 @@ for (const endpoint of endpoints) {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       if (shouldAllow) {
-        expect(response.status()).not.toBeOneOf([401, 403]);
+        // toBeOneOf is not a built-in matcher — use toContain against the set
+        expect([401, 403]).not.toContain(response.status());
       } else {
-        expect(response.status()).toBeOneOf([401, 403]);
+        expect([401, 403]).toContain(response.status());
       }
     });
   }
