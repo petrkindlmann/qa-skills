@@ -29,9 +29,11 @@ When two skills could plausibly match a request, use these disambiguation rules.
 
 - **Strategy vs planning vs risk:** Use `risk-based-testing` first to produce the risk matrix. Use `test-strategy` for multi-quarter QA direction. Use `test-planning` for a single sprint or release.
 - **Bootstrapping vs onboarding:** Use `qa-start` when starting QA on a brand-new project (no QA exists yet). Use `qa-project-bootstrap` when onboarding a QA engineer to an existing codebase.
-- **AI cluster:** Use `ai-test-generation` when AI writes test code for you. Use `ai-system-testing` when AI/LLM features in your product are the thing being tested. Use `ai-qa-review` to review existing test code. Use `ai-bug-triage` to classify CI failures.
+- **AI cluster:** Use `ai-test-generation` when AI writes test code for you. Use `ai-system-testing` when AI/LLM features in your product are the thing being tested (and for LLM-layer attacks: indirect prompt injection, defend-the-tester, OWASP LLM Top 10). Use `ai-qa-review` to review existing test code. Use `ai-bug-triage` to classify CI failures. Use `bug-reproduction` to turn a defect report into a verified minimal repro and a failing regression test (it executes; `ai-bug-triage` only classifies). Use `agentic-browser-testing` for goal-driven E2E where a browser agent explores without a script (scripted Playwright stays in `playwright-automation`).
 - **Production trio:** Use `testing-in-production` for safe rollout techniques (flags, canary) **during** release. Use `synthetic-monitoring` for scheduled probes that run **after** release. Use `observability-driven-testing` when prod telemetry is the **input** to designing new tests.
 - **Selector maintenance:** Use `test-reliability` for runtime per-test healing when one test goes flaky. Use `selector-drift-recovery` for offline bulk regeneration after a UI refactor or redesign breaks many selectors.
+- **Test-case vs test-suite work:** Use `test-case-management` to author/maintain MANUAL cases in TestRail/Xray/Zephyr/Qase (not test code — that's `ai-test-generation`). Use `test-suite-curation` to prune/restructure a whole regression suite ("should this test exist"); use `ai-qa-review` to judge whether an individual test is well-written ("is this test good").
+- **Specialized-flow testing:** Use `email-testing` for inbox-capture flows (signup/reset/OTP). Use `payment-testing` for PSP-sandbox checkout/3DS/webhooks. Use `analytics-tracking-testing` to verify GA4/dataLayer/pixel data is CORRECT (whether tracking is ALLOWED under consent law is `compliance-testing`). All three defer generic endpoint contracts to `api-testing`.
 - **Last resort:** Use `qa-do` ONLY when the request doesn't match any other skill's trigger phrases. If the request clearly matches another skill, invoke that skill directly.
 
 ## Tools Integration
@@ -40,7 +42,7 @@ When two skills could plausibly match a request, use these disambiguation rules.
 - Tool-specific integration guides live in `tools/integrations/`
 - Examples: `playwright-automation` references the Playwright integration guide, `qa-metrics` references Allure/Grafana dashboards
 
-## Available Skills — 43 skills across 10 categories
+## Available Skills — 50 skills across 10 categories
 
 ### Foundation
 | `qa-project-context` | "set up QA context," "configure testing," first use of any skill |
@@ -65,15 +67,20 @@ When two skills could plausibly match a request, use these disambiguation rules.
 
 ### Specialized
 | `accessibility-testing` | "accessibility," "a11y," "WCAG," "screen reader," "axe" |
-| `security-testing` | "security test," "OWASP," "vulnerability," "ZAP," "XSS" |
+| `security-testing` | "security test," "OWASP," "OWASP LLM Top 10," "vulnerability," "ZAP," "XSS" |
 | `cross-browser-testing` | "cross-browser," "browser matrix," "BrowserStack," "Safari" |
 | `database-testing` | "database test," "migration test," "data integrity," "SQL test" |
+| `email-testing` | "signup email test," "password reset email," "magic link," "OTP," "Mailpit," "Mailosaur" |
+| `payment-testing` | "Stripe checkout test," "payment test," "3DS," "test card," "webhook signature," "test clock" |
+| `analytics-tracking-testing` | "GA4 event test," "verify the pixel fires," "dataLayer test," "tracking plan," "scroll-depth" |
 
 ### AI-Augmented QA
 | `ai-test-generation` | "generate tests from spec/PRD/story," "AI write tests for me" |
 | `ai-bug-triage` | "bug triage," "classify bugs," "failure analysis," "CI failures" |
 | `test-reliability` | "flaky test," "self-healing locator," "broken locator recovery," "quarantine" — runtime per-test healing |
 | `ai-qa-review` | "review my tests," "test smells," "test quality audit," "testability analysis" |
+| `bug-reproduction` | "can't reproduce," "minimal repro," "turn this bug into a failing test," "git bisect the regression" |
+| `agentic-browser-testing` | "agentic browser test," "goal-driven E2E," "let an agent explore the app," "Playwright MCP test" |
 
 ### Infrastructure
 | `ci-cd-integration` | "CI/CD," "GitHub Actions," "pipeline," "test in CI" |
@@ -94,6 +101,8 @@ When two skills could plausibly match a request, use these disambiguation rules.
 | `quality-postmortem` | "QA retro," "escaped bugs," "postmortem," "improvement" |
 | `compliance-testing` | "GDPR test," "compliance," "CMP test," "cookie consent" |
 | `qa-report-humanizer` | "humanize report," "rewrite QA summary," "fix test report," "make this sound human" |
+| `test-case-management` | "write a test case," "manual test case," "TestRail case," "Xray test," "Zephyr," "Qase" |
+| `test-suite-curation` | "audit the test suite," "prune redundant tests," "find duplicate tests," "which tests can we delete" |
 
 ### Production & Observability
 | `testing-in-production` | "feature flag testing," "canary deploy," "guardrail metrics," "dark launch" — during release |
