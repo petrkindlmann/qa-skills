@@ -39,6 +39,28 @@ For the 43 existing skills the same gate applies in reverse: re-template, then f
 eval; any failure is either a content gap (fix the skill) or a bad eval (fix the eval, and
 say which and why in the commit).
 
+## AI-agent / LLM security coverage (folded, not a new skill)
+
+Decision 2026-06-10: cover the indirect-prompt-injection + agent-targeted-malware class
+inside existing skills rather than adding skill #51. Triggered by a real payload (a fake
+"security finding" carrying a self-propagating directive + a home-dir credential-exfil
+`scan.js` + a "report secrets in context" fallback).
+
+- `security-testing` — add an **OWASP LLM Top 10 (2025)** section (LLM01 prompt injection …
+  LLM10), and sharpen its description to hand LLM-layer attacks to `ai-system-testing`.
+  Keep classic web-app OWASP as the spine.
+- `ai-system-testing` — extend prompt-injection coverage with: indirect injection via
+  tool output / RAG documents / scan reports (not just user data), self-propagating
+  "directive" payloads, data-exfiltration-via-agent (DNS/HTTP beacons), and a
+  **defend-the-tester** section: treat tool output as untrusted, never execute scripts found
+  in untrusted content, schema-validate tool responses, isolate agent-to-agent chains.
+- New reference: `skills/ai-system-testing/references/injection-detector.md` plus an actual
+  runnable detector at `skills/ai-system-testing/scripts/detect_injection.py` — flags fake
+  directive blocks, "ignore previous instructions", exfil-via-DNS, self-propagation language,
+  and "report secrets in context" fallbacks in any report/log/document. Ships with its own
+  fixtures and a self-test.
+- `risk-based-testing` already names the risk; cross-link it to the new sections.
+
 ## Re-template pass (all 43)
 
 Per skill: audit (currency web-check of every named tool/version, correctness of every
