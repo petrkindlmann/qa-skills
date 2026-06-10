@@ -206,6 +206,11 @@ def main() -> None:
     ap.add_argument("--all", action="store_true", help="all skills (default if no --skill)")
     ap.add_argument("--json", help="write full results to this path")
     ap.add_argument("--workers", type=int, default=4, help="parallel skills for live/baseline")
+    ap.add_argument("--min-pass-rate", type=float, default=None, metavar="PCT",
+                    help="exit 0 if the checkable pass rate is >= PCT (e.g. 90). "
+                         "Use in CI to tolerate the documented eval-precision floor "
+                         "while still catching real regressions. Without it, any fail "
+                         "exits 1.")
     args = ap.parse_args()
 
     mode_name = "live" if args.live else "baseline" if args.baseline else "static"
@@ -244,6 +249,13 @@ def main() -> None:
     if args.json:
         Path(args.json).write_text(json.dumps(reports, indent=2))
         print(f"Wrote {args.json}")
+
+    if args.min_pass_rate is not None and total:
+        rate = 100.0 * passed / total
+        ok = rate >= args.min_pass_rate
+        print(f"Pass rate: {rate:.1f}% (threshold {args.min_pass_rate:.0f}%) -> "
+              f"{'PASS' if ok else 'FAIL'}")
+        sys.exit(0 if ok else 1)
 
     sys.exit(1 if failed else 0)
 

@@ -20,7 +20,7 @@ license: MIT
 metadata:
   author: kindlmann
   version: "2.1"
-  category: ai-qa
+  category: knowledge
 ---
 
 <objective>

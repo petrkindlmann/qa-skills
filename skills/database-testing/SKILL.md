@@ -15,7 +15,7 @@ license: MIT
 metadata:
   author: kindlmann
   version: "2.0"
-  category: automation
+  category: specialized
 ---
 
 <objective>

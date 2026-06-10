@@ -4,12 +4,18 @@ on:
   push:
     paths:
       - 'skills/**'
+      - 'evals/**'
+      - 'scripts/**'
       - 'skills_index.json'
+      - 'README.md'
       - '.github/workflows/validate-skills.yml'
   pull_request:
     paths:
       - 'skills/**'
+      - 'evals/**'
+      - 'scripts/**'
       - 'skills_index.json'
+      - 'README.md'
       - '.github/workflows/validate-skills.yml'
   workflow_dispatch: {}
 
@@ -19,65 +25,25 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Validate SKILL.md files
-        run: |
-          errors=0
-          for skill_dir in skills/*/; do
-            skill_name=$(basename "$skill_dir")
-            skill_file="$skill_dir/SKILL.md"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
-            # Check SKILL.md exists
-            if [ ! -f "$skill_file" ]; then
-              echo "ERROR: $skill_dir missing SKILL.md"
-              errors=$((errors + 1))
-              continue
-            fi
+      # Structural validation: required sections, category whitelist, name/dir match,
+      # references exist + no orphans, Related-Skills resolution, eval-spec presence,
+      # README/index count sync, line caps.
+      - name: Validate skills
+        run: python3 scripts/validate_skills.py
 
-            # Check line count — raised from 500 to 700 for v2.4.0 currency pass
-            # (regulatory content + framework lists legitimately need the room).
-            # Still a soft signal that a skill may be sprawling; trim or split into
-            # references/ files if a skill approaches 700.
-            lines=$(wc -l < "$skill_file")
-            if [ "$lines" -gt 700 ]; then
-              echo "ERROR: $skill_file is $lines lines (max 700)"
-              errors=$((errors + 1))
-            fi
+      # Static eval proxy: each skill's content must teach every checkable
+      # expected_pattern and recommend no anti_pattern. Free; no model calls.
+      - name: Static evals
+        run: python3 scripts/run_evals.py --static --all --min-pass-rate 90
 
-            # Check frontmatter exists
-            if ! head -1 "$skill_file" | grep -q '^---$'; then
-              echo "ERROR: $skill_file missing YAML frontmatter"
-              errors=$((errors + 1))
-              continue
-            fi
+      # The index is a generated artifact — fail if it drifted from skills/.
+      - name: Index in sync
+        run: python3 scripts/build_index.py --check
 
-            # Check name matches directory
-            fm_name=$(grep '^name:' "$skill_file" | head -1 | sed 's/name: *//')
-            if [ "$fm_name" != "$skill_name" ]; then
-              echo "ERROR: $skill_file name '$fm_name' doesn't match directory '$skill_name'"
-              errors=$((errors + 1))
-            fi
-
-            # Check description exists
-            if ! grep -q '^description:' "$skill_file"; then
-              echo "ERROR: $skill_file missing description"
-              errors=$((errors + 1))
-            fi
-
-            # Check referenced files exist
-            for ref in $(grep -oP 'references/[a-z0-9-]+\.md' "$skill_file" 2>/dev/null); do
-              if [ ! -f "$skill_dir/$ref" ]; then
-                echo "ERROR: $skill_file references $ref but file doesn't exist"
-                errors=$((errors + 1))
-              fi
-            done
-
-            echo "OK: $skill_name ($lines lines)"
-          done
-
-          if [ "$errors" -gt 0 ]; then
-            echo ""
-            echo "FAILED: $errors error(s) found"
-            exit 1
-          fi
-          echo ""
-          echo "All skills validated successfully"
+      # The bundled injection detector must keep passing its own selftest.
+      - name: Injection detector selftest
+        run: python3 skills/ai-system-testing/scripts/detect_injection.py --selftest

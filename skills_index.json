@@ -86,18 +86,6 @@
       ]
     },
     {
-      "name": "accessibility-testing",
-      "path": "skills/accessibility-testing",
-      "category": "automation",
-      "tags": [
-        "accessibility",
-        "a11y",
-        "wcag",
-        "axe-core",
-        "screen-reader"
-      ]
-    },
-    {
       "name": "api-testing",
       "path": "skills/api-testing",
       "category": "automation",
@@ -110,17 +98,6 @@
       ]
     },
     {
-      "name": "cross-browser-testing",
-      "path": "skills/cross-browser-testing",
-      "category": "automation",
-      "tags": [
-        "cross-browser",
-        "browserstack",
-        "safari",
-        "browser-matrix"
-      ]
-    },
-    {
       "name": "cypress-automation",
       "path": "skills/cypress-automation",
       "category": "automation",
@@ -130,18 +107,6 @@
         "component",
         "intercept",
         "testing"
-      ]
-    },
-    {
-      "name": "database-testing",
-      "path": "skills/database-testing",
-      "category": "automation",
-      "tags": [
-        "database",
-        "migration",
-        "integrity",
-        "sql",
-        "seed-data"
       ]
     },
     {
@@ -179,19 +144,6 @@
         "browser",
         "typescript",
         "testing"
-      ]
-    },
-    {
-      "name": "security-testing",
-      "path": "skills/security-testing",
-      "category": "automation",
-      "tags": [
-        "security",
-        "owasp",
-        "zap",
-        "xss",
-        "csrf",
-        "dependency-scan"
       ]
     },
     {
@@ -233,6 +185,18 @@
       ]
     },
     {
+      "name": "accessibility-testing",
+      "path": "skills/accessibility-testing",
+      "category": "specialized",
+      "tags": [
+        "accessibility",
+        "a11y",
+        "wcag",
+        "axe-core",
+        "screen-reader"
+      ]
+    },
+    {
       "name": "analytics-tracking-testing",
       "path": "skills/analytics-tracking-testing",
       "category": "specialized",
@@ -240,6 +204,29 @@
         "specialized",
         "analytics",
         "tracking"
+      ]
+    },
+    {
+      "name": "cross-browser-testing",
+      "path": "skills/cross-browser-testing",
+      "category": "specialized",
+      "tags": [
+        "cross-browser",
+        "browserstack",
+        "safari",
+        "browser-matrix"
+      ]
+    },
+    {
+      "name": "database-testing",
+      "path": "skills/database-testing",
+      "category": "specialized",
+      "tags": [
+        "database",
+        "migration",
+        "integrity",
+        "sql",
+        "seed-data"
       ]
     },
     {
@@ -258,6 +245,19 @@
       "tags": [
         "specialized",
         "payment"
+      ]
+    },
+    {
+      "name": "security-testing",
+      "path": "skills/security-testing",
+      "category": "specialized",
+      "tags": [
+        "security",
+        "owasp",
+        "zap",
+        "xss",
+        "csrf",
+        "dependency-scan"
       ]
     },
     {

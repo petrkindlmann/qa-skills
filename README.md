@@ -80,8 +80,8 @@ Ask your AI agent in natural language. The right skill activates automatically.
 
 50 skills across 10 categories. Each skill keeps a lean `SKILL.md` (heavy code offloaded to `references/`, loaded on demand) with cross-references to related skills.
 
-### Foundation (1)
-`qa-project-context` — project context template that every other skill reads first
+### Foundation (3)
+`qa-project-context` · `qa-start` · `qa-do` — project context template every other skill reads first, new-project QA bootstrap, and the last-resort skill router
 
 ### Strategy (4)
 `test-strategy` · `test-planning` · `risk-based-testing` · `exploratory-testing` — QA strategy, sprint/release test plans, risk-based prioritization, session-based exploratory testing
@@ -89,10 +89,10 @@ Ask your AI agent in natural language. The right skill activates automatically.
 ### Automation (8)
 `playwright-automation` · `cypress-automation` · `selector-drift-recovery` · `api-testing` · `unit-testing` · `mobile-testing` · `visual-testing` · `performance-testing` — Playwright E2E, Cypress component/E2E, bulk post-refactor selector regeneration, REST/GraphQL, Jest/Vitest/pytest, Appium/Detox, visual regression, k6 load testing and Lighthouse CI
 
-### Specialized (6)
+### Specialized (7)
 `accessibility-testing` · `security-testing` · `cross-browser-testing` · `database-testing` · `email-testing` · `payment-testing` · `analytics-tracking-testing` — WCAG compliance, OWASP Top 10 + LLM, analytics-driven browser matrices, migration testing, email-flow capture, Stripe/PSP checkout and 3DS, GA4/pixel tracking correctness
 
-### AI-augmented QA (7)
+### AI-augmented QA (6)
 `ai-test-generation` · `ai-bug-triage` · `test-reliability` · `ai-qa-review` · `bug-reproduction` · `agentic-browser-testing` — LLM test generation, automated bug triage, flaky test management, test quality review, report-to-failing-test reproduction, goal-driven agentic browser testing
 
 ### Infrastructure (5)
