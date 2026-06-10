@@ -294,7 +294,7 @@ When an agent (your harness, a coding agent) reads untrusted content, treat the 
 
 ### Bundled detector
 
-`scripts/detect_injection.py` is a zero-dependency Python scanner that flags the markers of these payloads in untrusted text — instruction override, role override, fake-authority directives, self-propagation, secret-exfil requests, DNS/HTTP beacons, home-dir harvesting, run-this-script instructions, hidden HTML-comment instructions, and the verbal fallback. Run it at the boundary where untrusted content enters an agent's context:
+`scripts/detect_injection.py` is a zero-dependency Python scanner that flags the markers of these payloads in untrusted text — instruction override, role override, fake-authority directives, self-propagation, secret-exfil requests, DNS-based exfil beacons, home-dir harvesting, run-this-script instructions, hidden HTML-comment instructions, and the verbal fallback. (HTTP/C2 exfil over an allowed egress path is intentionally *not* regex-matched — it's indistinguishable from a legitimate request; catch it with egress allow-lists, not text patterns.) Run it at the boundary where untrusted content enters an agent's context:
 
 ```bash
 python scripts/detect_injection.py report.txt        # scan a file
