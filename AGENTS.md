@@ -45,17 +45,23 @@ When two skills could plausibly match a request, use these disambiguation rules.
 ## Available Skills — 50 skills across 10 categories
 
 ### Foundation
+| Skill | When to use |
+|---|---|
 | `qa-project-context` | "set up QA context," "configure testing," first use of any skill |
 | `qa-start` | "set up QA on a new project," "QA from scratch," "no QA exists yet," "/qa-start" |
 | `qa-do` | "which skill should I use," "where do I start," "/qa-do" — last-resort router only |
 
 ### Strategy
+| Skill | When to use |
+|---|---|
 | `test-strategy` | "test strategy," "multi-quarter QA direction," "QA roadmap" |
 | `test-planning` | "sprint test plan," "release test plan," "what to test this sprint" |
 | `risk-based-testing` | "risk matrix," "risk heatmap," "where to focus testing" — run BEFORE strategy/planning |
 | `exploratory-testing` | "exploratory testing," "SBTM," "manual testing," "bug hunting" |
 
 ### Automation
+| Skill | When to use |
+|---|---|
 | `playwright-automation` | "Playwright," "write E2E test," "page object," "new Playwright suite" |
 | `cypress-automation` | "Cypress," "cy.," "component test," "Cypress Cloud" |
 | `selector-drift-recovery` | "UI refactor broke tests," "redesign broke tests," "bulk update selectors," "selector drift" |
@@ -66,6 +72,8 @@ When two skills could plausibly match a request, use these disambiguation rules.
 | `performance-testing` | "performance test," "load test," "k6," "Lighthouse," "Web Vitals" |
 
 ### Specialized
+| Skill | When to use |
+|---|---|
 | `accessibility-testing` | "accessibility," "a11y," "WCAG," "screen reader," "axe" |
 | `security-testing` | "security test," "OWASP," "OWASP LLM Top 10," "vulnerability," "ZAP," "XSS" |
 | `cross-browser-testing` | "cross-browser," "browser matrix," "BrowserStack," "Safari" |
@@ -75,6 +83,8 @@ When two skills could plausibly match a request, use these disambiguation rules.
 | `analytics-tracking-testing` | "GA4 event test," "verify the pixel fires," "dataLayer test," "tracking plan," "scroll-depth" |
 
 ### AI-Augmented QA
+| Skill | When to use |
+|---|---|
 | `ai-test-generation` | "generate tests from spec/PRD/story," "AI write tests for me" |
 | `ai-bug-triage` | "bug triage," "classify bugs," "failure analysis," "CI failures" |
 | `test-reliability` | "flaky test," "self-healing locator," "broken locator recovery," "quarantine" — runtime per-test healing |
@@ -83,6 +93,8 @@ When two skills could plausibly match a request, use these disambiguation rules.
 | `agentic-browser-testing` | "agentic browser test," "goal-driven E2E," "let an agent explore the app," "Playwright MCP test" |
 
 ### Infrastructure
+| Skill | When to use |
+|---|---|
 | `ci-cd-integration` | "CI/CD," "GitHub Actions," "pipeline," "test in CI" |
 | `test-environments` | "test environment," "staging," "Docker," "preview environment" |
 | `test-data-management` | "test data," "fixtures," "factories," "seed data" |
@@ -90,11 +102,15 @@ When two skills could plausibly match a request, use these disambiguation rules.
 | `service-virtualization` | "mock service," "stub API," "WireMock," "MSW," "test isolation" |
 
 ### Metrics
+| Skill | When to use |
+|---|---|
 | `qa-metrics` | "QA metrics," "test metrics," "quality KPIs," "test health" |
 | `qa-dashboard` | "test dashboard," "Allure," "test report," "Grafana" |
 | `coverage-analysis` | "code coverage," "coverage gap," "Istanbul," "coverage threshold" |
 
 ### Process
+| Skill | When to use |
+|---|---|
 | `shift-left-testing` | "shift left," "TDD," "dev-QA pairing," "definition of done" |
 | `qa-project-bootstrap` | "onboard new QA engineer," "ramp up to existing codebase," "test architecture audit," "first 30 days" |
 | `release-readiness` | "release ready," "go/no-go," "smoke test," "release checklist" |
@@ -105,11 +121,15 @@ When two skills could plausibly match a request, use these disambiguation rules.
 | `test-suite-curation` | "audit the test suite," "prune redundant tests," "find duplicate tests," "which tests can we delete" |
 
 ### Production & Observability
+| Skill | When to use |
+|---|---|
 | `testing-in-production` | "feature flag testing," "canary deploy," "guardrail metrics," "dark launch" — during release |
 | `synthetic-monitoring` | "synthetic monitoring," "scheduled probes," "SLA validation" — after release |
 | `observability-driven-testing` | "trace-based testing," "design tests from logs," "production errors point to test gaps" |
 
 ### Knowledge & Migration
+| Skill | When to use |
+|---|---|
 | `ai-system-testing` | "test our LLM feature," "prompt regression test," "AI feature testing" — testing AI features in your product |
 | `chaos-engineering` | "chaos engineering," "fault injection," "resilience," "game day" |
 | `test-migration` | "migrate tests," "switch framework," "Selenium to Playwright" |
