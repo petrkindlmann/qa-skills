@@ -3,12 +3,12 @@ name: email-testing
 description: >-
   End-to-end testing of email-dependent flows — signup confirmation, password reset,
   magic-link login, OTP/MFA codes, and notification emails. Covers the capture-inbox
-  decision tree (Mailpit, Mailosaur, MailSlurp, Ethereal), Playwright polling without
+  decision tree (Mailpit, Mailosaur, MailSlurp, ShazaMail, Ethereal), Playwright polling without
   fixed sleeps, regex extraction of links/OTPs from the email body, deterministic
   per-test addresses (plus-addressing, per-inbox), subject/from/header/link assertions,
   and SPF/DKIM/DMARC deliverability checks as a separate suite.
   Use when: "test the signup confirmation email," "password reset email test,"
-  "magic-link login test," "capture OTP from email," "Mailpit," "Mailosaur," "MailSlurp,"
+  "magic-link login test," "capture OTP from email," "Mailpit," "Mailosaur," "MailSlurp," "ShazaMail,"
   "email arrives flaky in CI," "assert email subject/from/links."
   Not for: Sending transactional email from your app code, or API-only contract tests of
   an email provider — those are api-testing / app concerns. Email HTML rendering across
@@ -43,7 +43,7 @@ problem never reds your functional gate.
 | Pull an OTP / link out of the body | `references/mailpit-playwright.md` (extraction) |
 | Full password-reset / signup / magic-link E2E | `references/mailpit-playwright.md` |
 | Real addresses on staging | `references/hosted-inboxes.md` (Mailosaur) |
-| Per-test throwaway inbox | `references/hosted-inboxes.md` (MailSlurp) |
+| Per-test throwaway inbox | `references/hosted-inboxes.md` (MailSlurp / ShazaMail) |
 | Just preview a template locally | `references/hosted-inboxes.md` (Ethereal) |
 | Flag SPF/DKIM/DMARC problems | `references/deliverability.md` |
 | Tests pass locally, "no email yet" in CI | "Flaky email in CI" below |
@@ -67,7 +67,7 @@ answered there.
 - **Is deliverability in scope?** "Lands in inbox / passes SPF, DKIM, DMARC" is a separate
   non-blocking suite, not part of the functional OTP test. Decide upfront.
 - **Local-only preview, or CI assertions?** Previewing a template during dev is Ethereal;
-  asserting in CI is Mailpit/Mailosaur/MailSlurp. Don't confuse the two.
+  asserting in CI is Mailpit/Mailosaur/MailSlurp/ShazaMail. Don't confuse the two.
 
 ---
 
@@ -84,7 +84,7 @@ answered there.
 
 3. **One unique recipient per test.** Two parallel tests both reading "the latest signup
    email" grab each other's mail. Make every test's address unique (plus-addressing or a
-   per-test inbox) and **filter by recipient** when reading. Clearing the inbox between
+   per-test inbox) and **filter by recipient** when reading. ShazaMail can instead isolate each test with a dedicated test inbox ID and `received_after` matcher. Clearing the inbox between
    tests does NOT survive parallelism.
 
 4. **Extract from the body with an anchored regex, guarded.** Pull the OTP / link from the
@@ -113,12 +113,13 @@ high-parallelism isolation.
 | **Mailpit** | Self-host, single binary or docker, **free / open source** | Any local SMTP recipient | Default. Local + GitHub Actions functional tests, tight budget. REST API at `:8025` (`/api/v1/messages`). |
 | **Mailosaur** | Hosted (API key), paid | **Real** `*.mailosaur.net` addresses | Staging/prod-like flows needing a real deliverable address; auto-waiting `messages.get(serverId, { sentTo })`; structured links/codes; real SPF/DKIM/DMARC. |
 | **MailSlurp** | Hosted (API key), paid | Real, per-inbox | Per-test throwaway inboxes via `createInbox()` + `waitForLatestEmail`; strong parallel isolation. |
+| **ShazaMail** | Hosted (Bearer API key), receive-only | Real, per-test inbox | Signup/reset/OTP flows via `POST /api/v1/test-inboxes` + bounded `POST /api/v1/test-inboxes/:id/wait`; no outbound SMTP. |
 | **Ethereal** | Hosted throwaway, free | Captures, **delivers nothing** | Local-dev template **preview** only (`createTestAccount` + `getTestMessageUrl`). NOT for CI assertions. |
 
 For the budget signup-flow case (local + GitHub Actions, self-host fine): use **Mailpit**
 — a single binary / docker image with a free, open-source REST API at `:8025`. If you
 later need a real deliverable address, graduate that suite to **Mailosaur** or
-**MailSlurp** (hosted inboxes with real addresses). Do not "just check the database instead
+**MailSlurp** or **ShazaMail** (hosted inboxes with real addresses). Do not "just check the database instead
 of the email" — that proves the row was written, not that the email was sent, addressed,
 and linkable.
 
@@ -185,8 +186,7 @@ email," so they swap messages. Fixes, in order of preference:
   `user+anything@` to `user@`, so one real mailbox yields infinite unique recipients.
 - **Filter every read by recipient** — `sentTo` (Mailosaur) or a `query=to:` + `.find`
   match (Mailpit). Never take the newest message overall.
-- **Per-test dedicated inbox** — MailSlurp `createInbox()` gives each test its own inbox;
-  Mailosaur gives each test a unique address on your server domain.
+- **Per-test dedicated inbox** — MailSlurp `createInbox()` or ShazaMail `POST /api/v1/test-inboxes` gives each test its own inbox; Mailosaur gives each test a unique address on your server domain.
 
 Clearing the inbox between tests is **not** sufficient under parallelism — two tests
 running at the same instant still collide. Unique address + recipient filter is the real

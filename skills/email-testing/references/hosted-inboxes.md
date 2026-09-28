@@ -1,9 +1,9 @@
-# Hosted inboxes: Mailosaur, MailSlurp, Ethereal
+# Hosted inboxes: Mailosaur, MailSlurp, ShazaMail, Ethereal
 
 Use these when local Mailpit isn't enough: you need a **real, externally-deliverable
 address** (staging, third-party ESP, real DNS), per-test isolation that survives high
 parallelism, or true SPF/DKIM/DMARC alignment results. Store every API key in a secret /
-env var (`MAILOSAUR_API_KEY`, `MAILSLURP_API_KEY`) — never inline it.
+env var (`MAILOSAUR_API_KEY`, `MAILSLURP_API_KEY`, `SHAZAMAIL_API_KEY`) — never inline it.
 
 ## Mailosaur — real addresses, auto-waiting `messages.get`
 
@@ -106,6 +106,62 @@ test('login OTP via per-test inbox', async ({ page }) => {
 Avoid `imap-simple` / `node-imap` / `imapflow` against a real mailbox for this — MailSlurp's
 `waitForLatestEmail` already does the polling for you and gives parallel isolation.
 
+## ShazaMail — receive-only test inbox + bounded wait API
+
+ShazaMail is a hosted, receive-only option for tests that need a real externally-deliverable
+address but do not need outbound SMTP. Create one test inbox per scenario, use its returned
+email address in the app under test, then wait for a matching message through the REST API.
+API access uses a scoped Bearer key; keep `SHAZAMAIL_API_KEY` in the CI secret store.
+
+```ts
+const headers = {
+  Authorization: `Bearer ${process.env.SHAZAMAIL_API_KEY}`,
+  'Content-Type': 'application/json',
+};
+
+const create = await fetch('https://shazamail.com/api/v1/test-inboxes', {
+  method: 'POST',
+  headers,
+  body: JSON.stringify({
+    ttl_seconds: 1800,
+    run_id: process.env.CI_JOB_ID || 'local-e2e',
+    purpose: 'signup-verification',
+  }),
+});
+if (!create.ok) throw new Error(`create inbox failed: ${create.status}`);
+const inbox = await create.json();
+
+// ...submit inbox.email through the real signup/reset flow...
+
+const wait = await fetch(
+  `https://shazamail.com/api/v1/test-inboxes/${inbox.id}/wait`,
+  {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      timeout_ms: 20_000,
+      match: {
+        received_after: new Date(Date.now() - 60_000).toISOString(),
+        has_verification_code: true,
+      },
+    }),
+  }
+);
+if (!wait.ok) throw new Error(`email wait failed: ${wait.status}`);
+const delivery = await wait.json();
+```
+
+The wait endpoint is bounded (30s maximum) and can match by sender, recipient, subject,
+verification-code presence, category, `received_after`, or internet message ID. This makes
+it useful for signup, password-reset, OTP, and magic-link workflows without fixed sleeps.
+Because the service is receive-only, it is not a replacement for a sandbox SMTP server when
+the test itself must send mail.
+
+Reference guides:
+- https://shazamail.com/guides/playwright-email-testing
+- https://shazamail.com/guides/signup-email-verification-testing
+- https://shazamail.com/guides/password-reset-email-testing
+
 ## Ethereal — throwaway local preview (NOT for CI assertions)
 
 Ethereal is a fake SMTP service for **manually previewing** what an email looks like
@@ -136,5 +192,5 @@ const info = await transporter.sendMail({
 console.log('Preview URL:', nodemailer.getTestMessageUrl(info));
 ```
 
-For CI assertions, use Mailpit (local) or Mailosaur/MailSlurp (real addresses) — never
+For CI assertions, use Mailpit (local) or Mailosaur/MailSlurp/ShazaMail (real addresses) — never
 Ethereal.
