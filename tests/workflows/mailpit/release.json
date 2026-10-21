@@ -1,18 +1,29 @@
 {
   "version": "1.31.6",
   "tag": "v1.31.6",
-  "platform": "linux-amd64",
   "release_url": "https://github.com/axllent/mailpit/releases/tag/v1.31.6",
   "metadata_url": "https://api.github.com/repos/axllent/mailpit/releases/tags/v1.31.6",
-  "archive_url": "https://github.com/axllent/mailpit/releases/download/v1.31.6/mailpit-linux-amd64.tar.gz",
-  "archive_sha256": "10fa12ccc610f653d4ed4df848c1817f9935dcf4e9a6a458a19ab0fa02093f91",
-  "archive_bytes": 10591705,
-  "digest_source": "GitHub release asset digest sha256, asset ID 642736510",
   "published_at": "2026-10-15T05:02:13Z",
   "checked_at": "2026-10-21",
+  "digest_source": "GitHub release asset digest sha256 for each asset ID; binary digests computed from the extracted executable",
   "api_docs_url": "https://mailpit.axllent.org/docs/api-v1/",
   "runtime_docs_url": "https://mailpit.axllent.org/docs/configuration/runtime-options/",
   "pinned_api_spec_url": "https://raw.githubusercontent.com/axllent/mailpit/v1.31.6/server/ui/api/v1/swagger.json",
-  "binary_sha256": "89ad3d1987140f5f4432be497e0aa8fbf1e8a6bb30258b7d35d5ea4bedfcd4df",
-  "api_spec_sha256": "77cd5441b66fabfadaee3fafc84e63c927edc0eaed88590d82745c94b663f3ca"
+  "api_spec_sha256": "77cd5441b66fabfadaee3fafc84e63c927edc0eaed88590d82745c94b663f3ca",
+  "assets": {
+    "linux-amd64": {
+      "asset_id": 642736510,
+      "archive_url": "https://github.com/axllent/mailpit/releases/download/v1.31.6/mailpit-linux-amd64.tar.gz",
+      "archive_sha256": "10fa12ccc610f653d4ed4df848c1817f9935dcf4e9a6a458a19ab0fa02093f91",
+      "archive_bytes": 10591705,
+      "binary_sha256": "89ad3d1987140f5f4432be497e0aa8fbf1e8a6bb30258b7d35d5ea4bedfcd4df"
+    },
+    "darwin-arm64": {
+      "asset_id": 642736475,
+      "archive_url": "https://github.com/axllent/mailpit/releases/download/v1.31.6/mailpit-darwin-arm64.tar.gz",
+      "archive_sha256": "1411270aa8fd7f4fb0cc358318754d7bb7c2c30bfd70572dd12d05a53e956373",
+      "archive_bytes": 9972537,
+      "binary_sha256": "2213c19efa6ee6f009ab7f4b2b686e037bedac7e56e0b05e20149653df843017"
+    }
+  }
 }

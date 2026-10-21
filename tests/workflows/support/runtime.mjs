@@ -7,6 +7,8 @@ import { randomUUID } from 'node:crypto';
 import { setTimeout as pause } from 'node:timers/promises';
 
 export const repository = fileURLToPath(new URL('../../../', import.meta.url));
+// CI images expose both names; macOS ships python3 only. QA_PYTHON overrides either.
+export const python = process.env.QA_PYTHON ?? (process.platform === 'win32' ? 'python' : 'python3');
 
 // The services run over real loopback sockets. This helper never fulfills requests.
 export async function launchService({ command, args, directory, readyFile, env = {}, timeoutMs = 15000 }) {
@@ -65,7 +67,7 @@ export async function launchService({ command, args, directory, readyFile, env =
 export async function startMailpit(directory) {
   const instance = `workflow-${process.pid}-${randomUUID()}`;
   const service = await launchService({
-    command: 'python',
+    command: python,
     args: ['tests/workflows/mailpit/mailpit_service.py', 'serve', '--instance', instance,
       '--ttl', '900', '--ready-file', path.join(directory, 'ready.json')],
     directory, readyFile: path.join(directory, 'ready.json'), timeoutMs: 30000,
@@ -84,7 +86,7 @@ export async function startShop({ directory, smtpPort, failFulfillmentOnce = fal
       '--ready-file', path.join(directory, 'ready.json'), '--smtp-port', String(smtpPort),
       '--email-suffix', namespace, '--test-mode'];
     if (failOnce) args.push('--fail-fulfillment-once');
-    current = await launchService({ command: 'python', args, directory,
+    current = await launchService({ command: python, args, directory,
       readyFile: path.join(directory, 'ready.json'), env: { APP_FAULT: process.env.QA_SHOP_FAULT ?? '' } });
     port = Number(new URL(current.ready.base_url).port);
   }

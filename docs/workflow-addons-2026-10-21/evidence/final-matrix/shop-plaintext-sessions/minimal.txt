@@ -1,0 +1,7 @@
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / database.spec.mjs / session credentials are stored hashed at rest and removed on logout (attempt 1)
+Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoMatch[2m([22m[32mexpected[39m[2m)[22m
+
+Expected pattern: [32m/^[0-9a-f]{64}$/[39m
+Received string:  [31m"t1nvO3Ubwsy1anLCdWT2xsZ6N0S8Mn12KCMlVJu9TcY"[39m
+WORKFLOW RESULT: failed; attempts=11; {"passed":10,"failed":1}

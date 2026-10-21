@@ -6,8 +6,9 @@ Runnable recipes for automated scanning and keyboard auditing. Decision prose li
 ## Install
 
 ```bash
-# @axe-core/playwright tracks axe-core's major.minor; install the 4.11.x line
-npm install --save-dev @axe-core/playwright
+# Pin the exact current release; the minor tracks axe-core's rule set (4.14.0 on 2026-10-21)
+npm view @axe-core/playwright version
+npm install --save-dev --save-exact @axe-core/playwright@4.14.0
 ```
 
 > **RGAA tag caveat:** Several best-practice rules (`focus-order-semantics`, `region`,
@@ -42,6 +43,10 @@ export async function checkAccessibility(
   await testInfo.attach('a11y-results', {
     body: JSON.stringify(results, null, 2), contentType: 'application/json',
   });
+
+  // A scan that evaluated nothing is not a clean page (blank, redirected, or wrong selector).
+  expect(results.passes.length + results.violations.length + results.incomplete.length,
+    'axe evaluated no rules').toBeGreaterThan(0);
 
   const violations = results.violations.map((v) => ({
     rule: v.id, impact: v.impact, description: v.description,
@@ -80,6 +85,17 @@ test.describe('Accessibility - interactive states', () => {
     await checkAccessibility(page, testInfo);
   });
 });
+```
+
+## Known-Gap Baseline for Pages You Cannot Fix
+
+Vendored or upstream pages often ship real violations. Do not disable the scan; pin the exact
+set so the test still moves when a rule appears or disappears:
+
+```typescript
+const upstreamGaps = ['button-name', 'label']; // unnamed row controls in the pinned TodoMVC
+const violations = await scanAccessibility(page, testInfo); // same helper, returns the summary
+expect([...new Set(violations.map((v) => v.rule))].sort()).toEqual(upstreamGaps);
 ```
 
 ## Rule Suppression

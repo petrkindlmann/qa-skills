@@ -218,3 +218,43 @@ describe('OrderService', () => {
   });
 });
 ```
+
+## Reading the Application's Own Store (SQLite via `node:sqlite`)
+
+When the app under test owns a SQLite file, open it read-only from the test and check what
+the API never shows: hashing at rest, the constraints a migration may have dropped, and
+referential health. Writes for constraint tests go inside a transaction that is rolled back.
+
+```javascript
+import { DatabaseSync } from 'node:sqlite'; // Node 24+
+
+const db = new DatabaseSync(app.databasePath, { readOnly: true });
+db.exec('PRAGMA busy_timeout = 5000');
+expect(db.prepare('PRAGMA journal_mode').get().journal_mode).toBe('wal');
+expect(db.prepare('PRAGMA integrity_check').get().integrity_check).toBe('ok');
+expect(db.prepare('PRAGMA foreign_key_check').all()).toEqual([]);
+
+// Session tokens must be stored hashed: never equal to, or containing, the cookie value.
+for (const row of db.prepare('SELECT token_hash FROM sessions').all()) {
+  expect(row.token_hash).toMatch(/^[0-9a-f]{64}$/);
+  expect(row.token_hash).not.toBe(cookieValue);
+}
+
+// The unique index a migration might drop: resolve index columns, do not trust names.
+const uniqueColumns = db.prepare("PRAGMA index_list('orders')").all()
+  .filter((index) => index.unique === 1)
+  .map((index) => db.prepare(`PRAGMA index_info('${index.name}')`).all().map((c) => c.name).sort());
+expect(uniqueColumns).toContainEqual(['idem_key', 'user_id']);
+db.close();
+
+// Constraint test with rollback on a writable handle.
+const writable = new DatabaseSync(app.databasePath);
+writable.exec('BEGIN IMMEDIATE');
+try {
+  expect(() => writable.prepare('INSERT INTO orders (id, user_id, idem_key, ...) VALUES (?, ?, ?, ...)')
+    .run('duplicate', existing.user_id, existing.idem_key /* , ... */)).toThrow(/UNIQUE constraint failed/);
+} finally {
+  writable.exec('ROLLBACK');
+  writable.close();
+}
+```

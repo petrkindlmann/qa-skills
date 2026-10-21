@@ -1,0 +1,9 @@
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / database.spec.mjs / schema enforces idempotency uniqueness, foreign keys and durable journaling (attempt 1)
+Error: a unique index must cover (user_id, idem_key)
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoContainEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+Expected value: [32m["idem_key", "user_id"][39m
+Received array: [31m[["id"]][39m
+WORKFLOW RESULT: failed; attempts=11; {"passed":10,"failed":1}

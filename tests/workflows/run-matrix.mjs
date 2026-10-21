@@ -29,11 +29,24 @@ const reviewCases = [
   { id: 'shop-signed-whitespace', suite: 'baseline-shop', count: 10, env: { QA_SHOP_FAULT: 'canonicalized_signature' }, title: 'noncanonical' },
   { id: 'todo-removal-persistence', suite: 'baseline-todo', count: 9, env: { QA_TODO_FAULT: 'delete-persistence-lost' }, title: 'single delete persists immediately', baselineTitle: 'whitespace Enter and empty blur' },
 ];
+// 2026-10-21 addons: accessibility, data at rest, hardening and lab performance. Each fault
+// runs against the addon suite only; the original cases keep running the combined suite.
+const addonCases = [
+  { id: 'shop-unlabeled-controls', env: { QA_SHOP_FAULT: 'unlabeled_controls' }, title: 'no WCAG 2.2 AA violations' },
+  { id: 'shop-plaintext-sessions', env: { QA_SHOP_FAULT: 'plaintext_session_tokens' }, title: 'hashed at rest' },
+  { id: 'shop-missing-idempotency-index', env: { QA_SHOP_FAULT: 'missing_idempotency_index' }, title: 'idempotency uniqueness' },
+  { id: 'shop-no-login-throttle', env: { QA_SHOP_FAULT: 'no_login_throttle' }, title: 'throttled per account' },
+  { id: 'shop-open-test-support', env: { QA_SHOP_FAULT: 'open_test_support' }, title: 'locked without the admin key' },
+  { id: 'shop-smtp-failure', env: { QA_SHOP_FAULT: 'smtp_failure_503' }, title: 'mail service is down' },
+  { id: 'todo-delayed-render', env: { QA_TODO_FAULT: 'delayed-render' }, title: 'largest content within the lab budget' },
+  { id: 'todo-layout-shift', env: { QA_TODO_FAULT: 'layout-shift' }, title: 'layout stays stable' },
+].map(scenario => ({ ...scenario, suite: 'addons', count: 11 }));
 let cases = phase === 'initial' ? originalCases : phase === 'review-baseline'
   ? [...originalCases.filter(scenario => scenario.healthy), ...reviewCases.map(scenario => ({ ...scenario,
     expectedGap: !scenario.baselineTitle, title: scenario.baselineTitle ?? scenario.title }))]
-  : [{ id: 'combined-healthy', suite: '.', healthy: true, count: 25 },
-    ...[...originalCases.filter(scenario => !scenario.healthy), ...reviewCases].map(scenario => ({ ...scenario, suite: '.', count: 25 }))];
+  : [{ id: 'combined-healthy', suite: '.', healthy: true, count: 36 },
+    ...[...originalCases.filter(scenario => !scenario.healthy), ...reviewCases].map(scenario => ({ ...scenario, suite: '.', count: 36 })),
+    ...addonCases];
 cases = cases.map(scenario => ({ ...scenario, count: scenario.count ?? (scenario.suite === 'baseline-shop' ? 10 : 9) }));
 if (process.argv[3]) {
   const selected = process.argv[3].split(',');
@@ -61,17 +74,20 @@ const manifest = { startedAt: new Date().toISOString(), phase, node: process.ver
     ...await hashes(path.join(root, 'tests/workflows/fixture-app')),
     ...await hashes(path.join(root, 'tests/workflows/support')),
     ...await hashes(path.join(root, 'tests/workflows/upstream-todomvc')) }, runs: [] };
-if (phase === 'final') Object.assign(manifest.sourceHashes, await hashes(path.join(root, 'tests/workflows/generated/review-followup')));
+if (phase === 'final') Object.assign(manifest.sourceHashes, await hashes(path.join(root, 'tests/workflows/generated/review-followup')),
+  await hashes(path.join(root, 'tests/workflows/generated/addons')));
 
 for (const scenario of cases) {
   const directory = path.join(output, scenario.id);
   await prepareRunDirectory(directory);
+  // Bound each variant in proportion to its suite: four seconds per case, never under 90 s.
+  const globalTimeoutMs = Math.max(90000, scenario.count * 4000);
   const args = ['node_modules/playwright/cli.js', 'test', '--config', 'tests/workflows/playwright.config.mjs',
-    '--workers=2', '--retries=0', '--global-timeout=90000'];
+    '--workers=2', '--retries=0', `--global-timeout=${globalTimeoutMs}`];
   const env = { ...process.env, QA_SHOP_FAULT: '', QA_TODO_FAULT: '', ...scenario.env,
     QA_WORKFLOW_SUITE: path.join(root, 'tests/workflows/generated', scenario.suite), QA_WORKFLOW_OUTPUT: directory };
   const started = performance.now();
-  const result = await runBounded({ command: process.execPath, args, cwd: root, env, timeoutMs: 100000, killGraceMs: 5000 });
+  const result = await runBounded({ command: process.execPath, args, cwd: root, env, timeoutMs: globalTimeoutMs + 10000, killGraceMs: 5000 });
   await writeFile(path.join(directory, 'minimal.txt'), result.log);
   let report;
   let parseError;

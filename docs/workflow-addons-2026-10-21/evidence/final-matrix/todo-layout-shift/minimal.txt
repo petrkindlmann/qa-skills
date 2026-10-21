@@ -1,0 +1,17 @@
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / performance.spec.mjs / TodoMVC layout stays stable after load and while listing items (attempt 1)
+Error: entry field moved after first render
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+[32m- Expected  - 1[39m
+[31m+ Received  + 1[39m
+
+[2m  Object {[22m
+[2m    "height": 65,[22m
+[2m    "width": 550,[22m
+[2m    "x": 365,[22m
+[32m-   "y": 130,[39m
+[31m+   "y": 370,[39m
+[2m  }[22m
+WORKFLOW RESULT: failed; attempts=11; {"passed":10,"failed":1}

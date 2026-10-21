@@ -84,3 +84,44 @@ for (const endpoint of endpoints) {
 ```
 
 Also test: session rotation after login (prevent session fixation), JWT signed with wrong key, and OAuth state parameter tampering.
+
+## Failed-Login Throttle with Clock Control
+
+Concurrent-burst tests prove a limiter exists; this proves its window and its boundaries. The
+fixture clock replaces sleeps (see `test-data-management` for clock seams in your own app).
+
+```typescript
+test('repeated sign-in failures are throttled per account and recover after the window', async ({ request }) => {
+  const email = 'alice@example.test';
+  for (let attempt = 1; attempt <= 5; attempt += 1) {
+    const response = await request.post('/api/login', { data: { email, password: `wrong-${attempt}` } });
+    expect(response.status()).toBe(401);
+  }
+  const throttled = await request.post('/api/login', { data: { email, password: 'wrong-6' } });
+  expect(throttled.status()).toBe(429);
+  expect(throttled.headers()['retry-after']).toBe('60');
+
+  // The correct password must not bypass the throttle, and no session may exist.
+  expect((await request.post('/api/login', { data: { email, password: 'Alice-secret-123!' } })).status()).toBe(429);
+  expect((await request.get('/api/me')).status()).toBe(401);
+
+  // Unknown addresses throttle identically, so the limiter cannot be used to enumerate accounts.
+  for (let attempt = 1; attempt <= 5; attempt += 1) await request.post('/api/login', { data: { email: 'nobody@example.test', password: 'x' } });
+  expect((await request.post('/api/login', { data: { email: 'nobody@example.test', password: 'x' } })).status()).toBe(429);
+
+  await request.post('/test-support/clock', { headers: { 'X-Test-Admin-Key': process.env.TEST_ADMIN_KEY! }, data: { advance_seconds: 61 } });
+  expect((await request.post('/api/login', { data: { email, password: 'Alice-secret-123!' } })).status()).toBe(200);
+});
+```
+
+## Debug and Test-Support Routes Stay Locked
+
+Support endpoints that exist for tests are an attack surface in every other environment.
+Assert the lock from outside, with no key, a guessed key and an empty key:
+
+```typescript
+for (const headers of [{}, { 'X-Test-Admin-Key': 'guessed' }, { 'X-Test-Admin-Key': '' }]) {
+  expect((await request.get('/test-support/state', { headers })).status()).toBe(403);
+  expect((await request.post('/test-support/clock', { headers, data: { advance_seconds: 1 } })).status()).toBe(403);
+}
+```

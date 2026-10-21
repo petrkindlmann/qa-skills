@@ -1,5 +1,29 @@
 # Versions
 
+## v3.3.0 (2026-10-21)
+
+### Addon workflows, macOS support and four skill repairs
+
+- Add eleven acceptance cases over the same real Shop, TodoMVC and Mailpit fixtures for
+  `accessibility-testing`, `database-testing`, `security-testing` and `performance-testing`:
+  axe scans of every reachable state with a documented upstream baseline, a keyboard-only
+  sign-in, hashed-at-rest and constraint checks read straight from SQLite, a failed-login
+  throttle driven by the fixture clock, locked support routes, uniform password reset under
+  a mail outage, and LCP/CLS lab budgets with an anchored entry field.
+- Add eight matching fixture faults (six Shop, two TodoMVC); the controls matrix now runs
+  23 variants and every designated assertion fails for its fault. The first CLS control
+  escaped at 0.07: a 240px jump of a compact app scores under the 0.1 budget, so the
+  recipe and the skill now anchor the key control as well as the score.
+- Pin a Mailpit asset per platform (Linux AMD64 and macOS arm64) with GitHub's published
+  digests, download over HTTPS only without curl, and resolve process identity through
+  `ps` where `/proc` is absent. The runtime launches `python3` by default (`QA_PYTHON`
+  overrides). The whole workflow suite now runs on an arm64 Mac as well as in CI.
+- Correct the axe-core install advice (pin the current exact release, not a stale minor),
+  fail an axe scan that evaluated nothing, and add throttle, locked-route and SQLite
+  at-rest recipes. The login throttle is documented in the Shop contract.
+
+Details: [addon report](docs/WORKFLOW-ADDONS-2026-10-21.md).
+
 ## v3.2.0 (2026-10-21)
 
 ### Application workflows and assertion sensitivity

@@ -44,6 +44,11 @@ the scenario's addresses/messages.
   `shop_session` cookie with `HttpOnly`, `SameSite=Lax` and `Path=/`. Invalid credentials
   return 401 `{ "error": "invalid_credentials" }`. The fixture runs over local HTTP,
   so it intentionally does not set `Secure`.
+- Failed sign-ins are throttled per email address. After **5** failures within
+  **60 seconds** every further attempt for that address, including one with the correct
+  password, returns 429 `{ "error": "too_many_attempts" }` with `Retry-After: 60` and
+  creates no session. Unknown addresses throttle identically. The counter clears after a
+  successful sign-in or once the window passes; use the test clock rather than sleeping.
 - `GET /api/me`: 200 with the same user shape when signed in; otherwise 401
   `{ "error": "unauthenticated" }`.
 - `POST /api/logout`: invalidates the current session and returns 204.
@@ -107,8 +112,9 @@ must also hold for concurrent deliveries and after process restart.
 
 `POST /api/password-reset/request` takes `{ "email": "..." }` and always responds
 202 `{ "message": "If this account exists, a reset email has been sent." }` for a
-syntactically valid email, whether or not an account exists. Unknown accounts do not
-receive mail. Known accounts receive a real SMTP message addressed to that account,
+syntactically valid email, whether or not an account exists, and whether or not the
+SMTP service is reachable (a delivery failure only increments the `smtp_errors`
+counter). Unknown accounts do not receive mail. Known accounts receive a real SMTP message addressed to that account,
 with subject `Reset your Shop password`, plaintext and HTML alternatives, and a link
 to this application's `/reset-password?token=...` page. Consume the message through
 Mailpit's own API or UI. Do not infer the token from application state.
@@ -131,7 +137,8 @@ Normal browser journeys need no application-source edits or request interception
 ## Explicit test support
 
 These routes exist only with `--test-mode` and require
-`X-Test-Admin-Key: local-test-admin`:
+`X-Test-Admin-Key: local-test-admin`; a missing or wrong key returns 403
+`{ "error": "forbidden" }`:
 
 - `GET /test-support/state`: returns current fixture `now`, `orders`, `receipts`,
   `reset_tokens` (only user, expiry and consumed state; never raw tokens),

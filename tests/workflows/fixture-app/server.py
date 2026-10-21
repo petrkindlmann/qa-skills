@@ -36,6 +36,8 @@ CATALOG = {
 }
 PAYMENT_SECRET = b"local-payment-secret"
 ADMIN_KEY = "local-test-admin"
+LOGIN_FAILURE_LIMIT = 5
+LOGIN_FAILURE_WINDOW = 60
 
 
 def password_hash(password, salt=None):
@@ -53,8 +55,8 @@ def digest(value):
 
 
 class HTTPProblem(Exception):
-    def __init__(self, status, code):
-        self.status, self.code = status, code
+    def __init__(self, status, code, headers=None):
+        self.status, self.code, self.headers = status, code, headers or {}
 
 
 class Runtime:
@@ -72,9 +74,11 @@ class Runtime:
         self.fail_lock = threading.Lock()
         self.base_url = None
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        # Fixture fault: a migration that dropped the idempotency constraint.
+        idempotency = "" if self.faults.has("missing_idempotency_index") else ", UNIQUE(user_id, idem_key)"
         with self.connection() as db:
             db.execute("PRAGMA journal_mode=WAL")
-            db.executescript("""
+            db.executescript(f"""
                 CREATE TABLE IF NOT EXISTS users (
                     id TEXT PRIMARY KEY, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS sessions (
@@ -85,13 +89,14 @@ class Runtime:
                     idem_key TEXT NOT NULL, intent_hash TEXT NOT NULL, items TEXT NOT NULL,
                     currency TEXT NOT NULL, amount INTEGER NOT NULL,
                     status TEXT NOT NULL DEFAULT 'pending', fulfillment_count INTEGER NOT NULL DEFAULT 0,
-                    created REAL NOT NULL, UNIQUE(user_id, idem_key));
+                    created REAL NOT NULL{idempotency});
                 CREATE TABLE IF NOT EXISTS receipts (
                     id TEXT PRIMARY KEY, payload_hash TEXT NOT NULL,
                     order_id TEXT NOT NULL REFERENCES orders(id), created REAL NOT NULL);
                 CREATE TABLE IF NOT EXISTS reset_tokens (
                     token_hash TEXT PRIMARY KEY, user_id TEXT NOT NULL REFERENCES users(id),
                     expires REAL NOT NULL, consumed REAL);
+                CREATE TABLE IF NOT EXISTS login_attempts (email TEXT NOT NULL, attempted REAL NOT NULL);
                 CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL);
             """)
             db.execute("INSERT OR IGNORE INTO metadata VALUES ('clock_offset', '0')")
@@ -129,6 +134,20 @@ class Runtime:
         offset = db.execute("SELECT value FROM metadata WHERE key='clock_offset'").fetchone()[0]
         return time.time() + float(offset)
 
+    def session_key(self, token):
+        # Fixture fault: a session table that stores the raw bearer value.
+        return token if self.faults.has("plaintext_session_tokens") else digest(token)
+
+    def page(self):
+        data = Path(__file__).with_name("index.html").read_bytes()
+        if self.faults.has("unlabeled_controls"):
+            # Fixture fault: visible captions that no longer label their inputs.
+            data, replaced = re.subn(rb"<label>(Email|Password|Account email|New password) (<input[^>]*>)</label>",
+                                     rb"<span>\1</span> \2", data)
+            if replaced != 4:
+                raise RuntimeError("unlabeled_controls no longer matches the four labelled inputs")
+        return data
+
     def consume_transient_failure(self):
         with self.fail_lock:
             fail = self.fail_once
@@ -157,6 +176,9 @@ class Runtime:
                 db.execute("UPDATE metadata SET value=CAST(value AS INTEGER)+1 WHERE key='smtp_errors'")
             print(json.dumps({"event": "smtp_error", "error": type(error).__name__}),
                   file=sys.stderr, flush=True)
+            if self.faults.has("smtp_failure_503"):
+                # Fixture fault: a mail outage turns the uniform 202 into an error for real accounts.
+                raise HTTPProblem(503, "email_unavailable")
 
 
 def public_order(row):
@@ -247,12 +269,14 @@ class Handler(BaseHTTPRequestHandler):
 
     def user(self, db):
         row = db.execute("SELECT users.* FROM sessions JOIN users ON users.id=sessions.user_id "
-                         "WHERE token_hash=? AND expires>?", (digest(self.session_token()), self.app.now(db))).fetchone()
+                         "WHERE token_hash=? AND expires>?", (self.app.session_key(self.session_token()), self.app.now(db))).fetchone()
         if row is None:
             raise HTTPProblem(401, "unauthenticated")
         return row
 
     def admin(self):
+        if self.app.faults.has("open_test_support"):
+            return  # Fixture fault: support routes shipped without any check.
         if not self.app.test_mode:
             raise HTTPProblem(404, "not_found")
         if not hmac.compare_digest(self.headers.get("X-Test-Admin-Key", ""), ADMIN_KEY):
@@ -269,7 +293,7 @@ class Handler(BaseHTTPRequestHandler):
             self.route(method, urlsplit(self.path).path)
         except HTTPProblem as error:
             self.close_connection = True
-            self.respond(error.status, {"error": error.code})
+            self.respond(error.status, {"error": error.code}, error.headers)
         except (BrokenPipeError, ConnectionResetError):
             pass
         except Exception as error:
@@ -280,7 +304,7 @@ class Handler(BaseHTTPRequestHandler):
 
     def route(self, method, path):
         if method == "GET" and path in {"/", "/reset-password"}:
-            data = Path(__file__).with_name("index.html").read_bytes()
+            data = self.app.page()
             self.send_response(200)
             for name, value in {"Content-Type": "text/html; charset=utf-8",
                                 "Content-Length": str(len(data)), "Cache-Control": "no-store",
@@ -298,20 +322,31 @@ class Handler(BaseHTTPRequestHandler):
             email, password = body.get("email"), body.get("password")
             if not isinstance(email, str) or not isinstance(password, str):
                 raise HTTPProblem(401, "invalid_credentials")
+            account = email.lower()
             with self.app.connection(transaction=True) as db:
-                row = db.execute("SELECT * FROM users WHERE email=?", (email.lower(),)).fetchone()
-                if row is None or not password_matches(password, row["password"]):
-                    raise HTTPProblem(401, "invalid_credentials")
-                token = secrets.token_urlsafe(32)
-                db.execute("INSERT INTO sessions VALUES (?, ?, ?)",
-                           (digest(token), row["id"], self.app.now(db) + 86400))
-                user = {"id": row["id"], "email": row["email"]}
-            return self.respond(200, {"user": user}, {
+                now = self.app.now(db)
+                db.execute("DELETE FROM login_attempts WHERE attempted<=?", (now - LOGIN_FAILURE_WINDOW,))
+                failures = db.execute("SELECT COUNT(*) FROM login_attempts WHERE email=?", (account,)).fetchone()[0]
+                if failures >= LOGIN_FAILURE_LIMIT and not self.app.faults.has("no_login_throttle"):
+                    raise HTTPProblem(429, "too_many_attempts", {"Retry-After": str(LOGIN_FAILURE_WINDOW)})
+                row = db.execute("SELECT * FROM users WHERE email=?", (account,)).fetchone()
+                accepted = row is not None and password_matches(password, row["password"])
+                if accepted:
+                    db.execute("DELETE FROM login_attempts WHERE email=?", (account,))
+                    token = secrets.token_urlsafe(32)
+                    db.execute("INSERT INTO sessions VALUES (?, ?, ?)",
+                               (self.app.session_key(token), row["id"], now + 86400))
+                else:
+                    # The failure must commit before the rejection leaves this transaction.
+                    db.execute("INSERT INTO login_attempts VALUES (?, ?)", (account, now))
+            if not accepted:
+                raise HTTPProblem(401, "invalid_credentials")
+            return self.respond(200, {"user": {"id": row["id"], "email": row["email"]}}, {
                 "Set-Cookie": f"shop_session={token}; HttpOnly; SameSite=Lax; Path=/"})
         if method == "POST" and path == "/api/logout":
             if not self.app.faults.has("logout_cookie_only"):
                 with self.app.connection(transaction=True) as db:
-                    db.execute("DELETE FROM sessions WHERE token_hash=?", (digest(self.session_token()),))
+                    db.execute("DELETE FROM sessions WHERE token_hash=?", (self.app.session_key(self.session_token()),))
             return self.respond(204, headers={
                 "Set-Cookie": "shop_session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0"})
         if method == "GET" and path == "/api/me":

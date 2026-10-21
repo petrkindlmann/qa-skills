@@ -299,6 +299,18 @@ test('checkout page meets Core Web Vitals', async ({ page }) => {
 });
 ```
 
+CLS weights every shift by the fraction of the viewport it moves, so a compact app on a wide
+desktop viewport can jump 240px for a late banner and still score about 0.07. Anchor the
+control the user is about to use as well as asserting the score:
+
+```typescript
+const input = page.getByPlaceholder('What needs to be done?');
+await expect(input).toBeVisible();
+const firstRendered = await input.boundingBox();
+await page.waitForTimeout(1500); // the settle window the CLS observer above also uses
+expect(await input.boundingBox(), 'entry field moved after first render').toEqual(firstRendered);
+```
+
 LCP and CLS observe cleanly in a page-load audit. To approximate INP, drive a real
 interaction (click/type) and observe `event`/`first-input` entries — but treat that as
 a scripted lab proxy, not the field INP users actually experience.

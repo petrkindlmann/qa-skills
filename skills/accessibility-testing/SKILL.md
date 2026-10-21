@@ -73,11 +73,16 @@ anything already answered.
 
 ## Automated Scanning with axe-core + Playwright
 
-Install `@axe-core/playwright` (the 4.11.x line; it tracks axe-core's major.minor). Wrap it in
-a reusable `checkAccessibility(page, testInfo, options)` helper that filters to the WCAG tags
+Install `@axe-core/playwright` pinned to an exact version from `npm view @axe-core/playwright
+version` (4.14.0 on 2026-10-21; its minor tracks axe-core's, so a new rule set arrives with
+every bump and must be reviewed, not auto-updated). Wrap it in a reusable
+`checkAccessibility(page, testInfo, options)` helper that filters to the WCAG tags
 `['wcag2a', 'wcag2aa', 'wcag22aa']`, attaches the full results JSON to the test for the audit
-trail, and asserts `violations.toHaveLength(0)`. Loop it over every key page and over
-interactive states (modal open, menu expanded), not just the default load.
+trail, fails if axe evaluated no rules at all (a blank or redirected page scans clean), and
+asserts `violations.toHaveLength(0)`. Loop it over every key page and over interactive states
+(modal open, menu expanded, signed-in account), not just the default load. For a third-party
+page you cannot fix, assert the exact set of known rule ids instead of skipping the scan, so a
+new violation or a fixed one changes the test.
 
 Suppress a rule only with a documented justification (a tracking issue or inline comment) and
 `exclude` third-party widgets you don't own rather than disabling the rule globally.

@@ -14,6 +14,7 @@
     "test:mailpit": "python3 tests/workflows/mailpit/run_verification.py"
   },
   "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
     "@playwright/test": "1.62.1",
     "msw": "2.15.0",
     "playwright": "1.62.1"

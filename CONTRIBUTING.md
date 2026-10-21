@@ -86,7 +86,9 @@ still need a judge. Never substitute a fake model process for evidence of model 
 
 The second campaign uses a checksum-pinned official TodoMVC, a local Shop with SQLite,
 and the real Mailpit binary. They use loopback sockets and synthetic accounts, without
-request interception or external payment/email delivery. On Linux AMD64:
+request interception or external payment/email delivery. On Linux AMD64 or macOS arm64
+(the two platforms with a pinned Mailpit asset; `python3` must be on PATH, or set
+`QA_PYTHON`):
 
 ```bash
 npm ci
@@ -100,7 +102,10 @@ npm run test:workflow-controls
 `test:workflows` is the ordinary healthy acceptance suite. `test:workflow-controls` also
 expects the designated assertions to fail for deliberate defects; it exits nonzero if
 a healthy control fails, a defect escapes, input is absent or infrastructure prevents
-an observation. Reports keep each failed assertion; an expected negative control is
+an observation. To add a scenario, add the fault switch to the fixture (`fixture-app/faults.py`
+or `upstream-todomvc/faults/mutations.mjs`), write the acceptance case against the public
+contract, and register the pair in `run-matrix.mjs` with the substring of the test title
+that must fail. A fault that no test catches is reported as `not_established`, not hidden. Reports keep each failed assertion; an expected negative control is
 not counted as a passing application test. Keep baseline authoring separate from
 review-driven repairs and record skill/source hashes. See
 `docs/REAL-WORKFLOWS-2026-10-21.md` for provenance and the exact coverage boundary.

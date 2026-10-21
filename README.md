@@ -221,8 +221,12 @@ workflows: pinned official TodoMVC, a local HTTP/SQLite Shop, and actual Mailpit
 It retains fresh-agent test authoring, independent review, reproduced coverage gaps,
 review-driven follow-up, and healthy/deliberately broken application runs. The report
 separates bounded evidence from claims about future projects or external providers.
+The [2026-10-21 addon report](docs/WORKFLOW-ADDONS-2026-10-21.md) extends the same
+fixtures to accessibility, database, security and performance checks, with eight more
+deliberate defects, and makes the whole suite run on macOS arm64 as well as Linux.
 
-Run the local gates with Python 3.12 and Node 24:
+Run the local gates with Python 3.12+ and Node 24+ (Linux AMD64 or macOS arm64 for the
+application workflows):
 
 ```bash
 python -m pip install -r requirements-dev.txt

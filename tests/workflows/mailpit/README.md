@@ -4,21 +4,24 @@ This directory contains a reproducible, localhost-only Mailpit service and execu
 
 ## Pin and prerequisites
 
-`release.json` pins **Mailpit v1.31.6**, Linux AMD64, published 2026-10-15 and verified against official GitHub release metadata on 2026-10-21.
+`release.json` pins **Mailpit v1.31.6**, published 2026-10-15 and verified against official GitHub release metadata on 2026-10-21, with one official asset per supported platform.
 
 | Item | Value |
 | --- | --- |
 | Official release | https://github.com/axllent/mailpit/releases/tag/v1.31.6 |
-| Official archive | https://github.com/axllent/mailpit/releases/download/v1.31.6/mailpit-linux-amd64.tar.gz |
-| Archive SHA-256 | `10fa12ccc610f653d4ed4df848c1817f9935dcf4e9a6a458a19ab0fa02093f91` |
-| Extracted executable SHA-256 | `89ad3d1987140f5f4432be497e0aa8fbf1e8a6bb30258b7d35d5ea4bedfcd4df` |
 | Pinned API specification | https://raw.githubusercontent.com/axllent/mailpit/v1.31.6/server/ui/api/v1/swagger.json |
 | API specification SHA-256 | `77cd5441b66fabfadaee3fafc84e63c927edc0eaed88590d82745c94b663f3ca` |
-| Tested runtime | Node `v24.19.0`, Python `3.12.14`, `@playwright/test` `1.62.1` |
-| Tested browser | Google Chrome `156.0.8078.47`, provided by the parent workflow at `/tmp/qa-skills-chrome/opt/google/chrome/chrome` |
+| Tested runtime (Linux) | Node `v24.19.0`, Python `3.12.14`, `@playwright/test` `1.62.1` |
+| Tested browser (Linux) | Google Chrome `156.0.8078.47`, provided by the parent workflow at `/tmp/qa-skills-chrome/opt/google/chrome/chrome` |
+| Tested runtime (macOS) | Node `v26.0.0`, Python `3.14.6`, Playwright-installed Chromium headless shell `151.0.7922.34`, 2026-10-21 |
 | Candidate commit | `e876dcfd6194066d1d697aea9ca6d7e08d2ce123` plus the workflow files recorded by SHA-256 in each evidence file |
 
-The binary and archive live only below `/tmp/qa-mailpit-runtime/mailpit-1.31.6/`. The install command downloads only the pinned official URL, verifies both hashes, extracts only the expected regular executable, and checks `mailpit version --no-release-check`. Subsequent runs reuse the verified download. Other platforms need a separately reviewed asset pin.
+| Platform key | Official archive | Archive SHA-256 | Extracted executable SHA-256 |
+| --- | --- | --- | --- |
+| `linux-amd64` | `mailpit-linux-amd64.tar.gz` (asset 642736510) | `10fa12ccc610f653d4ed4df848c1817f9935dcf4e9a6a458a19ab0fa02093f91` | `89ad3d1987140f5f4432be497e0aa8fbf1e8a6bb30258b7d35d5ea4bedfcd4df` |
+| `darwin-arm64` | `mailpit-darwin-arm64.tar.gz` (asset 642736475) | `1411270aa8fd7f4fb0cc358318754d7bb7c2c30bfd70572dd12d05a53e956373` | `2213c19efa6ee6f009ab7f4b2b686e037bedac7e56e0b05e20149653df843017` |
+
+Archive digests are the `digest` values GitHub publishes per release asset; executable digests were computed from the extracted file. The binary and archive live only below `/tmp/qa-mailpit-runtime/mailpit-1.31.6-<platform>/`. The install command selects the asset for `platform.system()` and `platform.machine()`, downloads it over HTTPS only (no redirect may leave HTTPS, and the transfer is capped at the pinned byte count), verifies both hashes, extracts only the expected regular executable, and checks `mailpit version --no-release-check`. Subsequent runs reuse the verified download. Any other platform fails before downloading and needs a separately reviewed asset pin. Process liveness uses `/proc` where it exists and `ps -o stat=,lstart=` elsewhere.
 
 The parent workflow supplied the matching installed Playwright Test package and local browser. This directory did not change root dependencies, CI, or any skill. The default browser cache was absent, so this environment needs `QA_BROWSER_EXECUTABLE` as shown below.
 

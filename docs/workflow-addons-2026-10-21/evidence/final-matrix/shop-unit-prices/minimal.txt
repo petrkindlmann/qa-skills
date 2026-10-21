@@ -1,0 +1,22 @@
+WORKFLOW RUN: 36 scheduled cases
+FAILED:  /  / review-followup/shop-review.spec.mjs / correctly signed noncanonical JSON is accepted and identical bytes replay once (attempt 1)
+Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32m1800[39m
+Received: [31m1200[39m
+FAILED:  /  / review-followup/shop-review.spec.mjs / each SKU has its contracted unit price and quantity ten is accepted (attempt 1)
+Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoMatchObject[2m([22m[32mexpected[39m[2m)[22m
+
+[32m- Expected  - 1[39m
+[31m+ Received  + 1[39m
+
+[33m@@ -1,7 +1,7 @@[39m
+[2m  Object {[22m
+[32m-   "amount": 1200,[39m
+[31m+   "amount": 1500,[39m
+[2m    "currency": "EUR",[22m
+[2m    "fulfillment_count": 0,[22m
+[2m    "id": Any<String>,[22m
+[2m    "status": "pending",[22m
+[2m    "user_id": "alice",[22m
+WORKFLOW RESULT: failed; attempts=36; {"passed":34,"failed":2}

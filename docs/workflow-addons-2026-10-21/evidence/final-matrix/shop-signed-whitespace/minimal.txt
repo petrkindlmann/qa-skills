@@ -1,0 +1,9 @@
+WORKFLOW RUN: 36 scheduled cases
+FAILED:  /  / review-followup/shop-review.spec.mjs / correctly signed noncanonical JSON is accepted and identical bytes replay once (attempt 1)
+Error: HTTP http://127.0.0.1:64489/api/webhooks/payment
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32m200[39m
+Received: [31m401[39m
+WORKFLOW RESULT: failed; attempts=36; {"passed":35,"failed":1}

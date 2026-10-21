@@ -194,6 +194,10 @@ The three metrics Google uses for user-perceived performance.
 | **INP** (Interaction to Next Paint) | Responsiveness — interaction → next paint (field-only) | ≤ 200ms | 200ms–500ms | > 500ms |
 | **CLS** (Cumulative Layout Shift) | Visual stability — unexpected layout movement | ≤ 0.1 | 0.1–0.25 | > 0.25 |
 
+CLS is area-weighted: a small app on a wide viewport can drop 240px for a late banner and
+score 0.07. In lab tests also anchor the key control's bounding box after first render
+(see `references/recipes.md`).
+
 **Common fixes:**
 - **LCP** — slow server (cache/CDN, SSR/SSG the LCP content), render-blocking CSS/JS (defer, inline critical CSS), slow image load (WebP/AVIF, `preload` the LCP image).
 - **INP** — long JS tasks (`scheduler.yield()`, `requestIdleCallback`), heavy handlers (debounce/throttle, Web Workers), layout thrashing (batch DOM reads/writes via `requestAnimationFrame`).

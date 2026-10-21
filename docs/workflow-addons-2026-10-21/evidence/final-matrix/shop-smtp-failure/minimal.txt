@@ -1,0 +1,9 @@
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / security.spec.mjs / password reset stays uniform and accepted when the mail service is down (attempt 1)
+Error: http://127.0.0.1:65181/api/password-reset/request {"error": "email_unavailable"}
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32m202[39m
+Received: [31m503[39m
+WORKFLOW RESULT: failed; attempts=11; {"passed":10,"failed":1}

@@ -1,0 +1,15 @@
+{
+  "case": "todo-layout-shift",
+  "first_pass_outcome": "not_established",
+  "note": "First matrix pass before the entry-field anchor was added. The designated test passed because the CLS score stayed under the 0.1 budget. Values copied from the cls-after-load attachment of that run; the run directory was later reused by the corrected pass.",
+  "viewport": { "width": 1280, "height": 800 },
+  "fault": "layout-shift: 240px banner inserted above .todoapp 400 ms after load",
+  "cls_after_load": {
+    "score": 0.07241615295410155,
+    "shifts": [
+      { "value": 0.002167739868164063, "startTime": 123.79999999981374 },
+      { "value": 0.07024841308593749, "startTime": 515 }
+    ]
+  },
+  "resolution": "performance.spec.mjs now also requires the entry field's bounding box to equal its first-render position; the corrected pass is recorded in final-matrix/matrix.json"
+}

@@ -1,0 +1,28 @@
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / accessibility.spec.mjs / Shop sign-in completes through the keyboard alone in document order (attempt 1)
+Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32m"Email"[39m
+Received: [31m""[39m
+FAILED:  /  / accessibility.spec.mjs / Shop sign-in, account and reset pages have no WCAG 2.2 AA violations (attempt 1)
+Error: 1 a11y violations on sign-in:
+[
+  {
+    "rule": "label",
+    "impact": "critical",
+    "description": "Ensure every form element has a label",
+    "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label?application=playwright",
+    "elements": [
+      "<input name=\"email\" type=\"email\" autocomplete=\"username\" required=\"\">",
+      "<input name=\"password\" type=\"password\" autocomplete=\"current-password\" required=\"\">",
+      "<input name=\"email\" type=\"email\" required=\"\">"
+    ]
+  }
+]
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoHaveLength[2m([22m[32mexpected[39m[2m)[22m
+
+Expected length: [32m0[39m
+Received length: [31m1[39m
+Received array:  [31m[{"description": "Ensure every form element has a label", "elements": ["<input name=\"email\" type=\"email\" autocomplete=\"username\" required=\"\">", "<input name=\"password\" type=\"password\" autocomplete=\"current-password\" required=\"\">", "<input name=\"email\" type=\"email\" required=\"\">"], "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/label?application=playwright", "impact": "critical", "rule": "label"}][39m
+WORKFLOW RESULT: failed; attempts=11; {"failed":2,"passed":9}

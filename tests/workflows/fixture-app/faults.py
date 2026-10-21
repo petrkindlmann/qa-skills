@@ -11,6 +11,9 @@ KNOWN = frozenset({
     "receipt_before_commit", "idempotency_payload_conflict", "reusable_reset_token",
     "logout_cookie_only",
     "compensating_prices", "canonicalized_signature",
+    # 2026-10-21 addon scenarios: accessibility, data at rest, hardening, resilience.
+    "unlabeled_controls", "plaintext_session_tokens", "missing_idempotency_index",
+    "no_login_throttle", "open_test_support", "smtp_failure_503",
 })
 
 

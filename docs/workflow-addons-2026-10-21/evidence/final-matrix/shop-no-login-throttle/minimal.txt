@@ -1,0 +1,9 @@
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / security.spec.mjs / repeated sign-in failures are throttled per account and recover after the window (attempt 1)
+Error: {"error": "invalid_credentials"}
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32m429[39m
+Received: [31m401[39m
+WORKFLOW RESULT: failed; attempts=11; {"passed":10,"failed":1}

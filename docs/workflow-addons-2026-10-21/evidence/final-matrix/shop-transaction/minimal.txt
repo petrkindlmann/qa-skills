@@ -1,0 +1,8 @@
+WORKFLOW RUN: 36 scheduled cases
+FAILED:  /  / baseline-shop/shop.spec.mjs / transient fulfillment rolls back receipt then same event succeeds after restart (attempt 1)
+Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoHaveLength[2m([22m[32mexpected[39m[2m)[22m
+
+Expected length: [32m0[39m
+Received length: [31m1[39m
+Received array:  [31m[{"created": 1792551602.9860191, "id": "evt-test", "order_id": "d33219db-20e2-4d91-80b6-0030a2858747"}][39m
+WORKFLOW RESULT: failed; attempts=36; {"passed":35,"failed":1}
