@@ -34,6 +34,28 @@ On first skill use per session:
   a green retry, or a mocked integration is not proof of broader correctness. State what was
   exercised and what still requires a real service, device, model, or semantic review.
 
+## QA during development
+
+When the user requests application checking or a change to application behavior:
+
+1. Read the project's QA context and existing tests; infer routine setup from the repository.
+2. If the full QA Skills checkout is available, run `node <qa-skills>/scripts/qa.mjs plan --project <project> --goal "<user goal>"`.
+3. Read the primary skill and the next relevant skill returned by the plan. Execute the
+   domain workflow rather than treating a route recommendation as completed QA.
+4. Run `node <qa-skills>/scripts/qa.mjs run --project <project> --goal "<user goal>"`.
+   Use existing config and the requested target. Inspect `report.html` and `result.json`.
+5. For an observed failure, reproduce it and preserve the failing assertion. Repair code
+   only within the user's authorized task. Rerun the affected check and its healthy control.
+   Limit an unattended repair loop to two attempts, then report the specific blocker.
+6. Keep failed, blocked, incomplete, and unrun work visible. Never delete an assertion,
+   expand an allowlist, or add retries just to obtain a passing report.
+
+`init --wire-agent` can add this workflow to another project's `AGENTS.md` when requested.
+It does not change global host settings. The host agent executes the selected skills;
+selection rules and a subprocess runner do not replace application-specific reasoning.
+If only individual skills are installed, execute their workflows directly and retain the
+same evidence. Missing optional context does not require a planning-only stop.
+
 ## Cross-Skill References
 
 - Skills reference each other with: "For [topic], see `skill-name`"
@@ -60,8 +82,8 @@ When two skills could plausibly match a request, use these disambiguation rules.
 ## Tools Integration
 
 - Skills reference tools listed in `tools/REGISTRY.md`
-- Tool-specific integration guides live in `tools/integrations/`
-- Examples: `playwright-automation` references the Playwright integration guide, `qa-metrics` references Allure/Grafana dashboards
+- Tool recipes live in each skill's `references/` directory.
+- The executable QA runner lives in `tools/qa/`; see `docs/QA-RUNNER.md`.
 
 ## Available Skills — 50 skills across 10 categories
 

@@ -14,7 +14,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.1"
+  version: "2.2"
   category: process
 ---
 
@@ -76,6 +76,16 @@ If you wait until something is on fire to decide whether to roll back, you'll wa
 Post-deployment verification isn't just about catching bugs. Track what went well, what was slow, what was stressful. Improve the process continuously.
 
 ---
+
+## Collect Current Local Evidence
+
+When the full QA Skills checkout is present, run
+`node <qa-skills>/scripts/qa.mjs run --project <project> --goal "Check release readiness"`
+against the candidate's configured checks. Read both `report.html` and `result.json`.
+Carry every failed, blocked, incomplete, skipped, and unrun area into the release
+checklist. The report is evidence for its named checks, not an automatic release approval.
+Use `risk-based-testing` to identify critical flows absent from the current suite, and
+execute those domain workflows before making a go/no-go recommendation.
 
 ## Go/No-Go Checklist
 

@@ -1,0 +1,15 @@
+{
+  "command": [
+    "npm",
+    "test",
+    "--",
+    "--test-reporter=tap"
+  ],
+  "shellCommand": "npm test -- --test-reporter=tap",
+  "cwd": "/tmp/qa-field-use/shipping",
+  "startedAt": "2026-10-21T04:27:26.807116+00:00",
+  "finishedAt": "2026-10-21T04:27:27.326809+00:00",
+  "durationSeconds": 0.52,
+  "exitCode": 0,
+  "capturedBytes": 10363
+}

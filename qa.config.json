@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "goal": "Exercise the documented recipes and the QA execution workflow",
+  "budgetMs": 180000,
+  "checks": [
+    {
+      "id": "documented-helpers",
+      "command": ["node", "--test", "--test-reporter=tap", "--test-isolation=none", "tests/examples/*.test.mjs"],
+      "reporter": "tap",
+      "timeoutMs": 60000
+    },
+    {
+      "id": "documented-browser",
+      "command": ["node", "--test", "--test-reporter=tap", "--test-isolation=none", "tests/browser/*.test.mjs"],
+      "reporter": "tap",
+      "timeoutMs": 90000
+    },
+    {
+      "id": "qa-runner",
+      "command": ["node", "--test", "--test-reporter=tap", "--test-isolation=none", "tests/qa/*.test.mjs"],
+      "reporter": "tap",
+      "timeoutMs": 60000
+    }
+  ]
+}

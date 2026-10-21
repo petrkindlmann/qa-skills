@@ -1,3 +1,4 @@
+import { oracle } from '../../support/oracle.mjs';
 import { test, expect, json, create, basket, state, payment, signature, deliver, resetLink, signIn } from './helpers.mjs';
 
 test('API auth, cookie contract and logout revoke access', async ({app,clients})=>{
@@ -21,19 +22,19 @@ test('catalog controls money and malformed orders never create state',async({app
   const bad=[{...basket,currency:'USD'},{...basket,items:[]},...[0,11,1.5,'2'].map(quantity=>({...basket,items:[{sku:'TEA-50',quantity}]})),{...basket,items:[{sku:'MISSING',quantity:1}]},{...basket,items:[{sku:'TEA-50',quantity:1},{sku:'TEA-50',quantity:2}]}];
   for(const [i,data] of bad.entries()) expect(await json(await clients.alice.post('/api/orders',{headers:{'Idempotency-Key':`invalid-${i}`},data}),400)).toEqual({error:'invalid_order'});
   expect((await state(app,request)).orders).toHaveLength(0);
-  const {order}=await create(clients.alice,'priced',{...basket,amount:1});expect(order.amount).toBe(4200);expect(order.status).toBe('pending');expect(order.fulfillment_count).toBe(0);
+  const {order}=await create(clients.alice,'priced',{...basket,amount:1});await oracle('shop-pricing', 'toBe', () => expect(order.amount).toBe(4200));expect(order.status).toBe('pending');expect(order.fulfillment_count).toBe(0);
 });
 
 test('order ownership is private and idempotency keys belong to users',async({clients})=>{
   const a=(await create(clients.alice,'same-key')).order;const b=(await create(clients.bob,'same-key')).order;expect(a.id).not.toBe(b.id);
   expect((await json(await clients.alice.get('/api/orders'),200)).orders.map(o=>o.id)).toEqual([a.id]);expect((await json(await clients.bob.get('/api/orders'),200)).orders.map(o=>o.id)).toEqual([b.id]);
-  expect(await json(await clients.bob.get(`/api/orders/${a.id}`),404)).toEqual({error:'not_found'});expect(await json(await clients.bob.get('/api/orders/unknown'),404)).toEqual({error:'not_found'});
+  expect(await oracle('shop-ownership', 'toBe', async () => json(await clients.bob.get(`/api/orders/${a.id}`),404))).toEqual({error:'not_found'});expect(await json(await clients.bob.get('/api/orders/unknown'),404)).toEqual({error:'not_found'});
 });
 
 test('concurrent equivalent checkout replays once and persists across restart',async({app,clients,request})=>{
   const results=await Promise.all(Array.from({length:6},(_,i)=>clients.alice.post('/api/orders',{headers:{'Idempotency-Key':'parallel'},data:{...basket,items:i%2?[...basket.items].reverse():basket.items}})));
   expect(results.map(r=>r.status()).sort()).toEqual([200,200,200,200,200,201]);const bodies=await Promise.all(results.map(r=>r.json()));const id=bodies[0].order.id;expect(new Set(bodies.map(x=>x.order.id)).size).toBe(1);expect(bodies.filter(b=>!b.replayed)).toHaveLength(1);
-  for(const data of [{...basket,currency:'USD'},{...basket,items:[{sku:'TEA-50',quantity:3}]}]) expect(await json(await clients.alice.post('/api/orders',{headers:{'Idempotency-Key':'parallel'},data}),409)).toEqual({error:'idempotency_conflict'});
+  for(const data of [{...basket,currency:'USD'},{...basket,items:[{sku:'TEA-50',quantity:3}]}]) expect(await oracle('shop-key-conflict', 'toBe', async () => json(await clients.alice.post('/api/orders',{headers:{'Idempotency-Key':'parallel'},data}),409))).toEqual({error:'idempotency_conflict'});
   expect((await state(app,request)).orders).toHaveLength(1);await app.restart({failFulfillmentOnce:false});
   const replay=await create(clients.alice,'parallel',basket,200);expect(replay.replayed).toBe(true);expect(replay.order.id).toBe(id);expect((await state(app,request)).orders).toHaveLength(1);
 });
@@ -54,7 +55,7 @@ test('concurrent payment redelivery, conflict and distinct event IDs fulfill onc
   const responses=await Promise.all(Array.from({length:6},()=>deliver(app,request,event)));const bodies=await Promise.all(responses.map(r=>json(r,200)));expect(bodies.filter(b=>!b.duplicate)).toHaveLength(1);
   expect(await json(await deliver(app,request,{...event,data:{...event.data,amount:1}}),409)).toEqual({error:'event_conflict'});
   expect((await json(await deliver(app,request,payment(order,'evt-other')),200)).duplicate).toBe(false);
-  let s=await state(app,request);expect(s.receipts).toHaveLength(2);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});
+  let s=await state(app,request);expect(s.receipts).toHaveLength(2);await oracle('shop-deduplication', 'toMatchObject', () => expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1}));
   await app.restart({failFulfillmentOnce:false});expect((await json(await deliver(app,request,event),200)).duplicate).toBe(true);
   s=await state(app,request);expect(s.receipts).toHaveLength(2);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});
 });
@@ -62,7 +63,7 @@ test('concurrent payment redelivery, conflict and distinct event IDs fulfill onc
 test('transient fulfillment rolls back receipt then same event succeeds after restart',async({app,clients,request})=>{
   const order=(await create(clients.alice)).order;const event=payment(order);
   await app.restart({failFulfillmentOnce:true});expect(await json(await deliver(app,request,event),503)).toEqual({error:'fulfillment_unavailable'});
-  expect((await json(await clients.alice.get(`/api/orders/${order.id}`),200)).order).toMatchObject({status:'pending',fulfillment_count:0});expect((await state(app,request)).receipts).toHaveLength(0);
+  expect((await json(await clients.alice.get(`/api/orders/${order.id}`),200)).order).toMatchObject({status:'pending',fulfillment_count:0});await oracle('shop-transaction', 'toHaveLength', async () => expect((await state(app,request)).receipts).toHaveLength(0));
   await app.restart({failFulfillmentOnce:false});expect((await json(await deliver(app,request,event),200)).duplicate).toBe(false);
   expect((await json(await deliver(app,request,event),200)).duplicate).toBe(true);const s=await state(app,request);expect(s.receipts).toHaveLength(1);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});
 });
@@ -85,7 +86,7 @@ test('actual reset email completes browser flow and revokes all sessions',async(
   await page.goto(link.href);await page.getByLabel('New password',{exact:true}).fill('New-password-987!');const result=page.waitForResponse(r=>r.url().endsWith('/api/password-reset/confirm'));await page.getByRole('button',{name:/reset password|save password|change password/i}).click();expect(await json(await result,200)).toEqual({reset:true});
   expect((await clients.alice.get('/api/me')).status()).toBe(401);expect((await page.request.get(`${app.baseURL}/api/me`)).status()).toBe(401);
   expect(await json(await clients.guest.post('/api/login',{data:app.users.alice}),401)).toEqual({error:'invalid_credentials'});
-  expect(await json(await clients.guest.post('/api/password-reset/confirm',{data:{token,password:'Another-password-123!'}}),400)).toEqual({error:'invalid_or_expired_token'});
+  expect(await oracle('shop-reset-reuse', 'toBe', async () => json(await clients.guest.post('/api/password-reset/confirm',{data:{token,password:'Another-password-123!'}}),400))).toEqual({error:'invalid_or_expired_token'});
   await signIn(page,app,'New-password-987!');await expect(page.getByRole('button',{name:'Sign out'})).toBeVisible();expect((await state(app,request)).smtp_errors).toBe(0);
 });
 

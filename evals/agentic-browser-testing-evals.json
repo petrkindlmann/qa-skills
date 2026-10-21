@@ -1,6 +1,6 @@
 {
   "skill": "agentic-browser-testing",
-  "version": "1.0",
+  "version": "1.1",
   "evals": [
     {
       "id": "abt-001",
@@ -19,7 +19,11 @@
         "await expect(page",
         "data-testid"
       ],
-      "tags": ["setup", "playwright-mcp", "goal-driven"]
+      "tags": [
+        "setup",
+        "playwright-mcp",
+        "goal-driven"
+      ]
     },
     {
       "id": "abt-002",
@@ -29,32 +33,41 @@
         "stable OR high-frequency OR critical path",
         "scripted OR durable OR pinned for (login|stable)",
         "agentic OR intent-driven OR exploratory for (dashboard|experimental)",
-        "cost OR latency OR slower OR 2-5x"
+        "measure OR cost OR latency"
       ],
       "anti_patterns": [
         "always use the agent",
         "agentic for everything",
         "agents replace OR replace all scripted"
       ],
-      "tags": ["decision", "intent-vs-scripted", "fit"]
+      "tags": [
+        "decision",
+        "intent-vs-scripted",
+        "fit"
+      ]
     },
     {
       "id": "abt-003",
       "prompt": "Our agent browser test passes one run and fails the next with no app change. Make the run deterministic enough to trust in CI.",
       "expected_patterns": [
-        "temperature.*0 OR temperature: 0 OR pinned model OR model pin",
+        "pinned model OR model pin OR record.*model",
         "seed OR seeded data OR fixed fixture OR reset database",
         "max steps OR step budget OR bounded steps OR maxSteps",
-        "explicit success OR success assertion OR pass.?fail verdict",
+        "independent.*oracle OR independent.*assertion",
         "snapshot OR accessibility tree"
       ],
       "anti_patterns": [
         "temperature: 0.7 OR temperature 1",
         "retry until it passes OR just retry",
         "browser_take_screenshot (for assertion)",
-        "waitForTimeout"
+        "waitForTimeout",
+        "temperature zero guarantees determinism"
       ],
-      "tags": ["determinism", "ci", "flake"]
+      "tags": [
+        "determinism",
+        "ci",
+        "flake"
+      ]
     },
     {
       "id": "abt-004",
@@ -64,7 +77,7 @@
         "browser_snapshot",
         "ref OR role OR accessible name OR aria",
         "browser_click OR browser_type",
-        "tokens OR token-efficient OR cheaper OR deterministic"
+        "measure OR payload OR inspectable"
       ],
       "anti_patterns": [
         "pixel coordinates OR x,y coordinate OR mouse_click_xy (as default)",
@@ -72,14 +85,18 @@
         "OCR",
         "browser_take_screenshot (as default)"
       ],
-      "tags": ["accessibility-tree", "interaction-model", "snapshot-first"]
+      "tags": [
+        "accessibility-tree",
+        "interaction-model",
+        "snapshot-first"
+      ]
     },
     {
       "id": "abt-005",
       "prompt": "These agent runs are burning tokens and take 90 seconds each. Cut the cost and latency without losing coverage.",
       "expected_patterns": [
         "step budget OR max steps OR maxSteps OR bounded steps",
-        "model tier OR cheaper model OR haiku OR sonnet OR tiering",
+        "model selection OR measured model OR model comparison",
         "cache OR caching OR prompt cache",
         "scope OR narrow goal OR single flow OR seeded entry point",
         "snapshot OR accessibility tree (over screenshots)"
@@ -90,7 +107,11 @@
         "screenshot every step OR full-page screenshot each",
         "no budget"
       ],
-      "tags": ["cost", "latency", "model-tiering"]
+      "tags": [
+        "cost",
+        "latency",
+        "measured-model-selection"
+      ]
     },
     {
       "id": "abt-006",
@@ -100,7 +121,8 @@
         "account name OR specific text OR expected text",
         "url OR /dashboard OR navigated",
         "fail.?fast OR negative OR not.* login page OR must not OR forbidden state",
-        "browser_snapshot OR assert against snapshot"
+        "browser_snapshot OR assert against snapshot",
+        "independent.*oracle OR independent.*assertion"
       ],
       "anti_patterns": [
         "no error OR didn't crash OR page loaded (as success)",
@@ -108,7 +130,11 @@
         "LLM decides on its own OR trust the agent",
         "screenshot looks correct"
       ],
-      "tags": ["success-assertion", "oracle", "false-positive"]
+      "tags": [
+        "success-assertion",
+        "oracle",
+        "false-positive"
+      ]
     },
     {
       "id": "abt-007",
@@ -126,25 +152,37 @@
         "data-testid only",
         "record clicks OR record my actions"
       ],
-      "tags": ["graduation", "playwright-test-agents", "promotion"]
+      "tags": [
+        "graduation",
+        "playwright-test-agents",
+        "promotion"
+      ]
     },
     {
       "id": "abt-008",
       "prompt": "Wire our agentic browser test into GitHub Actions so a failed agent goal blocks the merge. The result needs to be machine-readable, not a paragraph the LLM wrote.",
       "expected_patterns": [
-        "exit code OR exit 1 OR non-zero exit",
-        "pass.?fail OR boolean OR true/false verdict OR structured (verdict|output)",
-        "github actions OR \\.github/workflows OR ci",
-        "step budget OR max steps OR timeout (cap)",
-        "seeded OR ephemeral OR reset (state|data) OR fixture"
+        "exit code OR nonzero OR exit 1",
+        "independent.*oracle",
+        "runId",
+        "target",
+        "build",
+        "blocked",
+        "timeout",
+        "observed"
       ],
       "anti_patterns": [
-        "manual review OR human reads the output",
         "always exit 0",
-        "parse the prose OR grep the explanation",
-        "allow_failure: true OR continue-on-error: true"
+        "model self-grade as release evidence",
+        "accepting string true as a boolean",
+        "an absent host adapter silently passes",
+        "parse the prose OR grep the explanation"
       ],
-      "tags": ["ci", "gating", "machine-readable"]
+      "tags": [
+        "ci",
+        "gating",
+        "machine-readable"
+      ]
     },
     {
       "id": "abt-009",
@@ -162,7 +200,11 @@
         "browser_snapshot will work fine (on the canvas)",
         "disable accessibility tree globally"
       ],
-      "tags": ["canvas", "vision-fallback", "accessibility-gap"]
+      "tags": [
+        "canvas",
+        "vision-fallback",
+        "accessibility-gap"
+      ]
     },
     {
       "id": "abt-010",
@@ -180,7 +222,11 @@
         "no determinism concern",
         "remove the assertions"
       ],
-      "tags": ["migration", "tradeoffs", "intent-vs-scripted"]
+      "tags": [
+        "migration",
+        "tradeoffs",
+        "intent-vs-scripted"
+      ]
     }
   ]
 }

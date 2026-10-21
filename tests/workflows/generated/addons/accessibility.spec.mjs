@@ -1,3 +1,4 @@
+import { oracle } from '../../support/oracle.mjs';
 import { test, expect, checkAccessibility, scanAccessibility } from './helpers.mjs';
 import { todoUI } from '../baseline-todo/todo-ui.mjs';
 
@@ -5,19 +6,37 @@ import { todoUI } from '../baseline-todo/todo-ui.mjs';
 test('Shop sign-in, account and reset pages have no WCAG 2.2 AA violations', async ({ app, page }, testInfo) => {
   await page.goto(app.baseURL);
   await expect(page.locator('html[data-ready="true"]')).toBeAttached();
-  await checkAccessibility(page, testInfo, { label: 'sign-in' });
+  await oracle('shop-unlabeled-controls', 'toHaveLength', () => checkAccessibility(page, testInfo, {
+    label: 'sign-in', expectedURL: new URL('/', app.baseURL).href,
+    ready: async () => {
+      await expect(page.locator('html[data-ready="true"]')).toBeAttached();
+      await expect(page.getByRole('button', { name: 'Sign in', exact: true })).toBeVisible();
+    },
+  }));
 
   await page.getByLabel('Email', { exact: true }).fill(app.users.alice.email);
   await page.getByLabel('Password', { exact: true }).fill(app.users.alice.password);
   await page.getByRole('button', { name: 'Sign in', exact: true }).click();
   await expect(page.getByText(`Signed in as ${app.users.alice.email}`)).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Your orders' })).toBeVisible();
-  await checkAccessibility(page, testInfo, { label: 'account' });
+  await checkAccessibility(page, testInfo, {
+    label: 'account', expectedURL: new URL('/', app.baseURL).href,
+    ready: async () => {
+      await expect(page.getByText(`Signed in as ${app.users.alice.email}`)).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Your orders' })).toBeVisible();
+    },
+  });
 
   await page.goto(`${app.baseURL}/reset-password?token=not-a-real-token`);
   await expect(page.locator('html[data-ready="true"]')).toBeAttached();
   await expect(page.getByLabel('New password', { exact: true })).toBeVisible();
-  await checkAccessibility(page, testInfo, { label: 'reset' });
+  await checkAccessibility(page, testInfo, {
+    label: 'reset', expectedURL: new URL('/reset-password?token=not-a-real-token', app.baseURL).href,
+    ready: async () => {
+      await expect(page.locator('html[data-ready="true"]')).toBeAttached();
+      await expect(page.getByLabel('New password', { exact: true })).toBeVisible();
+    },
+  });
 });
 
 test('Shop sign-in completes through the keyboard alone in document order', async ({ app, page }) => {
@@ -59,12 +78,24 @@ test('TodoMVC empty state is clean and populated rows expose only the documented
   await page.goto(todo.baseURL);
   const ui = todoUI(page);
   await expect(ui.input).toBeVisible();
-  await checkAccessibility(page, testInfo, { label: 'todo-empty' });
+  await checkAccessibility(page, testInfo, {
+    label: 'todo-empty', expectedURL: new URL('/', todo.baseURL).href,
+    ready: async () => {
+      await expect(ui.input).toBeVisible();
+      await expect(ui.rows).toHaveCount(0);
+    },
+  });
 
   await ui.add('Review the scan', 'Fix the row controls');
   await expect(ui.titles).toHaveText(['Review the scan', 'Fix the row controls']);
   await ui.rows.nth(1).getByRole('checkbox').check();
-  const violations = await scanAccessibility(page, testInfo, { label: 'todo-populated' });
+  const violations = await scanAccessibility(page, testInfo, {
+    label: 'todo-populated', expectedURL: new URL('/', todo.baseURL).href,
+    ready: async () => {
+      await expect(ui.titles).toHaveText(['Review the scan', 'Fix the row controls']);
+      await expect(ui.rows.nth(1).getByRole('checkbox')).toBeChecked();
+    },
+  });
   expect([...new Set(violations.map(v => v.rule))].sort(), JSON.stringify(violations, null, 2)).toEqual(upstreamRowGaps);
   for (const violation of violations) {
     // Each documented gap is a row control, never the entry field or the filters.

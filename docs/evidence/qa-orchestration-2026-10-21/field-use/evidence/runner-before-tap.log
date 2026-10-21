@@ -1,0 +1,5 @@
+RUN project-tests
+FAILED project-tests: The declared command failed without a complete test verdict. Exit code 1.
+RESULT FAILED: 0/1 checks passed, 0 tests observed
+Report: /tmp/qa-field-use/shipping/evidence/qa-run-before-tap/2026-10-21T04-25-45-695Z-7a3f8f3a/report.html
+Result: /tmp/qa-field-use/shipping/evidence/qa-run-before-tap/2026-10-21T04-25-45-695Z-7a3f8f3a/result.json

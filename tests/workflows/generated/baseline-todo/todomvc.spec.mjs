@@ -1,3 +1,4 @@
+import { oracle } from '../../support/oracle.mjs';
 import { test, expect } from '../../support/fixtures.mjs';
 import { todoUI } from './todo-ui.mjs';
 
@@ -42,7 +43,7 @@ test('duplicate titles remain independent through complete edit and delete', asy
   await expect(ui.titles).toHaveText(['Buy milk', 'Keep receipt']);
   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();
   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();
-  await expect(ui.count).toHaveText('2 items left');
+  await oracle('todo-duplicates', 'toHaveText', () => expect(ui.count).toHaveText('2 items left'));
 });
 
 // Scenario: SC-003; Requirements: REQ-3, REQ-4.
@@ -114,7 +115,7 @@ test('filters visibly select the correct subset without losing or duplicating re
     ['All', ['Read chapter', 'Return book', 'Reserve sequel']],
   ]) {
     await ui.filter(name).click();
-    await expect(ui.titles).toHaveText(titles);
+    await oracle('todo-filter', 'toHaveText', () => expect(ui.titles).toHaveText(titles));
     // Observed legacy UI uses selected class, not aria-current, for its visible border.
     await expect(ui.filter(name)).toHaveClass(/selected/);
     for (const other of ['All', 'Active', 'Completed'].filter(x => x !== name))
@@ -140,7 +141,7 @@ test('Enter and blur save edits while Escape preserves the saved title on reload
   await ui.edit(1, 'Pack overnight bag', 'blur');
   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);
   await ui.edit(1, 'Discard this draft', 'Escape');
-  await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);
+  await oracle('todo-cancel', 'toHaveText', () => expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']));
   await ui.edit(0, '', 'Escape');
   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);
   await page.reload();
@@ -165,7 +166,7 @@ test('whitespace Enter and empty blur edits remove only their targeted records',
   await expect(ui.rows.first().getByRole('checkbox')).toBeChecked();
   await expect(ui.count).toHaveText('0 items left');
   await page.reload();
-  await expect(ui.titles).toHaveText(['Keep stamped letter']);
+  await oracle('todo-removal-persistence', 'toHaveText', () => expect(ui.titles).toHaveText(['Keep stamped letter']));
 });
 
 // Scenario: SC-008; Requirements: REQ-6, REQ-8.
@@ -214,7 +215,7 @@ test('saved edits completion order and removals persist through reload and furth
   await ui.rows.nth(1).getByRole('checkbox').check();
   await expect(ui.titles).toHaveText(['Water balcony plants', 'Walk dog', 'Call family']);
   await page.reload();
-  await expect(ui.titles).toHaveText(['Water balcony plants', 'Walk dog', 'Call family']);
+  await oracle('todo-persistence', 'toHaveText', () => expect(ui.titles).toHaveText(['Water balcony plants', 'Walk dog', 'Call family']));
   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();
   await expect(ui.rows.nth(1).getByRole('checkbox')).toBeChecked();
   await expect(ui.rows.nth(2).getByRole('checkbox')).not.toBeChecked();

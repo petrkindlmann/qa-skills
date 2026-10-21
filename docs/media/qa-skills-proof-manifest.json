@@ -1,0 +1,19 @@
+{
+  "durationSeconds": 8,
+  "fps": 24,
+  "format": "motion graphic",
+  "claim": "22 controlled local faults detected, plus a passing healthy control",
+  "basisCommit": "462126bcc4d3bfe94a7c064b848c690c1366f343",
+  "basis": [
+    "docs/REAL-WORKFLOWS-2026-10-21.md",
+    "tests/workflows/run-matrix.mjs"
+  ],
+  "notDepicted": "No automated source repair or provider payment is depicted.",
+  "files": [
+    "qa-skills-proof-square.mp4",
+    "qa-skills-proof-square.png",
+    "qa-skills-proof-wide.mp4",
+    "qa-skills-proof-wide.png",
+    "qa-skills-proof.gif"
+  ]
+}

@@ -1,3 +1,4 @@
+import { oracle } from '../../support/oracle.mjs';
 import { test, expect } from '../../support/fixtures.mjs';
 import { json, login, createOrder, signedRawEvent, state } from './helpers.mjs';
 
@@ -21,7 +22,7 @@ test('logout revokes a previously valid copied session on the server', async ({ 
 
     expect((await original.post('/api/logout')).status()).toBe(204);
     expect(await json(await original.get('/api/me'), 401)).toEqual({ error: 'unauthenticated' });
-    expect(await json(await replay.get('/api/me', { headers }), 401)).toEqual({ error: 'unauthenticated' });
+    expect(await oracle('shop-logout', 'toBe', async () => json(await replay.get('/api/me', { headers }), 401))).toEqual({ error: 'unauthenticated' });
     expect(await json(await replay.get('/api/orders', { headers }), 401)).toEqual({ error: 'unauthenticated' });
   } finally {
     await Promise.all(contexts.map(context => context.dispose()));
@@ -41,10 +42,10 @@ test('each SKU has its contracted unit price and quantity ten is accepted', asyn
     await test.step(`${example.sku} x ${example.quantity} costs ${example.amount}`, async () => {
       const { order, replayed } = await createOrder(app, request, example.key, example.sku, example.quantity);
       expect(replayed).toBe(false);
-      expect(order).toMatchObject({
+      await oracle('shop-unit-prices', 'toMatchObject', () => expect(order).toMatchObject({
         id: expect.any(String), user_id: app.users.alice.id, currency: 'EUR',
         amount: example.amount, status: 'pending', fulfillment_count: 0,
-      });
+      }));
       expect(order.items.map(({ sku, quantity }) => ({ sku, quantity }))).toEqual([
         { sku: example.sku, quantity: example.quantity },
       ]);
@@ -80,7 +81,7 @@ test('correctly signed noncanonical JSON is accepted and identical bytes replay 
   expect(untouched.orders).toHaveLength(1);
   expect(untouched.orders[0]).toMatchObject({ id: order.id, status: 'pending', fulfillment_count: 0 });
 
-  expect(await json(await signedRawEvent(app, request, raw), 200))
+  expect(await oracle('shop-signed-whitespace', 'toBe', async () => json(await signedRawEvent(app, request, raw), 200)))
     .toEqual({ received: true, duplicate: false, order_id: order.id });
   expect(await json(await signedRawEvent(app, request, raw), 200))
     .toEqual({ received: true, duplicate: true, order_id: order.id });

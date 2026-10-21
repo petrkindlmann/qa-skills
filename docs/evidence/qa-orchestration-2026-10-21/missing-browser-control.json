@@ -1,0 +1,461 @@
+{
+  "startedAt": "2026-10-21T04:25:08.688Z",
+  "phase": "final",
+  "node": "v24.19.0",
+  "playwright": "1.62.1",
+  "browserExecutable": "/no-such-browser",
+  "method": "Fresh-agent acceptance assertions with explicit oracle wrappers; full suite per variant; retries disabled. Detection requires a designated matcher failure, a structured oracle record, and a matching per-run token. Broader causal interpretation still requires review.",
+  "sourceHashes": {
+    "tests/workflows/generated/baseline-shop/final-response.md": "16d07616c3644fd6245c9aa2416a88148fa2c2413c54304feff8266529cb0984",
+    "tests/workflows/generated/baseline-shop/helpers.mjs": "80964eab222c8777a92b703faa8715cf2fffe8f6e634994594459e6ce6cf477a",
+    "tests/workflows/generated/baseline-shop/probe.mjs": "1b15812046ca4debc16231201d89cd4117e42f8d6c7784a0bbb9937375f6bd0c",
+    "tests/workflows/generated/baseline-shop/shop.spec.mjs": "36bca2fa255500003c3cc4fa4e80ef6cc2ad16b13597f29bd783ae9c9dce578e",
+    "tests/workflows/generated/baseline-todo/design.md": "7e5fb62ccaec5f1ef372140184fc0f66088112c37defdf67b95795750a2e6f0e",
+    "tests/workflows/generated/baseline-todo/execution-summary.json": "d8c61e56a9108313f3912279e36d4409dc30b9ef4d0bd327a98cfe37920fd166",
+    "tests/workflows/generated/baseline-todo/final-response.md": "bbdf100d8a2dafcd821cd7d6dc150563304797c2913503bc0b294607a426145f",
+    "tests/workflows/generated/baseline-todo/initial-failure-evidence/error-context.md": "a7cfd96e0e9b74bf152e151ac39c5b8b4eda6984fc85db7de949314becd566d7",
+    "tests/workflows/generated/baseline-todo/review.md": "7b16997ab8bb66b0fa6f0ee7cf9a4690c72f5106811b863c8bad7d4ed4e83eb9",
+    "tests/workflows/generated/baseline-todo/todo-ui.mjs": "bfcd542ab26419f6eb064e95f7934d4b5a67e163346596825e98cf7b6b547d6c",
+    "tests/workflows/generated/baseline-todo/todomvc.spec.mjs": "075cebb0719c7cc24d74b6d7a03572f6e36706573313b0f0f57ec29866b59f95",
+    "tests/workflows/fixture-app/faults.py": "b42ca2898c10e3e2f1a0e5ec3ae5c811b2f861dff444612fc27ec66e39ec3bf1",
+    "tests/workflows/fixture-app/index.html": "b4a49e52321ca59c9fb28847aafdd2687832c50f833ef961bbba6d35cbe3463a",
+    "tests/workflows/fixture-app/server.py": "818bd7a717005450d03bd9e404f36bd4fe4f38886bb29e6fad79d47a1650b340",
+    "tests/workflows/support/fixtures.mjs": "a07e6cfb9908ac0b35a060f88464f55062c37d86a4d93d7e7661d945a79fe489",
+    "tests/workflows/support/oracle.mjs": "b64d64316bdaa619af0bae14c3764c0b8e9908fbec4b9cfad7e27b410b1da2c2",
+    "tests/workflows/support/outcome.mjs": "be9ca26cd90980127f29d1bc46d72d97fcb01551e68430d8e238a8bcff706a6c",
+    "tests/workflows/support/process.mjs": "a2d4df47999ab2e14a8960ee7161748896dfd849edaa53f7fb87338cd928a056",
+    "tests/workflows/support/runtime.mjs": "30deab42ac0a9e2d319e2fddf4267e6048b1b8c077308d8ce5bfcf532b45f0af",
+    "tests/workflows/upstream-todomvc/README.md": "8c9765c9928f243978ce28e0c8523645565b20a777dca173590dd67b330e6d99",
+    "tests/workflows/upstream-todomvc/faults/delete-persistence-lost.mjs": "ba59d1a4180f7dcd5bf6288b6db030c1275f8e95de9279515caab952eb11838e",
+    "tests/workflows/upstream-todomvc/faults/mutations.mjs": "6aa98a3321289243be0040ffdb1705b2c49a04d269b56ae95921430d7036ef83",
+    "tests/workflows/upstream-todomvc/faults/probe-delete-persistence.mjs": "a9e7a85b39de44621b68b86b9062d99770106515fc4b5575bf46000d9da19847",
+    "tests/workflows/upstream-todomvc/faults/probe.mjs": "c56486e6a2271f31b3fbe4dfce94e89e54636bbec6804e0f75f07b600c2bc739",
+    "tests/workflows/upstream-todomvc/observations/current-es5/examples/javascript-es5/dist/index.html": "fa135782c7bd9bca4eac3a665759c0698d3829b2f97b99fdc26761ee7084ecd5",
+    "tests/workflows/upstream-todomvc/observations/current-es5/license.md": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d",
+    "tests/workflows/upstream-todomvc/observations/current-es5-provenance.json": "0cefa7eaf4964d98fb833f47f7737d500aeb7f6fb8df3d61f782baa69a1ab923",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-preservation.json": "c8a066965ac5dadfe23b797587bdb4fd442596a625b84987158dec754453455a",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-results.json": "a08b63be16a231ee3b06719bf3bff97725d1847e317283792c74a04aa7491ce8",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-summary.md": "12b49af28de21c8f58396fb7c5159711c8cb27e70b1eecc77aaf1076e72dc154",
+    "tests/workflows/upstream-todomvc/observations/probe-results.json": "c232f16bbe22f06e5ad07d5193373e0ade085d6bbe73b11bdc4c0b9069c937e0",
+    "tests/workflows/upstream-todomvc/provenance.json": "3f8b0c9ee6462f43967f4563b989bb9bc689302b26496ffcdfda1777dd1a9d20",
+    "tests/workflows/upstream-todomvc/server.mjs": "347634c22f0e581f1dad069df7bab76ec57f8bbc9f776d3146f6a6e8af6a4778",
+    "tests/workflows/upstream-todomvc/upstream/examples/vanillajs/index.html": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e",
+    "tests/workflows/upstream-todomvc/upstream/examples/vanillajs/package.json": "861dd4872b19132c99161161ff032f3e52368dfec39ad18680ce4c620543efdd",
+    "tests/workflows/upstream-todomvc/upstream/license.md": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-app-css/2.4.1/package.json": "95b2dc61769730bf06ad0d0abc1a611ab417b13c14ee979920b1d5c61f491a0f",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-app-css/2.4.1/readme.md": "bcfd25e122c41039722b4e4bdf4b122ae240ad2f95bd1823d5358bdee316cbe0",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-common/1.0.5/package.json": "b58875806d8f06f234edf0b5d1bff8b20a4e8e84582d19057a62320267073e93",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-common/1.0.5/readme.md": "5dafddbb1d858af4a2528d7c620d5b7848e9987623012757c3d022e9802796bc",
+    "tests/workflows/generated/review-followup/final-response.md": "966d9308d6089bd223a8a757cb7c5664024fc373a69a3954a946d7547d9ae545",
+    "tests/workflows/generated/review-followup/helpers.mjs": "7c58c0c0e714264e9f6176680d08f33049d2818907a23cb0a7d9db9455c26598",
+    "tests/workflows/generated/review-followup/shop-review.spec.mjs": "de1eca9b9a4e640910c55d9929cef20063913946a4da177bdfd9ac11db50d18a",
+    "tests/workflows/generated/review-followup/todo-review.spec.mjs": "e18128b76b8bcf4623fe4607c0b90363031394336e4483f80621d1cfd4283bdb",
+    "tests/workflows/generated/addons/README.md": "304dd768e8e7659505a55de8a02ca0d125e83a70368fab2d8cabca466a2074eb",
+    "tests/workflows/generated/addons/accessibility.spec.mjs": "484ec6bd61e920e087a7d37e2e8f12493341ca9948e1fb268aa2e2a362d948ed",
+    "tests/workflows/generated/addons/database.spec.mjs": "4aeac81b61fc2d1f08794b6ce294dfdbc6528b66136e22e283ea8a3bcf87ea14",
+    "tests/workflows/generated/addons/helpers.mjs": "ca9a125ee15417971d94218238ef137b3b29b255a35c629cd33b9663910c72b9",
+    "tests/workflows/generated/addons/performance.spec.mjs": "496831089e736285f32d6a8dbfb760143583231899bcb5cd0d6e0e7f784896e0",
+    "tests/workflows/generated/addons/security.spec.mjs": "2fec7e87c63b499e7a1fe93504ca4302e0bdfbb02b92c3c6144dae1d164eef75"
+  },
+  "runs": [
+    {
+      "id": "combined-healthy",
+      "suite": ".",
+      "healthy": true,
+      "count": 36,
+      "runId": "ad169744-dd7c-4aa6-be97-78dcd00b433a",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=144000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 17226,
+      "stats": {
+        "startTime": "2026-10-21T04:25:09.133Z",
+        "duration": 16697.147999999997,
+        "expected": 16,
+        "skipped": 0,
+        "unexpected": 20,
+        "flaky": 0
+      },
+      "executed": 36,
+      "failed": [
+        {
+          "title": "Shop sign-in, account and reset pages have no WCAG 2.2 AA violations",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 200,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Shop sign-in completes through the keyboard alone in document order",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 200,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "TodoMVC empty state is clean and populated rows expose only the documented upstream gaps",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "TodoMVC paints its largest content within the lab budget",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "TodoMVC layout stays stable after load and while listing items",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "browser checkout restores order on reload and reflects server payment",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "actual reset email completes browser flow and revokes all sessions",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "reset requests resist account enumeration and tokens expire on the server clock",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 2,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "creates trimmed nonblank titles in order and clears the entry field",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 2,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "duplicate titles remain independent through complete edit and delete",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 2,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "individual completion and restoration keep the active count global under filters",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 2,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "bulk toggle affects hidden records and works from an empty filtered view",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 2,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "filters visibly select the correct subset without losing or duplicating records",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 6,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "Enter and blur save edits while Escape preserves the saved title on reload",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 7,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "whitespace Enter and empty blur edits remove only their targeted records",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 2,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "delete and clear completed preserve active rows and empty controls recover",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "saved edits completion order and removals persist through reload and further keyboard input",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 2,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "single delete persists immediately with survivor order and completion intact",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "clear completed persists immediately and preserves active titles and order",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "clearing the final completed item persists the empty state immediately",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 2,
+              "errors": [
+                "Error: browserType.launch: Failed to launch chromium because executable doesn't exist at /no-such-browser"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": true,
+      "timedOut": false,
+      "outcome": "healthy_failure",
+      "outputTruncated": false,
+      "oracleVerified": false
+    },
+    {
+      "id": "shop-logout",
+      "suite": ".",
+      "count": 36,
+      "env": {
+        "QA_SHOP_FAULT": "logout_cookie_only"
+      },
+      "title": "copied",
+      "runId": "ab9b365f-ea17-4eb9-94f8-1a0634f0a01e",
+      "oracle": {
+        "id": "shop-logout",
+        "matcher": "toBe"
+      },
+      "expectedCount": 36,
+      "executed": 0,
+      "failed": [],
+      "outcome": "not_run",
+      "code": null,
+      "reason": "Healthy control combined-healthy failed; fault interpretation is blocked",
+      "oracleVerified": false
+    },
+    {
+      "id": "shop-plaintext-sessions",
+      "env": {
+        "QA_SHOP_FAULT": "plaintext_session_tokens"
+      },
+      "title": "hashed at rest",
+      "suite": "addons",
+      "count": 11,
+      "runId": "cf14716f-6f44-4a7f-92df-aa98442e6c6e",
+      "oracle": {
+        "id": "shop-plaintext-sessions",
+        "matcher": "toMatch"
+      },
+      "expectedCount": 11,
+      "executed": 0,
+      "failed": [],
+      "outcome": "not_run",
+      "code": null,
+      "reason": "Healthy control combined-healthy failed; fault interpretation is blocked",
+      "oracleVerified": false
+    }
+  ],
+  "finishedAt": "2026-10-21T04:25:25.932Z"
+}

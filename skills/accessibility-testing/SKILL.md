@@ -12,7 +12,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: specialized
 ---
 
@@ -77,9 +77,12 @@ Install `@axe-core/playwright` pinned to an exact version from `npm view @axe-co
 version` (4.14.0 on 2026-10-21; its minor tracks axe-core's, so a new rule set arrives with
 every bump and must be reviewed, not auto-updated). Wrap it in a reusable
 `checkAccessibility(page, testInfo, options)` helper that filters to the WCAG tags
-`['wcag2a', 'wcag2aa', 'wcag22aa']`, attaches the full results JSON to the test for the audit
-trail, fails if axe evaluated no rules at all (a blank or redirected page scans clean), and
-asserts `violations.toHaveLength(0)`. Loop it over every key page and over interactive states
+`['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']`. Require an expected URL and an
+application-owned readiness assertion before scanning: blank, error, and redirected pages
+can pass axe. Attach the full results JSON, reject a scan that evaluated no rules, and
+assert `violations.toHaveLength(0)`. The exported `scanAccessibility` helper returns the
+violation summary for known-gap baselines; `checkAccessibility` requires zero violations.
+Loop it over every key page and over interactive states
 (modal open, menu expanded, signed-in account), not just the default load. For a third-party
 page you cannot fix, assert the exact set of known rule ids instead of skipping the scan, so a
 new violation or a fixed one changes the test.

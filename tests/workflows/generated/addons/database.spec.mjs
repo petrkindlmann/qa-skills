@@ -1,3 +1,4 @@
+import { oracle } from '../../support/oracle.mjs';
 import { DatabaseSync } from 'node:sqlite';
 import { test, expect, json, basket, sessionCookie, state, payment, deliver } from './helpers.mjs';
 
@@ -15,7 +16,7 @@ test('session credentials are stored hashed at rest and removed on logout', asyn
     const rows = db.prepare('SELECT token_hash, user_id FROM sessions ORDER BY user_id').all();
     expect(rows.map(row => row.user_id)).toEqual(['alice', 'bob']);
     for (const row of rows) {
-      expect(row.token_hash).toMatch(/^[0-9a-f]{64}$/);
+      await oracle('shop-plaintext-sessions', 'toMatch', () => expect(row.token_hash).toMatch(/^[0-9a-f]{64}$/));
       expect(row.token_hash).not.toBe(cookie);
       expect(row.token_hash).not.toContain(cookie);
     }
@@ -42,7 +43,7 @@ test('schema enforces idempotency uniqueness, foreign keys and durable journalin
     const uniqueColumns = db.prepare("PRAGMA index_list('orders')").all()
       .filter(index => index.unique === 1)
       .map(index => db.prepare(`PRAGMA index_info('${index.name}')`).all().map(column => column.name).sort());
-    expect(uniqueColumns, 'a unique index must cover (user_id, idem_key)').toContainEqual(['idem_key', 'user_id']);
+    await oracle('shop-missing-idempotency-index', 'toContainEqual', () => expect(uniqueColumns, 'a unique index must cover (user_id, idem_key)').toContainEqual(['idem_key', 'user_id']));
     const references = db.prepare("PRAGMA foreign_key_list('orders')").all().map(fk => `${fk.from}->${fk.table}.${fk.to}`);
     expect(references).toEqual(['user_id->users.id']);
 

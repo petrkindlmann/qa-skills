@@ -1,6 +1,6 @@
 {
   "skill": "qa-do",
-  "version": "2.1",
+  "version": "2.2",
   "evals": [
     {
       "id": "qado-001",
@@ -280,6 +280,57 @@
         "routing",
         "analytics",
         "precise-match"
+      ]
+    },
+    {
+      "id": "qado-017",
+      "prompt": "Validate this application using the repository we already have. Please carry it through and leave a readable report.",
+      "expected_patterns": [
+        "scripts/qa.mjs",
+        "run --project",
+        "report.html",
+        "result.json"
+      ],
+      "anti_patterns": [
+        "stopping after naming a skill without executing authorized checks"
+      ],
+      "tags": [
+        "routing",
+        "execution",
+        "report"
+      ]
+    },
+    {
+      "id": "qado-018",
+      "prompt": "The project has no tests and the browser dependency is missing. Does the successful launcher exit mean the application passed?",
+      "expected_patterns": [
+        "blocked OR incomplete",
+        "authored OR executed",
+        "evidence"
+      ],
+      "anti_patterns": [
+        "treating no observed tests as a passing application"
+      ],
+      "tags": [
+        "evidence",
+        "missing-input"
+      ]
+    },
+    {
+      "id": "qado-019",
+      "prompt": "After changing behavior, run the relevant checks and repair failures. The fix still fails after two attempts.",
+      "expected_patterns": [
+        "two attempts",
+        "blocker",
+        "assertion"
+      ],
+      "anti_patterns": [
+        "dropping failing assertions to obtain a passing report",
+        "endless repair loop"
+      ],
+      "tags": [
+        "autonomy",
+        "bounded-repair"
       ]
     }
   ]

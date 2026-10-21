@@ -20,6 +20,7 @@ tests/workflows/artifacts/
 tests/workflows/mailpit/artifacts/
 test-results/
 playwright-report/
+qa-results/
 
 # Python
 __pycache__/

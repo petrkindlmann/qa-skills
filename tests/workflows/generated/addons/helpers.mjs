@@ -19,9 +19,15 @@ export async function sessionCookie(context) {
   return cookies[0].value;
 }
 
-// Port of the accessibility-testing helper: WCAG tags only, full results attached, summary returned.
-export async function scanAccessibility(page, testInfo, { label, tags, exclude = [], disableRules = [] } = {}) {
-  let builder = new AxeBuilder({ page }).withTags(tags ?? ['wcag2a', 'wcag2aa', 'wcag22aa']);
+// Workflow adapter of the documented helper, with the same target/readiness contract.
+export async function scanAccessibility(page, testInfo, options) {
+  if (!options?.expectedURL || typeof options.ready !== 'function') {
+    throw new Error('Accessibility scan requires expectedURL and an application readiness assertion');
+  }
+  await expect(page).toHaveURL(options.expectedURL);
+  await options.ready();
+  const { label, tags, exclude = [], disableRules = [] } = options;
+  let builder = new AxeBuilder({ page }).withTags(tags ?? ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']);
   for (const selector of exclude) builder = builder.exclude(selector);
   if (disableRules.length) builder = builder.disableRules(disableRules);
   const results = await builder.analyze();
@@ -36,7 +42,7 @@ export async function scanAccessibility(page, testInfo, { label, tags, exclude =
   }));
 }
 
-export async function checkAccessibility(page, testInfo, options = {}) {
+export async function checkAccessibility(page, testInfo, options) {
   const violations = await scanAccessibility(page, testInfo, options);
   expect(violations, `${violations.length} a11y violations on ${options.label ?? 'page'}:\n${JSON.stringify(violations, null, 2)}`)
     .toHaveLength(0);

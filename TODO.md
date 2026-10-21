@@ -1,12 +1,12 @@
 # TODO
 
-Outstanding work, roughly in priority order. Updated 2026-06-10 (v3.0.0).
+Outstanding work, roughly in priority order. Reviewed 2026-10-21.
 
 ## Near-term
 
 - [x] **Eval runner.** ✅ Built in v3.0.0: `scripts/run_evals.py` (`--static` / `--baseline` / `--live`) with the shared grammar in `scripts/eval_patterns.py`, plus the extended `scripts/validate_skills.py` and generated `scripts/build_index.py`.
 - [ ] **Full live eval (deferred follow-up).** Decision 2026-06-10: shipped v3.0.0 on the green `--static` pass (471/512 checkable cases, rest correctly deferred to a judge) plus a proven `--live` harness (smoke-tested on api-testing). The full `--live --all` run (~500 `claude -p` sessions, multi-hour, heavy token cost) is a documented follow-up, not a release blocker. Run it before any major external promotion push, ideally wired into `.github/workflows/` as a gated/nightly job (static evals already CI-ready).
-- [ ] **CI workflow.** Add `.github/workflows/validate.yml` running `validate_skills.py` + `run_evals.py --static` + `build_index.py --check` on every PR. (Scripts are ready; the workflow file is not yet written.)
+- [x] **CI workflow.** `.github/workflows/validate-skills.yml` runs structural checks, executable documentation recipes, QA runner controls, and real application fault controls on relevant pull requests and pushes to main.
 - [ ] **Distribution.** Repo is live at [qa-skills.com](https://qa-skills.com) and filed to `awesome-claude-code` (issue #1774). Post a before/after demo (agent writing Playwright tests with vs. without these skills). Track GitHub stars as the real adoption signal.
 
 ## Validation (before investing further)

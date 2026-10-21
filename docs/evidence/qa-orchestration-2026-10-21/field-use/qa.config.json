@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "checks": [
+    {
+      "id": "project-tests",
+      "command": ["npm", "run", "test", "--", "--test-reporter=tap"],
+      "reporter": "tap",
+      "timeoutMs": 15000
+    }
+  ]
+}

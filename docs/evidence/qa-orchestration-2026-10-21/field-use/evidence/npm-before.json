@@ -1,0 +1,13 @@
+{
+  "command": [
+    "npm",
+    "test"
+  ],
+  "shellCommand": "npm test",
+  "cwd": "/tmp/qa-field-use/shipping",
+  "startedAt": "2026-10-21T04:24:20.169487+00:00",
+  "finishedAt": "2026-10-21T04:24:20.391611+00:00",
+  "durationSeconds": 0.222,
+  "exitCode": 0,
+  "capturedBytes": 269
+}

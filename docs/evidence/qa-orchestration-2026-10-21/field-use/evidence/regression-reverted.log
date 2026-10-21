@@ -1,0 +1,69 @@
+TAP version 13
+# Subtest: standard shipping below threshold
+ok 1 - standard shipping below threshold
+  ---
+  duration_ms: 2.981696
+  type: 'test'
+  ...
+# Subtest: standard shipping above threshold
+ok 2 - standard shipping above threshold
+  ---
+  duration_ms: 0.192079
+  type: 'test'
+  ...
+# Subtest: standard shipping is free at exactly 5000 cents
+not ok 3 - standard shipping is free at exactly 5000 cents
+  ---
+  duration_ms: 1.24964
+  type: 'test'
+  location: '/tmp/qa-field-use/shipping/quote.test.mjs:8:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      {
+    +   shipping: 500,
+    -   shipping: 0,
+        subtotal: 5000,
+    +   total: 5500
+    -   total: 5000
+      }
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    subtotal: 5000
+    shipping: 0
+    total: 5000
+  actual:
+    subtotal: 5000
+    shipping: 500
+    total: 5500
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///tmp/qa-field-use/shipping/quote.test.mjs:9:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    node:internal/test_runner/test:1285:31
+    node:internal/process/task_queues:151:7
+    AsyncResource.runInAsyncScope (node:async_hooks:227:14)
+    AsyncResource.runMicrotask (node:internal/process/task_queues:148:8)
+  ...
+# Subtest: zero subtotal still pays standard shipping
+ok 4 - zero subtotal still pays standard shipping
+  ---
+  duration_ms: 0.128323
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 3
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 86.785733

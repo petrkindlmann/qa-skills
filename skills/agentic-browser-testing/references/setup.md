@@ -1,16 +1,16 @@
 # Agentic Browser Test Setup
 
 Concrete configs for running a goal-driven browser agent with Playwright MCP, plus the
-determinism harness referenced from SKILL.md.
+bounded host-adapter configuration referenced from SKILL.md.
 
 ## 1. Install and register Playwright MCP
 
 Playwright MCP is accessibility-tree-first: every interaction returns a structured
-`browser_snapshot` of roles, refs, and accessible names (~200-400 tokens) instead of a
+`browser_snapshot` of roles, refs, and accessible names instead of a
 screenshot. You do **not** feed the model pixels by default.
 
 ```jsonc
-// .mcp.json (Claude Code) — register the server, headless, deterministic
+// .mcp.json (Claude Code) — register the server, headless, with an isolated profile
 {
   "mcpServers": {
     "playwright": {
@@ -63,30 +63,35 @@ NEGATIVE (forbidden state — fail fast if seen):
 - Still on a URL matching /checkout|/cart  → FAIL
 - Snapshot contains role="alert" with "payment failed" → FAIL
 
-OUTPUT: a single JSON object {"passed": true|false, "evidence": "...", "steps": N}
+OUTPUT: observations, tool evidence references, and whether the exploration is complete.
+The host adapter records the actual step count and run identity. A separate oracle decides pass/fail.
 ```
 
-The negative check is what stops the agent self-grading "looks fine" while stuck.
+The harness, not this prompt or the model, must execute the success and forbidden-state checks.
+See [gate-contract.md](gate-contract.md).
 
-## 3. Determinism harness
+## 3. Host-adapter contract
 
-Pin everything the model and the app can vary:
+The following is an illustrative adapter configuration, not a supplied runner. Connect each
+field to a supported setting in your installed host, enforce step/time/token limits in code,
+and fail as blocked if the adapter or model is unavailable:
 
 ```jsonc
 // agent-run.config.json
 {
   "model": "claude-haiku-4-5-20251001",  // PINNED id, not "latest"
-  "temperature": 0,                        // no creative exploration in CI
+  "temperature": 0,                        // only if the selected model supports this parameter
   "maxSteps": 18,                          // step budget — hard cap, fail past it
   "maxTokens": 120000,                     // token budget guardrail
+  "timeoutMs": 120000,                     // wall-clock cap enforced by the host
   "seed": "checkout-seed-001",             // seeded fixture / DB reset key
   "promptCache": true                      // cache the static goal + tool defs
 }
 ```
 
-Determinism levers, in order of impact:
+Repeatability controls:
 
-1. **temperature 0 + pinned model id** — same inputs, same trajectory. Never `latest`.
+1. **Pinned model and supported sampling settings** — reduce variability; they do not guarantee the same trajectory.
 2. **Seeded data + DB reset** before each run — the app stops being a variable.
 3. **Bounded step budget** — caps non-determinism and cost; a runaway is a failure, not a retry.
 4. **Explicit pass/fail assertion** — a true/false oracle, not "no error."
@@ -98,16 +103,16 @@ removing it.
 
 ## 4. Cost and latency controls
 
-Agent runs are 2-5x slower and pricier than a scripted test. Control spend without
-dropping coverage:
+Compare observed latency and cost with a scripted test. Control unnecessary work with
+budgets and a scoped entry point:
 
 | Lever | How |
 |-------|-----|
 | Step budget | `maxSteps` low and enforced; a step is an LLM round-trip — the main cost driver |
-| Model tiering | Haiku 4.5 / Sonnet 4.6 for cheap navigation steps; reserve Opus 4.8 for genuinely ambiguous flows only |
+| Model tiering | Choose an available model using measured task accuracy, cost and latency |
 | Prompt caching | Cache the static system prompt, tool schemas, and goal — they repeat every run |
 | Scope | One narrow goal per run; start at a **seeded entry point** deep-linked past login instead of re-driving login each time |
-| Snapshot over screenshot | The a11y snapshot is ~200-400 tokens; a screenshot is thousands. Default to snapshot |
+| Snapshot over screenshot | Use semantic controls where available; measure payload sizes on the actual page |
 
 Backwards moves to avoid: "use a bigger model for every step," "raise max steps,"
 "screenshot every step." Those raise cost and latency without buying reliability.

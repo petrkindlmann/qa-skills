@@ -1,6 +1,6 @@
 {
   "skill": "accessibility-testing",
-  "version": "2.1",
+  "version": "2.2",
   "evals": [
     {
       "id": "a11y-001",
@@ -9,7 +9,7 @@
         "@axe-core/playwright",
         "AxeBuilder",
         "withTags",
-        "'wcag2a', 'wcag2aa', 'wcag22aa'",
+        "'wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'",
         "analyze",
         "violations",
         "toHaveLength(0)"

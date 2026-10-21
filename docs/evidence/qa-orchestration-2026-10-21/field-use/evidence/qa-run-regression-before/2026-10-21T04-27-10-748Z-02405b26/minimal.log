@@ -1,0 +1,6 @@
+QA run 2026-10-21T04-27-10-748Z-02405b26
+Project: parcel-desk
+Budget: 180000 ms
+RUN project-tests
+FAILED project-tests: 3 tests failed. Exit code 1.
+RESULT FAILED: 0/1 checks passed, 49 tests observed

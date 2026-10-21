@@ -59,6 +59,41 @@ Download individual skill folders from `skills/` and place them in your project'
 
 ## Usage
 
+### Test the tests
+
+![Eight-second illustration of the healthy control and 22 deliberately broken local variants](docs/media/qa-skills-proof.gif)
+
+The controlled application suite checks a healthy fixture and 22 deliberate faults.
+This motion graphic illustrates that experiment. See the [application evidence](docs/REAL-WORKFLOWS-2026-10-21.md)
+and [current workflow report](docs/QA-ORCHESTRATION-2026-10-21.md) for observations and limits.
+
+### Run checks and produce an evidence report
+
+The full checkout also includes a local QA runner. Install its dependencies with `npm ci`,
+then point it at your application:
+
+```bash
+npm run qa -- run --project /absolute/path/to/app --goal "Check the critical user flows"
+```
+
+It discovers the project's test command, recommends skills from the goal and repository,
+runs bounded checks, and produces `report.html`, JSON evidence, and concise/detailed logs.
+Missing tools, no observed tests, skipped work, and uninterpretable output remain visible.
+The host agent uses the selected skills to author tests and make authorized repairs.
+
+To make this part of future coding tasks, explicitly add the project instruction:
+
+```bash
+npm run qa -- init --project /absolute/path/to/app --wire-agent
+```
+
+This preserves the project's existing config and instructions. Activation depends on the
+host reading its `AGENTS.md`; the runner does not install a background agent. For running
+URLs, readiness selectors, CI artifacts, supported reporters, and execution limits, see
+[the QA runner guide](docs/QA-RUNNER.md). Installing individual skills does not install the CLI.
+
+### Use a domain skill
+
 Ask your AI agent in natural language. Skill selection depends on the host agent;
 name a skill explicitly when a request could fit several. The examples below show
 the intended routing.
@@ -229,11 +264,11 @@ Run the local gates with Python 3.12+ and Node 24+ (Linux AMD64 or macOS arm64 f
 application workflows):
 
 ```bash
-python -m pip install -r requirements-dev.txt
-python -m unittest discover -s tests -p 'test_*.py' -v
-python scripts/validate_skills.py
-python scripts/build_index.py --check
-python scripts/run_evals.py --static --all --min-pass-rate 90
+python3 -m pip install -r requirements-dev.txt
+python3 -m unittest discover -s tests -p 'test_*.py' -v
+python3 scripts/validate_skills.py
+python3 scripts/build_index.py --check
+python3 scripts/run_evals.py --static --all --min-pass-rate 90
 npm ci
 npm test
 npx playwright install --with-deps chromium

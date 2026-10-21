@@ -1,0 +1,18 @@
+{
+  "command": [
+    "node",
+    "/workspace/scratch/db79cfa7c2bc/qa-skills-audit-2026-10-21/scripts/qa.mjs",
+    "plan",
+    "--project",
+    "/tmp/qa-field-use/shipping",
+    "--goal",
+    "Check documented shipping quote behavior for release, repair reproducible code defects, add useful regression coverage, and execute local HTTP checks with evidence."
+  ],
+  "shellCommand": "node /workspace/scratch/db79cfa7c2bc/qa-skills-audit-2026-10-21/scripts/qa.mjs plan --project /tmp/qa-field-use/shipping --goal 'Check documented shipping quote behavior for release, repair reproducible code defects, add useful regression coverage, and execute local HTTP checks with evidence.'",
+  "cwd": "/tmp/qa-field-use/shipping",
+  "startedAt": "2026-10-21T04:24:14.866197+00:00",
+  "finishedAt": "2026-10-21T04:24:14.932166+00:00",
+  "durationSeconds": 0.066,
+  "exitCode": 0,
+  "capturedBytes": 2805
+}

@@ -116,7 +116,8 @@ Reference files go in `skills/skill-name/references/` for content that would mak
 
 ## Tool integrations
 
-Tool integration guides go in `tools/integrations/tool-name.md`. Update `tools/REGISTRY.md` with the new entry.
+Tool recipes live in the owning skill's `references/` directory. The executable QA
+runner lives in `tools/qa/`. Keep `tools/REGISTRY.md` aligned with real skill names.
 
 ## What we look for
 

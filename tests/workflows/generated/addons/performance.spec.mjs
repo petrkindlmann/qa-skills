@@ -1,3 +1,4 @@
+import { oracle } from '../../support/oracle.mjs';
 import { test, expect } from './helpers.mjs';
 import { todoUI } from '../baseline-todo/todo-ui.mjs';
 
@@ -31,7 +32,7 @@ test('TodoMVC paints its largest content within the lab budget', async ({ todo, 
   await testInfo.attach('lcp', { body: JSON.stringify(lcp, null, 2), contentType: 'application/json' });
   expect(lcp, 'no LCP entry was observed').not.toBeNull();
   expect(lcp.startTime).toBeGreaterThan(0);
-  expect(lcp.startTime, `LCP ${Math.round(lcp.startTime)}ms for ${lcp.element}`).toBeLessThan(LCP_BUDGET_MS);
+  await oracle('todo-delayed-render', 'toBeLessThan', () => expect(lcp.startTime, `LCP ${Math.round(lcp.startTime)}ms for ${lcp.element}`).toBeLessThan(LCP_BUDGET_MS));
 });
 
 test('TodoMVC layout stays stable after load and while listing items', async ({ todo, page }, testInfo) => {
@@ -45,7 +46,7 @@ test('TodoMVC layout stays stable after load and while listing items', async ({ 
   const settled = await cumulativeLayoutShift(page, 1500);
   await testInfo.attach('cls-after-load', { body: JSON.stringify(settled, null, 2), contentType: 'application/json' });
   expect(settled.score, JSON.stringify(settled.shifts)).toBeLessThan(CLS_BUDGET);
-  expect(await ui.input.boundingBox(), 'entry field moved after first render').toEqual(firstRendered);
+  await oracle('todo-layout-shift', 'toEqual', async () => expect(await ui.input.boundingBox(), 'entry field moved after first render').toEqual(firstRendered));
 
   // Adding rows is user-initiated; it must not shift the entry field the user is typing in.
   const before = await ui.input.boundingBox();

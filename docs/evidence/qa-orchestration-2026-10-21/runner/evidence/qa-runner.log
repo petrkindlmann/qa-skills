@@ -1,0 +1,214 @@
+TAP version 13
+# Subtest: real browser CLI distinguishes healthy, inaccessible, redirected blank, and absent-readiness pages
+ok 1 - real browser CLI distinguishes healthy, inaccessible, redirected blank, and absent-readiness pages
+  ---
+  duration_ms: 3932.745166
+  type: 'test'
+  ...
+# Subtest: real Playwright JSON reports retain healthy and failed HTTP assertions
+ok 2 - real Playwright JSON reports retain healthy and failed HTTP assertions
+  ---
+  duration_ms: 2617.553211
+  type: 'test'
+  ...
+# Subtest: routing: Can we test the payment confirmation email?
+ok 3 - routing: Can we test the payment confirmation email?
+  ---
+  duration_ms: 2.755205
+  type: 'test'
+  ...
+# Subtest: routing: Our LLM feature invents answers when retrieval returns nothing.
+ok 4 - routing: Our LLM feature invents answers when retrieval returns nothing.
+  ---
+  duration_ms: 1.066374
+  type: 'test'
+  ...
+# Subtest: routing: Generate tests from this PRD.
+ok 5 - routing: Generate tests from this PRD.
+  ---
+  duration_ms: 0.109555
+  type: 'test'
+  ...
+# Subtest: routing: This one locator is flaky on a fast machine.
+ok 6 - routing: This one locator is flaky on a fast machine.
+  ---
+  duration_ms: 0.152709
+  type: 'test'
+  ...
+# Subtest: routing: The redesign broke all selectors in 80 tests.
+ok 7 - routing: The redesign broke all selectors in 80 tests.
+  ---
+  duration_ms: 0.108313
+  type: 'test'
+  ...
+# Subtest: routing: Classify these 60 CI failures into groups.
+ok 8 - routing: Classify these 60 CI failures into groups.
+  ---
+  duration_ms: 0.096545
+  type: 'test'
+  ...
+# Subtest: routing: Reproduce why the old session still works after logout.
+ok 9 - routing: Reproduce why the old session still works after logout.
+  ---
+  duration_ms: 0.108914
+  type: 'test'
+  ...
+# Subtest: routing: A screen reader cannot name the submit control.
+ok 10 - routing: A screen reader cannot name the submit control.
+  ---
+  duration_ms: 0.121393
+  type: 'test'
+  ...
+# Subtest: routing: Check whether the CMP sends data before consent.
+ok 11 - routing: Check whether the CMP sends data before consent.
+  ---
+  duration_ms: 0.143596
+  type: 'test'
+  ...
+# Subtest: routing: The GA4 checkout event has the wrong currency.
+ok 12 - routing: The GA4 checkout event has the wrong currency.
+  ---
+  duration_ms: 0.147452
+  type: 'test'
+  ...
+# Subtest: routing: Exercise Android deep links with Appium.
+ok 13 - routing: Exercise Android deep links with Appium.
+  ---
+  duration_ms: 0.05981
+  type: 'test'
+  ...
+# Subtest: routing: Compare our browser matrix in Safari.
+ok 14 - routing: Compare our browser matrix in Safari.
+  ---
+  duration_ms: 0.386061
+  type: 'test'
+  ...
+# Subtest: routing: Measure the layout shift after the banner arrives.
+ok 15 - routing: Measure the layout shift after the banner arrives.
+  ---
+  duration_ms: 0.109364
+  type: 'test'
+  ...
+# Subtest: routing: Prove the database migration preserves unique email addresses.
+ok 16 - routing: Prove the database migration preserves unique email addresses.
+  ---
+  duration_ms: 0.142535
+  type: 'test'
+  ...
+# Subtest: routing: Use Pact to check the consumer contract.
+ok 17 - routing: Use Pact to check the consumer contract.
+  ---
+  duration_ms: 0.107271
+  type: 'test'
+  ...
+# Subtest: routing: Remove duplicate tests from this regression suite.
+ok 18 - routing: Remove duplicate tests from this regression suite.
+  ---
+  duration_ms: 0.081222
+  type: 'test'
+  ...
+# Subtest: routing: Set up QA from scratch for this new project.
+ok 19 - routing: Set up QA from scratch for this new project.
+  ---
+  duration_ms: 0.049274
+  type: 'test'
+  ...
+# Subtest: routing: Onboard a QA engineer into our existing team.
+ok 20 - routing: Onboard a QA engineer into our existing team.
+  ---
+  duration_ms: 0.04653
+  type: 'test'
+  ...
+# Subtest: routing: Keep a scheduled probe of the status page.
+ok 21 - routing: Keep a scheduled probe of the status page.
+  ---
+  duration_ms: 0.042524
+  type: 'test'
+  ...
+# Subtest: routing: Exercise the feature flag during the canary rollout.
+ok 22 - routing: Exercise the feature flag during the canary rollout.
+  ---
+  duration_ms: 0.13961
+  type: 'test'
+  ...
+# Subtest: changed paths add focused supporting skills without loading the catalog
+ok 23 - changed paths add focused supporting skills without loading the catalog
+  ---
+  duration_ms: 0.323777
+  type: 'test'
+  ...
+# Subtest: config rejects shell strings, duplicate ids, unknown fields, credentials and missing reporter
+ok 24 - config rejects shell strings, duplicate ids, unknown fields, credentials and missing reporter
+  ---
+  duration_ms: 0.887505
+  type: 'test'
+  ...
+# Subtest: TAP gate rejects zero, skips, duplicate summaries and inconsistent totals
+ok 25 - TAP gate rejects zero, skips, duplicate summaries and inconsistent totals
+  ---
+  duration_ms: 1.19603
+  type: 'test'
+  ...
+# Subtest: Playwright gate rejects missing results, empty suites, flaky retries and expected failures
+ok 26 - Playwright gate rejects missing results, empty suites, flaky retries and expected failures
+  ---
+  duration_ms: 0.701926
+  type: 'test'
+  ...
+# Subtest: real CLI discovers and runs a Node project outside Git and produces linked reports
+ok 27 - real CLI discovers and runs a Node project outside Git and produces linked reports
+  ---
+  duration_ms: 290.428614
+  type: 'test'
+  ...
+# Subtest: real CLI keeps a defect red and does not turn skipped tests green
+ok 28 - real CLI keeps a defect red and does not turn skipped tests green
+  ---
+  duration_ms: 500.513897
+  type: 'test'
+  ...
+# Subtest: an explicit npm reporter argument remains singular
+ok 29 - an explicit npm reporter argument remains singular
+  ---
+  duration_ms: 252.964904
+  type: 'test'
+  ...
+# Subtest: no tests, exit-zero text and missing executable cannot produce a passing run
+ok 30 - no tests, exit-zero text and missing executable cannot produce a passing run
+  ---
+  duration_ms: 218.645847
+  type: 'test'
+  ...
+# Subtest: the total budget bounds stalled commands and leaves subsequent checks blocked
+ok 31 - the total budget bounds stalled commands and leaves subsequent checks blocked
+  ---
+  duration_ms: 968.591855
+  type: 'test'
+  ...
+# Subtest: plan is read-only, init is explicit and AGENTS wiring is idempotent
+ok 32 - plan is read-only, init is explicit and AGENTS wiring is idempotent
+  ---
+  duration_ms: 13.751865
+  type: 'test'
+  ...
+# Subtest: conflicting workflow markers do not rewrite the existing AGENTS file
+ok 33 - conflicting workflow markers do not rewrite the existing AGENTS file
+  ---
+  duration_ms: 4.291305
+  type: 'test'
+  ...
+# Subtest: known secrets, URL query values, and hostile report strings are kept out of shareable HTML
+ok 34 - known secrets, URL query values, and hostile report strings are kept out of shareable HTML
+  ---
+  duration_ms: 42.091684
+  type: 'test'
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8900.309354

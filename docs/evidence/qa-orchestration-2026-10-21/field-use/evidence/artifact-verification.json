@@ -1,0 +1,16 @@
+{
+  "report": "evidence/REPORT.md",
+  "reportLinksVerified": 28,
+  "sourceManifestMatches": true,
+  "finalTests": {
+    "total": 49,
+    "passed": 49,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0,
+    "todo": 0,
+    "retried": 0,
+    "observed": 49
+  },
+  "serverLifecycle": "Each live HTTP suite stops its child server and asserts successful shutdown in an after hook; final suite passed."
+}

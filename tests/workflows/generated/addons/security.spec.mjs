@@ -1,3 +1,4 @@
+import { oracle } from '../../support/oracle.mjs';
 import { test, expect, json, adminHeaders, state, startShopWithoutMail } from './helpers.mjs';
 
 const LIMIT = 5;
@@ -15,7 +16,7 @@ test('repeated sign-in failures are throttled per account and recover after the 
   await failLogins(client, app.users.alice.email, LIMIT);
 
   const throttled = await client.post('/api/login', { data: { email: app.users.alice.email, password: 'wrong-again' } });
-  expect(throttled.status(), await throttled.text()).toBe(429);
+  await oracle('shop-no-login-throttle', 'toBe', async () => expect(throttled.status(), await throttled.text()).toBe(429));
   expect(await throttled.json()).toEqual({ error: 'too_many_attempts' });
   expect(throttled.headers()['retry-after']).toBe('60');
   // The correct password does not bypass the throttle, and no session was created.
@@ -37,7 +38,7 @@ test('repeated sign-in failures are throttled per account and recover after the 
 
 test('test-support routes stay locked without the admin key', async ({ app, request }) => {
   for (const headers of [{}, { 'X-Test-Admin-Key': 'guessed-key' }, { 'X-Test-Admin-Key': '' }]) {
-    expect(await json(await request.get(`${app.baseURL}/test-support/state`, { headers }), 403)).toEqual({ error: 'forbidden' });
+    expect(await oracle('shop-open-test-support', 'toBe', async () => json(await request.get(`${app.baseURL}/test-support/state`, { headers }), 403))).toEqual({ error: 'forbidden' });
     expect(await json(await request.post(`${app.baseURL}/test-support/clock`, { headers, data: { advance_seconds: 1 } }), 403)).toEqual({ error: 'forbidden' });
   }
   // The key is not accepted anywhere else, and the locked route reveals no state shape.
@@ -56,7 +57,7 @@ test('password reset stays uniform and accepted when the mail service is down', 
     expect(await json(await client.post('/api/password-reset/request', { data: { email: unknown } }), 202)).toEqual(accepted);
     expect((await state(app, request)).smtp_errors).toBe(0);
 
-    expect(await json(await client.post('/api/password-reset/request', { data: { email: app.users.alice.email } }), 202)).toEqual(accepted);
+    expect(await oracle('shop-smtp-failure', 'toBe', async () => json(await client.post('/api/password-reset/request', { data: { email: app.users.alice.email } }), 202))).toEqual(accepted);
     const observed = await state(app, request);
     expect(observed.smtp_errors).toBe(1);
     expect(observed.reset_tokens.map(token => token.user_id)).toEqual(['alice']);

@@ -1,0 +1,270 @@
+{
+  "schemaVersion": 1,
+  "reviewedAt": "2026-10-21T09:37:45.455792+00:00",
+  "matrix": "/tmp/qa-orchestration-isolated-final/matrix.json",
+  "matrixSha256": "4d38fb1a0d620c2c5e8ec9f51071b7d1ff5d2b2c9ed554c8f2e34a24c08d2391",
+  "verdict": "accepted controlled-fault matrix",
+  "method": "Read all 40 failure errors, compare exact case/title pairs with the earlier reviewed 40-failure set, re-evaluate all raw reports with the current gate, verify source hashes, attempt shape, process outcomes, timestamps, and artifact paths. No tests rerun.",
+  "counts": {
+    "configurations": 23,
+    "healthyCasesPassed": 36,
+    "faultVariantsDetected": 22,
+    "testExecutions": 628,
+    "passed": 588,
+    "intentionalFailures": 40,
+    "unexpectedExtraFailures": 0,
+    "skipped": 0,
+    "retried": 0,
+    "infrastructureFailures": 0,
+    "sourceFilesChecked": 51,
+    "sourceMismatches": 0,
+    "uniqueRunDirectories": 23
+  },
+  "artifactPathProblems": [],
+  "failureSetComparison": {
+    "extra": [],
+    "missing": []
+  },
+  "duplicateDeleteTraceEvidence": [
+    {
+      "error": {
+        "error": {
+          "message": "Cannot read properties of undefined (reading 'title')",
+          "stack": "TypeError: Cannot read properties of undefined (reading 'title')\n    at Store.<anonymous> (http://127.0.0.1:38093/js/controller.js:114:57)\n    at Store.find (http://127.0.0.1:38093/js/store.js:47:12)\n    at Model.read (http://127.0.0.1:38093/js/model.js:56:17)\n    at Controller.editItem (http://127.0.0.1:38093/js/controller.js:113:14)\n    at http://127.0.0.1:38093/js/controller.js:21:9\n    at HTMLLabelElement.<anonymous> (http://127.0.0.1:38093/js/view.js:192:5)\n    at HTMLUListElement.dispatchEvent (http://127.0.0.1:38093/js/helpers.js:27:13)",
+          "name": "TypeError"
+        }
+      },
+      "location": {
+        "url": "http://127.0.0.1:38093/js/controller.js",
+        "line": 113,
+        "column": 56
+      }
+    }
+  ],
+  "variants": [
+    {
+      "id": "combined-healthy",
+      "failedTests": [],
+      "outcome": "healthy_pass",
+      "review": "All 36 healthy checks passed.",
+      "artifactDirectory": "combined-healthy/10204313-388e-48b0-871d-93cc23e81c06"
+    },
+    {
+      "id": "shop-ownership",
+      "failedTests": [
+        "order ownership is private and idempotency keys belong to users"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Foreign order read returned 200 instead of 404.",
+      "artifactDirectory": "shop-ownership/9168b9af-6fa8-4bdd-8e46-f5241f66d940"
+    },
+    {
+      "id": "shop-pricing",
+      "failedTests": [
+        "catalog controls money and malformed orders never create state"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Client amount 1 was accepted instead of server price 4200; no additional failures.",
+      "artifactDirectory": "shop-pricing/9a228e40-049d-40fa-a5e3-4c759b53f2d4"
+    },
+    {
+      "id": "shop-deduplication",
+      "failedTests": [
+        "concurrent payment redelivery, conflict and distinct event IDs fulfill once durably",
+        "transient fulfillment rolls back receipt then same event succeeds after restart",
+        "correctly signed noncanonical JSON is accepted and identical bytes replay once"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Three assertions observed repeated fulfillment (7 or 2 rather than 1).",
+      "artifactDirectory": "shop-deduplication/a37c8ae3-3cb7-4da3-a133-6e3c2a8b9261"
+    },
+    {
+      "id": "shop-transaction",
+      "failedTests": [
+        "transient fulfillment rolls back receipt then same event succeeds after restart"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "A receipt remained after the deliberately failed transaction.",
+      "artifactDirectory": "shop-transaction/8121db81-affe-4aa0-9ec2-b1a2009193d6"
+    },
+    {
+      "id": "shop-key-conflict",
+      "failedTests": [
+        "concurrent equivalent checkout replays once and persists across restart"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Changed intent replayed with 200 instead of conflict 409.",
+      "artifactDirectory": "shop-key-conflict/cbc2b742-bc22-4ca8-b67c-b67e1e366031"
+    },
+    {
+      "id": "shop-reset-reuse",
+      "failedTests": [
+        "actual reset email completes browser flow and revokes all sessions"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Consumed reset token succeeded with 200 instead of 400.",
+      "artifactDirectory": "shop-reset-reuse/95d4cf39-59ff-4161-81f7-4a00beec998b"
+    },
+    {
+      "id": "todo-persistence",
+      "failedTests": [
+        "Enter and blur save edits while Escape preserves the saved title on reload",
+        "whitespace Enter and empty blur edits remove only their targeted records",
+        "saved edits completion order and removals persist through reload and further keyboard input",
+        "single delete persists immediately with survivor order and completion intact",
+        "clear completed persists immediately and preserves active titles and order"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Five assertions observed loss of saved rows after reload.",
+      "artifactDirectory": "todo-persistence/c9ea30b7-7e85-4cdb-87c1-a75c00adb9a6"
+    },
+    {
+      "id": "todo-duplicates",
+      "failedTests": [
+        "duplicate titles remain independent through complete edit and delete",
+        "whitespace Enter and empty blur edits remove only their targeted records"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Wrong duplicate deletion changed active count; later edit raised app TypeError and never produced its textbox.",
+      "artifactDirectory": "todo-duplicates/123069a8-7961-4209-82d2-46cd634f273d"
+    },
+    {
+      "id": "todo-filter",
+      "failedTests": [
+        "individual completion and restoration keep the active count global under filters",
+        "bulk toggle affects hidden records and works from an empty filtered view",
+        "filters visibly select the correct subset without losing or duplicating records",
+        "delete and clear completed preserve active rows and empty controls recover"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Four assertions observed incorrect active/completed subsets.",
+      "artifactDirectory": "todo-filter/cd6aa18e-6b89-4e50-9eba-57facef1da5f"
+    },
+    {
+      "id": "todo-cancel",
+      "failedTests": [
+        "Enter and blur save edits while Escape preserves the saved title on reload",
+        "saved edits completion order and removals persist through reload and further keyboard input"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Two assertions observed cancelled drafts being saved.",
+      "artifactDirectory": "todo-cancel/65f44c1e-0e2a-44a6-a1de-a4ac439bff63"
+    },
+    {
+      "id": "shop-logout",
+      "failedTests": [
+        "session credentials are stored hashed at rest and removed on logout",
+        "orders, receipts and sessions stay referentially consistent after payment and logout",
+        "logout revokes a previously valid copied session on the server"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Three assertions observed retained sessions or successful copied-session replay after logout.",
+      "artifactDirectory": "shop-logout/4e90d768-40de-425a-a6e4-18eafe797d9e"
+    },
+    {
+      "id": "shop-unit-prices",
+      "failedTests": [
+        "each SKU has its contracted unit price and quantity ten is accepted",
+        "correctly signed noncanonical JSON is accepted and identical bytes replay once"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Two assertions observed the deliberately changed per-SKU prices.",
+      "artifactDirectory": "shop-unit-prices/fb7fa5f0-2e47-45fe-8645-9501915ac3eb"
+    },
+    {
+      "id": "shop-signed-whitespace",
+      "failedTests": [
+        "correctly signed noncanonical JSON is accepted and identical bytes replay once"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Correctly signed original bytes were rejected with 401 instead of 200.",
+      "artifactDirectory": "shop-signed-whitespace/8f48c400-cd37-4410-8715-710174e7e6fe"
+    },
+    {
+      "id": "todo-removal-persistence",
+      "failedTests": [
+        "whitespace Enter and empty blur edits remove only their targeted records",
+        "single delete persists immediately with survivor order and completion intact",
+        "clear completed persists immediately and preserves active titles and order",
+        "clearing the final completed item persists the empty state immediately"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Four assertions observed deleted rows restored by reload.",
+      "artifactDirectory": "todo-removal-persistence/ca772f79-4d85-4a6f-a389-5bcea9467209"
+    },
+    {
+      "id": "shop-unlabeled-controls",
+      "failedTests": [
+        "Shop sign-in, account and reset pages have no WCAG 2.2 AA violations",
+        "Shop sign-in completes through the keyboard alone in document order"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Axe reported missing labels; keyboard check observed an empty focused control name.",
+      "artifactDirectory": "shop-unlabeled-controls/f4ebb672-176c-48e2-adf1-66fe30d102f4"
+    },
+    {
+      "id": "shop-plaintext-sessions",
+      "failedTests": [
+        "session credentials are stored hashed at rest and removed on logout"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Stored session credential did not match the required hash format.",
+      "artifactDirectory": "shop-plaintext-sessions/115a2970-2325-4204-9951-cabfa918b6ae"
+    },
+    {
+      "id": "shop-missing-idempotency-index",
+      "failedTests": [
+        "schema enforces idempotency uniqueness, foreign keys and durable journaling"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Only the primary-key index was present, without required idempotency uniqueness.",
+      "artifactDirectory": "shop-missing-idempotency-index/f2791c5c-021f-468b-8b00-791a607d9186"
+    },
+    {
+      "id": "shop-no-login-throttle",
+      "failedTests": [
+        "repeated sign-in failures are throttled per account and recover after the window"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Sixth failed sign-in returned 401 instead of 429.",
+      "artifactDirectory": "shop-no-login-throttle/26eed6a3-abcb-4132-9d14-30c1b718cdf5"
+    },
+    {
+      "id": "shop-open-test-support",
+      "failedTests": [
+        "test-support routes stay locked without the admin key"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Unkeyed support endpoint returned 200 instead of 403.",
+      "artifactDirectory": "shop-open-test-support/3d2f25d0-a2f4-4ff7-a2f1-829e6a97dce5"
+    },
+    {
+      "id": "shop-smtp-failure",
+      "failedTests": [
+        "password reset stays uniform and accepted when the mail service is down"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Known-account reset request returned 503 instead of uniform 202.",
+      "artifactDirectory": "shop-smtp-failure/deb460ce-4249-4b5d-b739-aa497f1d481e"
+    },
+    {
+      "id": "todo-delayed-render",
+      "failedTests": [
+        "TodoMVC paints its largest content within the lab budget"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "LCP 2560ms exceeded 1500ms after the injected 2500ms delay.",
+      "artifactDirectory": "todo-delayed-render/abfbc785-4ddc-40fd-8015-a1092976f73f"
+    },
+    {
+      "id": "todo-layout-shift",
+      "failedTests": [
+        "TodoMVC layout stays stable after load and while listing items"
+      ],
+      "outcome": "assertion_detection_verified",
+      "review": "Input y coordinate moved from 130 to 370 after the injected 240px banner.",
+      "artifactDirectory": "todo-layout-shift/77a6b634-0be7-4021-a17e-ffbeccbd9507"
+    }
+  ],
+  "limits": "Applies to these controlled fixtures and captured source hashes; this is not proof of arbitrary application coverage or universal autonomous behavior."
+}

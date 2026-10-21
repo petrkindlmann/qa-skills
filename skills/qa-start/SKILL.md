@@ -2,23 +2,26 @@
 name: qa-start
 description: >-
   Sequenced launcher that bootstraps QA on a project with no QA in place. Chains
-  qa-project-context → test-strategy → test-planning in one guided run, then points
-  you at automation. Use when: "set up QA on a new project," "QA from scratch," "no QA
+  qa-project-context → test-strategy → test-planning in one guided run, then executes
+  available checks and records evidence. Use when: "set up QA on a new project," "QA from scratch," "no QA
   exists yet," "/qa-start." Not for: onboarding a QA engineer to an existing team with
   existing tests — use qa-project-bootstrap. Not for: "which skill do I use" with no
   clear match — use qa-do.
   Related: qa-project-context, test-strategy, test-planning, qa-project-bootstrap, qa-do.
 license: MIT
-compatibility: Cross-tool. Tested with Claude Code, Codex, Cursor, Gemini CLI. Reads/writes the user's project root; no network access required.
+compatibility: Cross-tool skill instructions. The optional repository CLI requires Node 24; execution needs the project's test tools and any configured target.
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: foundation
   argument-hint: "optional path to existing repo (e.g. './apps/web') if running from a monorepo root"
 ---
 
 <objective>
-A sequenced launcher for bootstrapping QA where none exists. It contains no QA guidance itself — it chains three skills in the correct order so engineers don't jump to writing tests before deciding what to test or why. Run `qa-project-context` → `test-strategy` → `test-planning` and you end with a context file, a strategy document, and a first test plan: a complete QA foundation.
+A sequenced launcher for bootstrapping QA where none exists. Inspect the repository,
+capture available context, choose the first critical behavior, and execute its checks.
+Use `qa-project-context` → `test-strategy` → `test-planning` to keep the decisions explicit,
+then deliver test evidence and the next concrete gap alongside the planning artifacts.
 </objective>
 
 ## When to Use This
@@ -49,9 +52,12 @@ Pick your entry point — skip any step whose artifact already exists.
 
 Creates `.agents/qa-project-context.md` in your project root. That file records your tech stack, test frameworks, CI/CD pipeline, environments, coverage goals, risk areas, and team structure. Every later skill reads it, so it never asks you the same questions twice.
 
-**What to do:** Invoke `qa-project-context` and work through its discovery questions. The skill walks each section interactively, discovers what it can from the repo, and writes the file.
+**What to do:** Invoke `qa-project-context`. Start discovery with the repo and existing
+task, then write the file. Record unknown decisions explicitly. Ask only for a missing
+answer that changes the next action; continue useful checks when optional context is absent.
 
-**Done when:** `.agents/qa-project-context.md` exists in your project root with all sections filled in. It is the source of truth for everything that follows.
+**Done when:** `.agents/qa-project-context.md` records observed setup, usable commands,
+current scope, and unresolved decisions. Do not invent team structure, targets, or credentials.
 
 ## Step 2: Create the Test Strategy
 
@@ -72,6 +78,30 @@ Translates the strategy into an actionable plan for the first sprint or release.
 **What to do:** Invoke `test-planning` after Step 2. It consumes the strategy from Step 2 and the context from Step 1. Provide the feature list or sprint scope when prompted.
 
 **Done when:** You have a test plan (e.g. `plan.md`) with features mapped to test cases, coverage priorities set, effort estimated, and scope boundaries clear. This is the artifact your team executes against.
+
+## Run the First Checks
+
+Inspect the repository before producing planning documents. Use available context to
+make routine choices and keep the initial strategy and plan proportional to the project.
+A missing optional context file does not block an authorized local test run.
+
+When the full QA Skills checkout is available, run:
+
+```bash
+node <qa-skills>/scripts/qa.mjs init --project <project> --wire-agent
+node <qa-skills>/scripts/qa.mjs run --project <project> --goal "Check the critical user flow"
+```
+
+`init` creates a project config without overwriting an existing one. Use `--wire-agent`
+when the user wants QA integrated into future coding tasks; it adds a bounded workflow
+to the project's `AGENTS.md`, preserving existing instructions. Skip init for a configured
+project. The host agent must load that project instruction for automatic selection.
+
+Read the selected domain skill and execute its workflow. If there are no tests, author
+and run the first test for an observed critical behavior; do not present setup as a pass.
+Retain a real `report.html` and `result.json`, including blocked dependencies and unrun
+flows. A successful smoke check establishes only the behavior that was exercised.
+See the repository's `docs/QA-RUNNER.md` for the runner contract.
 
 ## After Step 3
 

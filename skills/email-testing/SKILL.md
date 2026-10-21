@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.1"
+  version: "1.2"
   category: specialized
 ---
 
@@ -80,7 +80,9 @@ answered there.
 2. **Poll, never sleep.** Email arrival is asynchronous. A fixed `waitForTimeout` is either
    too short (flake) or too slow (wasted minutes) and is the #1 cause of flaky email tests.
    Use `expect.poll` / `.toPass` against `/api/v1/search?query=...`, or a built-in waiter
-   (`messages.get`, `waitForLatestEmail`) that already polls for you.
+   (`messages.get`, `waitForLatestEmail`) that already polls for you. Bound each HTTP call
+   at the client, including response-body parsing; a provider wait budget alone does not
+   protect against a stalled connection.
 
 3. **One unique recipient per test.** Two parallel tests both reading "the latest signup
    email" grab each other's mail. Make every test's address unique (plus-addressing or a
@@ -350,7 +352,8 @@ Prove the suite actually captures and asserts, smallest check first:
 - **mailpit-playwright.md** — docker-compose, the `expect.poll` Mailpit helper, OTP/link
   extraction utilities, and full password-reset / signup / OTP / magic-link E2E tests.
 - **hosted-inboxes.md** — Mailosaur (`messages.get` auto-wait, real addresses, structured
-  links/codes), MailSlurp (`createInbox` + `waitForLatestEmail`, per-test inbox), and
-  Ethereal (local preview via `createTestAccount` + `getTestMessageUrl`).
+  links/codes), MailSlurp (`createInbox` + `waitForLatestEmail`, per-test inbox), ShazaMail
+  (per-test inbox with client deadlines for create/wait), and Ethereal (local preview via
+  `createTestAccount` + `getTestMessageUrl`).
 - **deliverability.md** — SPF/DKIM/DMARC as a separate non-blocking suite, why body-regex
   and Mailpit don't validate auth, and the Mailosaur deliverability assertion.

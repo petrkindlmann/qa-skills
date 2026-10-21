@@ -1,0 +1,342 @@
+QA run 2026-10-21T04-34-21-958Z-694a1256
+Project: parcel-desk
+Budget: 180000 ms
+
+CHECK project-tests
+ARGV ["npm","run","test","--","--test-reporter=tap"]
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> test
+> node --test --test-reporter=tap
+
+TAP version 13
+# Subtest: standard shipping below threshold
+ok 1 - standard shipping below threshold
+  ---
+  duration_ms: 4.289126
+  type: 'test'
+  ...
+# Subtest: standard shipping above threshold
+ok 2 - standard shipping above threshold
+  ---
+  duration_ms: 0.411536
+  type: 'test'
+  ...
+# Subtest: express cost
+ok 3 - express cost
+  ---
+  duration_ms: 0.191406
+  type: 'test'
+  ...
+# Subtest: standard shipping is free at exactly 5000 cents
+ok 4 - standard shipping is free at exactly 5000 cents
+  ---
+  duration_ms: 0.204696
+  type: 'test'
+  ...
+# Subtest: zero subtotal still pays standard shipping
+ok 5 - zero subtotal still pays standard shipping
+  ---
+  duration_ms: 0.238717
+  type: 'test'
+  ...
+# Subtest: express always costs 1200 cents for subtotal 0
+ok 6 - express always costs 1200 cents for subtotal 0
+  ---
+  duration_ms: 0.194641
+  type: 'test'
+  ...
+# Subtest: express always costs 1200 cents for subtotal 4999
+ok 7 - express always costs 1200 cents for subtotal 4999
+  ---
+  duration_ms: 0.147581
+  type: 'test'
+  ...
+# Subtest: express always costs 1200 cents for subtotal 5000
+ok 8 - express always costs 1200 cents for subtotal 5000
+  ---
+  duration_ms: 0.136014
+  type: 'test'
+  ...
+# Subtest: express always costs 1200 cents for subtotal 5001
+ok 9 - express always costs 1200 cents for subtotal 5001
+  ---
+  duration_ms: 0.144567
+  type: 'test'
+  ...
+# Subtest: rejects negative subtotal
+ok 10 - rejects negative subtotal
+  ---
+  duration_ms: 0.666087
+  type: 'test'
+  ...
+# Subtest: rejects fractional subtotal
+ok 11 - rejects fractional subtotal
+  ---
+  duration_ms: 0.311536
+  type: 'test'
+  ...
+# Subtest: rejects numeric string subtotal
+ok 12 - rejects numeric string subtotal
+  ---
+  duration_ms: 0.137405
+  type: 'test'
+  ...
+# Subtest: rejects null subtotal
+ok 13 - rejects null subtotal
+  ---
+  duration_ms: 0.183845
+  type: 'test'
+  ...
+# Subtest: rejects boolean subtotal
+ok 14 - rejects boolean subtotal
+  ---
+  duration_ms: 0.145978
+  type: 'test'
+  ...
+# Subtest: rejects object subtotal
+ok 15 - rejects object subtotal
+  ---
+  duration_ms: 0.148773
+  type: 'test'
+  ...
+# Subtest: rejects array subtotal
+ok 16 - rejects array subtotal
+  ---
+  duration_ms: 0.128522
+  type: 'test'
+  ...
+# Subtest: rejects missing subtotal
+ok 17 - rejects missing subtotal
+  ---
+  duration_ms: 0.095643
+  type: 'test'
+  ...
+# Subtest: rejects NaN subtotal
+ok 18 - rejects NaN subtotal
+  ---
+  duration_ms: 0.148041
+  type: 'test'
+  ...
+# Subtest: rejects infinity subtotal
+ok 19 - rejects infinity subtotal
+  ---
+  duration_ms: 0.148011
+  type: 'test'
+  ...
+# Subtest: rejects unknown method "overnight"
+ok 20 - rejects unknown method "overnight"
+  ---
+  duration_ms: 0.171116
+  type: 'test'
+  ...
+# Subtest: rejects unknown method ""
+ok 21 - rejects unknown method ""
+  ---
+  duration_ms: 0.103605
+  type: 'test'
+  ...
+# Subtest: rejects unknown method null
+ok 22 - rejects unknown method null
+  ---
+  duration_ms: 0.069955
+  type: 'test'
+  ...
+# Subtest: rejects unknown method 1
+ok 23 - rejects unknown method 1
+  ---
+  duration_ms: 0.055373
+  type: 'test'
+  ...
+# Subtest: GET /health reports ready over HTTP
+ok 24 - GET /health reports ready over HTTP
+  ---
+  duration_ms: 124.405801
+  type: 'test'
+  ...
+# {"method":"GET","path":"/health","status":200,"response":{"status":"ready"}}
+# Subtest: HTTP standard quote for 0 cents
+ok 25 - HTTP standard quote for 0 cents
+  ---
+  duration_ms: 13.726865
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":0,"method":"standard"},"status":200,"response":{"subtotal":0,"shipping":500,"total":500}}
+# Subtest: HTTP standard quote for 4999 cents
+ok 26 - HTTP standard quote for 4999 cents
+  ---
+  duration_ms: 5.827147
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":4999,"method":"standard"},"status":200,"response":{"subtotal":4999,"shipping":500,"total":5499}}
+# Subtest: HTTP standard quote for 5000 cents
+ok 27 - HTTP standard quote for 5000 cents
+  ---
+  duration_ms: 3.341248
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":5000,"method":"standard"},"status":200,"response":{"subtotal":5000,"shipping":0,"total":5000}}
+# Subtest: HTTP standard quote for 5001 cents
+ok 28 - HTTP standard quote for 5001 cents
+  ---
+  duration_ms: 3.577392
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":5001,"method":"standard"},"status":200,"response":{"subtotal":5001,"shipping":0,"total":5001}}
+# Subtest: HTTP express quote for 0 cents
+ok 29 - HTTP express quote for 0 cents
+  ---
+  duration_ms: 4.08482
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":0,"method":"express"},"status":200,"response":{"subtotal":0,"shipping":1200,"total":1200}}
+# Subtest: HTTP express quote for 4999 cents
+ok 30 - HTTP express quote for 4999 cents
+  ---
+  duration_ms: 4.143023
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":4999,"method":"express"},"status":200,"response":{"subtotal":4999,"shipping":1200,"total":6199}}
+# Subtest: HTTP express quote for 5000 cents
+ok 31 - HTTP express quote for 5000 cents
+  ---
+  duration_ms: 2.917444
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":5000,"method":"express"},"status":200,"response":{"subtotal":5000,"shipping":1200,"total":6200}}
+# Subtest: HTTP express quote for 5001 cents
+ok 32 - HTTP express quote for 5001 cents
+  ---
+  duration_ms: 3.364242
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":5001,"method":"express"},"status":200,"response":{"subtotal":5001,"shipping":1200,"total":6201}}
+# Subtest: HTTP omitted method preserves standard default
+ok 33 - HTTP omitted method preserves standard default
+  ---
+  duration_ms: 3.75719
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":5000},"status":200,"response":{"subtotal":5000,"shipping":0,"total":5000}}
+# Subtest: HTTP rejects negative subtotal with 400
+ok 34 - HTTP rejects negative subtotal with 400
+  ---
+  duration_ms: 3.831727
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":-1},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects fractional subtotal with 400
+ok 35 - HTTP rejects fractional subtotal with 400
+  ---
+  duration_ms: 1.988725
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":1.5},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects string subtotal with 400
+ok 36 - HTTP rejects string subtotal with 400
+  ---
+  duration_ms: 1.982896
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":"5000"},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects null subtotal with 400
+ok 37 - HTTP rejects null subtotal with 400
+  ---
+  duration_ms: 3.211553
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":null},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects boolean subtotal with 400
+ok 38 - HTTP rejects boolean subtotal with 400
+  ---
+  duration_ms: 3.455539
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":true},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects object subtotal with 400
+ok 39 - HTTP rejects object subtotal with 400
+  ---
+  duration_ms: 2.668803
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":{}},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects array subtotal with 400
+ok 40 - HTTP rejects array subtotal with 400
+  ---
+  duration_ms: 2.695091
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":[]},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects missing subtotal with 400
+ok 41 - HTTP rejects missing subtotal with 400
+  ---
+  duration_ms: 2.799317
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"method":"standard"},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects unknown method with 400
+ok 42 - HTTP rejects unknown method with 400
+  ---
+  duration_ms: 1.43736
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":5000,"method":"overnight"},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects null method with 400
+ok 43 - HTTP rejects null method with 400
+  ---
+  duration_ms: 2.410506
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":5000,"method":null},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects empty method with 400
+ok 44 - HTTP rejects empty method with 400
+  ---
+  duration_ms: 1.372342
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":5000,"method":""},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects numeric method with 400
+ok 45 - HTTP rejects numeric method with 400
+  ---
+  duration_ms: 2.564697
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":{"subtotal":5000,"method":1},"status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects malformed JSON with 400
+ok 46 - HTTP rejects malformed JSON with 400
+  ---
+  duration_ms: 2.055285
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":"{","status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP rejects null body with 400
+ok 47 - HTTP rejects null body with 400
+  ---
+  duration_ms: 2.310566
+  type: 'test'
+  ...
+# {"method":"POST","path":"/quote","request":"null","status":400,"response":{"error":"Invalid quote input"}}
+# Subtest: HTTP server remains healthy after invalid requests
+ok 48 - HTTP server remains healthy after invalid requests
+  ---
+  duration_ms: 2.484376
+  type: 'test'
+  ...
+# {"method":"GET","path":"/health","status":200,"response":{"status":"ready"}}
+# Subtest: HTTP unknown route returns 404
+ok 49 - HTTP unknown route returns 404
+  ---
+  duration_ms: 2.388272
+  type: 'test'
+  ...
+# {"method":"GET","path":"/missing","status":404,"response":{"error":"Not found"}}
+1..49
+# tests 49
+# suites 0
+# pass 49
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 317.317541
+

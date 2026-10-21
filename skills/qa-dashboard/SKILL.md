@@ -13,7 +13,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.1"
+  version: "2.2"
   category: metrics
 ---
 
@@ -34,7 +34,8 @@ failing test.
 |-----------|-------|
 | Already on Grafana for infra metrics | **Grafana Dashboards** — add test metrics alongside prod |
 | Test runner has a hosted dashboard (Cypress/Playwright) | **SaaS-Native Dashboards** — least plumbing |
-| Need rich HTML report, no infra to run | **Allure Report** — generate in CI, publish artifact |
+| Need a local evidence report from the bundled QA runner | **Local QA Report** |
+| Need rich HTML from an existing Allure adapter | **Allure Report** |
 | Need self-hosted aggregation across frameworks + AI triage | **ReportPortal** |
 | Need a single view across multiple runners | **Grafana** or **Allure** (cross-runner aggregation) |
 | Need a weekly summary / release verdict for stakeholders | **Stakeholder Reports** |
@@ -66,6 +67,19 @@ Check `.agents/qa-project-context.md` first — if it exists, use it and skip an
 **5. Automate report generation.** Reports that require manual effort (running scripts, copying data, formatting slides) will not survive the first busy sprint. Generate reports from CI pipelines automatically.
 
 ---
+
+## Local QA Report
+
+For a project using the full QA Skills checkout, run
+`node <qa-skills>/scripts/qa.mjs run --project <project> --goal "<current QA task>"`.
+Open its generated `report.html`; use `result.json` for machine-readable decisions.
+The report includes skill routing, target/source context, per-check evidence, and next
+steps. Keep the accompanying logs and evidence directory when sharing the report.
+
+Retain failed, blocked, incomplete, and skipped work. Exit code zero without an observed
+test is not a passing suite. Do not replace missing evidence with an agent's narrative.
+Publish the run directory as a CI artifact with `if: always()` so failed runs remain
+inspectable. Use the repository's `docs/QA-RUNNER.md` for configuration and retention.
 
 ## Allure Report
 

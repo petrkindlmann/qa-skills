@@ -1,3 +1,4 @@
+import { oracle } from '../../support/oracle.mjs';
 import { test, expect } from '../../support/fixtures.mjs';
 import { todoUI } from '../baseline-todo/todo-ui.mjs';
 
@@ -14,7 +15,7 @@ test('single delete persists immediately with survivor order and completion inta
   await ui.remove(1);
   await page.reload();
 
-  await expect(ui.titles).toHaveText(['Keep first', 'Keep third', 'Keep completed']);
+  await oracle('todo-removal-persistence', 'toHaveText', () => expect(ui.titles).toHaveText(['Keep first', 'Keep third', 'Keep completed']));
   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();
   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();
   await expect(ui.rows.nth(2).getByRole('checkbox')).toBeChecked();

@@ -1,0 +1,5 @@
+RUN project-tests
+INCOMPLETE project-tests: Expected one TAP summary for tests; received 0. Use a single test process per check.
+RESULT INCOMPLETE: 0/1 checks passed, 0 tests observed
+Report: /tmp/qa-field-use/shipping/evidence/qa-run-before/2026-10-21T04-24-14-928Z-821c9bc5/report.html
+Result: /tmp/qa-field-use/shipping/evidence/qa-run-before/2026-10-21T04-24-14-928Z-821c9bc5/result.json

@@ -3,8 +3,10 @@ import { spawn } from 'node:child_process';
 // Own a process group on POSIX. Even inherited output pipes cannot keep this
 // promise pending beyond timeout + kill grace + settlement grace.
 export function runBounded({ command, args = [], cwd, env = process.env,
-  timeoutMs = 90000, killGraceMs = 3000, settlementGraceMs = 1000, maxOutputBytes = 8 * 1024 * 1024 }) {
+  timeoutMs = 90000, killGraceMs = 3000, settlementGraceMs = 1000, maxOutputBytes = 8 * 1024 * 1024,
+  signal, onSpawn }) {
   return new Promise(resolve => {
+    if (signal?.aborted) { resolve({ code: null, signal: null, aborted: true, timedOut: false, log: '', outputTruncated: false }); return; }
     const grouped = process.platform !== 'win32';
     const child = spawn(command, args, { cwd, env, detached: grouped, stdio: ['ignore', 'pipe', 'pipe'] });
     const chunks = [];
@@ -12,6 +14,7 @@ export function runBounded({ command, args = [], cwd, env = process.env,
     let truncated = false;
     let settled = false;
     let timedOut = false;
+    let aborted = false;
     let exitCode = null;
     let exitSignal = null;
     const timers = [];
@@ -30,24 +33,34 @@ export function runBounded({ command, args = [], cwd, env = process.env,
     const finish = extra => {
       if (settled) return;
       settled = true;
+      // A parent may close its pipes while an ignored-stdio grandchild keeps
+      // running. Own the whole POSIX group until settlement, including normal
+      // command exit, rather than cancelling escalation and leaking descendants.
+      if (grouped) kill('SIGKILL');
       for (const timer of timers) clearTimeout(timer);
+      signal?.removeEventListener('abort', abort);
       child.stdout.destroy();
       child.stderr.destroy();
       child.unref();
-      resolve({ code: exitCode, signal: exitSignal, timedOut, outputTruncated: truncated,
+      resolve({ code: exitCode, signal: exitSignal, timedOut, aborted, outputTruncated: truncated,
         log: Buffer.concat(chunks).toString('utf8'), ...extra });
     };
     child.once('error', error => finish({ launchError: error.message }));
     child.once('exit', (code, signal) => { exitCode = code; exitSignal = signal; });
     child.once('close', (code, signal) => { exitCode = code; exitSignal = signal; finish({}); });
-    timers.push(setTimeout(() => {
-      timedOut = true;
+    const terminate = () => {
       kill('SIGTERM');
       timers.push(setTimeout(() => kill('SIGKILL'), killGraceMs));
       timers.push(setTimeout(() => {
         kill('SIGKILL');
         finish({ forcedSettlement: true });
       }, killGraceMs + settlementGraceMs));
-    }, timeoutMs));
+    };
+    const abort = () => { if (!settled && !aborted) { aborted = true; terminate(); } };
+    signal?.addEventListener('abort', abort, { once: true });
+    try { if (child.pid) onSpawn?.(child.pid); }
+    catch (error) { kill('SIGKILL'); finish({ launchError: `Process ownership callback failed: ${error.message}` }); return; }
+    if (signal?.aborted) abort();
+    timers.push(setTimeout(() => { timedOut = true; terminate(); }, timeoutMs));
   });
 }

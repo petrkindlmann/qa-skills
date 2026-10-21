@@ -1,0 +1,183 @@
+--- a/README.md
++++ b/README.md
+@@ -10,3 +10,13 @@
+ 
+ Run with `npm start` (PORT defaults to 4179) and `npm test`. No external services,
+ accounts, database, or credentials are needed. The app is a local development fixture.
++
++## Regression checks
++
++`npm test` runs the quote unit tests and real HTTP contract checks. The HTTP checks
++start a temporary server on an available loopback port and stop it when they finish.
++They cover the free-shipping boundary, express pricing, rejected inputs, and health.
++Run `npm test -- --test-reporter=tap` for machine-readable test output.
++
++`qa.config.json` makes the TAP reporter explicit for the QA Skills runner. See
++`evidence/REPORT.md` for the release review, source diff, and before/after results.
+--- a/quote.mjs
++++ b/quote.mjs
+@@ -1,5 +1,5 @@
+ export function quote(subtotal, method='standard') {
+   if (!Number.isSafeInteger(subtotal) || subtotal < 0 || !['standard','express'].includes(method)) throw new Error('Invalid quote input');
+-  const shipping = method === 'express' ? 1200 : subtotal > 5000 ? 0 : 500;
++  const shipping = method === 'express' ? 1200 : subtotal >= 5000 ? 0 : 500;
+   return {subtotal, shipping, total: subtotal + shipping};
+ }
+--- a/quote.test.mjs
++++ b/quote.test.mjs
+@@ -4,3 +4,33 @@
+ test('standard shipping below threshold',()=>assert.deepEqual(quote(4999),{subtotal:4999,shipping:500,total:5499}));
+ test('standard shipping above threshold',()=>assert.deepEqual(quote(5001),{subtotal:5001,shipping:0,total:5001}));
+ test('express cost',()=>assert.deepEqual(quote(6000,'express'),{subtotal:6000,shipping:1200,total:7200}));
++
++test('standard shipping is free at exactly 5000 cents', () => {
++  assert.deepEqual(quote(5000, 'standard'), {subtotal: 5000, shipping: 0, total: 5000});
++});
++
++test('zero subtotal still pays standard shipping', () => {
++  assert.deepEqual(quote(0, 'standard'), {subtotal: 0, shipping: 500, total: 500});
++});
++
++for (const subtotal of [0, 4999, 5000, 5001]) {
++  test(`express always costs 1200 cents for subtotal ${subtotal}`, () => {
++    assert.deepEqual(quote(subtotal, 'express'), {subtotal, shipping: 1200, total: subtotal + 1200});
++  });
++}
++
++for (const [label, subtotal] of [
++  ['negative', -1], ['fractional', 1.5], ['numeric string', '5000'],
++  ['null', null], ['boolean', true], ['object', {}], ['array', []],
++  ['missing', undefined], ['NaN', NaN], ['infinity', Infinity],
++]) {
++  test(`rejects ${label} subtotal`, () => {
++    assert.throws(() => quote(subtotal), /Invalid quote input/);
++  });
++}
++
++for (const method of ['overnight', '', null, 1]) {
++  test(`rejects unknown method ${JSON.stringify(method)}`, () => {
++    assert.throws(() => quote(5000, method), /Invalid quote input/);
++  });
++}
+--- /dev/null
++++ b/server.test.mjs
+@@ -0,0 +1,105 @@
++import test, {before, after} from 'node:test';
++import assert from 'node:assert/strict';
++import net from 'node:net';
++import {spawn} from 'node:child_process';
++import {once} from 'node:events';
++import {fileURLToPath} from 'node:url';
++
++let child;
++let origin;
++let output = '';
++
++before(async () => {
++  // Let the OS choose an available loopback port; fail loudly if it is taken before startup.
++  const reservation = net.createServer();
++  reservation.listen(0, '127.0.0.1');
++  await once(reservation, 'listening');
++  const port = reservation.address().port;
++  await new Promise((resolve, reject) => reservation.close(error => error ? reject(error) : resolve()));
++  origin = `http://127.0.0.1:${port}`;
++  child = spawn(process.execPath, ['server.mjs'], {
++    cwd: fileURLToPath(new URL('.', import.meta.url)),
++    env: {...process.env, PORT: String(port)},
++    stdio: ['ignore', 'pipe', 'pipe'],
++  });
++  await new Promise((resolve, reject) => {
++    const timer = setTimeout(() => reject(new Error(`Server did not become ready: ${output}`)), 3000);
++    const finish = error => {
++      clearTimeout(timer);
++      error ? reject(error) : resolve();
++    };
++    child.once('error', finish);
++    child.once('exit', (code, signal) => finish(new Error(`Server exited before readiness: ${code ?? signal}; ${output}`)));
++    child.stdout.on('data', chunk => {
++      output += chunk;
++      if (output.includes('Parcel Desk ready')) finish();
++    });
++    child.stderr.on('data', chunk => { output += chunk; });
++  });
++});
++
++after(async () => {
++  if (!child || child.exitCode !== null || child.signalCode !== null) return;
++  const exited = once(child, 'exit');
++  child.kill('SIGTERM');
++  const forceStop = setTimeout(() => child.kill('SIGKILL'), 2000);
++  try {
++    const [code, signal] = await exited;
++    assert.equal(code, 0, `Server did not stop cleanly: ${signal}; ${output}`);
++  } finally {
++    clearTimeout(forceStop);
++  }
++});
++
++async function request(t, method, path, body, expectedStatus, expectedBody) {
++  const response = await fetch(`${origin}${path}`, {
++    method,
++    headers: {'content-type': 'application/json'},
++    ...(body === undefined ? {} : {body: typeof body === 'string' ? body : JSON.stringify(body)}),
++    signal: AbortSignal.timeout(2000),
++  });
++  const actual = await response.json();
++  t.diagnostic(JSON.stringify({method, path, request: body, status: response.status, response: actual}));
++  assert.match(response.headers.get('content-type'), /^application\/json\b/);
++  assert.equal(response.status, expectedStatus);
++  assert.deepEqual(actual, expectedBody);
++}
++
++test('GET /health reports ready over HTTP', t => request(t, 'GET', '/health', undefined, 200, {status: 'ready'}));
++
++for (const [subtotal, shipping] of [[0, 500], [4999, 500], [5000, 0], [5001, 0]]) {
++  test(`HTTP standard quote for ${subtotal} cents`, t =>
++    request(t, 'POST', '/quote', {subtotal, method: 'standard'}, 200, {subtotal, shipping, total: subtotal + shipping}));
++}
++
++for (const subtotal of [0, 4999, 5000, 5001]) {
++  test(`HTTP express quote for ${subtotal} cents`, t =>
++    request(t, 'POST', '/quote', {subtotal, method: 'express'}, 200, {subtotal, shipping: 1200, total: subtotal + 1200}));
++}
++
++test('HTTP omitted method preserves standard default', t =>
++  request(t, 'POST', '/quote', {subtotal: 5000}, 200, {subtotal: 5000, shipping: 0, total: 5000}));
++
++for (const [label, body] of [
++  ['negative subtotal', {subtotal: -1}],
++  ['fractional subtotal', {subtotal: 1.5}],
++  ['string subtotal', {subtotal: '5000'}],
++  ['null subtotal', {subtotal: null}],
++  ['boolean subtotal', {subtotal: true}],
++  ['object subtotal', {subtotal: {}}],
++  ['array subtotal', {subtotal: []}],
++  ['missing subtotal', {method: 'standard'}],
++  ['unknown method', {subtotal: 5000, method: 'overnight'}],
++  ['null method', {subtotal: 5000, method: null}],
++  ['empty method', {subtotal: 5000, method: ''}],
++  ['numeric method', {subtotal: 5000, method: 1}],
++  ['malformed JSON', '{'],
++  ['null body', 'null'],
++]) {
++  test(`HTTP rejects ${label} with 400`, t =>
++    request(t, 'POST', '/quote', body, 400, {error: 'Invalid quote input'}));
++}
++
++test('HTTP server remains healthy after invalid requests', t => request(t, 'GET', '/health', undefined, 200, {status: 'ready'}));
++
++test('HTTP unknown route returns 404', t => request(t, 'GET', '/missing', undefined, 404, {error: 'Not found'}));
+--- /dev/null
++++ b/qa.config.json
+@@ -0,0 +1,11 @@
++{
++  "version": 1,
++  "checks": [
++    {
++      "id": "project-tests",
++      "command": ["npm", "run", "test", "--", "--test-reporter=tap"],
++      "reporter": "tap",
++      "timeoutMs": 15000
++    }
++  ]
++}

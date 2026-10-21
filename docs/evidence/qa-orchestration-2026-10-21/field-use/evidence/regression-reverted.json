@@ -1,0 +1,16 @@
+{
+  "command": [
+    "node",
+    "--test",
+    "--test-reporter=tap",
+    "--test-name-pattern=standard shipping",
+    "quote.test.mjs"
+  ],
+  "shellCommand": "node --test --test-reporter=tap '--test-name-pattern=standard shipping' quote.test.mjs",
+  "cwd": "/tmp/qa-field-use/shipping",
+  "startedAt": "2026-10-21T04:28:09.418361+00:00",
+  "finishedAt": "2026-10-21T04:28:09.545417+00:00",
+  "durationSeconds": 0.127,
+  "exitCode": 1,
+  "capturedBytes": 1781
+}

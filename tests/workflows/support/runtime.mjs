@@ -5,10 +5,11 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { randomUUID } from 'node:crypto';
 import { setTimeout as pause } from 'node:timers/promises';
+import { pythonExecutable } from '../../../scripts/run-python.mjs';
 
 export const repository = fileURLToPath(new URL('../../../', import.meta.url));
 // CI images expose both names; macOS ships python3 only. QA_PYTHON overrides either.
-export const python = process.env.QA_PYTHON ?? (process.platform === 'win32' ? 'python' : 'python3');
+export const python = pythonExecutable();
 
 // The services run over real loopback sockets. This helper never fulfills requests.
 export async function launchService({ command, args, directory, readyFile, env = {}, timeoutMs = 15000 }) {

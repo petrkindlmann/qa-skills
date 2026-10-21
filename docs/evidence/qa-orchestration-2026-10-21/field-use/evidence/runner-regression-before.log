@@ -1,0 +1,5 @@
+RUN project-tests
+FAILED project-tests: 3 tests failed. Exit code 1.
+RESULT FAILED: 0/1 checks passed, 49 tests observed
+Report: /tmp/qa-field-use/shipping/evidence/qa-run-regression-before/2026-10-21T04-27-10-748Z-02405b26/report.html
+Result: /tmp/qa-field-use/shipping/evidence/qa-run-regression-before/2026-10-21T04-27-10-748Z-02405b26/result.json

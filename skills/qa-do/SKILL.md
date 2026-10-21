@@ -1,20 +1,20 @@
 ---
 name: qa-do
 description: >-
-  Routing skill of last resort. Takes a plain-language QA situation and names the
-  right 1-2 skills to use and in what order. Use ONLY when the request does not
+  Route a plain-language QA situation to the next 1-2 skills, then carry out the
+  requested workflow with evidence and a readable report. Use ONLY when the request does not
   match any other skill's trigger phrases. Use when: "which skill should I use,"
-  "where do I start," "I'm not sure what to test," "/qa-do," or any vague QA
+  "where do I start," "validate this app," "run QA and report," "/qa-do," or any vague QA
   situation that doesn't map to one skill. Not for: bootstrapping a brand-new
   project with no QA — use qa-start. Not for: capturing project setup/context —
   use qa-project-context. If the request clearly matches another skill, invoke
   that skill directly instead of routing through here.
   Related: qa-start, qa-project-context, test-strategy.
 license: MIT
-compatibility: Cross-tool. Tested with Claude Code, Codex, Cursor, Gemini CLI. Reads the project root; no network access required.
+compatibility: Cross-tool skill instructions. The optional repository CLI requires Node 24; execution needs the project's test tools and any configured target.
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: foundation
   argument-hint: "plain-language QA situation (e.g. 'our checkout flow is slow and tests are flaky')"
 ---
@@ -22,10 +22,17 @@ metadata:
 <objective>
 Most QA situations fit a recognizable pattern. This skill takes a plain-language
 description of what you're trying to do or what problem you're facing, matches it to a
-pattern, and names the 1-2 skills to use and in what order. It diagnoses and routes — it
-does not duplicate content from the skills it points to. If invoked with arguments, the
-situation is `$ARGUMENTS`; otherwise ask the user for a sentence or two describing it.
+pattern, and selects the next 1-2 skills in order. Execute their workflows for an action
+request; return a recommendation alone when the user asks which skill to choose. If
+invoked with arguments, the situation is `$ARGUMENTS`; otherwise infer it from the
+current task and project evidence.
 </objective>
+
+## Discovery Questions
+
+Check `.agents/qa-project-context.md` first. Inspect the project manifest, tests, current
+changes, configured target, and available tools before asking anything. Ask only for a
+missing target or requirement that changes the requested work.
 
 ## Core Principles
 
@@ -37,7 +44,7 @@ situation is `$ARGUMENTS`; otherwise ask the user for a sentence or two describi
 
 2. **One or two skills, in order — never a pile.** Output at most two skills. A second
    skill earns its place only when the first leaves a clear gap (diagnose → measure, risk →
-   checklist). If one skill covers the request, say "Direct" and stop. Routing to three
+   checklist). If one skill covers the request, say "Direct" and execute it. Routing to three
    skills means the situation is ambiguous — ask a clarifying question instead.
 
 3. **The routing table is the source of truth, and it goes stale.** This router is uniquely
@@ -53,6 +60,32 @@ enough. The router outputs **the recommended skill(s) (1-2, in order)** and **on
 skill** explaining the role it plays. Example: "Our E2E tests keep failing in CI but pass
 locally." → `test-reliability` (diagnose flaky/environment-sensitive tests), then
 `ci-cd-integration` (align the pipeline environment with local behavior).
+
+## Execute an Application Check
+
+When the full repository is available, use its bounded runner. Resolve `<qa-skills>` to
+this checkout and `<project>` to the application, even when the working directory differs.
+
+```bash
+node <qa-skills>/scripts/qa.mjs plan --project <project> --goal "<user goal>"
+node <qa-skills>/scripts/qa.mjs run --project <project> --goal "<user goal>"
+```
+
+Read the primary skill and next relevant skill in the plan, then perform their workflows.
+The runner discovers available test commands and writes `report.html`, `result.json`,
+logs, and a host handoff. A plan is not an executed test. Where only individual skills
+are installed, execute their recipes directly and retain equivalent evidence.
+
+For URL checks, use a concrete target and application-owned readiness selector. Run the
+configured checks without treating optional missing integrations as a reason to stop
+unrelated local work. A missing browser, unavailable target, no observed tests, or an
+unreadable test result remains **blocked** or **incomplete**. Preserve skipped cases.
+
+For a failure, reproduce it, preserve its assertion, and apply a repair only when it is
+within the user's task. Execute again after changing the code. Stop after **two attempts**
+if the failure persists and report the exact blocker; do not weaken an assertion or
+retry indefinitely. The report covers executed checks, not universal correctness.
+See the repository's `docs/QA-RUNNER.md` for configuration and host integration.
 
 ## Common Situations and Their Skills
 
@@ -155,6 +188,13 @@ Regenerate this from the `category:` field of every `skills/*/SKILL.md` whenever
   and fall back to the closest Quick Reference category rather than forcing a wrong match.
 - **Grabbing a request that belongs to a named sibling.** "Set up QA on a new project" is
   `qa-start`; "capture project context" is `qa-project-context`. qa-do is last resort only.
+
+## Done When
+
+- The next 1-2 skills are named with reasons tied to the current task.
+- An action request has executed checks or a specific recorded blocker.
+- The report identifies the target, source revision, command, outcome, and remaining gaps.
+- Authored, executed, failed, skipped, blocked, and unrun checks are distinguishable.
 
 ## Related Skills
 

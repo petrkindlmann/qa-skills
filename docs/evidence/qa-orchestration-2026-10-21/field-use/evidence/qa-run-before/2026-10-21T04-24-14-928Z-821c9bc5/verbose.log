@@ -1,0 +1,7 @@
+QA run 2026-10-21T04-24-14-928Z-821c9bc5
+Project: parcel-desk
+Budget: 180000 ms
+
+CHECK project-tests
+ARGV ["npm","run","test"]
+

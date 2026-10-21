@@ -1,0 +1,14 @@
+{
+  "files": {
+    "package.json": "3bc831c2db40d99066f5109994988a90267125c37627e0d004dff423618721b1",
+    "README.md": "ab373825cfb1c72738bd1fd4d89552d7e8d762e5967aa7cf11787471ed2e8b96",
+    "quote.mjs": "2310e065a5bb88872506bde79d133f7ac8b85ad54eb4dc9a454b52afc348aef8",
+    "quote.test.mjs": "36317325fc763dae7ce2f7edcec05da8acf3f6abaa0a5c4ae6e50ec1ba4a4efc",
+    "server.mjs": "a7f18c4310ebb564a143a34c8697311e49cd0c30bd33369311ba2261ab107061",
+    "server.test.mjs": "ee49827191b13cef3a3629fb3248a53ecdf59dfa95034ec215c0761e49ab555d",
+    "qa.config.json": "404c21ebfeafdc048f869820b1179fe1ca7f17cab6929082db3d666d26a0df1f"
+  },
+  "candidateSha256": "8451910680b6602257b23db8351e8782c354de356842f55b982beadc3deb6729",
+  "gitCommit": null,
+  "identityMethod": "SHA-256 of the canonical sorted file-hash map; this fixture is not a Git checkout."
+}

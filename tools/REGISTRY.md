@@ -42,9 +42,9 @@ Central registry of QA tools referenced across qaskills. Each skill declares whi
 
 | Tool | Category | MCP Server | Referenced by Skills |
 |------|----------|------------|---------------------|
-| Jira | Bug tracking | Yes (Atlassian MCP) | bug-reporting |
-| Linear | Bug tracking | Yes (Linear MCP) | bug-reporting |
-| GitHub Issues | Bug tracking | Yes (GitHub MCP) | bug-reporting |
+| Jira | Bug tracking | Yes (Atlassian MCP) | ai-bug-triage, bug-reproduction |
+| Linear | Bug tracking | Yes (Linear MCP) | ai-bug-triage, bug-reproduction |
+| GitHub Issues | Bug tracking | Yes (GitHub MCP) | ai-bug-triage, bug-reproduction |
 
 ## Security
 

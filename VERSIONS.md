@@ -1,5 +1,29 @@
 # Versions
 
+## v3.4.0 (2026-10-21)
+
+### Executable QA routing and evidence reports
+
+- Add `qa plan`, `qa run`, and `qa init --wire-agent`: project discovery, goal/diff-based
+  skill selection, bounded test commands, application readiness/accessibility checks,
+  and standalone HTML/JSON reports with minimal and verbose logs.
+- Wire a bounded QA loop into project instructions on request. The host loads domain
+  skills, reproduces failures, makes authorized repairs, and reruns checks; the CLI
+  records observations without presenting model prose or an empty suite as a pass.
+- Add cumulative WCAG 2.1 rules, expected-page/readiness assertions, and a callable
+  known-gap accessibility scanner. Give hosted inbox requests client deadlines that
+  cover both headers and response bodies.
+- Require a designated failing matcher and per-run oracle evidence before counting
+  a fixture defect as detected. Stop fault runs after a failed healthy control.
+- Replace the agentic CI self-grade with a typed independent-oracle gate bound to
+  run, target, and build. Keep the external host adapter as an explicit prerequisite.
+- Honor `QA_PYTHON` through the shared npm launcher and service runtime. Repair stale
+  skill counts, links, and CI documentation; add executable QA runner controls to CI.
+- Add a reproducible eight-second motion-graphic renderer and three video storyboards.
+
+Usage: [QA runner](docs/QA-RUNNER.md). Campaign evidence and limits:
+[delivery report](docs/QA-ORCHESTRATION-2026-10-21.md).
+
 ## v3.3.0 (2026-10-21)
 
 ### Addon workflows, macOS support and four skill repairs

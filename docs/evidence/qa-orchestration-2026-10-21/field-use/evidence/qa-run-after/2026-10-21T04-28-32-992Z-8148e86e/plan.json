@@ -1,0 +1,99 @@
+{
+  "schemaVersion": 1,
+  "createdAt": "2026-10-21T04:28:32.991Z",
+  "project": {
+    "root": "/tmp/qa-field-use/shipping",
+    "name": "parcel-desk",
+    "packageManager": "npm",
+    "frameworks": [
+      "node-test"
+    ],
+    "lockfiles": [],
+    "inputs": [
+      {
+        "path": "package.json",
+        "sha256": "3bc831c2db40d99066f5109994988a90267125c37627e0d004dff423618721b1"
+      },
+      {
+        "path": "qa.config.json",
+        "sha256": "404c21ebfeafdc048f869820b1179fe1ca7f17cab6929082db3d666d26a0df1f"
+      }
+    ],
+    "contextPath": null,
+    "availableScripts": [
+      "test",
+      "start"
+    ],
+    "checks": [
+      {
+        "id": "project-tests",
+        "command": [
+          "npm",
+          "run",
+          "test"
+        ],
+        "reporter": "tap",
+        "timeoutMs": 90000,
+        "source": "package.json scripts.test",
+        "declaredScript": "node --test"
+      }
+    ],
+    "commit": null,
+    "dirty": null,
+    "gitRoot": null,
+    "changedFiles": [],
+    "runtime": {
+      "node": "v24.19.0",
+      "platform": "linux",
+      "arch": "x64"
+    }
+  },
+  "configPath": "/tmp/qa-field-use/shipping/qa.config.json",
+  "goal": "Check documented shipping quote behavior for release, repair reproducible code defects, add useful regression coverage, and execute local HTTP checks with evidence.",
+  "url": null,
+  "browser": {},
+  "checks": [
+    {
+      "id": "project-tests",
+      "command": [
+        "npm",
+        "run",
+        "test",
+        "--",
+        "--test-reporter=tap"
+      ],
+      "reporter": "tap",
+      "timeoutMs": 15000,
+      "source": "/tmp/qa-field-use/shipping/qa.config.json"
+    }
+  ],
+  "budgetMs": 180000,
+  "routing": {
+    "primary": [
+      {
+        "skill": "bug-reproduction",
+        "reason": "The goal needs a concrete reproduction and a regression assertion.",
+        "path": "/workspace/scratch/db79cfa7c2bc/qa-skills-audit-2026-10-21/skills/bug-reproduction/SKILL.md"
+      },
+      {
+        "skill": "release-readiness",
+        "reason": "The goal is a release decision with explicit coverage boundaries.",
+        "path": "/workspace/scratch/db79cfa7c2bc/qa-skills-audit-2026-10-21/skills/release-readiness/SKILL.md"
+      }
+    ],
+    "supporting": [
+      {
+        "skill": "coverage-analysis",
+        "reason": "The goal asks where measured coverage is missing.",
+        "path": "/workspace/scratch/db79cfa7c2bc/qa-skills-audit-2026-10-21/skills/coverage-analysis/SKILL.md"
+      }
+    ],
+    "method": "deterministic goal, project, and changed-path routing",
+    "hostRequired": "The host agent must read the named SKILL.md files. This CLI does not call a model or author tests."
+  },
+  "boundaries": [
+    "Only declared test commands and the supplied browser target execute.",
+    "The CLI routes skills and records checks; the host agent supplies model reasoning and any authorized code repair.",
+    "No command result is accepted as test evidence without a supported nonempty reporter."
+  ]
+}

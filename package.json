@@ -6,12 +6,14 @@
     "node": ">=24.0.0"
   },
   "scripts": {
+    "qa": "node scripts/qa.mjs",
+    "test:qa": "node --test --test-isolation=none tests/qa/*.test.mjs",
     "test": "node --test --test-isolation=none tests/examples/*.test.mjs",
     "test:browser": "node --test --test-isolation=none tests/browser/*.test.mjs",
-    "workflow:setup": "python3 tests/workflows/mailpit/mailpit_service.py install",
+    "workflow:setup": "node scripts/run-python.mjs tests/workflows/mailpit/mailpit_service.py install",
     "test:workflows": "node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs",
     "test:workflow-controls": "node tests/workflows/run-matrix.mjs final",
-    "test:mailpit": "python3 tests/workflows/mailpit/run_verification.py"
+    "test:mailpit": "node scripts/run-python.mjs tests/workflows/mailpit/run_verification.py"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",

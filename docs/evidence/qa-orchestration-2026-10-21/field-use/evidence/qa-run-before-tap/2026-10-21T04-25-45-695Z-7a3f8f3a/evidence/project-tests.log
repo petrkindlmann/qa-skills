@@ -1,0 +1,16 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> test
+> node --test --test-reporter=tap
+
+node:internal/test_runner/utils:297
+      throw new ERR_INVALID_ARG_VALUE(
+      ^
+
+TypeError [ERR_INVALID_ARG_VALUE]: The argument '--test-reporter' must match the number of specified '--test-reporter-destination'. Received [ 'tap', 'tap' ]
+    at parseCommandLine (node:internal/test_runner/utils:297:13)
+    at node:internal/main/test_runner:19:17 {
+  code: 'ERR_INVALID_ARG_VALUE'
+}
+
+Node.js v24.19.0

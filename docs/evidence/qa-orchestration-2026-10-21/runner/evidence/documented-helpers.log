@@ -1,0 +1,708 @@
+(node:129315) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+TAP version 13
+# Subtest: agent gate executes an independent oracle and accepts a complete current result
+ok 1 - agent gate executes an independent oracle and accepts a complete current result
+  ---
+  duration_ms: 54.309098
+  type: 'test'
+  ...
+# Subtest: model self-grades, string booleans, zero steps, excess steps and wrong binding do not start the oracle
+ok 2 - model self-grades, string booleans, zero steps, excess steps and wrong binding do not start the oracle
+  ---
+  duration_ms: 2.390889
+  type: 'test'
+  ...
+# Subtest: independent failures override a model success claim and successful process exit
+ok 3 - independent failures override a model success claim and successful process exit
+  ---
+  duration_ms: 81.029784
+  type: 'test'
+  ...
+# Subtest: missing, empty, duplicate, unobserved and mismatched oracle evidence fails closed
+ok 4 - missing, empty, duplicate, unobserved and mismatched oracle evidence fails closed
+  ---
+  duration_ms: 401.827697
+  type: 'test'
+  ...
+# Subtest: a bounded oracle timeout and a missing executable remain blocked
+ok 5 - a bounded oracle timeout and a missing executable remain blocked
+  ---
+  duration_ms: 112.476568
+  type: 'test'
+  ...
+# Subtest: invalid oracle contracts are rejected before spawning
+ok 6 - invalid oracle contracts are rejected before spawning
+  ---
+  duration_ms: 2.895297
+  type: 'test'
+  ...
+# Subtest: the published oracle runs real HTTP requests and rejects the wrong account, build and unauthenticated session
+ok 7 - the published oracle runs real HTTP requests and rejects the wrong account, build and unauthenticated session
+  ---
+  duration_ms: 396.090553
+  type: 'test'
+  ...
+# Subtest: gate CLI writes a typed verdict and removes an earlier success before rejecting malformed input
+ok 8 - gate CLI writes a typed verdict and removes an earlier success before rejecting malformed input
+  ---
+  duration_ms: 180.62444
+  type: 'test'
+  ...
+# Subtest: GET event preserves its exact event name and value
+ok 9 - GET event preserves its exact event name and value
+  ---
+  duration_ms: 0.603318
+  type: 'test'
+  ...
+# Subtest: POST batch inherits common query parameters for every event
+ok 10 - POST batch inherits common query parameters for every event
+  ---
+  duration_ms: 0.512892
+  type: 'test'
+  ...
+# Subtest: POST fields override shared parameters without a phantom query-only event
+ok 11 - POST fields override shared parameters without a phantom query-only event
+  ---
+  duration_ms: 0.241123
+  type: 'test'
+  ...
+# Subtest: URL query supplies a default event name but each POST row is one event
+ok 12 - URL query supplies a default event name but each POST row is one event
+  ---
+  duration_ms: 0.273322
+  type: 'test'
+  ...
+# Subtest: blank POST rows do not create extra events
+ok 13 - blank POST rows do not create extra events
+  ---
+  duration_ms: 0.329976
+  type: 'test'
+  ...
+# Subtest: consent-only request with no event name produces no business event
+ok 14 - consent-only request with no event name produces no business event
+  ---
+  duration_ms: 0.098047
+  type: 'test'
+  ...
+# Subtest: missing and empty event names are ignored
+ok 15 - missing and empty event names are ignored
+  ---
+  duration_ms: 0.093561
+  type: 'test'
+  ...
+# Subtest: lookalike hosts and paths containing collect in query are ignored
+ok 16 - lookalike hosts and paths containing collect in query are ignored
+  ---
+  duration_ms: 0.149405
+  type: 'test'
+  ...
+# Subtest: configured first-party collector is accepted explicitly
+ok 17 - configured first-party collector is accepted explicitly
+  ---
+  duration_ms: 0.102404
+  type: 'test'
+  ...
+# Subtest: duplicate events remain duplicated for the caller to detect
+ok 18 - duplicate events remain duplicated for the caller to detect
+  ---
+  duration_ms: 0.094603
+  type: 'test'
+  ...
+# Subtest: collector captures early events and can release its listener
+ok 19 - collector captures early events and can release its listener
+  ---
+  duration_ms: 0.219079
+  type: 'test'
+  ...
+# Subtest: actual ShazaMail helper creates an inbox and waits using real local HTTP
+ok 20 - actual ShazaMail helper creates an inbox and waits using real local HTTP
+  ---
+  duration_ms: 22.212181
+  type: 'test'
+  ...
+# Subtest: actual ShazaMail helper bounds stalled-headers on create
+ok 21 - actual ShazaMail helper bounds stalled-headers on create
+  ---
+  duration_ms: 85.543276
+  type: 'test'
+  ...
+# Subtest: actual ShazaMail helper bounds stalled-body on create
+ok 22 - actual ShazaMail helper bounds stalled-body on create
+  ---
+  duration_ms: 82.623556
+  type: 'test'
+  ...
+# Subtest: actual ShazaMail helper bounds stalled-headers on wait
+ok 23 - actual ShazaMail helper bounds stalled-headers on wait
+  ---
+  duration_ms: 80.273133
+  type: 'test'
+  ...
+# Subtest: actual ShazaMail helper bounds stalled-body on wait
+ok 24 - actual ShazaMail helper bounds stalled-body on wait
+  ---
+  duration_ms: 81.136966
+  type: 'test'
+  ...
+# Subtest: ShazaMail HTTP and malformed JSON failures remain distinct from client timeouts
+ok 25 - ShazaMail HTTP and malformed JSON failures remain distinct from client timeouts
+  ---
+  duration_ms: 6.798722
+  type: 'test'
+  ...
+# Subtest: ShazaMail rejects absent credentials, invalid budgets and unsupported paths without requests
+ok 26 - ShazaMail rejects absent credentials, invalid budgets and unsupported paths without requests
+  ---
+  duration_ms: 0.293802
+  type: 'test'
+  ...
+# Subtest: OTP is selected by label rather than an earlier order number
+ok 27 - OTP is selected by label rather than an earlier order number
+  ---
+  duration_ms: 0.336606
+  type: 'test'
+  ...
+# Subtest: missing and ambiguous OTPs fail instead of guessing
+ok 28 - missing and ambiguous OTPs fail instead of guessing
+  ---
+  duration_ms: 0.291208
+  type: 'test'
+  ...
+# Subtest: a repeated rendering of the same OTP is unambiguous
+ok 29 - a repeated rendering of the same OTP is unambiguous
+  ---
+  duration_ms: 0.098908
+  type: 'test'
+  ...
+# Subtest: localized template can specify its label without changing extraction logic
+ok 30 - localized template can specify its label without changing extraction logic
+  ---
+  duration_ms: 0.231669
+  type: 'test'
+  ...
+# Subtest: Mailpit uses search endpoint and exact recipient, then fetches matching body
+ok 31 - Mailpit uses search endpoint and exact recipient, then fetches matching body
+  ---
+  duration_ms: 15.262812
+  type: 'test'
+  ...
+# Subtest: a second request for the same account excludes previously seen mail
+ok 32 - a second request for the same account excludes previously seen mail
+  ---
+  duration_ms: 0.720284
+  type: 'test'
+  ...
+# Subtest: delayed delivery is polled without an arbitrary browser sleep
+ok 33 - delayed delivery is polled without an arbitrary browser sleep
+  ---
+  duration_ms: 4.663078
+  type: 'test'
+  ...
+# Subtest: server errors and malformed search responses are visible failures
+ok 34 - server errors and malformed search responses are visible failures
+  ---
+  duration_ms: 0.623548
+  type: 'test'
+  ...
+# Subtest: detail response cannot substitute another recipient or message ID
+ok 35 - detail response cannot substitute another recipient or message ID
+  ---
+  duration_ms: 1.06968
+  type: 'test'
+  ...
+# Subtest: missing mail times out rather than becoming an empty successful result
+ok 36 - missing mail times out rather than becoming an empty successful result
+  ---
+  duration_ms: 19.942344
+  type: 'test'
+  ...
+# Subtest: a second matrix cannot reuse a live owner output directory
+ok 37 - a second matrix cannot reuse a live owner output directory
+  ---
+  duration_ms: 3.22218
+  type: 'test'
+  ...
+# Subtest: a dead parent with a live recorded child still blocks reuse
+ok 38 - a dead parent with a live recorded child still blocks reuse
+  ---
+  duration_ms: 1.90647
+  type: 'test'
+  ...
+# Subtest: an actual departed owner can be reclaimed without waiting or overwriting a live lock
+ok 39 - an actual departed owner can be reclaimed without waiting or overwriting a live lock
+  ---
+  duration_ms: 60.703132
+  type: 'test'
+  ...
+# Subtest: unknown ownership fails promptly with a fresh-output remedy and preserves the record
+ok 40 - unknown ownership fails promptly with a fresh-output remedy and preserves the record
+  ---
+  duration_ms: 1.927321
+  type: 'test'
+  ...
+# Subtest: documented payment handlers support create, retrieve, confirm, and missing IDs
+ok 41 - documented payment handlers support create, retrieve, confirm, and missing IDs
+  ---
+  duration_ms: 36.220714
+  type: 'test'
+  ...
+# Subtest: rate-limit scenario wins over the matching payment success handler
+ok 42 - rate-limit scenario wins over the matching payment success handler
+  ---
+  duration_ms: 110.294588
+  type: 'test'
+  ...
+# Subtest: documented lifecycle clears payment state between tests
+ok 43 - documented lifecycle clears payment state between tests
+  ---
+  duration_ms: 8.277549
+  type: 'test'
+  ...
+# Subtest: payments created at the same clock tick receive distinct fixture IDs
+ok 44 - payments created at the same clock tick receive distinct fixture IDs
+  ---
+  duration_ms: 5.064923
+  type: 'test'
+  ...
+# Subtest: the documented CI setup rejects an unhandled request before network fallback
+ok 45 - the documented CI setup rejects an unhandled request before network fallback
+  ---
+  duration_ms: 5.095119
+  type: 'test'
+  ...
+# Subtest: documented scenario: should handle payment API timeout
+ok 46 - documented scenario: should handle payment API timeout
+  ---
+  duration_ms: 55.268111
+  type: 'test'
+  ...
+# Subtest: documented scenario: should retry on 503
+ok 47 - documented scenario: should retry on 503
+  ---
+  duration_ms: 311.195928
+  type: 'test'
+  ...
+# Subtest: sample client exposes rate limiting without retrying it as a 503
+ok 48 - sample client exposes rate limiting without retrying it as a 503
+  ---
+  duration_ms: 106.304573
+  type: 'test'
+  ...
+# Subtest: sample client caps persistent 503 retries and keeps the request identity
+ok 49 - sample client caps persistent 503 retries and keeps the request identity
+  ---
+  duration_ms: 8.928688
+  type: 'test'
+  ...
+# Subtest: documented reset removes a runtime failure override
+ok 50 - documented reset removes a runtime failure override
+  ---
+  duration_ms: 6.021468
+  type: 'test'
+  ...
+# Subtest: sequential redelivery fulfills once
+ok 51 - sequential redelivery fulfills once
+  ---
+  duration_ms: 1.394378
+  type: 'test'
+  ...
+# Subtest: failure after dedup insertion remains retryable instead of losing fulfillment
+ok 52 - failure after dedup insertion remains retryable instead of losing fulfillment
+  ---
+  duration_ms: 0.564249
+  type: 'test'
+  ...
+# Subtest: success commits before acknowledgment and releases its connection
+ok 53 - success commits before acknowledgment and releases its connection
+  ---
+  duration_ms: 0.457999
+  type: 'test'
+  ...
+# Subtest: duplicate path closes the transaction before returning
+ok 54 - duplicate path closes the transaction before returning
+  ---
+  duration_ms: 0.537689
+  type: 'test'
+  ...
+# Subtest: owned descendants stop after timeout parent exit
+ok 55 - owned descendants stop after timeout parent exit
+  ---
+  duration_ms: 1159.121289
+  type: 'test'
+  ...
+# Subtest: owned descendants stop after normal parent exit
+ok 56 - owned descendants stop after normal parent exit
+  ---
+  duration_ms: 523.514963
+  type: 'test'
+  ...
+# Subtest: Python selection honors an exact executable override and platform defaults
+ok 57 - Python selection honors an exact executable override and platform defaults
+  ---
+  duration_ms: 0.45179
+  type: 'test'
+  ...
+# Subtest: an executable override works without python3 on PATH and preserves literal arguments
+ok 58 - an executable override works without python3 on PATH and preserves literal arguments
+  ---
+  duration_ms: 46.332094
+  type: 'test'
+  ...
+# Subtest: missing Python and bounded stalled executions cannot claim success
+ok 59 - missing Python and bounded stalled executions cannot claim success
+  ---
+  duration_ms: 108.454497
+  type: 'test'
+  ...
+# Subtest: every failed and timedOut retry survives a later successful attempt
+ok 60 - every failed and timedOut retry survives a later successful attempt
+  ---
+  duration_ms: 1.799208
+  type: 'test'
+  ...
+# Subtest: nested suites, projects, and expected failures retain separate provenance
+ok 61 - nested suites, projects, and expected failures retain separate provenance
+  ---
+  duration_ms: 0.378009
+  type: 'test'
+  ...
+# Subtest: missing messages, locations, and locator renderings never discard an attempt
+ok 62 - missing messages, locations, and locator renderings never discard an attempt
+  ---
+  duration_ms: 0.601776
+  type: 'test'
+  ...
+# Subtest: timeout and assertion text leave source, route, intent, and cause unverified
+ok 63 - timeout and assertion text leave source, route, intent, and cause unverified
+  ---
+  duration_ms: 0.995459
+  type: 'test'
+  ...
+# Subtest: run-level errors remain visible even when no tests produced an attempt
+ok 64 - run-level errors remain visible even when no tests produced an attempt
+  ---
+  duration_ms: 0.345199
+  type: 'test'
+  ...
+# Subtest: interrupted and missing-status attempts remain incomplete inventory records
+ok 65 - interrupted and missing-status attempts remain incomplete inventory records
+  ---
+  duration_ms: 0.193891
+  type: 'test'
+  ...
+# Subtest: observed healthy results can produce an empty failure inventory
+ok 66 - observed healthy results can produce an empty failure inventory
+  ---
+  duration_ms: 0.240502
+  type: 'test'
+  ...
+# Subtest: empty or malformed reporter structures do not become a successful empty inventory
+ok 67 - empty or malformed reporter structures do not become a successful empty inventory
+  ---
+  duration_ms: 0.509677
+  type: 'test'
+  ...
+# Subtest: the triage gate accepts a complete reviewed record and rejects untriaged records
+ok 68 - the triage gate accepts a complete reviewed record and rejects untriaged records
+  ---
+  duration_ms: 0.339181
+  type: 'test'
+  ...
+# Subtest: confirmation alone cannot bypass missing source, intent, route, or triage evidence
+ok 69 - confirmation alone cannot bypass missing source, intent, route, or triage evidence
+  ---
+  duration_ms: 1.434259
+  type: 'test'
+  ...
+# Subtest: the actual I/O driver writes the complete inventory and never reads guessed source files
+ok 70 - the actual I/O driver writes the complete inventory and never reads guessed source files
+  ---
+  duration_ms: 1.23579
+  type: 'test'
+  ...
+# Subtest: the actual I/O driver rejects invalid JSON and invalid UTF-8
+ok 71 - the actual I/O driver rejects invalid JSON and invalid UTF-8
+  ---
+  duration_ms: 1.131683
+  type: 'test'
+  ...
+# Subtest: recorded applied scores pass only when every score meets the floor
+ok 72 - recorded applied scores pass only when every score meets the floor
+  ---
+  duration_ms: 45.523807
+  type: 'test'
+  ...
+# Subtest: a low score fails even when other high scores raise the average
+ok 73 - a low score fails even when other high scores raise the average
+  ---
+  duration_ms: 40.268858
+  type: 'test'
+  ...
+# Subtest: empty or non-array inputs cannot report a passing gate
+ok 74 - empty or non-array inputs cannot report a passing gate
+  ---
+  duration_ms: 158.327802
+  type: 'test'
+  ...
+# Subtest: malformed JSON and invalid UTF-8 are input errors
+ok 75 - malformed JSON and invalid UTF-8 are input errors
+  ---
+  duration_ms: 73.639702
+  type: 'test'
+  ...
+# Subtest: missing applied boolean or nonnumeric scores are input errors
+ok 76 - missing applied boolean or nonnumeric scores are input errors
+  ---
+  duration_ms: 271.790784
+  type: 'test'
+  ...
+# Subtest: invalid candidate rows and missing source coordinates cannot pass
+ok 77 - invalid candidate rows and missing source coordinates cannot pass
+  ---
+  duration_ms: 181.867407
+  type: 'test'
+  ...
+# Subtest: no applied edits is reported as unscorable rather than passing
+ok 78 - no applied edits is reported as unscorable rather than passing
+  ---
+  duration_ms: 37.942044
+  type: 'test'
+  ...
+# Subtest: two applied candidates for the same source location are rejected
+ok 79 - two applied candidates for the same source location are rejected
+  ---
+  duration_ms: 37.586279
+  type: 'test'
+  ...
+# Subtest: unexpected CLI arguments cannot be silently ignored
+ok 80 - unexpected CLI arguments cannot be silently ignored
+  ---
+  duration_ms: 35.794962
+  type: 'test'
+  ...
+# Subtest: high-scoring proposals awaiting review remain flagged
+ok 81 - high-scoring proposals awaiting review remain flagged
+  ---
+  duration_ms: 0.363397
+  type: 'test'
+  ...
+# Subtest: applying one alternative resolves only its source location
+ok 82 - applying one alternative resolves only its source location
+  ---
+  duration_ms: 0.178979
+  type: 'test'
+  ...
+# Subtest: multiple unresolved proposals count as one source location
+ok 83 - multiple unresolved proposals count as one source location
+  ---
+  duration_ms: 0.205689
+  type: 'test'
+  ...
+# Subtest: conflicting applied candidates cannot produce a success summary
+ok 84 - conflicting applied candidates cannot produce a success summary
+  ---
+  duration_ms: 0.183667
+  type: 'test'
+  ...
+# Subtest: OTLP numeric error status cannot pass an error-free trace assertion
+ok 85 - OTLP numeric error status cannot pass an error-free trace assertion
+  ---
+  duration_ms: 0.31232
+  type: 'test'
+  ...
+# Subtest: OTLP string and explicitly normalized short error names are detected
+ok 86 - OTLP string and explicitly normalized short error names are detected
+  ---
+  duration_ms: 0.113201
+  type: 'test'
+  ...
+# Subtest: known healthy and unset statuses remain valid
+ok 87 - known healthy and unset statuses remain valid
+  ---
+  duration_ms: 0.086881
+  type: 'test'
+  ...
+# Subtest: unknown supplied status encodings fail instead of hiding errors
+ok 88 - unknown supplied status encodings fail instead of hiding errors
+  ---
+  duration_ms: 0.160172
+  type: 'test'
+  ...
+# Subtest: a typed ecommerce event accepts real zero values and nested products
+ok 89 - a typed ecommerce event accepts real zero values and nested products
+  ---
+  duration_ms: 0.292851
+  type: 'test'
+  ...
+# Subtest: blank, null, boolean and nonfinite numbers cannot become a passing zero
+ok 90 - blank, null, boolean and nonfinite numbers cannot become a passing zero
+  ---
+  duration_ms: 0.325049
+  type: 'test'
+  ...
+# Subtest: strings retain their type and nonempty requirement
+ok 91 - strings retain their type and nonempty requirement
+  ---
+  duration_ms: 0.145779
+  type: 'test'
+  ...
+# Subtest: all missing and mismatched product fields have explicit locations
+ok 92 - all missing and mismatched product fields have explicit locations
+  ---
+  duration_ms: 0.123135
+  type: 'test'
+  ...
+# Subtest: empty, malformed and sparse item arrays cannot satisfy ecommerce coverage
+ok 93 - empty, malformed and sparse item arrays cannot satisfy ecommerce coverage
+  ---
+  duration_ms: 0.134803
+  type: 'test'
+  ...
+# Subtest: unknown events, inherited fields and wrong payload shapes cannot pass
+ok 94 - unknown events, inherited fields and wrong payload shapes cannot pass
+  ---
+  duration_ms: 0.139169
+  type: 'test'
+  ...
+# Subtest: invalid or unsupported plans are configuration errors
+ok 95 - invalid or unsupported plans are configuration errors
+  ---
+  duration_ms: 0.62447
+  type: 'test'
+  ...
+# Subtest: workflow gate accepts a complete healthy passing run
+ok 96 - workflow gate accepts a complete healthy passing run
+  ---
+  duration_ms: 0.550509
+  type: 'test'
+  ...
+# Subtest: a failed healthy control preserves requested variants as unrun instead of spending their budgets
+ok 97 - a failed healthy control preserves requested variants as unrun instead of spending their budgets
+  ---
+  duration_ms: 0.290427
+  type: 'test'
+  ...
+# Subtest: expected failure annotations cannot count as healthy passes
+ok 98 - expected failure annotations cannot count as healthy passes
+  ---
+  duration_ms: 0.58442
+  type: 'test'
+  ...
+# Subtest: skipped and interrupted cases cannot satisfy the healthy count
+ok 99 - skipped and interrupted cases cannot satisfy the healthy count
+  ---
+  duration_ms: 0.233672
+  type: 'test'
+  ...
+# Subtest: missing and empty reports fail closed
+ok 100 - missing and empty reports fail closed
+  ---
+  duration_ms: 0.201683
+  type: 'test'
+  ...
+# Subtest: missing cases and retry passes cannot replace the intended execution
+ok 101 - missing cases and retry passes cannot replace the intended execution
+  ---
+  duration_ms: 0.268454
+  type: 'test'
+  ...
+# Subtest: global errors and abnormal process termination reject otherwise passing output
+ok 102 - global errors and abnormal process termination reject otherwise passing output
+  ---
+  duration_ms: 0.836159
+  type: 'test'
+  ...
+# Subtest: designated matcher failure and per-run oracle evidence establish a detection
+ok 103 - designated matcher failure and per-run oracle evidence establish a detection
+  ---
+  duration_ms: 0.917432
+  type: 'test'
+  ...
+# Subtest: a matching title and SQL setup error are infrastructure failures and cannot pass the gate
+ok 104 - a matching title and SQL setup error are infrastructure failures and cannot pass the gate
+  ---
+  duration_ms: 0.532201
+  type: 'test'
+  ...
+# Subtest: missing, malformed, wrong-oracle and stale-run records cannot prove detection
+ok 105 - missing, malformed, wrong-oracle and stale-run records cannot prove detection
+  ---
+  duration_ms: 0.856439
+  type: 'test'
+  ...
+# Subtest: a nonzero exit without the designated assertion is not detection
+ok 106 - a nonzero exit without the designated assertion is not detection
+  ---
+  duration_ms: 0.149154
+  type: 'test'
+  ...
+# Subtest: browser infrastructure failures and incomplete negative runs do not count
+ok 107 - browser infrastructure failures and incomplete negative runs do not count
+  ---
+  duration_ms: 0.24559
+  type: 'test'
+  ...
+# Subtest: an independent infrastructure failure rejects a run even when the designated oracle failed
+ok 108 - an independent infrastructure failure rejects a run even when the designated oracle failed
+  ---
+  duration_ms: 0.769057
+  type: 'test'
+  ...
+# Subtest: cancellation cannot count as a healthy run even if a child exits zero
+ok 109 - cancellation cannot count as a healthy run even if a child exits zero
+  ---
+  duration_ms: 0.136135
+  type: 'test'
+  ...
+# Subtest: unexpected passes of test.fail cases are not broken-application detections
+ok 110 - unexpected passes of test.fail cases are not broken-application detections
+  ---
+  duration_ms: 0.145249
+  type: 'test'
+  ...
+# Subtest: preparing a reused run directory removes stale evidence and preserves unrelated files
+ok 111 - preparing a reused run directory removes stale evidence and preserves unrelated files
+  ---
+  duration_ms: 26.222774
+  type: 'test'
+  ...
+# Subtest: bounded process runner records actual successful and failed child exits
+ok 112 - bounded process runner records actual successful and failed child exits
+  ---
+  duration_ms: 67.166116
+  type: 'test'
+  ...
+# Subtest: spawn errors settle without waiting for a nonexistent child
+ok 113 - spawn errors settle without waiting for a nonexistent child
+  ---
+  duration_ms: 3.924177
+  type: 'test'
+  ...
+# Subtest: explicit cancellation stops the owned process and returns an aborted result
+ok 114 - explicit cancellation stops the owned process and returns an aborted result
+  ---
+  duration_ms: 3.412938
+  type: 'test'
+  ...
+# Subtest: inherited pipes and SIGTERM-resistant descendants cannot keep the runner pending
+ok 115 - inherited pipes and SIGTERM-resistant descendants cannot keep the runner pending
+  ---
+  duration_ms: 657.812901
+  type: 'test'
+  ...
+# Subtest: real Playwright oracle records a chosen matcher but refuses SQL errors and a different assertion
+ok 116 - real Playwright oracle records a chosen matcher but refuses SQL errors and a different assertion
+  ---
+  duration_ms: 3411.712252
+  type: 'test'
+  ...
+1..116
+# tests 116
+# suites 0
+# pass 116
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9869.193842

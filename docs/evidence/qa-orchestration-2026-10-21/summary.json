@@ -1,0 +1,115 @@
+{
+  "baseCommit": "462126bcc4d3bfe94a7c064b848c690c1366f343",
+  "candidateIdentity": "Uncommitted working tree at execution; source-sha256.json binds the tested implementation. The publication commit contains that source.",
+  "node": "v24.19.0",
+  "python": "Python 3.12.14",
+  "browser": "Google Chrome 156.0.8078.47",
+  "core": {
+    "runId": "2026-10-21T09-36-38-867Z-d220a4c0",
+    "durationMs": 55609,
+    "summary": {
+      "status": "passed",
+      "checks": {
+        "total": 3,
+        "passed": 3,
+        "failed": 0,
+        "blocked": 0,
+        "incomplete": 0,
+        "unverified": 0
+      },
+      "tests": {
+        "total": 242,
+        "passed": 242,
+        "failed": 0,
+        "skipped": 0,
+        "cancelled": 0,
+        "todo": 0,
+        "retried": 0,
+        "observed": 242
+      },
+      "exitCode": 0
+    },
+    "checks": [
+      {
+        "id": "documented-helpers",
+        "status": "passed",
+        "counts": {
+          "total": 116,
+          "passed": 116,
+          "failed": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "todo": 0,
+          "retried": 0,
+          "observed": 116
+        },
+        "durationMs": 9940
+      },
+      {
+        "id": "documented-browser",
+        "status": "passed",
+        "counts": {
+          "total": 92,
+          "passed": 92,
+          "failed": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "todo": 0,
+          "retried": 0,
+          "observed": 92
+        },
+        "durationMs": 36715
+      },
+      {
+        "id": "qa-runner",
+        "status": "passed",
+        "counts": {
+          "total": 34,
+          "passed": 34,
+          "failed": 0,
+          "skipped": 0,
+          "cancelled": 0,
+          "todo": 0,
+          "retried": 0,
+          "observed": 34
+        },
+        "durationMs": 8950
+      }
+    ]
+  },
+  "pythonTests": 133,
+  "matrix": {
+    "startedAt": "2026-10-21T04:44:06.126Z",
+    "finishedAt": "2026-10-21T04:50:43.029Z",
+    "variants": 23,
+    "healthyCases": 36,
+    "designatedFaultsDetected": 22,
+    "caseExecutions": 628,
+    "passed": 588,
+    "failed": 40,
+    "skipped": 0,
+    "flaky": 0
+  },
+  "fieldTask": {
+    "originalTests": 3,
+    "newAssertions": 46,
+    "finalAssertions": 49,
+    "unitAssertions": 23,
+    "httpAssertions": 26,
+    "beforeFailures": 3,
+    "afterFailures": 0
+  },
+  "staticContent": {
+    "total": 516,
+    "passed": 484,
+    "failed": 32,
+    "errors": 0,
+    "semantic_deferred": 817
+  },
+  "structure": {
+    "skills": 50,
+    "errors": 0
+  },
+  "rawMatrixArchive": "matrix-reports.zip",
+  "interferedRunExcluded": "matrix-interference.json"
+}

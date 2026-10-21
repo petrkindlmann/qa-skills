@@ -1,0 +1,1502 @@
+QA run 2026-10-21T09-36-38-867Z-d220a4c0
+Project: qa-skills-regression-tests
+Budget: 180000 ms
+
+CHECK documented-helpers
+ARGV ["node","--test","--test-reporter=tap","--test-isolation=none","tests/examples/*.test.mjs"]
+(node:129315) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+TAP version 13
+# Subtest: agent gate executes an independent oracle and accepts a complete current result
+ok 1 - agent gate executes an independent oracle and accepts a complete current result
+  ---
+  duration_ms: 54.309098
+  type: 'test'
+  ...
+# Subtest: model self-grades, string booleans, zero steps, excess steps and wrong binding do not start the oracle
+ok 2 - model self-grades, string booleans, zero steps, excess steps and wrong binding do not start the oracle
+  ---
+  duration_ms: 2.390889
+  type: 'test'
+  ...
+# Subtest: independent failures override a model success claim and successful process exit
+ok 3 - independent failures override a model success claim and successful process exit
+  ---
+  duration_ms: 81.029784
+  type: 'test'
+  ...
+# Subtest: missing, empty, duplicate, unobserved and mismatched oracle evidence fails closed
+ok 4 - missing, empty, duplicate, unobserved and mismatched oracle evidence fails closed
+  ---
+  duration_ms: 401.827697
+  type: 'test'
+  ...
+# Subtest: a bounded oracle timeout and a missing executable remain blocked
+ok 5 - a bounded oracle timeout and a missing executable remain blocked
+  ---
+  duration_ms: 112.476568
+  type: 'test'
+  ...
+# Subtest: invalid oracle contracts are rejected before spawning
+ok 6 - invalid oracle contracts are rejected before spawning
+  ---
+  duration_ms: 2.895297
+  type: 'test'
+  ...
+# Subtest: the published oracle runs real HTTP requests and rejects the wrong account, build and unauthenticated session
+ok 7 - the published oracle runs real HTTP requests and rejects the wrong account, build and unauthenticated session
+  ---
+  duration_ms: 396.090553
+  type: 'test'
+  ...
+# Subtest: gate CLI writes a typed verdict and removes an earlier success before rejecting malformed input
+ok 8 - gate CLI writes a typed verdict and removes an earlier success before rejecting malformed input
+  ---
+  duration_ms: 180.62444
+  type: 'test'
+  ...
+# Subtest: GET event preserves its exact event name and value
+ok 9 - GET event preserves its exact event name and value
+  ---
+  duration_ms: 0.603318
+  type: 'test'
+  ...
+# Subtest: POST batch inherits common query parameters for every event
+ok 10 - POST batch inherits common query parameters for every event
+  ---
+  duration_ms: 0.512892
+  type: 'test'
+  ...
+# Subtest: POST fields override shared parameters without a phantom query-only event
+ok 11 - POST fields override shared parameters without a phantom query-only event
+  ---
+  duration_ms: 0.241123
+  type: 'test'
+  ...
+# Subtest: URL query supplies a default event name but each POST row is one event
+ok 12 - URL query supplies a default event name but each POST row is one event
+  ---
+  duration_ms: 0.273322
+  type: 'test'
+  ...
+# Subtest: blank POST rows do not create extra events
+ok 13 - blank POST rows do not create extra events
+  ---
+  duration_ms: 0.329976
+  type: 'test'
+  ...
+# Subtest: consent-only request with no event name produces no business event
+ok 14 - consent-only request with no event name produces no business event
+  ---
+  duration_ms: 0.098047
+  type: 'test'
+  ...
+# Subtest: missing and empty event names are ignored
+ok 15 - missing and empty event names are ignored
+  ---
+  duration_ms: 0.093561
+  type: 'test'
+  ...
+# Subtest: lookalike hosts and paths containing collect in query are ignored
+ok 16 - lookalike hosts and paths containing collect in query are ignored
+  ---
+  duration_ms: 0.149405
+  type: 'test'
+  ...
+# Subtest: configured first-party collector is accepted explicitly
+ok 17 - configured first-party collector is accepted explicitly
+  ---
+  duration_ms: 0.102404
+  type: 'test'
+  ...
+# Subtest: duplicate events remain duplicated for the caller to detect
+ok 18 - duplicate events remain duplicated for the caller to detect
+  ---
+  duration_ms: 0.094603
+  type: 'test'
+  ...
+# Subtest: collector captures early events and can release its listener
+ok 19 - collector captures early events and can release its listener
+  ---
+  duration_ms: 0.219079
+  type: 'test'
+  ...
+# Subtest: actual ShazaMail helper creates an inbox and waits using real local HTTP
+ok 20 - actual ShazaMail helper creates an inbox and waits using real local HTTP
+  ---
+  duration_ms: 22.212181
+  type: 'test'
+  ...
+# Subtest: actual ShazaMail helper bounds stalled-headers on create
+ok 21 - actual ShazaMail helper bounds stalled-headers on create
+  ---
+  duration_ms: 85.543276
+  type: 'test'
+  ...
+# Subtest: actual ShazaMail helper bounds stalled-body on create
+ok 22 - actual ShazaMail helper bounds stalled-body on create
+  ---
+  duration_ms: 82.623556
+  type: 'test'
+  ...
+# Subtest: actual ShazaMail helper bounds stalled-headers on wait
+ok 23 - actual ShazaMail helper bounds stalled-headers on wait
+  ---
+  duration_ms: 80.273133
+  type: 'test'
+  ...
+# Subtest: actual ShazaMail helper bounds stalled-body on wait
+ok 24 - actual ShazaMail helper bounds stalled-body on wait
+  ---
+  duration_ms: 81.136966
+  type: 'test'
+  ...
+# Subtest: ShazaMail HTTP and malformed JSON failures remain distinct from client timeouts
+ok 25 - ShazaMail HTTP and malformed JSON failures remain distinct from client timeouts
+  ---
+  duration_ms: 6.798722
+  type: 'test'
+  ...
+# Subtest: ShazaMail rejects absent credentials, invalid budgets and unsupported paths without requests
+ok 26 - ShazaMail rejects absent credentials, invalid budgets and unsupported paths without requests
+  ---
+  duration_ms: 0.293802
+  type: 'test'
+  ...
+# Subtest: OTP is selected by label rather than an earlier order number
+ok 27 - OTP is selected by label rather than an earlier order number
+  ---
+  duration_ms: 0.336606
+  type: 'test'
+  ...
+# Subtest: missing and ambiguous OTPs fail instead of guessing
+ok 28 - missing and ambiguous OTPs fail instead of guessing
+  ---
+  duration_ms: 0.291208
+  type: 'test'
+  ...
+# Subtest: a repeated rendering of the same OTP is unambiguous
+ok 29 - a repeated rendering of the same OTP is unambiguous
+  ---
+  duration_ms: 0.098908
+  type: 'test'
+  ...
+# Subtest: localized template can specify its label without changing extraction logic
+ok 30 - localized template can specify its label without changing extraction logic
+  ---
+  duration_ms: 0.231669
+  type: 'test'
+  ...
+# Subtest: Mailpit uses search endpoint and exact recipient, then fetches matching body
+ok 31 - Mailpit uses search endpoint and exact recipient, then fetches matching body
+  ---
+  duration_ms: 15.262812
+  type: 'test'
+  ...
+# Subtest: a second request for the same account excludes previously seen mail
+ok 32 - a second request for the same account excludes previously seen mail
+  ---
+  duration_ms: 0.720284
+  type: 'test'
+  ...
+# Subtest: delayed delivery is polled without an arbitrary browser sleep
+ok 33 - delayed delivery is polled without an arbitrary browser sleep
+  ---
+  duration_ms: 4.663078
+  type: 'test'
+  ...
+# Subtest: server errors and malformed search responses are visible failures
+ok 34 - server errors and malformed search responses are visible failures
+  ---
+  duration_ms: 0.623548
+  type: 'test'
+  ...
+# Subtest: detail response cannot substitute another recipient or message ID
+ok 35 - detail response cannot substitute another recipient or message ID
+  ---
+  duration_ms: 1.06968
+  type: 'test'
+  ...
+# Subtest: missing mail times out rather than becoming an empty successful result
+ok 36 - missing mail times out rather than becoming an empty successful result
+  ---
+  duration_ms: 19.942344
+  type: 'test'
+  ...
+# Subtest: a second matrix cannot reuse a live owner output directory
+ok 37 - a second matrix cannot reuse a live owner output directory
+  ---
+  duration_ms: 3.22218
+  type: 'test'
+  ...
+# Subtest: a dead parent with a live recorded child still blocks reuse
+ok 38 - a dead parent with a live recorded child still blocks reuse
+  ---
+  duration_ms: 1.90647
+  type: 'test'
+  ...
+# Subtest: an actual departed owner can be reclaimed without waiting or overwriting a live lock
+ok 39 - an actual departed owner can be reclaimed without waiting or overwriting a live lock
+  ---
+  duration_ms: 60.703132
+  type: 'test'
+  ...
+# Subtest: unknown ownership fails promptly with a fresh-output remedy and preserves the record
+ok 40 - unknown ownership fails promptly with a fresh-output remedy and preserves the record
+  ---
+  duration_ms: 1.927321
+  type: 'test'
+  ...
+# Subtest: documented payment handlers support create, retrieve, confirm, and missing IDs
+ok 41 - documented payment handlers support create, retrieve, confirm, and missing IDs
+  ---
+  duration_ms: 36.220714
+  type: 'test'
+  ...
+# Subtest: rate-limit scenario wins over the matching payment success handler
+ok 42 - rate-limit scenario wins over the matching payment success handler
+  ---
+  duration_ms: 110.294588
+  type: 'test'
+  ...
+# Subtest: documented lifecycle clears payment state between tests
+ok 43 - documented lifecycle clears payment state between tests
+  ---
+  duration_ms: 8.277549
+  type: 'test'
+  ...
+# Subtest: payments created at the same clock tick receive distinct fixture IDs
+ok 44 - payments created at the same clock tick receive distinct fixture IDs
+  ---
+  duration_ms: 5.064923
+  type: 'test'
+  ...
+# Subtest: the documented CI setup rejects an unhandled request before network fallback
+ok 45 - the documented CI setup rejects an unhandled request before network fallback
+  ---
+  duration_ms: 5.095119
+  type: 'test'
+  ...
+# Subtest: documented scenario: should handle payment API timeout
+ok 46 - documented scenario: should handle payment API timeout
+  ---
+  duration_ms: 55.268111
+  type: 'test'
+  ...
+# Subtest: documented scenario: should retry on 503
+ok 47 - documented scenario: should retry on 503
+  ---
+  duration_ms: 311.195928
+  type: 'test'
+  ...
+# Subtest: sample client exposes rate limiting without retrying it as a 503
+ok 48 - sample client exposes rate limiting without retrying it as a 503
+  ---
+  duration_ms: 106.304573
+  type: 'test'
+  ...
+# Subtest: sample client caps persistent 503 retries and keeps the request identity
+ok 49 - sample client caps persistent 503 retries and keeps the request identity
+  ---
+  duration_ms: 8.928688
+  type: 'test'
+  ...
+# Subtest: documented reset removes a runtime failure override
+ok 50 - documented reset removes a runtime failure override
+  ---
+  duration_ms: 6.021468
+  type: 'test'
+  ...
+# Subtest: sequential redelivery fulfills once
+ok 51 - sequential redelivery fulfills once
+  ---
+  duration_ms: 1.394378
+  type: 'test'
+  ...
+# Subtest: failure after dedup insertion remains retryable instead of losing fulfillment
+ok 52 - failure after dedup insertion remains retryable instead of losing fulfillment
+  ---
+  duration_ms: 0.564249
+  type: 'test'
+  ...
+# Subtest: success commits before acknowledgment and releases its connection
+ok 53 - success commits before acknowledgment and releases its connection
+  ---
+  duration_ms: 0.457999
+  type: 'test'
+  ...
+# Subtest: duplicate path closes the transaction before returning
+ok 54 - duplicate path closes the transaction before returning
+  ---
+  duration_ms: 0.537689
+  type: 'test'
+  ...
+# Subtest: owned descendants stop after timeout parent exit
+ok 55 - owned descendants stop after timeout parent exit
+  ---
+  duration_ms: 1159.121289
+  type: 'test'
+  ...
+# Subtest: owned descendants stop after normal parent exit
+ok 56 - owned descendants stop after normal parent exit
+  ---
+  duration_ms: 523.514963
+  type: 'test'
+  ...
+# Subtest: Python selection honors an exact executable override and platform defaults
+ok 57 - Python selection honors an exact executable override and platform defaults
+  ---
+  duration_ms: 0.45179
+  type: 'test'
+  ...
+# Subtest: an executable override works without python3 on PATH and preserves literal arguments
+ok 58 - an executable override works without python3 on PATH and preserves literal arguments
+  ---
+  duration_ms: 46.332094
+  type: 'test'
+  ...
+# Subtest: missing Python and bounded stalled executions cannot claim success
+ok 59 - missing Python and bounded stalled executions cannot claim success
+  ---
+  duration_ms: 108.454497
+  type: 'test'
+  ...
+# Subtest: every failed and timedOut retry survives a later successful attempt
+ok 60 - every failed and timedOut retry survives a later successful attempt
+  ---
+  duration_ms: 1.799208
+  type: 'test'
+  ...
+# Subtest: nested suites, projects, and expected failures retain separate provenance
+ok 61 - nested suites, projects, and expected failures retain separate provenance
+  ---
+  duration_ms: 0.378009
+  type: 'test'
+  ...
+# Subtest: missing messages, locations, and locator renderings never discard an attempt
+ok 62 - missing messages, locations, and locator renderings never discard an attempt
+  ---
+  duration_ms: 0.601776
+  type: 'test'
+  ...
+# Subtest: timeout and assertion text leave source, route, intent, and cause unverified
+ok 63 - timeout and assertion text leave source, route, intent, and cause unverified
+  ---
+  duration_ms: 0.995459
+  type: 'test'
+  ...
+# Subtest: run-level errors remain visible even when no tests produced an attempt
+ok 64 - run-level errors remain visible even when no tests produced an attempt
+  ---
+  duration_ms: 0.345199
+  type: 'test'
+  ...
+# Subtest: interrupted and missing-status attempts remain incomplete inventory records
+ok 65 - interrupted and missing-status attempts remain incomplete inventory records
+  ---
+  duration_ms: 0.193891
+  type: 'test'
+  ...
+# Subtest: observed healthy results can produce an empty failure inventory
+ok 66 - observed healthy results can produce an empty failure inventory
+  ---
+  duration_ms: 0.240502
+  type: 'test'
+  ...
+# Subtest: empty or malformed reporter structures do not become a successful empty inventory
+ok 67 - empty or malformed reporter structures do not become a successful empty inventory
+  ---
+  duration_ms: 0.509677
+  type: 'test'
+  ...
+# Subtest: the triage gate accepts a complete reviewed record and rejects untriaged records
+ok 68 - the triage gate accepts a complete reviewed record and rejects untriaged records
+  ---
+  duration_ms: 0.339181
+  type: 'test'
+  ...
+# Subtest: confirmation alone cannot bypass missing source, intent, route, or triage evidence
+ok 69 - confirmation alone cannot bypass missing source, intent, route, or triage evidence
+  ---
+  duration_ms: 1.434259
+  type: 'test'
+  ...
+# Subtest: the actual I/O driver writes the complete inventory and never reads guessed source files
+ok 70 - the actual I/O driver writes the complete inventory and never reads guessed source files
+  ---
+  duration_ms: 1.23579
+  type: 'test'
+  ...
+# Subtest: the actual I/O driver rejects invalid JSON and invalid UTF-8
+ok 71 - the actual I/O driver rejects invalid JSON and invalid UTF-8
+  ---
+  duration_ms: 1.131683
+  type: 'test'
+  ...
+# Subtest: recorded applied scores pass only when every score meets the floor
+ok 72 - recorded applied scores pass only when every score meets the floor
+  ---
+  duration_ms: 45.523807
+  type: 'test'
+  ...
+# Subtest: a low score fails even when other high scores raise the average
+ok 73 - a low score fails even when other high scores raise the average
+  ---
+  duration_ms: 40.268858
+  type: 'test'
+  ...
+# Subtest: empty or non-array inputs cannot report a passing gate
+ok 74 - empty or non-array inputs cannot report a passing gate
+  ---
+  duration_ms: 158.327802
+  type: 'test'
+  ...
+# Subtest: malformed JSON and invalid UTF-8 are input errors
+ok 75 - malformed JSON and invalid UTF-8 are input errors
+  ---
+  duration_ms: 73.639702
+  type: 'test'
+  ...
+# Subtest: missing applied boolean or nonnumeric scores are input errors
+ok 76 - missing applied boolean or nonnumeric scores are input errors
+  ---
+  duration_ms: 271.790784
+  type: 'test'
+  ...
+# Subtest: invalid candidate rows and missing source coordinates cannot pass
+ok 77 - invalid candidate rows and missing source coordinates cannot pass
+  ---
+  duration_ms: 181.867407
+  type: 'test'
+  ...
+# Subtest: no applied edits is reported as unscorable rather than passing
+ok 78 - no applied edits is reported as unscorable rather than passing
+  ---
+  duration_ms: 37.942044
+  type: 'test'
+  ...
+# Subtest: two applied candidates for the same source location are rejected
+ok 79 - two applied candidates for the same source location are rejected
+  ---
+  duration_ms: 37.586279
+  type: 'test'
+  ...
+# Subtest: unexpected CLI arguments cannot be silently ignored
+ok 80 - unexpected CLI arguments cannot be silently ignored
+  ---
+  duration_ms: 35.794962
+  type: 'test'
+  ...
+# Subtest: high-scoring proposals awaiting review remain flagged
+ok 81 - high-scoring proposals awaiting review remain flagged
+  ---
+  duration_ms: 0.363397
+  type: 'test'
+  ...
+# Subtest: applying one alternative resolves only its source location
+ok 82 - applying one alternative resolves only its source location
+  ---
+  duration_ms: 0.178979
+  type: 'test'
+  ...
+# Subtest: multiple unresolved proposals count as one source location
+ok 83 - multiple unresolved proposals count as one source location
+  ---
+  duration_ms: 0.205689
+  type: 'test'
+  ...
+# Subtest: conflicting applied candidates cannot produce a success summary
+ok 84 - conflicting applied candidates cannot produce a success summary
+  ---
+  duration_ms: 0.183667
+  type: 'test'
+  ...
+# Subtest: OTLP numeric error status cannot pass an error-free trace assertion
+ok 85 - OTLP numeric error status cannot pass an error-free trace assertion
+  ---
+  duration_ms: 0.31232
+  type: 'test'
+  ...
+# Subtest: OTLP string and explicitly normalized short error names are detected
+ok 86 - OTLP string and explicitly normalized short error names are detected
+  ---
+  duration_ms: 0.113201
+  type: 'test'
+  ...
+# Subtest: known healthy and unset statuses remain valid
+ok 87 - known healthy and unset statuses remain valid
+  ---
+  duration_ms: 0.086881
+  type: 'test'
+  ...
+# Subtest: unknown supplied status encodings fail instead of hiding errors
+ok 88 - unknown supplied status encodings fail instead of hiding errors
+  ---
+  duration_ms: 0.160172
+  type: 'test'
+  ...
+# Subtest: a typed ecommerce event accepts real zero values and nested products
+ok 89 - a typed ecommerce event accepts real zero values and nested products
+  ---
+  duration_ms: 0.292851
+  type: 'test'
+  ...
+# Subtest: blank, null, boolean and nonfinite numbers cannot become a passing zero
+ok 90 - blank, null, boolean and nonfinite numbers cannot become a passing zero
+  ---
+  duration_ms: 0.325049
+  type: 'test'
+  ...
+# Subtest: strings retain their type and nonempty requirement
+ok 91 - strings retain their type and nonempty requirement
+  ---
+  duration_ms: 0.145779
+  type: 'test'
+  ...
+# Subtest: all missing and mismatched product fields have explicit locations
+ok 92 - all missing and mismatched product fields have explicit locations
+  ---
+  duration_ms: 0.123135
+  type: 'test'
+  ...
+# Subtest: empty, malformed and sparse item arrays cannot satisfy ecommerce coverage
+ok 93 - empty, malformed and sparse item arrays cannot satisfy ecommerce coverage
+  ---
+  duration_ms: 0.134803
+  type: 'test'
+  ...
+# Subtest: unknown events, inherited fields and wrong payload shapes cannot pass
+ok 94 - unknown events, inherited fields and wrong payload shapes cannot pass
+  ---
+  duration_ms: 0.139169
+  type: 'test'
+  ...
+# Subtest: invalid or unsupported plans are configuration errors
+ok 95 - invalid or unsupported plans are configuration errors
+  ---
+  duration_ms: 0.62447
+  type: 'test'
+  ...
+# Subtest: workflow gate accepts a complete healthy passing run
+ok 96 - workflow gate accepts a complete healthy passing run
+  ---
+  duration_ms: 0.550509
+  type: 'test'
+  ...
+# Subtest: a failed healthy control preserves requested variants as unrun instead of spending their budgets
+ok 97 - a failed healthy control preserves requested variants as unrun instead of spending their budgets
+  ---
+  duration_ms: 0.290427
+  type: 'test'
+  ...
+# Subtest: expected failure annotations cannot count as healthy passes
+ok 98 - expected failure annotations cannot count as healthy passes
+  ---
+  duration_ms: 0.58442
+  type: 'test'
+  ...
+# Subtest: skipped and interrupted cases cannot satisfy the healthy count
+ok 99 - skipped and interrupted cases cannot satisfy the healthy count
+  ---
+  duration_ms: 0.233672
+  type: 'test'
+  ...
+# Subtest: missing and empty reports fail closed
+ok 100 - missing and empty reports fail closed
+  ---
+  duration_ms: 0.201683
+  type: 'test'
+  ...
+# Subtest: missing cases and retry passes cannot replace the intended execution
+ok 101 - missing cases and retry passes cannot replace the intended execution
+  ---
+  duration_ms: 0.268454
+  type: 'test'
+  ...
+# Subtest: global errors and abnormal process termination reject otherwise passing output
+ok 102 - global errors and abnormal process termination reject otherwise passing output
+  ---
+  duration_ms: 0.836159
+  type: 'test'
+  ...
+# Subtest: designated matcher failure and per-run oracle evidence establish a detection
+ok 103 - designated matcher failure and per-run oracle evidence establish a detection
+  ---
+  duration_ms: 0.917432
+  type: 'test'
+  ...
+# Subtest: a matching title and SQL setup error are infrastructure failures and cannot pass the gate
+ok 104 - a matching title and SQL setup error are infrastructure failures and cannot pass the gate
+  ---
+  duration_ms: 0.532201
+  type: 'test'
+  ...
+# Subtest: missing, malformed, wrong-oracle and stale-run records cannot prove detection
+ok 105 - missing, malformed, wrong-oracle and stale-run records cannot prove detection
+  ---
+  duration_ms: 0.856439
+  type: 'test'
+  ...
+# Subtest: a nonzero exit without the designated assertion is not detection
+ok 106 - a nonzero exit without the designated assertion is not detection
+  ---
+  duration_ms: 0.149154
+  type: 'test'
+  ...
+# Subtest: browser infrastructure failures and incomplete negative runs do not count
+ok 107 - browser infrastructure failures and incomplete negative runs do not count
+  ---
+  duration_ms: 0.24559
+  type: 'test'
+  ...
+# Subtest: an independent infrastructure failure rejects a run even when the designated oracle failed
+ok 108 - an independent infrastructure failure rejects a run even when the designated oracle failed
+  ---
+  duration_ms: 0.769057
+  type: 'test'
+  ...
+# Subtest: cancellation cannot count as a healthy run even if a child exits zero
+ok 109 - cancellation cannot count as a healthy run even if a child exits zero
+  ---
+  duration_ms: 0.136135
+  type: 'test'
+  ...
+# Subtest: unexpected passes of test.fail cases are not broken-application detections
+ok 110 - unexpected passes of test.fail cases are not broken-application detections
+  ---
+  duration_ms: 0.145249
+  type: 'test'
+  ...
+# Subtest: preparing a reused run directory removes stale evidence and preserves unrelated files
+ok 111 - preparing a reused run directory removes stale evidence and preserves unrelated files
+  ---
+  duration_ms: 26.222774
+  type: 'test'
+  ...
+# Subtest: bounded process runner records actual successful and failed child exits
+ok 112 - bounded process runner records actual successful and failed child exits
+  ---
+  duration_ms: 67.166116
+  type: 'test'
+  ...
+# Subtest: spawn errors settle without waiting for a nonexistent child
+ok 113 - spawn errors settle without waiting for a nonexistent child
+  ---
+  duration_ms: 3.924177
+  type: 'test'
+  ...
+# Subtest: explicit cancellation stops the owned process and returns an aborted result
+ok 114 - explicit cancellation stops the owned process and returns an aborted result
+  ---
+  duration_ms: 3.412938
+  type: 'test'
+  ...
+# Subtest: inherited pipes and SIGTERM-resistant descendants cannot keep the runner pending
+ok 115 - inherited pipes and SIGTERM-resistant descendants cannot keep the runner pending
+  ---
+  duration_ms: 657.812901
+  type: 'test'
+  ...
+# Subtest: real Playwright oracle records a chosen matcher but refuses SQL errors and a different assertion
+ok 116 - real Playwright oracle records a chosen matcher but refuses SQL errors and a different assertion
+  ---
+  duration_ms: 3411.712252
+  type: 'test'
+  ...
+1..116
+# tests 116
+# suites 0
+# pass 116
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 9869.193842
+
+
+CHECK documented-browser
+ARGV ["node","--test","--test-reporter=tap","--test-isolation=none","tests/browser/*.test.mjs"]
+(node:129860) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+TAP version 13
+Analytics fixture browser: 156.0.8078.47
+# Subtest: capture recipe observes a healthy GET and Meta action after initialization
+ok 1 - capture recipe observes a healthy GET and Meta action after initialization
+  ---
+  duration_ms: 566.36857
+  type: 'test'
+  ...
+# Subtest: capture recipe preserves each POST batch row and common measurement ID
+ok 2 - capture recipe preserves each POST batch row and common measurement ID
+  ---
+  duration_ms: 199.355362
+  type: 'test'
+  ...
+# Subtest: capture recipe rejects missing GA4
+ok 3 - capture recipe rejects missing GA4
+  ---
+  duration_ms: 219.469971
+  type: 'test'
+  ...
+# Subtest: capture recipe rejects stale GA4 without a new action event
+ok 4 - capture recipe rejects stale GA4 without a new action event
+  ---
+  duration_ms: 210.486718
+  type: 'test'
+  ...
+# Subtest: capture recipe rejects delayed duplicate GA4
+ok 5 - capture recipe rejects delayed duplicate GA4
+  ---
+  duration_ms: 253.581662
+  type: 'test'
+  ...
+# Subtest: capture recipe rejects missing Meta
+ok 6 - capture recipe rejects missing Meta
+  ---
+  duration_ms: 190.151376
+  type: 'test'
+  ...
+# Subtest: collector applies exact pixel origin/path/method and approved GA4 hosts
+ok 7 - collector applies exact pixel origin/path/method and approved GA4 hosts
+  ---
+  duration_ms: 160.389019
+  type: 'test'
+  ...
+# Subtest: matched pixel decoder errors fail the actual fixture and still release its listener
+ok 8 - matched pixel decoder errors fail the actual fixture and still release its listener
+  ---
+  duration_ms: 149.344654
+  type: 'test'
+  ...
+# Subtest: fixture teardown also runs when the consuming test throws and stops collection
+ok 9 - fixture teardown also runs when the consuming test throws and stops collection
+  ---
+  duration_ms: 202.794015
+  type: 'test'
+  ...
+# Subtest: dataLayer recipe observes healthy direct first assignment without seeding
+ok 10 - dataLayer recipe observes healthy direct first assignment without seeding
+  ---
+  duration_ms: 163.610405
+  type: 'test'
+  ...
+# Subtest: dataLayer recipe observes healthy default assignment without seeding
+ok 11 - dataLayer recipe observes healthy default assignment without seeding
+  ---
+  duration_ms: 174.37482
+  type: 'test'
+  ...
+# Subtest: missing application initialization remains absent and cannot pass the event gate
+ok 12 - missing application initialization remains absent and cannot pass the event gate
+  ---
+  duration_ms: 343.39528
+  type: 'test'
+  ...
+# Subtest: dataLayer recipe rejects initialized but empty queue
+ok 13 - dataLayer recipe rejects initialized but empty queue
+  ---
+  duration_ms: 146.035748
+  type: 'test'
+  ...
+# Subtest: dataLayer recipe rejects same object in separate pushes
+ok 14 - dataLayer recipe rejects same object in separate pushes
+  ---
+  duration_ms: 172.889902
+  type: 'test'
+  ...
+# Subtest: dataLayer recipe rejects same object twice in one push
+ok 15 - dataLayer recipe rejects same object twice in one push
+  ---
+  duration_ms: 153.23163
+  type: 'test'
+  ...
+# Subtest: dataLayer recipe rejects wrong nested quantity type
+ok 16 - dataLayer recipe rejects wrong nested quantity type
+  ---
+  duration_ms: 153.659413
+  type: 'test'
+  ...
+# Subtest: dataLayer recipe rejects removed layer descriptor
+ok 17 - dataLayer recipe rejects removed layer descriptor
+  ---
+  duration_ms: 164.985718
+  type: 'test'
+  ...
+# Subtest: dataLayer recipe rejects removed push descriptor
+ok 18 - dataLayer recipe rejects removed push descriptor
+  ---
+  duration_ms: 145.524722
+  type: 'test'
+  ...
+# Subtest: replacement events remain observable without restoring the discarded queue
+ok 19 - replacement events remain observable without restoring the discarded queue
+  ---
+  duration_ms: 288.669633
+  type: 'test'
+  ...
+# Subtest: custom push chain preserves receiver, arguments, return identity and one snapshot
+ok 20 - custom push chain preserves receiver, arguments, return identity and one snapshot
+  ---
+  duration_ms: 144.346779
+  type: 'test'
+  ...
+# Subtest: custom push exceptions propagate unchanged and snapshot failure does not alter the delegate
+ok 21 - custom push exceptions propagate unchanged and snapshot failure does not alter the delegate
+  ---
+  duration_ms: 152.580515
+  type: 'test'
+  ...
+# Subtest: reading before observer installation fails explicitly
+ok 22 - reading before observer installation fails explicitly
+  ---
+  duration_ms: 144.943012
+  type: 'test'
+  ...
+# Subtest: published a11y scanner passes the healthy form and attaches the actual rule results
+ok 23 - published a11y scanner passes the healthy form and attaches the actual rule results
+  ---
+  duration_ms: 610.07059
+  type: 'test'
+  ...
+# Subtest: published default tags detect WCAG 2.1 autocomplete and accessible-name defects
+ok 24 - published default tags detect WCAG 2.1 autocomplete and accessible-name defects
+  ---
+  duration_ms: 846.378963
+  type: 'test'
+  ...
+# Subtest: published scanner rejects missing target and readiness contracts
+ok 25 - published scanner rejects missing target and readiness contracts
+  ---
+  duration_ms: 107.038512
+  type: 'test'
+  ...
+# Subtest: actual public-page recipe accepts healthy application state
+ok 26 - actual public-page recipe accepts healthy application state
+  ---
+  duration_ms: 530.496153
+  type: 'test'
+  ...
+# Subtest: actual public-page recipe rejects redirect application state
+ok 27 - actual public-page recipe rejects redirect application state
+  ---
+  duration_ms: 363.046457
+  type: 'test'
+  ...
+# Subtest: actual public-page recipe rejects blank application state
+ok 28 - actual public-page recipe rejects blank application state
+  ---
+  duration_ms: 401.382429
+  type: 'test'
+  ...
+# Subtest: actual public-page recipe rejects loading application state
+ok 29 - actual public-page recipe rejects loading application state
+  ---
+  duration_ms: 407.588106
+  type: 'test'
+  ...
+# Subtest: actual known-gap recipe imports the published scanner and asserts the observed rule set
+ok 30 - actual known-gap recipe imports the published scanner and asserts the observed rule set
+  ---
+  duration_ms: 555.683952
+  type: 'test'
+  ...
+# Subtest: consent observer stays passive and preserves a custom push chain
+ok 31 - consent observer stays passive and preserves a custom push chain
+  ---
+  duration_ms: 159.410082
+  type: 'test'
+  ...
+# Subtest: application default gate rejects missing default
+ok 32 - application default gate rejects missing default
+  ---
+  duration_ms: 153.168956
+  type: 'test'
+  ...
+# Subtest: application default gate rejects granted default
+ok 33 - application default gate rejects granted default
+  ---
+  duration_ms: 138.385859
+  type: 'test'
+  ...
+# Subtest: application default gate rejects two-signal default
+ok 34 - application default gate rejects two-signal default
+  ---
+  duration_ms: 144.677737
+  type: 'test'
+  ...
+# Subtest: application default gate rejects object event masquerading as consent
+ok 35 - application default gate rejects object event masquerading as consent
+  ---
+  duration_ms: 144.061835
+  type: 'test'
+  ...
+# Subtest: application default gate rejects measurement before default
+ok 36 - application default gate rejects measurement before default
+  ---
+  duration_ms: 150.03908
+  type: 'test'
+  ...
+# Subtest: application default gate rejects temporary grant before interaction
+ok 37 - application default gate rejects temporary grant before interaction
+  ---
+  duration_ms: 175.603896
+  type: 'test'
+  ...
+# Subtest: application default gate rejects overwritten layer descriptor
+ok 38 - application default gate rejects overwritten layer descriptor
+  ---
+  duration_ms: 162.423492
+  type: 'test'
+  ...
+# Subtest: application default gate rejects overwritten push descriptor
+ok 39 - application default gate rejects overwritten push descriptor
+  ---
+  duration_ms: 178.347966
+  type: 'test'
+  ...
+# Subtest: late acceptance works as an independent documented test with its own observer
+ok 40 - late acceptance works as an independent documented test with its own observer
+  ---
+  duration_ms: 2042.941255
+  type: 'test'
+  ...
+# Subtest: a fresh rejection produces a new denied update
+ok 41 - a fresh rejection produces a new denied update
+  ---
+  duration_ms: 298.767225
+  type: 'test'
+  ...
+# Subtest: partial consent is observed from the actual button interaction
+ok 42 - partial consent is observed from the actual button interaction
+  ---
+  duration_ms: 303.808359
+  type: 'test'
+  ...
+# Subtest: a layer replacement is observed but never repaired or silently approved
+ok 43 - a layer replacement is observed but never repaired or silently approved
+  ---
+  duration_ms: 250.58503
+  type: 'test'
+  ...
+# Subtest: an earlier update cannot satisfy a new action with no update
+ok 44 - an earlier update cannot satisfy a new action with no update
+  ---
+  duration_ms: 475.886526
+  type: 'test'
+  ...
+# Subtest: documented withdrawal survives navigation and verifies storage and update
+ok 45 - documented withdrawal survives navigation and verifies storage and update
+  ---
+  duration_ms: 550.066219
+  type: 'test'
+  ...
+# Subtest: latest denied state after an apparent acceptance is rejected
+ok 46 - latest denied state after an apparent acceptance is rejected
+  ---
+  duration_ms: 255.635429
+  type: 'test'
+  ...
+# Subtest: basic mode accepts clean and substring-decoy traffic but catches deferred tracking
+ok 47 - basic mode accepts clean and substring-decoy traffic but catches deferred tracking
+  ---
+  duration_ms: 1271.861339
+  type: 'test'
+  ...
+# Subtest: basic acceptance requires newly emitted configured traffic
+ok 48 - basic acceptance requires newly emitted configured traffic
+  ---
+  duration_ms: 487.055264
+  type: 'test'
+  ...
+# Subtest: basic-mode defaults initialized only on acceptance are valid and remain required
+ok 49 - basic-mode defaults initialized only on acceptance are valid and remain required
+  ---
+  duration_ms: 794.536804
+  type: 'test'
+  ...
+# Subtest: advanced-mode recipes parse real GET requests before and after acceptance
+ok 50 - advanced-mode recipes parse real GET requests before and after acceptance
+  ---
+  duration_ms: 510.252314
+  type: 'test'
+  ...
+# Subtest: advanced-mode recipes parse real POST batch requests before and after acceptance
+ok 51 - advanced-mode recipes parse real POST batch requests before and after acceptance
+  ---
+  duration_ms: 499.217042
+  type: 'test'
+  ...
+# Subtest: advanced pre-consent gate rejects missing app default
+ok 52 - advanced pre-consent gate rejects missing app default
+  ---
+  duration_ms: 178.598808
+  type: 'test'
+  ...
+# Subtest: advanced pre-consent gate rejects empty collector
+ok 53 - advanced pre-consent gate rejects empty collector
+  ---
+  duration_ms: 156.604779
+  type: 'test'
+  ...
+# Subtest: advanced pre-consent gate rejects incorrect storage transport
+ok 54 - advanced pre-consent gate rejects incorrect storage transport
+  ---
+  duration_ms: 176.970418
+  type: 'test'
+  ...
+# Subtest: advanced pre-consent gate rejects missing encoded diagnostic
+ok 55 - advanced pre-consent gate rejects missing encoded diagnostic
+  ---
+  duration_ms: 166.891895
+  type: 'test'
+  ...
+# Subtest: a pre-consent ping cannot satisfy the post-acceptance beacon expectation
+ok 56 - a pre-consent ping cannot satisfy the post-acceptance beacon expectation
+  ---
+  duration_ms: 319.489245
+  type: 'test'
+  ...
+# Subtest: HTTP GPC recipe validates transport and opt-out without assuming a DOM property
+ok 57 - HTTP GPC recipe validates transport and opt-out without assuming a DOM property
+  ---
+  duration_ms: 267.497726
+  type: 'test'
+  ...
+# Subtest: explicit DOM GPC simulation exercises the client opt-out path
+ok 58 - explicit DOM GPC simulation exercises the client opt-out path
+  ---
+  duration_ms: 155.372469
+  type: 'test'
+  ...
+# Subtest: GPC gate rejects an ignored header even when no marketing cookie happens to exist
+ok 59 - GPC gate rejects an ignored header even when no marketing cookie happens to exist
+  ---
+  duration_ms: 844.238315
+  type: 'test'
+  ...
+# Subtest: GPC gate rejects storage leakage despite a checked opt-out indicator
+ok 60 - GPC gate rejects storage leakage despite a checked opt-out indicator
+  ---
+  duration_ms: 161.860257
+  type: 'test'
+  ...
+# Subtest: TCF reader waits through incomplete data, observes the real action, and unregisters
+ok 61 - TCF reader waits through incomplete data, observes the real action, and unregisters
+  ---
+  duration_ms: 315.737309
+  type: 'test'
+  ...
+# Subtest: TCF never response is bounded and does not leave a registered listener
+ok 62 - TCF never response is bounded and does not leave a registered listener
+  ---
+  duration_ms: 346.244314
+  type: 'test'
+  ...
+# Subtest: TCF failure response is bounded and does not leave a registered listener
+ok 63 - TCF failure response is bounded and does not leave a registered listener
+  ---
+  duration_ms: 164.913867
+  type: 'test'
+  ...
+# Subtest: TCF absent response is bounded and does not leave a registered listener
+ok 64 - TCF absent response is bounded and does not leave a registered listener
+  ---
+  duration_ms: 334.367123
+  type: 'test'
+  ...
+# Subtest: TCF policy number cannot substitute for TC string and actual purpose/vendor consent
+ok 65 - TCF policy number cannot substitute for TC string and actual purpose/vendor consent
+  ---
+  duration_ms: 464.385849
+  type: 'test'
+  ...
+# Subtest: cookie recipe sees deferred inventory leaks and does not exempt similar names
+ok 66 - cookie recipe sees deferred inventory leaks and does not exempt similar names
+  ---
+  duration_ms: 915.636222
+  type: 'test'
+  ...
+# Subtest: cookie acceptance and persisted navigation run against real storage and DOM
+ok 67 - cookie acceptance and persisted navigation run against real storage and DOM
+  ---
+  duration_ms: 565.190027
+  type: 'test'
+  ...
+# Subtest: banner threshold accepts usable controls and rejects a two-pixel reject button
+ok 68 - banner threshold accepts usable controls and rejects a two-pixel reject button
+  ---
+  duration_ms: 403.920988
+  type: 'test'
+  ...
+# Subtest: HTML href is parsed without closing markup and with entity decoding
+ok 69 - HTML href is parsed without closing markup and with entity decoding
+  ---
+  duration_ms: 102.943382
+  type: 'test'
+  ...
+# Subtest: valid token punctuation is preserved instead of trimmed
+ok 70 - valid token punctuation is preserved instead of trimmed
+  ---
+  duration_ms: 95.423244
+  type: 'test'
+  ...
+# Subtest: wrong origins, suffix lookalikes, credentials and schemes cannot become navigation
+ok 71 - wrong origins, suffix lookalikes, credentials and schemes cannot become navigation
+  ---
+  duration_ms: 99.796231
+  type: 'test'
+  ...
+# Subtest: two distinct matching links fail rather than choosing an account/token
+ok 72 - two distinct matching links fail rather than choosing an account/token
+  ---
+  duration_ms: 90.153174
+  type: 'test'
+  ...
+# Subtest: repeated display of the same exact link remains unambiguous
+ok 73 - repeated display of the same exact link remains unambiguous
+  ---
+  duration_ms: 100.194025
+  type: 'test'
+  ...
+# Subtest: plain text URL with explicit delimiters is accepted
+ok 74 - plain text URL with explicit delimiters is accepted
+  ---
+  duration_ms: 87.212203
+  type: 'test'
+  ...
+# Subtest: wrong path and missing token are rejected
+ok 75 - wrong path and missing token are rejected
+  ---
+  duration_ms: 94.109056
+  type: 'test'
+  ...
+# Subtest: reading an email does not execute its script in the test page
+ok 76 - reading an email does not execute its script in the test page
+  ---
+  duration_ms: 98.282334
+  type: 'test'
+  ...
+# Subtest: healthy HTTP control authenticates through the actual browser and runner
+ok 77 - healthy HTTP control authenticates through the actual browser and runner
+  ---
+  duration_ms: 1762.257035
+  type: 'test'
+  ...
+# Subtest: documented starter discovers its setup and loads the resulting session
+ok 78 - documented starter discovers its setup and loads the resulting session
+  ---
+  duration_ms: 2637.984223
+  type: 'test'
+  ...
+# Subtest: documented worker fixture authenticates the builtin page without explicit fixture use
+ok 79 - documented worker fixture authenticates the builtin page without explicit fixture use
+  ---
+  duration_ms: 1604.028368
+  type: 'test'
+  ...
+# Subtest: documented worker login supports a configured relative URL and writes usable state
+ok 80 - documented worker login supports a configured relative URL and writes usable state
+  ---
+  duration_ms: 1646.071683
+  type: 'test'
+  ...
+# Subtest: documented role fixtures authenticate both roles and isolate their cookies
+ok 81 - documented role fixtures authenticate both roles and isolate their cookies
+  ---
+  duration_ms: 2074.325126
+  type: 'test'
+  ...
+# Subtest: a generated role locator produces real screenshot evidence
+ok 82 - a generated role locator produces real screenshot evidence
+  ---
+  duration_ms: 242.143113
+  type: 'test'
+  ...
+# Subtest: duplicate test IDs cannot receive a unique score-five candidate
+ok 83 - duplicate test IDs cannot receive a unique score-five candidate
+  ---
+  duration_ms: 141.380122
+  type: 'test'
+  ...
+# Subtest: ambiguous names become distinct region-scoped proposals without choosing first
+ok 84 - ambiguous names become distinct region-scoped proposals without choosing first
+  ---
+  duration_ms: 164.59559
+  type: 'test'
+  ...
+# Subtest: duplicate region names do not disguise an ambiguous scoped selector
+ok 85 - duplicate region names do not disguise an ambiguous scoped selector
+  ---
+  duration_ms: 167.744237
+  type: 'test'
+  ...
+# Subtest: regex metacharacters in intent are literal accessible-name data
+ok 86 - regex metacharacters in intent are literal accessible-name data
+  ---
+  duration_ms: 137.057278
+  type: 'test'
+  ...
+# Subtest: quotes and code-like text in a test ID are safely quoted, never executed
+ok 87 - quotes and code-like text in a test ID are safely quoted, never executed
+  ---
+  duration_ms: 154.555954
+  type: 'test'
+  ...
+# Subtest: empty or missing intent is an input failure
+ok 88 - empty or missing intent is an input failure
+  ---
+  duration_ms: 95.452754
+  type: 'test'
+  ...
+# Subtest: a candidate that became ambiguous cannot create screenshot evidence
+ok 89 - a candidate that became ambiguous cannot create screenshot evidence
+  ---
+  duration_ms: 138.024105
+  type: 'test'
+  ...
+# Subtest: screenshot failures propagate instead of recording a nonexistent artifact
+ok 90 - screenshot failures propagate instead of recording a nonexistent artifact
+  ---
+  duration_ms: 435.124909
+  type: 'test'
+  ...
+# Subtest: missing, ambiguous and text-only candidates retain an unresolved failure row
+ok 91 - missing, ambiguous and text-only candidates retain an unresolved failure row
+  ---
+  duration_ms: 168.318396
+  type: 'test'
+  ...
+# Subtest: generation and screenshot errors remain visible in the recovery record
+ok 92 - generation and screenshot errors remain visible in the recovery record
+  ---
+  duration_ms: 204.131202
+  type: 'test'
+  ...
+1..92
+# tests 92
+# suites 0
+# pass 92
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 36633.956007
+
+
+CHECK qa-runner
+ARGV ["node","--test","--test-reporter=tap","--test-isolation=none","tests/qa/*.test.mjs"]
+TAP version 13
+# Subtest: real browser CLI distinguishes healthy, inaccessible, redirected blank, and absent-readiness pages
+ok 1 - real browser CLI distinguishes healthy, inaccessible, redirected blank, and absent-readiness pages
+  ---
+  duration_ms: 3932.745166
+  type: 'test'
+  ...
+# Subtest: real Playwright JSON reports retain healthy and failed HTTP assertions
+ok 2 - real Playwright JSON reports retain healthy and failed HTTP assertions
+  ---
+  duration_ms: 2617.553211
+  type: 'test'
+  ...
+# Subtest: routing: Can we test the payment confirmation email?
+ok 3 - routing: Can we test the payment confirmation email?
+  ---
+  duration_ms: 2.755205
+  type: 'test'
+  ...
+# Subtest: routing: Our LLM feature invents answers when retrieval returns nothing.
+ok 4 - routing: Our LLM feature invents answers when retrieval returns nothing.
+  ---
+  duration_ms: 1.066374
+  type: 'test'
+  ...
+# Subtest: routing: Generate tests from this PRD.
+ok 5 - routing: Generate tests from this PRD.
+  ---
+  duration_ms: 0.109555
+  type: 'test'
+  ...
+# Subtest: routing: This one locator is flaky on a fast machine.
+ok 6 - routing: This one locator is flaky on a fast machine.
+  ---
+  duration_ms: 0.152709
+  type: 'test'
+  ...
+# Subtest: routing: The redesign broke all selectors in 80 tests.
+ok 7 - routing: The redesign broke all selectors in 80 tests.
+  ---
+  duration_ms: 0.108313
+  type: 'test'
+  ...
+# Subtest: routing: Classify these 60 CI failures into groups.
+ok 8 - routing: Classify these 60 CI failures into groups.
+  ---
+  duration_ms: 0.096545
+  type: 'test'
+  ...
+# Subtest: routing: Reproduce why the old session still works after logout.
+ok 9 - routing: Reproduce why the old session still works after logout.
+  ---
+  duration_ms: 0.108914
+  type: 'test'
+  ...
+# Subtest: routing: A screen reader cannot name the submit control.
+ok 10 - routing: A screen reader cannot name the submit control.
+  ---
+  duration_ms: 0.121393
+  type: 'test'
+  ...
+# Subtest: routing: Check whether the CMP sends data before consent.
+ok 11 - routing: Check whether the CMP sends data before consent.
+  ---
+  duration_ms: 0.143596
+  type: 'test'
+  ...
+# Subtest: routing: The GA4 checkout event has the wrong currency.
+ok 12 - routing: The GA4 checkout event has the wrong currency.
+  ---
+  duration_ms: 0.147452
+  type: 'test'
+  ...
+# Subtest: routing: Exercise Android deep links with Appium.
+ok 13 - routing: Exercise Android deep links with Appium.
+  ---
+  duration_ms: 0.05981
+  type: 'test'
+  ...
+# Subtest: routing: Compare our browser matrix in Safari.
+ok 14 - routing: Compare our browser matrix in Safari.
+  ---
+  duration_ms: 0.386061
+  type: 'test'
+  ...
+# Subtest: routing: Measure the layout shift after the banner arrives.
+ok 15 - routing: Measure the layout shift after the banner arrives.
+  ---
+  duration_ms: 0.109364
+  type: 'test'
+  ...
+# Subtest: routing: Prove the database migration preserves unique email addresses.
+ok 16 - routing: Prove the database migration preserves unique email addresses.
+  ---
+  duration_ms: 0.142535
+  type: 'test'
+  ...
+# Subtest: routing: Use Pact to check the consumer contract.
+ok 17 - routing: Use Pact to check the consumer contract.
+  ---
+  duration_ms: 0.107271
+  type: 'test'
+  ...
+# Subtest: routing: Remove duplicate tests from this regression suite.
+ok 18 - routing: Remove duplicate tests from this regression suite.
+  ---
+  duration_ms: 0.081222
+  type: 'test'
+  ...
+# Subtest: routing: Set up QA from scratch for this new project.
+ok 19 - routing: Set up QA from scratch for this new project.
+  ---
+  duration_ms: 0.049274
+  type: 'test'
+  ...
+# Subtest: routing: Onboard a QA engineer into our existing team.
+ok 20 - routing: Onboard a QA engineer into our existing team.
+  ---
+  duration_ms: 0.04653
+  type: 'test'
+  ...
+# Subtest: routing: Keep a scheduled probe of the status page.
+ok 21 - routing: Keep a scheduled probe of the status page.
+  ---
+  duration_ms: 0.042524
+  type: 'test'
+  ...
+# Subtest: routing: Exercise the feature flag during the canary rollout.
+ok 22 - routing: Exercise the feature flag during the canary rollout.
+  ---
+  duration_ms: 0.13961
+  type: 'test'
+  ...
+# Subtest: changed paths add focused supporting skills without loading the catalog
+ok 23 - changed paths add focused supporting skills without loading the catalog
+  ---
+  duration_ms: 0.323777
+  type: 'test'
+  ...
+# Subtest: config rejects shell strings, duplicate ids, unknown fields, credentials and missing reporter
+ok 24 - config rejects shell strings, duplicate ids, unknown fields, credentials and missing reporter
+  ---
+  duration_ms: 0.887505
+  type: 'test'
+  ...
+# Subtest: TAP gate rejects zero, skips, duplicate summaries and inconsistent totals
+ok 25 - TAP gate rejects zero, skips, duplicate summaries and inconsistent totals
+  ---
+  duration_ms: 1.19603
+  type: 'test'
+  ...
+# Subtest: Playwright gate rejects missing results, empty suites, flaky retries and expected failures
+ok 26 - Playwright gate rejects missing results, empty suites, flaky retries and expected failures
+  ---
+  duration_ms: 0.701926
+  type: 'test'
+  ...
+# Subtest: real CLI discovers and runs a Node project outside Git and produces linked reports
+ok 27 - real CLI discovers and runs a Node project outside Git and produces linked reports
+  ---
+  duration_ms: 290.428614
+  type: 'test'
+  ...
+# Subtest: real CLI keeps a defect red and does not turn skipped tests green
+ok 28 - real CLI keeps a defect red and does not turn skipped tests green
+  ---
+  duration_ms: 500.513897
+  type: 'test'
+  ...
+# Subtest: an explicit npm reporter argument remains singular
+ok 29 - an explicit npm reporter argument remains singular
+  ---
+  duration_ms: 252.964904
+  type: 'test'
+  ...
+# Subtest: no tests, exit-zero text and missing executable cannot produce a passing run
+ok 30 - no tests, exit-zero text and missing executable cannot produce a passing run
+  ---
+  duration_ms: 218.645847
+  type: 'test'
+  ...
+# Subtest: the total budget bounds stalled commands and leaves subsequent checks blocked
+ok 31 - the total budget bounds stalled commands and leaves subsequent checks blocked
+  ---
+  duration_ms: 968.591855
+  type: 'test'
+  ...
+# Subtest: plan is read-only, init is explicit and AGENTS wiring is idempotent
+ok 32 - plan is read-only, init is explicit and AGENTS wiring is idempotent
+  ---
+  duration_ms: 13.751865
+  type: 'test'
+  ...
+# Subtest: conflicting workflow markers do not rewrite the existing AGENTS file
+ok 33 - conflicting workflow markers do not rewrite the existing AGENTS file
+  ---
+  duration_ms: 4.291305
+  type: 'test'
+  ...
+# Subtest: known secrets, URL query values, and hostile report strings are kept out of shareable HTML
+ok 34 - known secrets, URL query values, and hostile report strings are kept out of shareable HTML
+  ---
+  duration_ms: 42.091684
+  type: 'test'
+  ...
+1..34
+# tests 34
+# suites 0
+# pass 34
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 8900.309354
+

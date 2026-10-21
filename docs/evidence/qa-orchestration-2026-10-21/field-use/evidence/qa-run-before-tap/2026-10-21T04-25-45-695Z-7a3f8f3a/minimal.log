@@ -1,0 +1,6 @@
+QA run 2026-10-21T04-25-45-695Z-7a3f8f3a
+Project: parcel-desk
+Budget: 180000 ms
+RUN project-tests
+FAILED project-tests: The declared command failed without a complete test verdict. Exit code 1.
+RESULT FAILED: 0/1 checks passed, 0 tests observed

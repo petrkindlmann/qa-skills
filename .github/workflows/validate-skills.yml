@@ -7,6 +7,10 @@ on:
       - 'skills/**'
       - 'evals/**'
       - 'scripts/**'
+      - 'tools/qa/**'
+      - 'qa.config.json'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
       - 'tests/**'
       - 'requirements-dev.txt'
       - 'package.json'
@@ -20,6 +24,10 @@ on:
       - 'skills/**'
       - 'evals/**'
       - 'scripts/**'
+      - 'tools/qa/**'
+      - 'qa.config.json'
+      - 'AGENTS.md'
+      - 'CLAUDE.md'
       - 'tests/**'
       - 'requirements-dev.txt'
       - 'package.json'
@@ -98,6 +106,9 @@ jobs:
 
       - name: Execute browser recipes against good and broken fixtures
         run: npm run test:browser
+
+      - name: Exercise the QA runner, routing, and evidence reports
+        run: npm run test:qa
 
   application-workflows:
     runs-on: ubuntu-latest

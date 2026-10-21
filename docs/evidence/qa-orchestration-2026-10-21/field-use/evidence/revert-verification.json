@@ -1,0 +1,13 @@
+{
+  "command": [
+    "python3",
+    "evidence/revert-check.py"
+  ],
+  "shellCommand": "python3 evidence/revert-check.py",
+  "cwd": "/tmp/qa-field-use/shipping",
+  "startedAt": "2026-10-21T04:28:09.328698+00:00",
+  "finishedAt": "2026-10-21T04:28:09.558742+00:00",
+  "durationSeconds": 0.23,
+  "exitCode": 0,
+  "capturedBytes": 2310
+}

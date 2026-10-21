@@ -49,48 +49,46 @@ guard.
 Do NOT: "keep running it as an agent forever," record clicks into the suite, or hand-write
 `page.locator('xpath=...')`. The whole point of graduation is durable, role-based locators.
 
-## CI gating: a failed goal must block the merge
+## CI gating: execute an independent oracle
 
-The agent run must exit **non-zero** on failure and emit a **machine-readable** verdict.
-CI parses the boolean — a human does not read prose, and CI does not grep the explanation.
+The repository provides `scripts/agent-result-gate.mjs`. It executes a project-owned oracle
+with a deadline, checks typed evidence bound to the current run, target and build, and exits
+nonzero for failed or blocked results. It does not launch a model. Install or configure the
+host agent separately and test its adapter before adding it to CI. A skill-only installation
+does not install this repository utility; use a full, pinned checkout of QA Skills.
 
-```yaml
-# .github/workflows/agentic-smoke.yml
-name: agentic-smoke
-on: pull_request
-jobs:
-  smoke:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10            # hard timeout cap on the whole job
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 22 }
-      - run: npm ci
-      - name: Seed ephemeral state
-        run: npm run db:reset && npm run seed:checkout   # fresh, seeded, isolated
-      - name: Run agent goal
-        env:
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        run: node scripts/run-agent-goal.mjs --config agent-run.config.json
-        # script enforces maxSteps/timeout and writes result.json {"passed":bool}
-      - name: Gate the merge on the boolean verdict
-        run: |
-          test "$(jq -r .passed result.json)" = "true" || exit 1
+Use these steps in a CI job with a whole-job timeout:
+
+1. Reset an ephemeral fixture and identify the candidate build.
+2. Generate a unique run ID in the trusted harness. Configure the target, build ID, step
+   budget, model and wall-clock limit before agent execution.
+3. Run the installed host adapter. The adapter must enforce its budgets while running,
+   retain browser/tool evidence, and emit the activity record below. A prompt asking the
+   model to count its own steps is insufficient.
+4. Run the gate. It starts the reviewed oracle command itself and gives it a fresh evidence
+   path through `QA_ORACLE_EVIDENCE`. The model never chooses or rewrites this command.
+5. Retain both the agent trace and `gate-result.json`. A failed or blocked result fails CI;
+   do not use `continue-on-error` or retry until passing.
+
+```bash
+# Run from a full QA Skills checkout. These are concrete utility arguments; the
+# project-owned gate config and adapter result are described in gate-contract.md.
+node scripts/agent-result-gate.mjs \
+  --config /path/to/project/gate-config.json \
+  --agent-result /path/to/project/agent-result.json \
+  --output /path/to/project/gate-result.json
 ```
 
-The runner script (`run-agent-goal.mjs`) must:
+See [gate-contract.md](gate-contract.md) for the complete input/output contract and a
+bounded HTTP oracle example. The gate rejects string booleans, zero or over-budget steps,
+wrong run/target/build bindings, missing checks, empty observations, stale output, and
+abnormal execution. An ordinary nonzero oracle exit or a failed check produces `failed`;
+missing evidence or infrastructure failure produces `blocked`. Neither passes CI.
 
-- Enforce the **step budget** and a wall-clock **timeout cap** internally; abort past them.
-- Write a structured `result.json` with `{ "passed": true|false, "evidence": "...",
-  "steps": N }`.
-- `process.exit(passed ? 0 : 1)` so a failed goal fails the job.
-
-Anti-patterns that defeat the gate:
-
-- `continue-on-error: true` / `allow_failure: true` — the merge proceeds on red.
-- "always exit 0" or returning a prose verdict for a human to read.
-- Reusing shared/long-lived state instead of seeded, ephemeral fixtures.
+The earlier `node scripts/run-agent-goal.mjs` example was an adopter-written placeholder;
+that runner is not supplied here. Do not copy it into a workflow and expect a model to run.
+Use your actual installed host adapter, or keep the deterministic application checks from
+`playwright-automation` as the CI gate until that adapter exists.
 
 ## Canvas / vision fallback (scoped last resort)
 

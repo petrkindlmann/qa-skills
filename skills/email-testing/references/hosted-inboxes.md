@@ -120,48 +120,81 @@ email address in the app under test, then wait for a matching message through th
 API access uses a scoped Bearer key; keep `SHAZAMAIL_API_KEY` in the CI secret store.
 
 ```ts
-const headers = {
-  Authorization: `Bearer ${process.env.SHAZAMAIL_API_KEY}`,
-  'Content-Type': 'application/json',
-};
-
-const create = await fetch('https://shazamail.com/api/v1/test-inboxes', {
-  method: 'POST',
-  headers,
-  body: JSON.stringify({
-    ttl_seconds: 1800,
-    run_id: process.env.CI_JOB_ID || 'local-e2e',
-    purpose: 'signup-verification',
-  }),
-});
-if (!create.ok) throw new Error(`create inbox failed: ${create.status}`);
-const inbox = await create.json();
-
-// ...submit inbox.email through the real signup/reset flow...
-
-const wait = await fetch(
-  `https://shazamail.com/api/v1/test-inboxes/${inbox.id}/wait`,
-  {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({
-      timeout_ms: 20_000,
-      match: {
-        received_after: new Date(Date.now() - 60_000).toISOString(),
-        has_verification_code: true,
-      },
-    }),
+// helpers/shazamail.ts — Node 20+; the deadline covers headers AND response body parsing.
+export async function shazaMailPost(
+  path: string, payload: object,
+  { timeoutMs = 10_000, apiKey = process.env.SHAZAMAIL_API_KEY } = {}
+) {
+  if (!apiKey) throw new Error('SHAZAMAIL_API_KEY is required');
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0) {
+    throw new Error('ShazaMail client deadline must be a positive integer in milliseconds');
   }
-);
-if (!wait.ok) throw new Error(`email wait failed: ${wait.status}`);
-const delivery = await wait.json();
+  if (!/^\/api\/v1\/test-inboxes(?:\/[^/?#]+\/wait)?$/.test(path)) {
+    throw new Error('Unsupported ShazaMail inbox path');
+  }
+  const signal = AbortSignal.timeout(timeoutMs);
+  try {
+    const response = await fetch(new URL(path, 'https://shazamail.com'), {
+      method: 'POST', signal,
+      headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      await response.body?.cancel();
+      throw new Error(`ShazaMail ${path} returned HTTP ${response.status}`);
+    }
+    // Do not return response.json() without awaiting it: the same deadline must cover the body.
+    return await response.json();
+  } catch (error) {
+    if (signal.aborted) {
+      throw new Error(`ShazaMail ${path} client deadline exceeded (${timeoutMs} ms)`);
+    }
+    // Keep API keys, tokens, recipient addresses, and message bodies out of failure output.
+    if (error instanceof Error && error.message.startsWith('ShazaMail ')) throw error;
+    throw new Error(`ShazaMail ${path} transport or JSON response failure`);
+  }
+}
 ```
 
-The wait endpoint is bounded (30s maximum) and can match by sender, recipient, subject,
-verification-code presence, category, `received_after`, or internet message ID. This makes
-it useful for signup, password-reset, OTP, and magic-link workflows without fixed sleeps.
-Because the service is receive-only, it is not a replacement for a sandbox SMTP server when
-the test itself must send mail.
+```ts
+import { shazaMailPost } from '../helpers/shazamail';
+
+const inbox = await shazaMailPost('/api/v1/test-inboxes', {
+  ttl_seconds: 1800,
+  run_id: process.env.CI_JOB_ID || 'local-e2e',
+  purpose: 'signup-verification',
+}, { timeoutMs: 10_000 });
+if (typeof inbox?.id !== 'string' || !inbox.id || typeof inbox.email !== 'string' || !inbox.email) {
+  throw new Error('ShazaMail create response omitted the inbox id or email');
+}
+
+const receivedAfter = new Date().toISOString();
+// ...submit inbox.email through the real signup/reset flow AFTER recording receivedAfter...
+
+const delivery = await shazaMailPost(
+  `/api/v1/test-inboxes/${encodeURIComponent(inbox.id)}/wait`,
+  {
+    timeout_ms: 20_000, // the service's wait budget
+    match: { received_after: receivedAfter, has_verification_code: true },
+  },
+  { timeoutMs: 25_000 }, // a separate transport deadline, allowing time for the service response
+);
+// Assert sender/subject and extract the expected token from the documented delivery schema.
+// Complete the link/OTP in the application and assert the resulting account state.
+```
+
+The wait endpoint accepts a server wait budget (30s maximum); that does not bound a stalled
+connection or response body. Use a separate client deadline for **both** inbox creation and
+waiting, and leave the enclosing Playwright test enough time for creation, application actions,
+wait, and final assertions. A client timeout, HTTP failure, or malformed JSON is a failed
+acquisition, never evidence that no email was sent. Do not automatically retry inbox creation
+without checking whether the first call created it.
+
+The matcher can select sender, recipient, subject, verification-code presence, category,
+`received_after`, or internet message ID. Use one inbox per test and capture `received_after`
+just before the application action. The example covers inbox acquisition; it only becomes an
+end-to-end test after content checks and the application completion assertion. Because the
+service is receive-only, it does not replace a sandbox SMTP server when the test must send mail.
 
 Reference guides:
 - https://shazamail.com/guides/playwright-email-testing

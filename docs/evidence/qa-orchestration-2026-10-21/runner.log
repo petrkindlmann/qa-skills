@@ -1,0 +1,9 @@
+RUN documented-helpers
+PASSED documented-helpers: All observed tests passed with no skips or cancellations.
+RUN documented-browser
+PASSED documented-browser: All observed tests passed with no skips or cancellations.
+RUN qa-runner
+PASSED qa-runner: All observed tests passed with no skips or cancellations.
+RESULT PASSED: 3/3 checks passed, 242 tests observed
+Report: /tmp/qa-orchestration-self-final/2026-10-21T09-36-38-867Z-d220a4c0/report.html
+Result: /tmp/qa-orchestration-self-final/2026-10-21T09-36-38-867Z-d220a4c0/result.json

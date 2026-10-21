@@ -24,16 +24,25 @@ import { type Page, type TestInfo, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 interface A11yOptions {
+  expectedURL: string | RegExp;
+  ready: () => Promise<void>; // assert the app-owned page/state completion signal
   tags?: string[];
   exclude?: string[];
   disableRules?: string[];
 }
 
-export async function checkAccessibility(
-  page: Page, testInfo: TestInfo, options: A11yOptions = {}
-): Promise<void> {
+export async function scanAccessibility(
+  page: Page, testInfo: TestInfo, options: A11yOptions
+) {
+  if (!options?.expectedURL || typeof options.ready !== 'function') {
+    throw new Error('Accessibility scan requires expectedURL and an application readiness assertion');
+  }
+  // A blank/error/login page can pass axe. Prove the intended page and state first.
+  await expect(page).toHaveURL(options.expectedURL);
+  await options.ready();
+
   let builder = new AxeBuilder({ page })
-    .withTags(options.tags ?? ['wcag2a', 'wcag2aa', 'wcag22aa']);
+    .withTags(options.tags ?? ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa']);
 
   for (const sel of options.exclude ?? []) builder = builder.exclude(sel);
   if (options.disableRules?.length) builder = builder.disableRules(options.disableRules);
@@ -44,19 +53,29 @@ export async function checkAccessibility(
     body: JSON.stringify(results, null, 2), contentType: 'application/json',
   });
 
-  // A scan that evaluated nothing is not a clean page (blank, redirected, or wrong selector).
+  // This guards scanner execution only; the URL/readiness checks establish page identity.
   expect(results.passes.length + results.violations.length + results.incomplete.length,
     'axe evaluated no rules').toBeGreaterThan(0);
 
-  const violations = results.violations.map((v) => ({
+  return results.violations.map((v) => ({
     rule: v.id, impact: v.impact, description: v.description,
     helpUrl: v.helpUrl, elements: v.nodes.map((n) => n.html).slice(0, 5),
   }));
+}
 
+export async function checkAccessibility(
+  page: Page, testInfo: TestInfo, options: A11yOptions
+): Promise<void> {
+  const violations = await scanAccessibility(page, testInfo, options);
   expect(violations, `${violations.length} a11y violations:\n${JSON.stringify(violations, null, 2)}`)
     .toHaveLength(0);
 }
 ```
+
+The WCAG 2.2 AA target is cumulative: retain the WCAG 2.0 and 2.1 A/AA tags as well as
+`wcag22aa`. Selecting only `wcag22aa` does not select earlier criteria. A nonempty rule
+count proves scanner activity, not that the intended page loaded. Supply an exact approved
+URL and an application-owned completion assertion; adapt the example test IDs to your app.
 
 ## Using in Tests
 
@@ -70,19 +89,35 @@ test.describe('Accessibility - public pages', () => {
     { name: 'Home', path: '/' }, { name: 'Login', path: '/login' },
     { name: 'Pricing', path: '/pricing' }, { name: 'Sign Up', path: '/signup' },
   ]) {
-    test(`${name} page has no a11y violations`, async ({ page }, testInfo) => {
-      await page.goto(path);
-      await checkAccessibility(page, testInfo);
+    test(`${name} page has no a11y violations`, async ({ page, baseURL }, testInfo) => {
+      if (!baseURL) throw new Error('Configure the approved application baseURL');
+      const expectedURL = new URL(path, baseURL).href;
+      await page.goto(expectedURL);
+      await checkAccessibility(page, testInfo, {
+        expectedURL,
+        ready: async () => {
+          await expect(page.getByTestId(`page-${name.toLowerCase().replaceAll(' ', '-')}-ready`))
+            .toHaveAttribute('data-state', 'ready');
+          await expect(page.getByRole('heading', { name, exact: true })).toBeVisible();
+        },
+      });
     });
   }
 });
 
 test.describe('Accessibility - interactive states', () => {
-  test('modal dialog is accessible when open', async ({ page }, testInfo) => {
-    await page.goto('/dashboard');
+  test('modal dialog is accessible when open', async ({ page, baseURL }, testInfo) => {
+    if (!baseURL) throw new Error('Configure the approved application baseURL');
+    const expectedURL = new URL('/dashboard', baseURL).href;
+    await page.goto(expectedURL);
     await page.getByRole('button', { name: 'Create project' }).click();
-    await expect(page.getByRole('dialog')).toBeVisible();
-    await checkAccessibility(page, testInfo);
+    await checkAccessibility(page, testInfo, {
+      expectedURL,
+      ready: async () => {
+        await expect(page.getByRole('dialog', { name: 'Create project' })).toBeVisible();
+        await expect(page.getByTestId('project-dialog-ready')).toHaveAttribute('data-state', 'ready');
+      },
+    });
   });
 });
 ```
@@ -93,8 +128,17 @@ Vendored or upstream pages often ship real violations. Do not disable the scan; 
 set so the test still moves when a rule appears or disappears:
 
 ```typescript
+import { scanAccessibility } from '../../helpers/a11y';
+
 const upstreamGaps = ['button-name', 'label']; // unnamed row controls in the pinned TodoMVC
-const violations = await scanAccessibility(page, testInfo); // same helper, returns the summary
+const violations = await scanAccessibility(page, testInfo, {
+  expectedURL: new URL('/', baseURL).href,
+  ready: async () => {
+    // Arrange the populated state first: an empty TodoMVC has no row controls to scan.
+    await expect(page.getByRole('heading', { name: 'todos', exact: true })).toBeVisible();
+    await expect(page.locator('.todo-list > li')).toHaveCount(2);
+  },
+});
 expect([...new Set(violations.map((v) => v.rule))].sort()).toEqual(upstreamGaps);
 ```
 
@@ -105,6 +149,10 @@ suppression is reviewable and removable:
 
 ```typescript
 await checkAccessibility(page, testInfo, {
+  expectedURL: new URL('/support', baseURL).href,
+  ready: async () => {
+    await expect(page.getByTestId('support-ready')).toHaveAttribute('data-state', 'ready');
+  },
   disableRules: ['frame-title'], // Third-party chat widget; tracked in PROJ-4521
   exclude: ['#third-party-analytics-widget'],
 });

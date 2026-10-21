@@ -1,0 +1,2 @@
+# Preserve captured logs, generated reports, and source diffs byte for byte.
+docs/evidence/** -whitespace
