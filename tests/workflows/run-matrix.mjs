@@ -90,6 +90,10 @@ const campaign3Cases = [
   // record that limit (the database-testing addon catches the fault at the schema level).
   { id: 'c3-tdm-idempotency-index', suite: 'campaign3/test-data-management', count: 7, env: { QA_SHOP_FAULT: 'missing_idempotency_index' }, title: 'an idempotent replay through the factory' },
   { id: 'c3-tdm-cross-user', suite: 'campaign3/test-data-management', count: 7, env: { QA_SHOP_FAULT: 'cross_user_order_read' }, title: 'scopes running in parallel on one Shop' },
+  // Chaos experiments run one at a time: the CPU-load experiment measures the host.
+  { id: 'c3-chaos-healthy', suite: 'campaign3/chaos-engineering', healthy: true, count: 5, workers: 1 },
+  { id: 'c3-chaos-smtp-503', suite: 'campaign3/chaos-engineering', count: 5, workers: 1, env: { QA_SHOP_FAULT: 'smtp_failure_503' }, title: 'reset requests answer 202 during an SMTP outage' },
+  { id: 'c3-chaos-receipt', suite: 'campaign3/chaos-engineering', count: 5, workers: 1, env: { QA_SHOP_FAULT: 'receipt_before_commit' }, title: 'a transient fulfillment failure after restart' },
   { id: 'c3-tdm-duplicate-fulfillment', suite: 'campaign3/test-data-management', count: 7, env: { QA_SHOP_FAULT: 'duplicate_fulfillment' }, title: 'a signed payment payload from the factory' },
 ];
 const oracleMatchers = {
@@ -101,6 +105,7 @@ const oracleMatchers = {
   'c3-mig-duplicates': 'toEqual',
   'c3-tdm-idempotency-index': 'toHaveLength', 'c3-tdm-duplicate-fulfillment': 'toBe',
   'c3-tdm-cross-user': 'toEqual',
+  'c3-chaos-smtp-503': 'toBeLessThan', 'c3-chaos-receipt': 'toHaveLength',
   'shop-ownership': 'toBe', 'shop-pricing': 'toBe', 'shop-deduplication': 'toMatchObject',
   'shop-transaction': 'toHaveLength', 'shop-key-conflict': 'toBe', 'shop-reset-reuse': 'toBe',
   'todo-persistence': 'toHaveText', 'todo-duplicates': 'toHaveText', 'todo-filter': 'toHaveText',
@@ -167,7 +172,7 @@ for (const scenario of cases) {
   // Bound each variant in proportion to its suite: four seconds per case, never under 90 s.
   const globalTimeoutMs = Math.max(90000, scenario.count * 4000);
   const args = ['node_modules/playwright/cli.js', 'test', '--config', 'tests/workflows/playwright.config.mjs',
-    '--workers=2', '--retries=0', `--global-timeout=${globalTimeoutMs}`];
+    `--workers=${scenario.workers ?? 2}`, '--retries=0', `--global-timeout=${globalTimeoutMs}`];
   const env = { ...process.env, QA_SHOP_FAULT: '', QA_TODO_FAULT: '', ...scenario.env, QA_MATRIX_RUN_ID: scenario.runId,
     QA_WORKFLOW_SUITE: path.join(root, 'tests/workflows/generated', scenario.suite), QA_WORKFLOW_OUTPUT: directory };
   const started = performance.now();

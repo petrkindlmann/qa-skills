@@ -1,0 +1,7 @@
+campaign3 matrix (chaos-engineering, one worker) started 2026-10-21T23:24:28.844Z node v26.0.0 playwright 1.62.1
+c3-chaos-healthy: healthy_pass; 5 tests; 0 failed; 25000ms; code 0
+c3-chaos-smtp-503: assertion_detection_verified; 5 tests; 1 failed; 22294ms; code 1 oracle={"id":"c3-chaos-smtp-503","matcher":"toBeLessThan"} verified=true
+  failing: reset requests answer 202 during an SMTP outage, the outage is counted in smtp_errors, nothing is 5xx
+c3-chaos-receipt: assertion_detection_verified; 5 tests; 1 failed; 22435ms; code 1 oracle={"id":"c3-chaos-receipt","matcher":"toHaveLength"} verified=true
+  failing: a transient fulfillment failure after restart loses nothing and duplicates nothing; the retried delivery completes the order
+finished 2026-10-21T23:25:41.220Z

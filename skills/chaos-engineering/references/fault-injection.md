@@ -108,7 +108,10 @@ test('application handles Redis unavailability gracefully', async () => {
     const data = await response.json();
     expect(data.products.length).toBeGreaterThan(0);
 
-    // Verify degraded performance is within acceptable range
+    // Verify degraded performance is within acceptable range. The header is illustrative:
+    // few services emit one, so measure round-trip time on the client (performance.now()
+    // around the fetch), and take the bound from the service's own contract or SLO
+    // rather than a number chosen here.
     const latency = parseInt(response.headers.get('x-response-time') ?? '0');
     expect(latency).toBeLessThan(5000); // 5 seconds max without cache
   } finally {
@@ -118,7 +121,25 @@ test('application handles Redis unavailability gracefully', async () => {
 });
 ```
 
+## Without any tooling
+
+A local process under test needs none of the above. Three faults are available to any test
+that can start the process itself: a dependency pointed at a port nothing listens on
+(`ECONNREFUSED` at once; prove the port is closed before relying on it), a restart of the
+process on the same data between two steps of a flow (session, pending order, idempotency
+key must survive), and CPU load generated from inside the test for a bounded time (worker
+threads spinning with a per-thread deadline, so the load clears itself even if the test is
+killed). Each still needs the hypothesis, the asserted baseline, the abort monitor and the
+rollback. A black-holed dependency (packets dropped, timeout instead of refusal) is not
+reachable this way; it needs a firewall rule or a proxy, and the record says so.
+
 ## Automated abort / steady-state gating
+
+For an experiment that lives inside one test, the abort is a loop in the test: poll the
+steady-state metric every few hundred milliseconds while the fault runs, and when it crosses
+the stop threshold, terminate the fault (end the worker threads, restore the port, restart
+the process) and fail the test with the reading. Prove it trips by running once with the
+threshold set to zero and timing the stop; the rollback must land inside its stated window.
 
 Manual abort conditions are policy until a tool enforces them. Make the abort
 condition machine-checked so a flapping experiment halts without a human at the

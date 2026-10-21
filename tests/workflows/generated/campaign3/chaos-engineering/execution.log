@@ -1,0 +1,150 @@
+# Execution log: chaos-engineering against the Shop (2026-10-21, branch main, HEAD 9b08fa8)
+# Host: macOS (Darwin 27.0.0), Apple M4, 10 cores, 25.8 GB; node v26.0.0; @playwright/test 1.62.1.
+# All commands ran from /Users/petr/projects/qa-skills. Outputs trimmed.
+
+## Reading (no commands beyond cat/ls)
+skills/chaos-engineering/SKILL.md, skills/chaos-engineering/references/fault-injection.md,
+tests/workflows/fixture-app-contract.md, tests/workflows/support/{fixtures,runtime,process}.mjs,
+tests/workflows/playwright.config.mjs, tests/workflows/reporters/minimal.mjs, AGENTS.md,
+.agents/qa-project-context.md (an unfilled template: nothing applies), tests/workflows/mailpit/mailpit_service.py (head only, to confirm it is the real Mailpit binary).
+
+## Discovery (scratchpad script, starts a Mailpit and a Shop through support/runtime.mjs, no server source read)
+$ node <scratchpad>/discovery/probe.mjs
+mailpit http://127.0.0.1:62206 smtp 62207
+shop http://127.0.0.1:62213 alice+d7b0bb72499c45f8b11179dd6bca37cc@example.test
+--- / html --- (reset form: label "Account email", button "Send reset link", notice p#notice[role=status]; data-ready attribute on <html> when loaded)
+health 200 {"status": "ok", "build": "shop-lab-v1"} 4.4 ms
+reset 202 {"message": "If this account exists, a reset email has been sent."}
+mailpit search 200 {"total":1,"messages_count":1,"count":1,"first":{"To":[{"Address":"alice+d7b0...@example.test"}],"Subject":"Reset your Shop password"}}
+state 200 {"now": 1792613947.0, "orders": [], "receipts": [], "reset_tokens": [{"user_id": "alice", "expires": ..., "consumed": null}], "sessions": {}, "smtp_errors": 0}
+restart took 321 ms; baseURL now http://127.0.0.1:62213   (same port after restart; idle Shop, no live client connection)
+health after restart 200
+closed port 62220 ECONNREFUSED
+
+$ node <scratchpad>/discovery/probe2.mjs      (rest of the page script: reset-request form shows result.message in #notice; errors show error.message)
+
+## Suite runs
+# Command (identical for every run; QA_WORKFLOW_OUTPUT differed per run so reports were kept):
+$ QA_WORKFLOW_SUITE=/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/chaos-engineering \
+  QA_WORKFLOW_OUTPUT=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-chaos-engineering \
+  node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 1
+
+### Run 1 (20:23:59Z, first version of the suite), 72.6 s
+WORKFLOW RUN: 5 scheduled cases
+WORKFLOW RESULT: passed; attempts=5; {"passed":5}
+Records (from verbose.json stdout):
+  cpu-load-abort-gate: confirmed  abortReason "health took 158.2 ms > abort threshold 0 ms", abortMs 801.8, elapsedMs 989, recoveryMs 127.5
+  cpu-load-health-and-orders: confirmed  baseline {p50 26.5, max 373.2} underLoad {samples 45, non200 0, p50 22.6, p95 93.3, max 205.5, overBudget 0}; loadClearedAfterMs 8539; orderFlow 201/200 paid fc1 in 372 ms
+  smtp-outage: confirmed  resetStatuses [202,202,202], smtp_errors 3, mailpit messages for faulted account 0, pageErrors [], rollbackMs 412
+  process-restart: confirmed  restartMs 2515, me 200, order unchanged, replayed true, ordersAfter 1, sessionsAfter {alice:1}, paid after restart fc1
+  fulfillment-failure-after-restart: confirmed  armedRestartMs 1422, first delivery 503 fulfillment_unavailable (71 ms), state pending/0/receipts 0, retry duplicate:false, repeat duplicate:true, after rollback restart paid/1/1, rollbackMs 1244
+
+### Run 2 (20:25:39Z, same code; output dir ...-run2), 58.0 s
+WORKFLOW RUN: 5 scheduled cases
+WORKFLOW RESULT: passed; attempts=5; {"passed":5}
+  cpu-load-abort-gate: abortMs 1282.8, elapsedMs 1482
+  cpu-load-health-and-orders: baseline {p50 57.7, max 223.2} underLoad {samples 37, p50 43.9, p95 187.6, max 226.9, overBudget 0}; loadClearedAfterMs 8359
+  smtp-outage: smtp_errors 3, rollbackMs 1598
+  process-restart: restartMs 2106
+  fulfillment-failure-after-restart: armedRestartMs 2061, rollbackMs 1450
+
+# Change after runs 1-2 (recorded in experiments.md): the self-clearing check now uses each thread's own
+# start/end timestamps (threadRuntimesMs) instead of the main thread's view of the exit; the observed clear
+# time stays recorded with a runaway guard of LOAD_MS + 6000 ms. The abort-gate rollback bound went from 2 s
+# to 5 s (skill rule is < 30 s; observed 0.8-1.3 s).
+
+### Run 3 (20:28:14Z, final code), 85.8 s
+WORKFLOW RUN: 5 scheduled cases
+WORKFLOW RESULT: passed; attempts=5; {"passed":5}
+  cpu-load-abort-gate: abortMs 73.4, elapsedMs 345
+  cpu-load-health-and-orders: baseline {p50 16.9, max 32.8} underLoad {samples 36, p50 8.6, p95 126.9, max 333.7, overBudget 0}; threadRuntimesMs {min 6000, max 6086}; loadClearedAfterMs 6804
+  smtp-outage: smtp_errors 3, rollbackMs 697, faultedHealthMs [294.9, 5.8]
+  process-restart: restartMs 1558
+  fulfillment-failure-after-restart: armedRestartMs 2370, rollbackMs 2411
+
+### Run 4 (20:30:19Z, final code; output dir ...-run4), 163.7 s
+WORKFLOW RUN: 5 scheduled cases
+FAILED:  /  / cpu-load.spec.mjs / Experiment 4: CPU load / safety check: the automated abort halts the load and the rollback clears it (attempt 1)
+Error: baseline health: answered in 7561.8 ms, budget 500 ms
+Tearing down "app" exceeded the test timeout of 30000ms.
+WORKFLOW RESULT: failed; attempts=5; {"failed":1,"passed":4}
+  -> failed at the steady-state gate BEFORE any fault was injected (first probe of the run); the other four
+     experiments then passed: cpu-load-health-and-orders underLoad {samples 42, p95 118.7, max 351.2, overBudget 0},
+     threadRuntimesMs {6000, 6082}; smtp-outage smtp_errors 3; process-restart restartMs 1736; fulfillment armedRestartMs 1689.
+
+$ uptime
+22:33  up 18:52, 1 user, load averages: 101.09 59.41 44.49
+$ ps -eo pid,pcpu,pmem,etime,command | sort -k2 -nr | head -12
+88947 146.3  chrome-headless-shell --type=renderer (another Playwright run, 12 min old)
+ 9868 100.9  Code Helper --type=gpu-process
+ 9871 100.3  Code Helper (Renderer)
+ 9900  93.3  Code Helper --type=utility
+ 1115  82.0  com.apple.Virtualization.VirtualMachine
+90358  50.3  node web/scripts/build-nahled.mjs
+91969  30.8  node .../proc2/web/node_modules/.bin/tsc --noEmit
+81869  23.2  node .../proc1/node_modules/.bin/tsc --noEmit
+89868  20.5  node .../safe-merge-b12/node_modules/.bin/tsc --noEmit
+76585  17.5  next-server (v15.5.21)
+  -> host incident: load average 101 on 10 cores from unrelated work; not caused by this suite (its CPU load
+     runs at most 6 s inside one test and had self-cleared in run 3, threadRuntimesMs max 6086).
+
+## Bounded wait for the host to calm down (background until-loop, 5 s poll, 170 s cap)
+$ until-loop on `sysctl -n vm.loadavg` (1-min average < 25)
+load1=113.73 after 170s (threshold <25, max wait 170s)      -> did not calm down; load averages afterwards { 106.08 72.39 52.98 }
+
+## Tools named by the skill, on this host
+$ for t in stress-ng tc toxiproxy-server toxiproxy-cli iptables kubectl fallocate; do command -v $t; done
+stress-ng not found; tc not found; toxiproxy-server not found; toxiproxy-cli not found; iptables not found;
+kubectl /usr/local/bin/kubectl (no cluster); fallocate not found
+$ ls node_modules/toxiproxy-node-client      -> No such file or directory
+
+### Run 5 (20:38:59Z, final code; output dir ...-run5), 67.3 s, load averages before { 93.27 72.06 53.42 }, after { 62.42 67.18 53.14 }
+WORKFLOW RUN: 5 scheduled cases
+WORKFLOW RESULT: passed; attempts=5; {"passed":5}
+  cpu-load-abort-gate: abortReason "health took 79.1 ms > abort threshold 0 ms", abortMs 2441.4 (under host load; the original 2 s bound would have flagged this run, the 5 s bound did not), elapsedMs 2544
+  cpu-load-health-and-orders: baseline {p50 24.4, max 268.3} underLoad {samples 35, non200 0, p50 49.1, p95 163.4, max 346.1, overBudget 0}; threadRuntimesMs {6000, 6033}; loadClearedAfterMs 7940; order flow 566 ms
+  smtp-outage: smtp_errors 3, pageErrors [], rollbackMs 2142
+  process-restart: restartMs 2318, firstHealthMs 138.4
+  fulfillment-failure-after-restart: armedRestartMs 1090, first delivery 503 (107 ms), rollbackMs 1643
+
+### Run 6 (20:40:40Z, final code; output dir ...-run6), 56.3 s, load averages before { 58.41 65.91 53.09 }, after { 40.47 59.29 51.55 }
+WORKFLOW RUN: 5 scheduled cases
+FAILED:  /  / mail-outage.spec.mjs / Experiment 1: SMTP outage / reset requests answer 202 during an SMTP outage, the outage is counted in smtp_errors, nothing is 5xx (attempt 1)
+Error: baseline health: answered in 1311.5 ms, budget 500 ms
+WORKFLOW RESULT: failed; attempts=5; {"passed":4,"failed":1}
+  -> again a steady-state gate refusal BEFORE injection (the healthy Shop's first probe), host incident still on.
+  cpu-load-abort-gate: confirmed, abortMs 457.7, elapsedMs 921
+  cpu-load-health-and-orders: verdict "disproved: budget missed by 97.8 ms (max 597.8 ms, p95 130.8 ms, 1/34 over budget)";
+     baseline {p50 28.8, max 111.1}; threadRuntimesMs {6000, 6045}; loadClearedAfterMs 7163; order flow 201/200 paid fc1 in 547 ms;
+     test passed as designed (non-200 would fail; a miss is recorded with its gap). Confounded with the external host load.
+  process-restart: confirmed, restartMs 1206
+  fulfillment-failure-after-restart: confirmed, armedRestartMs 703, first delivery 503 (16 ms), rollbackMs 703
+
+$ (conditional run 7, skipped) load1=32.24 -> SKIPPED run 7: 1-minute load 32.24 >= 30
+
+### Run 7 (20:42:54Z, final code; output dir ...-run7), 89.7 s, load averages before { 27.72 51.26 49.15 }, after { 31.83 46.35 47.46 }
+WORKFLOW RUN: 5 scheduled cases
+WORKFLOW RESULT: passed; attempts=5; {"passed":5}
+  cpu-load-abort-gate: confirmed, abortMs 358, elapsedMs 495
+  cpu-load-health-and-orders: verdict "disproved: budget missed by 217.6 ms (max 717.6 ms, p95 717.6 ms, 1/20 over budget)";
+     baseline {p50 62.9, max 186.9}; underLoad {samples 20, non200 0, p50 137.9}; threadRuntimesMs {6030, 6139}; loadClearedAfterMs 7416; order flow correct
+  smtp-outage: confirmed, smtp_errors 3, rollbackMs 174
+  process-restart: confirmed, restartMs 660, firstHealthMs 10.4
+  fulfillment-failure-after-restart: confirmed, armedRestartMs 364, first delivery 503 (8.6 ms)
+
+### Run 8 (20:44:50Z, final code; output dir ...-run8), 38.8 s, load averages before { 30.83 44.90 46.90 }, after { 43.41 45.91 47.14 }
+WORKFLOW RUN: 5 scheduled cases
+WORKFLOW RESULT: passed; attempts=5; {"passed":5}
+  cpu-load-abort-gate: confirmed, abortMs 200.2, elapsedMs 345
+  cpu-load-health-and-orders: confirmed; baseline {p50 8.2, max 17}; underLoad {samples 37, non200 0, p50 9.1, p95 183, max 238.1, overBudget 0}; threadRuntimesMs {6000, 6018}; loadClearedAfterMs 6499; order flow 263 ms
+  smtp-outage: confirmed, smtp_errors 3, rollbackMs 579
+  process-restart: confirmed, restartMs 1250
+  fulfillment-failure-after-restart: confirmed, armedRestartMs 1412, first delivery 503 (36 ms)
+
+## Totals
+8 runs, 40 test executions: 38 passed, 2 failed. Both failures are steady-state gate refusals before any
+injection (run 4: 4a baseline probe 7561.8 ms; run 6: experiment 1 baseline probe 1311.5 ms) during an
+external host incident (load averages 40-114 on 10 cores). Final code: runs 3, 5, 7, 8 = 5/5; runs 7 and 8
+consecutive. Suite wall time summed: 73 + 58 + 86 + 164 + 67 + 56 + 90 + 39 = 633 s.
+Reports kept under the scratchpad: campaign3-chaos-engineering (run 3; run 1 copied to run1-verbose.json),
+-run2, -run4, -run5, -run6, -run7, -run8 (verbose.json, html/, test-results/ with traces of the two failures).

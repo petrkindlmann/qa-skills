@@ -35,7 +35,7 @@ Chaos engineering is the discipline of experimenting on a system to build confid
 
 ## Discovery Questions
 
-Check `.agents/qa-project-context.md` first. If it exists, use it as context and skip questions already answered there.
+Check `.agents/qa-project-context.md` first. If it exists and is filled in, use it as context and skip questions already answered there; an unfilled template answers nothing, so treat it as absent.
 
 **Environment and readiness:**
 - Where will chaos experiments run? (Pre-production only, production with approval, never production)
@@ -91,6 +91,10 @@ Every chaos experiment follows this five-step process.
 ### Step 1: Define steady state hypothesis
 
 Identify the metrics that define "normal" and predict what should happen during the experiment.
+Measure the baseline immediately before injecting, with a stated sample count (three to five
+probes, not one), and make it an assertion: if the baseline already misses the steady state,
+the experiment refuses to inject and records why. A host that is busy with something else is
+the commonest reason, and injecting on top of it produces numbers nobody can read.
 
 ```
 Experiment: Database failover
@@ -167,7 +171,9 @@ Findings document:
     - Retry logic worked correctly for read operations
     - Write operations returned 500 errors for 38 seconds (expected: queued)
 
-  Action items (every one has an owner and a due date — no item is deferred):
+  Action items (every one has an owner and a due date — no item is deferred;
+  where no tracker or team exists yet, record each action unassigned and say so,
+  rather than inventing an owner):
     - [ ] Configure connection pool health checks — assigned to @maria, due 2026-03-31
     - [ ] Implement write queue with 5-minute buffer — assigned to @dan, due 2026-04-02
     - [ ] Re-run experiment after fixes deployed (re-run scheduled 2026-04-03);
@@ -260,6 +266,12 @@ Decision tree:
 
   Need network fault injection in integration tests?
     → toxiproxy (lightweight, programmatic API)
+
+  A single local process in a test lab, no cluster, no proxy, no root?
+    → no tool: point a dependency at a closed port (connection refused), restart
+      the process on its own data between two steps of a flow, or load the CPU
+      from inside the test for a bounded time (see references/fault-injection.md,
+      "Without any tooling")
 
   Need to combine load testing with chaos?
     → k6 with xk6-disruptor extension
@@ -426,7 +438,7 @@ Prove the safety machinery works **before** trusting a single live experiment �
 
 1. **Inject and reverse in staging.** Run the lowest-blast-radius injection (e.g. `tc qdisc add dev eth0 root netem delay 200ms`) against one staging service, confirm the steady-state dashboard moves, then run the documented rollback (`tc qdisc del dev eth0 root`) and confirm metrics return to baseline. Time the rollback — it must complete inside its stated window (under 30s).
 2. **Trip the automated abort.** Force the monitored metric past its threshold (push error rate over the stop-condition) on an experiment wired to AWS FIS CloudWatch stop-conditions, a Gremlin Health Check, or a Litmus `promProbe` in `mode: Continuous`. Confirm the experiment halts on its own with no human action. If it does not fire, the abort is unverified (see `references/fault-injection.md`).
-3. **Confirm the self-clearing timeout.** Start a bounded injection (`stress-ng --cpu 4 --timeout 60s`, or Litmus `TOTAL_CHAOS_DURATION: '60'`), then walk away. Confirm the fault clears itself at the deadline even if nobody aborts.
+3. **Confirm the self-clearing timeout.** Start a bounded injection (`stress-ng --cpu 4 --timeout 60s`, or Litmus `TOTAL_CHAOS_DURATION: '60'`), then walk away. Confirm the fault clears itself at the deadline even if nobody aborts. When the observer runs on the same machine as the fault (an in-process CPU load), its own clock is late: read the deadline from timestamps the fault workers write as they stop, not from when the test notices, and judge the clearing by the rollback window, not by the raw gap.
 4. **Confirm the findings loop closes.** After a staging run, confirm a findings doc was produced with baseline-vs-actual numbers and that every gap became a tracked ticket with an owner — the experiment record is the artifact, not the injection.
 
 If steps 1–3 cannot be demonstrated in staging, the experiment is not safe to promote toward production.
@@ -437,7 +449,7 @@ If steps 1–3 cannot be demonstrated in staging, the experiment is not safe to 
 
 - Every experiment has a written hypothesis ("We believe that if [failure X], the system will [expected behavior Y]") recorded before any fault is injected
 - Blast radius is explicitly bounded — target scope, duration, and abort conditions are written in the experiment record, and no experiment runs in production before at least one passing run of the same experiment in staging
-- A steady-state snapshot (dashboard link or the actual baseline metric values) is attached to each experiment record, captured immediately before injection
+- A steady-state snapshot (dashboard link or the actual baseline metric values) is attached to each experiment record, captured immediately before injection; an experiment that refused to inject because the baseline missed is recorded as refused, not as passed
 - A findings doc exists per experiment with baseline-vs-actual numbers, recovery time, and an explicit data-integrity check (lost/corrupted: yes/no)
 - Each weakness found has a tracked ticket with a named owner, a due date, and a scheduled re-run of the same experiment to verify the fix
 
