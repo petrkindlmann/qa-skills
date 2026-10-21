@@ -56,7 +56,7 @@ Check `.agents/qa-project-context.md` first — if it exists, use it and skip an
 
 1. **Recovery is event-driven, not failure-driven.** Run this when a refactor is planned or just shipped, not when one test goes flaky. One broken test → `test-reliability`. Ten or more from the same event → this skill.
 
-2. **Old DOM, new DOM, mapped pair.** The whole skill rests on a snapshot before the refactor and one after. Everything else is bookkeeping around that pair. Capture both as **aria snapshots** (`await page.locator('body').ariaSnapshot()`), not raw HTML — a role-tree diff is exactly the signal role-first recovery needs and ignores the cosmetic churn (class renames, wrapper divs) that a raw-HTML diff drowns in. If you cannot produce both snapshots, fix that first.
+2. **Old DOM, new DOM, mapped pair.** The whole skill rests on a snapshot before the refactor and one after. Everything else is bookkeeping around that pair. Capture both as **aria snapshots** (`await page.locator('body').ariaSnapshot()`), not raw HTML — a role-tree diff is exactly the signal role-first recovery needs and ignores the cosmetic churn (class renames, wrapper divs) that a raw-HTML diff drowns in. If you cannot produce both snapshots, fix that first. The aria diff reports role and name drift only. A redesign that renames classes, ids and `data-*` hooks but keeps every role and name shows an **empty** aria diff while the whole suite fails. When the diff is empty and the tests are red, also diff a tag/id/class/`data-*`/`aria-*` outline of the markup (recovery-scripts §1); that is where a hook-only mapping comes from.
 
 3. **Role-first replacement, every time.** Even when the old test used CSS, the regenerated selector should prefer `getByRole` + accessible name, then `getByLabel` for form fields, then `getByTestId` when the refactor added one. The recovery PR is your chance to ratchet the average selector stability score up (0–5 rubric below, shared with `test-reliability`).
 
@@ -112,6 +112,12 @@ A complete failure inventory is not yet a list of broken selectors.
 - **Separate attempts from edits.** Retain all retry evidence, then select one reviewed
   recovery target per source occurrence. Keep unresolved and other-cause attempts
   visible in the inventory and recovery PR.
+- **Resolve every locator the helper or page object owns, not only the ones in the
+  errors.** A test aborts at its first broken step, so one failure hides the locators
+  behind it, and `toBeHidden()` / `toHaveCount(0)` pass vacuously on an element that no
+  longer exists. `grep -nE "locator\(|getBy[A-Z]"` the helper, count each locator on the
+  new build, and record the silent ones as `latent, not in report` so Phase 4 covers them
+  in one cycle instead of three.
 
 See `references/recovery-scripts.md` for the pure collector and `identify-drift.ts`
 driver, which write `.drift-recovery/failure-inventory.json` without guessing context.
@@ -143,6 +149,18 @@ For each row, generate candidates against the **new** DOM snapshot and score eac
 | 0 | No safe replacement found | no — flag for human |
 
 A candidate is **score 3 only if scoping already resolved it to a single element**. A still-ambiguous multi-match (`count > 1`, "needs scoping") is not a 3 — it is unfinished, and must not be auto-applied.
+
+Two cases the ladder does not name:
+
+- **A structural filter** (`.filter({ hasNot: page.getByRole('link') })`, `.filter({ has })`)
+  is scoping in the rung-4 sense when the result is exactly one element and the reviewer
+  confirms the filter describes the intent rather than today's layout. Score 3, and name the
+  structure it depends on in the rationale.
+- **A role-less, unnamed container** (a `<span>` counter, a `<section>` or `<footer>` with no
+  landmark name) has no honest candidate above text (2) or CSS (1). Do not invent a 3. The
+  recovery PR records the reviewer's explicit acceptance of the manual update, the scorer's
+  exit 1, and the ask to the front-end team for a `data-testid` or landmark name (rung 1).
+  That is the finished state for this cycle; loosening the floor is not.
 
 Keep the live Locator object for uniqueness checks and screenshots; the proposed source expression is not a CSS selector and must never be evaluated. Quote names and escape regex text, including punctuation and quotes from DOM attributes. Missing screenshot evidence leaves the candidate unresolved.
 
@@ -255,7 +273,7 @@ work instead of claiming a successful recovery.
 ## Done When
 
 - Every in-scope failure is accounted for as recovered with evidence or unresolved with a reason. Delete a test only after confirming the intended product removal.
-- If edits were applied, `references/score-candidates.mjs candidates.json` exits **0**. Missing input and no applied edits are reported explicitly.
+- If edits were applied, `references/score-candidates.mjs candidates.json` exits **0**. Missing input and no applied edits are reported explicitly. A reviewer-accepted sub-floor row leaves the scorer at exit 1; record that exit and the upstream ask instead of re-scoring the row.
 - The PR is open (`gh pr view` succeeds) with per-change evidence: confidence score and screenshot per change, grouped by file.
 - Record the full affected-suite process exit, build, counts, retries, skips and unresolved failures. Claim the suite passes only when the run supports that conclusion.
 - A short note is added to `.agents/qa-project-context.md` describing the refactor and any new test patterns introduced.

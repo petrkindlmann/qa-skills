@@ -40,7 +40,7 @@ describe("User API Contract", () => {
   it("should return a user by ID", async () => {
     await provider
       .addInteraction()
-      .given("user 123 exists")
+      .given("user exists", { id: 123 }) // parameterized state: the provider seeds whatever id the consumer names
       .uponReceiving("a request for user 123")
       .withRequest("GET", "/api/users/123", (builder) => {
         builder.headers({ Accept: "application/json" });
@@ -69,7 +69,7 @@ describe("User API Contract", () => {
   it("should return 404 for non-existent user", async () => {
     await provider
       .addInteraction()
-      .given("user 999 does not exist")
+      .given("user does not exist", { id: 999 })
       .uponReceiving("a request for non-existent user")
       .withRequest("GET", "/api/users/999")
       .willRespondWith(404, (builder) => {
@@ -166,11 +166,14 @@ describe("Provider Verification", () => {
 
       // Provider states: set up data that matches consumer expectations
       stateHandlers: {
-        "user 123 exists": async () => {
-          await seedUser({ id: 123, name: "Alice Johnson", email: "alice@example.com" });
+        // Parameterized states: the consumer writes .given("user exists", { id: 123 }) and the
+        // handler seeds whatever id it names, so one handler serves every consumer test. A
+        // state name with the value baked in ("user 123 exists") needs a new handler per value.
+        "user exists": async (params) => {
+          await seedUser({ id: Number(params.id), name: "Alice Johnson", email: `user-${params.id}@example.com` });
         },
-        "user 999 does not exist": async () => {
-          await clearUsers();
+        "user does not exist": async (params) => {
+          await deleteUser(Number(params.id));
         },
         "users exist": async () => {
           await seedUsers(15); // Seed enough for pagination

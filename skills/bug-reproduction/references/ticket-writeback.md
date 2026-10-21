@@ -48,7 +48,9 @@ next person:
 1. **Minimal steps / repro command** — not the raw walkthrough.
 2. **Environment + build/commit** — the exact SHA and platform.
 3. **Expected vs actual** — the concrete numbers, not "it's wrong."
-4. **Introducing commit** — the offending/root-cause commit from `git bisect`.
+4. **Introducing commit** — the offending/root-cause commit from `git bisect`. When bisect
+   did not apply (HEAD is good, no release tag, or the history belongs to another repository),
+   write `none: not a regression on this build` rather than leaving the element out.
 5. **Regression test** — a link to the committed test file and path.
 6. **Evidence** — logs, screenshot, trace, or other artifact.
 7. **Determinism notes** — seed, frozen time, and stubs needed to re-run identically.

@@ -1,0 +1,124 @@
+[
+  {
+    "skill": "contract-testing",
+    "scope": "skill_content",
+    "document_chars": 34698,
+    "calls": 1,
+    "items": [
+      {
+        "case": "ct-001",
+        "kind": "anti",
+        "text": "testing business logic in contract",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document lists testing business logic in contracts as an anti-pattern and its consumer tests assert only shape, status, and types.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-001",
+        "kind": "anti",
+        "text": "hardcoded test data without matchers",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Every response field in the consumer examples is wrapped in a matcher (like, eachLike, integer, string, regex), and the document explicitly instructs using Matchers.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-003",
+        "kind": "anti",
+        "text": "hardcoded passwords in compose file",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The compose file injects DB_PASSWORD and PACT_BROKER_PASSWORD from the environment and the document warns that hardcoding them leaks secrets.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-005",
+        "kind": "anti",
+        "text": "skipping can-i-deploy on main branch",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document states never to skip can-i-deploy on main and both pipelines gate deployment on main.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-006",
+        "kind": "anti",
+        "text": "one massive pact covering every endpoint",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document lists one massive pact as an anti-pattern and advises starting with critical integration points incrementally.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-006",
+        "kind": "anti",
+        "text": "business logic validation in contract test",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Business logic validation is called out as an anti-pattern; the contract tests only check status codes and field shapes.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-007",
+        "kind": "anti",
+        "text": "provider state without database setup",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "State handlers seed and clear the database for each given state, and skipping provider states is listed as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-007",
+        "kind": "anti",
+        "text": "hardcoded values instead of parameterized states",
+        "verdict": "yes",
+        "evidence": ".given(\"user 123 exists\")",
+        "reason": "All consumer interactions and the matching provider handler hardcode specific ids in state names (user 123, user 999) rather than using the parameterized state form the document only mentions as an aside.",
+        "evidence_verified": true,
+        "status": "recommended"
+      },
+      {
+        "case": "ct-008",
+        "kind": "anti",
+        "text": "schema validation without error handling",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The validateAgainstSpec helper throws on a missing schema and on validation failure with the Ajv errors included.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-010",
+        "kind": "anti",
+        "text": "hardcoded response data without matchers",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Response bodies in the consumer tests use matchers for every field rather than hardcoded literal values.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-010",
+        "kind": "anti",
+        "text": "not using eachLike for array responses",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The paginated list example uses eachLike for the data array.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.41605250000000005,
+    "duration_ms": 32467
+  }
+]

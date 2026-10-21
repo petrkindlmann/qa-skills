@@ -32,7 +32,7 @@ worse than no helper: the test goes green while no toxic was ever applied.
 
 ```typescript
 // test/helpers/toxiproxy.ts
-const TOXIPROXY_API = "http://localhost:8474";
+const TOXIPROXY_API = process.env.TOXIPROXY_API ?? "http://localhost:8474"; // override in CI
 
 async function post(path: string, body: unknown) {
   const res = await fetch(`${TOXIPROXY_API}${path}`, {

@@ -60,8 +60,8 @@
         "expect(interception.response?.statusCode)"
       ],
       "anti_patterns": [
-        "waiting on real network calls",
-        "hardcoding response body inline without fixtures",
+        "stubbing the fixture response but still waiting on a real network call",
+        "pasting a large response body inline instead of a fixture file",
         "not aliasing intercepts"
       ],
       "tags": [
@@ -151,7 +151,7 @@
         "describe('Role-based access'"
       ],
       "anti_patterns": [
-        "hardcoding test data in test files",
+        "duplicating user records inline instead of loading cypress/fixtures/users.json",
         "sharing state between tests",
         "not isolating each it() block"
       ],

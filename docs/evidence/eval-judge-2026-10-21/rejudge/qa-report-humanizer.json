@@ -1,0 +1,174 @@
+[
+  {
+    "skill": "qa-report-humanizer",
+    "scope": "skill_content",
+    "document_chars": 18080,
+    "calls": 1,
+    "items": [
+      {
+        "case": "qah-001",
+        "kind": "expected",
+        "text": "preserves the reported sprint and exact figures while identifying absent failure details",
+        "verdict": "yes",
+        "evidence": "Sprint 47: 342 tests run across 5 suites; reported pass rate 97.4%.",
+        "reason": "The Pattern 1 rewrite keeps the sprint and exact counts and then states that the failure count, affected suites, and new-vs-known status are missing.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qah-001",
+        "kind": "anti",
+        "text": "inventing failed suite names or causes absent from the source",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document explicitly says not to invent checkout failures or flaky tests to make the report more useful.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qah-003",
+        "kind": "expected",
+        "text": "does not infer release approval or passing smoke tests from optimism",
+        "verdict": "yes",
+        "evidence": "Reported optimism is not evidence that smoke tests passed or that approval was granted.",
+        "reason": "The Pattern 7 rewrite refuses to treat optimistic language as evidence of readiness or approval.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qah-003",
+        "kind": "anti",
+        "text": "inventing open bugs or a release decision",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document asks for test results, blockers, and a release decision rather than inventing them.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qah-004",
+        "kind": "expected",
+        "text": "names missing review evidence without asserting unseen code defects",
+        "verdict": "yes",
+        "evidence": "Do not claim the code has a brittle CSS selector, a missing 429 case, or only a happy",
+        "reason": "The Pattern 8 rewrite names the missing test or scenario and forbids asserting defects not shown in the supplied code.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qah-004",
+        "kind": "anti",
+        "text": "inventing details about code that was not provided",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document warns against claiming code defects unless the supplied code or review shows them.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qah-006",
+        "kind": "expected",
+        "text": "preserves reported completion without inventing skips or a schedule",
+        "verdict": "yes",
+        "evidence": "Do not turn a completed plan into invented skipped mobile tests or a carry-forward plan.",
+        "reason": "The Pattern 6 rewrite preserves the reported completion and refuses to invent skipped work or a next-sprint schedule.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qah-006",
+        "kind": "anti",
+        "text": "turning a completed plan into invented unfinished work",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document explicitly forbids turning a completed plan into invented unfinished work.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qah-007",
+        "kind": "expected",
+        "text": "does not infer causes from a percentage change",
+        "verdict": "yes",
+        "evidence": "Keep exact percentages. Do not attribute the change to repairs, flakiness, or fewer",
+        "reason": "The Pattern 3 rewrite reports the percentage change and states that its cause is not given rather than inferring one.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qah-007",
+        "kind": "anti",
+        "text": "inventing causes or new defects absent from the source",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document forbids attributing the change to repairs, flakiness, or fewer defects without evidence.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qah-008",
+        "kind": "expected",
+        "text": "asks for evidence before assigning a named risk or priority",
+        "verdict": "yes",
+        "evidence": "Name the areas and evidence before setting priorities.",
+        "reason": "The Pattern 4 rewrite requests the risk areas and supporting evidence before any priority is assigned.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qah-008",
+        "kind": "anti",
+        "text": "inventing named risk areas or historical incidents",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document states this is an information request, not a claim that payment coverage or incidents exist.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qah-010",
+        "kind": "expected",
+        "text": "asks for actual work or measurements without supplying invented achievements",
+        "verdict": "yes",
+        "evidence": "The draft gives no specific work or measurements for this sprint. Add the",
+        "reason": "The Pattern 10 rewrite asks for completed changes and results instead of supplying achievements.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qah-010",
+        "kind": "anti",
+        "text": "inventing completed changes or metrics absent from the source",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says not to invent a flakiness change or new export coverage.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qah-011",
+        "kind": "expected",
+        "text": "does not invent the unspecified broken behavior or frequency",
+        "verdict": "yes",
+        "evidence": "reproduction steps, and affected users are not specified.",
+        "reason": "The Pattern 2 rewrite keeps the reported severity and marks behavior, repro, and affected users as unspecified rather than inventing them.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qah-011",
+        "kind": "anti",
+        "text": "inventing a reproduction or impact absent from the source",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document states that plus-sign emails and an affected-user percentage belong only when the source supplies them.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.2908525,
+    "duration_ms": 29498
+  }
+]

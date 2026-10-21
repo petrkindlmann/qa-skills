@@ -117,6 +117,25 @@ class JudgeDocumentTests(unittest.TestCase):
         self.assertEqual(judge_evals.judge_document(DOCUMENT, [], run)["items"], [])
 
 
+class StaticScopeTests(unittest.TestCase):
+    def test_live_only_cases_are_not_judged_against_skill_content(self):
+        spec = {"skill": "sample", "version": "1", "evals": [
+            CASE, dict(CASE, id="case-002", static=False,
+                       expected_patterns=["preserves the run link exactly as supplied"])]}
+        with tempfile.TemporaryDirectory() as tmp:
+            spec_path = Path(tmp) / "sample-evals.json"
+            spec_path.write_text(json.dumps(spec), encoding="utf-8")
+            seen = []
+            def run(prompt, system, output_format):
+                seen.append(prompt)
+                return envelope([{"n": 1, "verdict": "yes", "evidence": "confirmation heading to be visible"},
+                                 {"n": 2, "verdict": "no"}])
+            with unittest.mock.patch.object(run_evals, "load_skill_text", return_value=DOCUMENT):
+                report = judge_evals.judge_static("sample", spec_path, run)
+        self.assertEqual([i["case"] for i in report["items"]], ["case-001", "case-001"])
+        self.assertNotIn("run link", seen[0])
+
+
 class ResultsFileTests(unittest.TestCase):
     def test_judges_recorded_outputs_and_rejects_static_results(self):
         spec = {"skill": "sample", "version": "1", "evals": [CASE]}

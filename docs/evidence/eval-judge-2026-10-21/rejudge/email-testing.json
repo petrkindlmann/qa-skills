@@ -1,0 +1,144 @@
+[
+  {
+    "skill": "email-testing",
+    "scope": "skill_content",
+    "document_chars": 42582,
+    "calls": 1,
+    "items": [
+      {
+        "case": "eml-001",
+        "kind": "anti",
+        "text": "just check the database instead of the email",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document explicitly warns against checking the database instead of the email, listing it as anti-pattern #3.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-003",
+        "kind": "anti",
+        "text": "innerText of a live page instead of the email body",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says 'Do NOT read innerText of the live page when you mean the email body', warning against the practice rather than recommending it.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-004",
+        "kind": "anti",
+        "text": "fetch the most recent message overall",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document repeatedly says never take messages[0] / messages.at(-1) without a recipient filter; it only models per-recipient or per-inbox reads.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-004",
+        "kind": "anti",
+        "text": "delete all messages between tests as the only fix",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document states that clearing the inbox between tests is not sufficient under parallelism and must be combined with unique addresses and recipient filters.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-005",
+        "kind": "anti",
+        "text": "skip the email and call the reset endpoint directly",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document lists calling the reset endpoint directly or hardcoding a token as anti-pattern #4 and models capturing the real email instead.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-006",
+        "kind": "anti",
+        "text": "assert only that an email exists without checking content",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document warns that 'An email arrived' is a weak assertion and requires subject, from, and link checks.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-007",
+        "kind": "anti",
+        "text": "assert deliverability inside the OTP flow test",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says to never assert deliverability inside the OTP / reset flow test and keeps it in a separate non-blocking suite.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-008",
+        "kind": "anti",
+        "text": "one shared inbox for the whole suite",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says one inbox per test, 'not one shared inbox', and requires per-test unique addresses or inboxes.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-009",
+        "kind": "anti",
+        "text": "recommending a hosted inbox service such as Mailosaur, MailSlurp or Mailtrap for a local preview",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says not to spin up a paid hosted service just to eyeball a template locally and recommends Ethereal for local preview instead.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-009",
+        "kind": "anti",
+        "text": "use Ethereal in CI for assertions",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document repeatedly states Ethereal is preview-only and 'NOT for CI assertions'.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-010",
+        "kind": "anti",
+        "text": "retry the whole test job",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says retrying the whole job treats the symptom and leaves the race in place.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-010",
+        "kind": "anti",
+        "text": "mark the test as flaky and move on",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document lists quarantining the test as a symptom-only response that leaves the race in place, not as a recommendation.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "eml-010",
+        "kind": "anti",
+        "text": "increase the global sleep to 30 seconds",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document explicitly rejects raising a global sleep to 30s and tells the reader to poll with a longer poll timeout instead.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.4174825000000001,
+    "duration_ms": 14926
+  }
+]

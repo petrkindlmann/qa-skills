@@ -1,0 +1,164 @@
+[
+  {
+    "skill": "visual-testing",
+    "scope": "skill_content",
+    "document_chars": 24632,
+    "calls": 1,
+    "items": [
+      {
+        "case": "vt-001",
+        "kind": "anti",
+        "text": "no wait for visibility before screenshot",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Every recipe waits for a heading or element to be visible (or uses a locator-scoped screenshot that auto-waits) before capturing.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-003",
+        "kind": "anti",
+        "text": "no masking of dynamic content",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document repeatedly requires masking or freezing dynamic content and lists its absence as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-003",
+        "kind": "anti",
+        "text": "screenshot without waiting for load",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Examples wait for page content to load before the screenshot and explicitly reject waitForTimeout.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-004",
+        "kind": "anti",
+        "text": "no API stubbing for live data",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The frozen-data recipe stubs the API with page.route and route.fulfill before capture.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-006",
+        "kind": "anti",
+        "text": "full-page screenshot instead of component",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document tells the reader to screenshot the component rather than the full page and reserves full-page only for layout tests.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-006",
+        "kind": "anti",
+        "text": "no API stubbing for states",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Empty and error state tests stub the API per state to drive each render.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-007",
+        "kind": "anti",
+        "text": "visual tests mixed with functional tests",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Visual specs are isolated via testMatch patterns and an @visual grep, not mixed with functional tests.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-007",
+        "kind": "anti",
+        "text": "no viewport specification per project",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Each Playwright project sets an explicit viewport in the config.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-007",
+        "kind": "anti",
+        "text": "no filtering of visual test files",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The config filters visual tests with testMatch and the CI job greps @visual.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-008",
+        "kind": "anti",
+        "text": "no visual inspection of diffs",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document requires reviewing expected/actual/diff images in show-report or the hosted UI.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-008",
+        "kind": "anti",
+        "text": "committing baseline changes without PR review",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The baseline workflow requires PR reviewers to verify baseline images and calls unreviewed updates an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-009",
+        "kind": "anti",
+        "text": "choosing tool without considering Storybook status",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Tool selection explicitly asks whether Storybook is in the project before choosing Chromatic or alternatives.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-009",
+        "kind": "anti",
+        "text": "Lost Pixel mentioned as current option",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Lost Pixel is listed under Avoid as an archived repo, not as a current option.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-009",
+        "kind": "anti",
+        "text": "no discussion of review workflow",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document has a dedicated review and approval workflow section and a Done When item for it.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "vt-010",
+        "kind": "anti",
+        "text": "same baseline used across platforms",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Baselines are platform-tagged and generated in the CI Docker image, never shared across platforms.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.3265725,
+    "duration_ms": 29754
+  }
+]

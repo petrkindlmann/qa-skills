@@ -16,7 +16,7 @@
         "http_req_failed.*rate<0.01"
       ],
       "anti_patterns": [
-        "vus AND duration without stages",
+        "a constant vus and duration profile offered as the ramped test",
         "hardcoded BASE_URL without __ENV",
         "no check() or assertions"
       ],

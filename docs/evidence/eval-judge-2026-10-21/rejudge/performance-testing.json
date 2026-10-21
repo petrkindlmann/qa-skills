@@ -1,0 +1,144 @@
+[
+  {
+    "skill": "performance-testing",
+    "scope": "skill_content",
+    "document_chars": 28541,
+    "calls": 1,
+    "items": [
+      {
+        "case": "perf-001",
+        "kind": "anti",
+        "text": "a constant vus and duration profile offered as the ramped test",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The Load Profiles table gives the constant profile as vus/duration and a separate ramp-up stress profile with staged targets, so the constant shape is never offered as the ramped test.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-002",
+        "kind": "anti",
+        "text": "constant load without spike shape",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document provides a dedicated spike test with a 50\u2192500\u219250 stage shape plus recovery window.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-002",
+        "kind": "anti",
+        "text": "no scoped threshold for recovery window",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The spike recipe scopes thresholds to the recovery window via 'http_req_duration{phase:recovery}' and requires it in Done When.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-004",
+        "kind": "anti",
+        "text": "no numeric values in assertions",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "All k6 thresholds and Lighthouse assertions carry explicit numeric limits (p(95)<500, maxNumericValue: 2500, etc.).",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-005",
+        "kind": "anti",
+        "text": "hardcoded timeout without setTimeout fallback",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The Playwright CWV recipe includes setTimeout fallbacks (resolve(-1) after 10000ms, resolve(score) after 3000ms) rather than a bare hardcoded wait.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-006",
+        "kind": "anti",
+        "text": "single scenario instead of three concurrent",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The scenarios recipe models three concurrent flows (browse, checkout, api_heavy) running at once.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-006",
+        "kind": "anti",
+        "text": "shared thresholds without scenario tags",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The scenarios example uses per-scenario thresholds tagged with {scenario:browse} and {scenario:checkout}.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-007",
+        "kind": "anti",
+        "text": "no mention of exit code 97",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Exit code 97 is explicitly called out in the migration callout and the CI section as something to handle.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-008",
+        "kind": "anti",
+        "text": "optimize without identifying actual bottleneck",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document repeatedly warns against optimizing without profiling and lists it as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-008",
+        "kind": "anti",
+        "text": "client-side metrics only without server context",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Ignoring server-side metrics is listed as an anti-pattern and bottleneck step 5 requires correlating with server metrics.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-009",
+        "kind": "anti",
+        "text": "hardcoded URL instead of env",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "k6 scripts drive BASE_URL from __ENV with only a localhost fallback; the document explicitly instructs driving the base URL from __ENV.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-009",
+        "kind": "anti",
+        "text": "no failure condition on threshold breach",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document states k6 exits non-zero on any threshold breach and that Lighthouse error assertions fail the build.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "perf-010",
+        "kind": "anti",
+        "text": "confusing field and lab data",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document carefully distinguishes field vs. lab data, including a comparison table and the INP-is-field-only section.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.4002025,
+    "duration_ms": 36115
+  }
+]

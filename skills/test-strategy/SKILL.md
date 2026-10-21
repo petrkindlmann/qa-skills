@@ -57,8 +57,8 @@ Before writing a single line of strategy, gather context. Check `.agents/qa-proj
 ---
 
 > **Calibrate to team maturity** (set `team_maturity` in `.agents/qa-project-context.md`):
-> - **startup** — Minimal pyramid: unit tests + a handful of critical E2E paths. Skip contract testing and formal metrics until CI runs reliably. Phase 1 under 4 weeks.
-> - **growing** — Full pyramid with defined coverage targets, flakiness thresholds, and CI quality gates. Add risk-based prioritization.
+> - **startup** — Minimal pyramid: unit tests + a handful of critical E2E paths. Risk assessment covers the 3-5 highest-impact features only; widen the matrix as the team grows. Skip contract testing and formal metrics until CI runs reliably. Phase 1 under 4 weeks.
+> - **growing** — Full pyramid with defined coverage targets, flakiness thresholds, and CI quality gates. Add risk-based prioritization. Scale coverage targets with team capacity: raise them when the people arrive, not before.
 > - **established** — SLA-backed quality gates, multi-environment coverage, advanced tooling (contract testing, chaos, observability), and formal review cadence.
 
 ---

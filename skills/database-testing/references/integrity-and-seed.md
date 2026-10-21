@@ -186,7 +186,7 @@ let pool: Pool;
 let client: PoolClient;
 
 export async function setupTestTransaction() {
-  pool = new Pool({ database: 'test_db' });
+  pool = new Pool({ database: process.env.TEST_DATABASE ?? 'test_db' });
   client = await pool.connect();
   await client.query('BEGIN');
   return client;

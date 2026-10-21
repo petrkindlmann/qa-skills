@@ -13,17 +13,21 @@ import { Pool } from 'pg';
 // The admin-Pool / CREATE DATABASE path below works against a standing Postgres
 // when you cannot use Testcontainers; pick ONE strategy per suite, do not mix.
 
+// The database name and URL come from the environment; the literals are local defaults.
+const TEST_DB = process.env.TEST_DATABASE ?? 'test_migrations';
+const TEST_DATABASE_URL = process.env.TEST_DATABASE_URL ?? `postgresql://localhost/${TEST_DB}`;
+
 describe('Forward migrations', () => {
   let pool: Pool;
 
   beforeAll(async () => {
     // Create a fresh database for migration testing
     const adminPool = new Pool({ database: 'postgres' });
-    await adminPool.query('DROP DATABASE IF EXISTS test_migrations');
-    await adminPool.query('CREATE DATABASE test_migrations');
+    await adminPool.query(`DROP DATABASE IF EXISTS ${TEST_DB}`);
+    await adminPool.query(`CREATE DATABASE ${TEST_DB}`);
     await adminPool.end();
 
-    pool = new Pool({ database: 'test_migrations' });
+    pool = new Pool({ database: TEST_DB });
   });
 
   afterAll(async () => {
@@ -33,7 +37,7 @@ describe('Forward migrations', () => {
   it('should apply all migrations from empty database', () => {
     // Run all migrations against empty database
     execSync('npx prisma migrate deploy', {
-      env: { ...process.env, DATABASE_URL: 'postgresql://localhost/test_migrations' },
+      env: { ...process.env, DATABASE_URL: TEST_DATABASE_URL },
     });
   });
 

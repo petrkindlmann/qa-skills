@@ -109,6 +109,9 @@ Notes:
   date-sensitive UI. Use `setSystemTime` instead when intervals must still advance.
 - `page.route` glob `**` matches any leading path; pass `*` after the path to catch query
   strings.
+- `page.request.get('/api/me')` resolves a relative path against `use.baseURL`. When the
+  suite sets no `baseURL` (each test starts its own server on a random port), pass the
+  absolute URL, `app.baseURL + '/api/me'`, or the call fails with `Invalid URL`.
 - These replace the wrong instincts: do **not** `page.waitForTimeout(...)` to "wait for
   midnight," do **not** bump the test timeout, and do **not** let the test hit the live
   pricing endpoint. `page.clock` exists and is the supported API — do not fall back to a

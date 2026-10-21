@@ -1,0 +1,314 @@
+[
+  {
+    "skill": "test-strategy",
+    "scope": "skill_content",
+    "document_chars": 50867,
+    "calls": 1,
+    "items": [
+      {
+        "case": "ts-001",
+        "kind": "expected",
+        "text": "PR gate AND merge gate AND deploy gate are all defined",
+        "verdict": "yes",
+        "evidence": "Quality gates are defined for all four stages (PR, merge, deploy, nightly), each with a concrete pass/fail threshold.",
+        "reason": "Section 9 defines PR, merge, deploy and nightly gates with concrete checks.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-001",
+        "kind": "expected",
+        "text": "phased rollout with Foundation, Coverage Expansion, and Quality Gates phases",
+        "verdict": "yes",
+        "evidence": "**Phase 2 \u2014 Coverage Expansion (Weeks 5-10):** integration tests for all service boundaries",
+        "reason": "Timeline section lays out Phase 1 Foundation, Phase 2 Coverage Expansion, Phase 3 Quality Gates, Phase 4 Optimization.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-001",
+        "kind": "anti",
+        "text": "no mention of risk-based prioritization",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Risk-based prioritization is Core Principle 1 and drives the risk matrix section.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-001",
+        "kind": "anti",
+        "text": "strategy without quarterly review cycle",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Document mandates quarterly review as a core principle and in the Ongoing timeline.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-001",
+        "kind": "anti",
+        "text": "tool selection without rationale matrix",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Section 6 provides a weighted scoring matrix and requires a scored rationale in Done When.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-001",
+        "kind": "anti",
+        "text": "ice cream cone detection without action plan",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Ice cream cone diagnosis is paired with a four-step action plan (freeze, decompose, PR checklist, CI gates).",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-001",
+        "kind": "anti",
+        "text": "metrics defined without tracking cadence",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Main KPI table includes a Cadence column and Done When requires a tracking cadence per row.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-002",
+        "kind": "expected",
+        "text": "separate genuinely flaky tests from ones exposing real bugs before rebalancing",
+        "verdict": "yes",
+        "evidence": "Before rebalancing, separate genuinely flaky E2E tests from ones exposing real bugs \u2014 quarantining a flaky test that hides a race condition is how the regression escapes.",
+        "reason": "Explicitly instructs separating flaky tests from real-bug tests before rebalancing.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-002",
+        "kind": "expected",
+        "text": "concrete target counts for the rebalanced pyramid",
+        "verdict": "yes",
+        "evidence": "Define target ratios (70-80% unit, 15-20% integration, 5-10% E2E) with concrete counts, plus target CI duration and flaky rate.",
+        "reason": "Target state requires concrete counts, and the worksheet and SaaS template show counts.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-002",
+        "kind": "anti",
+        "text": "recommend adding more E2E tests",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Document recommends freezing E2E growth and decomposing E2E tests into lower levels.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-003",
+        "kind": "anti",
+        "text": "entry criteria without dependencies on earlier levels",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Entry criteria explicitly require prior levels to pass (integration needs unit pass, E2E needs integration pass).",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-004",
+        "kind": "expected",
+        "text": "risk assessment focused on the 3-5 highest-impact features",
+        "verdict": "yes",
+        "evidence": "Risk assessment covers the 3-5 highest-impact features only; widen the matrix as the team grows.",
+        "reason": "Startup calibration limits the risk assessment to the 3-5 highest-impact features.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-004",
+        "kind": "expected",
+        "text": "Phase 1 under 4 weeks",
+        "verdict": "yes",
+        "evidence": "Skip contract testing and formal metrics until CI runs reliably. Phase 1 under 4 weeks.",
+        "reason": "Startup calibration explicitly states Phase 1 under 4 weeks.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-004",
+        "kind": "expected",
+        "text": "realistic baseline metrics for a small team",
+        "verdict": "yes",
+        "evidence": "Set realistic targets from current state (20%\u219290% in one quarter is a fantasy, not a plan).",
+        "reason": "Teaches realistic targets from current baseline and scaling metrics with team capacity and maturity.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-004",
+        "kind": "anti",
+        "text": "metric targets that require manual work beyond team capacity",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Document says to scale targets with team capacity and warns against fantasy targets.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-005",
+        "kind": "anti",
+        "text": "missing cost of ownership analysis",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Section 6 explicitly covers total cost of ownership (setup, writing, maintenance, debug, infrastructure).",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-006",
+        "kind": "expected",
+        "text": "testing action mapped to each risk level",
+        "verdict": "yes",
+        "evidence": "| **CRITICAL (15-25)** | Full automation + manual exploratory + load test | Mandatory, every commit | Real-time alerts, synthetic monitoring |",
+        "reason": "Risk-to-testing-action table maps CRITICAL/HIGH/MEDIUM/LOW to a testing action.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-006",
+        "kind": "expected",
+        "text": "automation and monitoring recommendations per risk level",
+        "verdict": "yes",
+        "evidence": "| **HIGH (10-14)** | Full automation + periodic manual review | Mandatory, every PR | Dashboard + daily checks |",
+        "reason": "Table has Automation and Monitoring columns per risk level.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-006",
+        "kind": "anti",
+        "text": "no testing action per risk level",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Every risk level has a defined testing action.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-006",
+        "kind": "anti",
+        "text": "equal weight to all features",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Document says not all code is equal and allocates effort by risk score.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-007",
+        "kind": "expected",
+        "text": "PR gate.*unit tests pass.*integration tests pass.*coverage does not decrease",
+        "verdict": "yes",
+        "evidence": "**PR gate** (every PR): unit tests pass; integration tests pass; coverage does not decrease (or meets minimum)",
+        "reason": "PR gate includes unit pass, integration pass, and coverage non-decrease.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-007",
+        "kind": "expected",
+        "text": "Merge gate.*E2E smoke.*no merge conflicts",
+        "verdict": "yes",
+        "evidence": "**Merge gate** (merge to main): all PR-gate checks pass; E2E smoke suite passes against preview deployment; no merge conflicts; branch up to date with main.",
+        "reason": "Merge gate includes E2E smoke and no merge conflicts.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-007",
+        "kind": "expected",
+        "text": "Deploy gate.*full E2E.*(performance|SLA).*security scan.*rollback plan",
+        "verdict": "yes",
+        "evidence": "**Deploy gate** (before production): full E2E suite passes on staging; performance benchmarks within range; security scan passes; feature flags configured; rollback plan documented and tested.",
+        "reason": "Deploy gate includes full E2E, performance, security scan and rollback plan.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-007",
+        "kind": "anti",
+        "text": "gates that block releases indefinitely",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Gates have concrete thresholds and a bounded bake window; no indefinite blocking is recommended.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-008",
+        "kind": "anti",
+        "text": "all work crammed into Phase 1",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Document spreads work across four phases and warns that doing everything at once fails.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-009",
+        "kind": "expected",
+        "text": "coverage targets scaled to the larger team capacity",
+        "verdict": "yes",
+        "evidence": "Scale coverage targets with team capacity: raise them when the people arrive, not before.",
+        "reason": "Growing-team calibration explicitly scales coverage targets with team capacity.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-009",
+        "kind": "expected",
+        "text": "integration test growth plan for the missing middle layer",
+        "verdict": "yes",
+        "evidence": "**Invest in integration infrastructure** \u2014 DB fixtures, service stubs, contract tests.",
+        "reason": "Hourglass action plan prescribes integration infrastructure, boundary tests, and contract testing for the missing middle.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ts-009",
+        "kind": "anti",
+        "text": "recommend adding more E2E tests",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Document recommends freezing E2E growth and decomposing E2E tests rather than adding more.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-009",
+        "kind": "anti",
+        "text": "no mention of test dependency analysis",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Test impact analysis driven by a dependency graph is described in CI Scaling Levers.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ts-009",
+        "kind": "anti",
+        "text": "coverage targets unchanged for larger team",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Document explicitly raises coverage targets as team capacity grows.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.8368125,
+    "duration_ms": 91524
+  }
+]

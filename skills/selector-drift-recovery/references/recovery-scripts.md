@@ -13,6 +13,10 @@ The executable playbook behind `selector-drift-recovery`. Assumes **Playwright >
 
 Missing any of these → fix it first. The skill cannot generate recovery from no reference point.
 
+The scripts below are TypeScript run through `npx tsx`. In a repository with no TypeScript
+runner and no room for a new dependency, save each as `.mjs`, drop the type annotations and
+use explicit `./name.mjs` import specifiers; the logic does not change.
+
 ---
 
 ## 1. Snapshot the old DOM
@@ -54,6 +58,25 @@ const routes = ['/checkout', '/cart', '/account'];
   await browser.close();
 })();
 ```
+
+The aria snapshot hides class, id and `data-*` renames by design. Dump a markup outline
+beside it so a hook-only redesign is still visible in the diff:
+
+```typescript
+// add inside the loop, after the aria snapshot
+const outline = await page.locator('body *').evaluateAll(nodes => nodes.map(n => {
+  const attrs = [...n.attributes]
+    .filter(a => a.name === 'id' || a.name === 'class' || a.name.startsWith('data-') || a.name.startsWith('aria-'))
+    .map(a => `${a.name}="${a.value}"`).join(' ');
+  return `${n.tagName.toLowerCase()} ${attrs}`.trim();
+}).join('\n'));
+fs.writeFileSync(`${outDir}/${name}.outline.txt`, outline);
+```
+
+An empty `diff old/*.aria.yml new/*.aria.yml` next to an outline diff full of renames is the
+signature of a class-only redesign; the Phase 4 mapping comes from the outline diff. A
+single-route application with many UI states keys the loop by state (empty, items, editing,
+each filter) instead of by route.
 
 ### Option B — Storybook at a pre-refactor commit
 
@@ -104,6 +127,11 @@ PLAYWRIGHT_TEST_BASE_URL="$PREVIEW_URL" \
   || qa_selector_status=$?
 printf '%s\n' "$qa_selector_status" > .drift-recovery/test-exit-code.txt
 ```
+
+If `playwright.config` already declares reporters (a `json` reporter writing a fixed file,
+plus `html`), `--reporter=json` on the command line replaces all of them. Run the project's
+own test command instead and copy its JSON output to `.drift-recovery/results.json`, keeping
+the exit status the same way.
 
 This adapter targets Playwright's JSON reporter shape: nested `suites[].specs[]`,
 `spec.tests[]` for projects, and `test.results[]` for attempts. Check a retained report
@@ -250,7 +278,12 @@ Loads the new-DOM HTML for each failure's `pageRoute`, generates candidates by t
 Copy the helper block to `scripts/recovery-candidates.ts`. Keep live Locator objects
 for inspection; the `selector` string is a proposed source expression for review,
 not a CSS selector and never input to `eval` or `new Function`. Names are quoted as
-JavaScript string literals and intent is escaped as literal regex text.
+JavaScript string literals and intent is escaped as literal regex text. `intent` is
+therefore the accessible name or visible text the old locator pointed at (`'Clear
+completed'`, `'items left'`), not a prose description such as "the todo list container";
+a description never matches and yields zero candidates. For an unnamed container (a list,
+section or footer without a label) skip `generate()`, write typed candidates by hand,
+check each with a live `count()` and score them on the rubric.
 
 ```typescript
 import { Page, Locator } from '@playwright/test';
@@ -277,7 +310,7 @@ export async function generate(page: Page, intent: string): Promise<Candidate[]>
     }
   }
   await add(page.getByLabel(rx), `getByLabel(${expression})`, 4, 'unique labelled field');
-  for (const role of ['button', 'link', 'heading', 'textbox', 'checkbox'] as const) {
+  for (const role of ['button', 'link', 'heading', 'textbox', 'checkbox', 'list', 'listitem', 'navigation'] as const) {
     const loc = page.getByRole(role, { name: rx });
     const selector = `getByRole(${quote(role)}, { name: ${expression} })`;
     const count = await loc.count();
@@ -377,8 +410,14 @@ For any test still failing, revert that one line (`git checkout -p`) and flag it
 
 ```bash
 git checkout -b chore/test-selector-recovery-$(date +%Y%m%d)
-git add tests/ .drift-recovery/candidates.json
-git commit -m "chore(tests): bulk selector recovery after <refactor>"
+# One PR, one commit per test file: a reviewer reads each file's selector changes next to
+# its evidence instead of one squashed diff across the suite.
+for file in $(git diff --name-only -- tests/); do
+  git add "$file"
+  git commit -m "test: recover selectors in ${file#tests/}"
+done
+git add .drift-recovery/candidates.json
+git commit -m "chore(tests): selector recovery evidence after <refactor>"
 git push -u origin HEAD
 gh pr create --title "chore(tests): selector recovery after <refactor>" \
   --body-file .drift-recovery/pr-body.md
@@ -402,14 +441,15 @@ export function summarizeRecovery(rows: any[]) {
     group.push(row);
     groups.set(key, group);
   }
-  const recovered: any[] = [], flagged: any[] = [];
+  const recovered: any[] = [], accepted: any[] = [], flagged: any[] = [];
   for (const group of groups.values()) {
     const applied = group.filter(row => row.applied === true);
     if (applied.length > 1) throw new Error('Multiple applied candidates for one source location');
-    if (applied.length === 1) recovered.push(applied[0]);
+    if (applied.length === 1 && applied[0].score >= 3) recovered.push(applied[0]);
+    else if (applied.length === 1) accepted.push(applied[0]); // reviewer-accepted edit below the floor; the scorer still exits 1
     else flagged.push({ ...group[0], rationale: group.map(row => row.rationale).join('; ') });
   }
-  return { recovered, flagged };
+  return { recovered, accepted, flagged };
 }
 ```
 
@@ -421,10 +461,10 @@ first to check candidate row types and source coordinates.
 import fs from 'fs';
 import { summarizeRecovery } from './recovery-summary';
 const c = JSON.parse(fs.readFileSync('.drift-recovery/candidates.json', 'utf8'));
-const { recovered, flagged } = summarizeRecovery(c);
+const { recovered, accepted, flagged } = summarizeRecovery(c);
 
 const perFile = Object.entries(
-  recovered.reduce((m: any, r: any) => ((m[r.file] ||= []).push(r), m), {})
+  [...recovered, ...accepted].reduce((m: any, r: any) => ((m[r.file] ||= []).push(r), m), {})
 ).map(([file, rows]: any) =>
   `### ${file}\n| Line | Old | New | Score | Shot |\n|---|---|---|---|---|\n` +
   rows.map((r: any) => `| ${r.line} | \`${r.oldLocator}\` | \`${r.selector}\` | ${r.score} | ![](${r.screenshotPath}) |`).join('\n')
@@ -434,15 +474,17 @@ fs.writeFileSync('.drift-recovery/pr-body.md', `## Trigger
 <Link to refactor PR>
 
 ## Summary
-- ${recovered.length} selectors recovered
-- ${new Set(recovered.map((r: any) => r.file)).size} test files updated
+- ${recovered.length} selectors recovered at score 3 or above
+- ${accepted.length} manual updates accepted below the floor (scorer exits 1 until the markup gains a hook)
+- ${new Set([...recovered, ...accepted].map((r: any) => r.file)).size} test files updated
 - ${flagged.length} flagged for manual review
 
 ## Per-file changes
 ${perFile}
 
 ## Flagged for review
-${flagged.map((f: any) => `- ${f.file}:${f.line} — ${f.oldLocator} (${f.rationale})`).join('\n')}
+${[...accepted.map((f: any) => `- ${f.file}:${f.line} — ${f.oldLocator} → \`${f.selector}\` (score ${f.score}, accepted by reviewer: ${f.rationale})`),
+   ...flagged.map((f: any) => `- ${f.file}:${f.line} — ${f.oldLocator} (${f.rationale})`)].join('\n')}
 
 ## How to review
 - Check each screenshot: does \`new\` point at the same element as \`old\`?

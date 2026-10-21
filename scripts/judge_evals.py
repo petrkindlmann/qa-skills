@@ -162,7 +162,9 @@ def judge_static(skill: str, spec_path: Path, run=run_evals.run_claude) -> dict:
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
     cases = validate_eval_spec(spec, expected_skill=skill)
     document = run_evals.load_skill_text(skill)
-    criteria = [c for case in cases for c in collect_criteria(case, document)]
+    # Live-only cases check facts from the prompt; skill content cannot carry them.
+    criteria = [c for case in cases if case.get("static") is not False
+                for c in collect_criteria(case, document)]
     judged = judge_document(document, criteria, run)
     return {"skill": skill, "scope": "skill_content", "document_chars": len(document),
             "calls": 1 if criteria else 0, **judged}

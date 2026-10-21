@@ -155,7 +155,7 @@
         "score-2 replacements OR Auto-applying score",
         "not preferring getByRole OR role-first",
         "CSS class OR Score-2/CSS candidates",
-        "not ratcheting up stability after recovery",
+        "ratchet OR ratcheting",
         "recovered tests should have higher score",
         "update or revert low-scoring candidates"
       ],

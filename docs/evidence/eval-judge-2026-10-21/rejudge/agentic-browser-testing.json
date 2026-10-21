@@ -1,0 +1,74 @@
+[
+  {
+    "skill": "agentic-browser-testing",
+    "scope": "skill_content",
+    "document_chars": 35745,
+    "calls": 1,
+    "items": [
+      {
+        "case": "abt-001",
+        "kind": "anti",
+        "text": "answering with a pre-written Playwright script instead of a goal-driven agent",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document lists reflexively writing a scripted Playwright test as anti-pattern 1 and only uses scripted tests as a graduation target for stabilized flows, not as a substitute for the goal-driven agent.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "abt-001",
+        "kind": "anti",
+        "text": "hard-coded selectors or test ids inside the goal prompt",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The goal prompt example contains no selectors or test ids, and the Done When section explicitly forbids page.locator, page.goto, and data-testid in the goal.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "abt-001",
+        "kind": "anti",
+        "text": "a success criterion that is implied rather than stated",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document repeatedly requires an explicit, stated oracle with expected text, URL, and a forbidden-state negative check, and rejects implied criteria like 'no error' or 'looks good'.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "abt-008",
+        "kind": "anti",
+        "text": "model self-grade as release evidence",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says never let the LLM self-grade and insists a project-owned harness oracle, not the model, decides pass/fail.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "abt-008",
+        "kind": "anti",
+        "text": "accepting string true as a boolean",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The gate contract explicitly states that {\"passed\": \"true\"} and string booleans cannot pass; completed must be the boolean true.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "abt-008",
+        "kind": "anti",
+        "text": "an absent host adapter silently passes",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says to fail as blocked if the adapter or model is unavailable and that a missing activity record cannot pass the gate.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.3247025,
+    "duration_ms": 11483
+  }
+]

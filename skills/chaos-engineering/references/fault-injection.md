@@ -92,7 +92,8 @@ rm /tmp/fill-disk.dat
 // Named import — toxiproxy-node-client (v4.x) has no default export.
 import { Toxiproxy } from 'toxiproxy-node-client';
 
-const toxiproxy = new Toxiproxy('http://localhost:8474');
+// Hosts and ports come from the environment so the same test runs in CI and locally.
+const toxiproxy = new Toxiproxy(process.env.TOXIPROXY_URL ?? 'http://localhost:8474');
 
 test('application handles Redis unavailability gracefully', async () => {
   const proxy = await toxiproxy.get('redis');
@@ -101,7 +102,7 @@ test('application handles Redis unavailability gracefully', async () => {
   await proxy.disable();
 
   try {
-    const response = await fetch('http://localhost:3000/api/products');
+    const response = await fetch(`${process.env.APP_URL ?? 'http://localhost:3000'}/api/products`);
     // Should still work, but slower (cache miss, hits database)
     expect(response.ok).toBe(true);
     const data = await response.json();

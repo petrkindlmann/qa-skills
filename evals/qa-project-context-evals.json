@@ -101,7 +101,7 @@
         "actual headcount"
       ],
       "anti_patterns": [
-        "suggesting comprehensive regression test suites",
+        "recommending a comprehensive regression suite to the solo developer",
         "recommending dedicated test engineers",
         "generic team structure advice"
       ],
@@ -143,7 +143,7 @@
         "Vitest recommended OR Vitest (unit) as defaults"
       ],
       "anti_patterns": [
-        "recommending tools in this skill",
+        "recommending tools beyond the zero-infra defaults",
         "leaving 'TBD' or [unit framework] in Test Stack",
         "no guidance on what to do next"
       ],

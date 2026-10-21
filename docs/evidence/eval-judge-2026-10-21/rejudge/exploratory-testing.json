@@ -1,0 +1,244 @@
+[
+  {
+    "skill": "exploratory-testing",
+    "scope": "skill_content",
+    "document_chars": 30772,
+    "calls": 1,
+    "items": [
+      {
+        "case": "etst-001",
+        "kind": "anti",
+        "text": "what to prove instead of what to learn",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document explicitly says the information goal should describe what you want to learn, not what you want to prove.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-001",
+        "kind": "anti",
+        "text": "target not specific enough to guide 45-90 minutes",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The charter checklist requires the target to be specific enough to guide exploration and coverable in 45-90 minutes.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-002",
+        "kind": "anti",
+        "text": "summary after the fact instead of during session",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document insists on real-time notes during the session and lists relying on memory afterward as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-003",
+        "kind": "expected",
+        "text": "names at least four of the seven HICCUPS oracles",
+        "verdict": "yes",
+        "evidence": "| **H** | History | Does current behavior match past behavior? | Did this work in the last release? Has the behavior changed subtly? |",
+        "reason": "The HICCUPS table names all seven oracles: History, Image, Comparable, Claims, User expectations, Product, Standards.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "etst-003",
+        "kind": "anti",
+        "text": "missing the oracle lens concept",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document defines an oracle as a principle for recognizing problems and frames heuristics as lenses.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-003",
+        "kind": "anti",
+        "text": "treats HICCUPS as a checklist to complete exhaustively",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document explicitly states heuristics are not checklists to exhaustively complete.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-003",
+        "kind": "anti",
+        "text": "no connection to actual bugs found",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Findings are tied to actual bugs, e.g. BUG-456 traced from session log to regression test.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-004",
+        "kind": "anti",
+        "text": "no edge cases at zero or maximum",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Boundary heuristics include zero, maximum, max+1, empty collection, and max length.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-004",
+        "kind": "anti",
+        "text": "vague boundaries instead of specific values",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Boundaries are given as specific values such as 0, 1, 1000, 100000 records and page-size 20/21 items.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-005",
+        "kind": "anti",
+        "text": "no reflection on what was unexpected",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The debrief template asks 'What surprised you?' and 'What was harder than expected?'.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-006",
+        "kind": "anti",
+        "text": "no mention of varying conditions",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The 'when you find something interesting' loop instructs to vary the conditions across data, users, browsers.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-006",
+        "kind": "anti",
+        "text": "session longer than 90 minutes",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document time-boxes sessions to 45-90 minutes and lists 3-hour sessions as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-007",
+        "kind": "anti",
+        "text": "no test reference to the original bug",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The example test name and comment reference the original BUG-456.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-007",
+        "kind": "anti",
+        "text": "no assertion on the validation error",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The Playwright example asserts the 'Email is required' validation error is visible.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-007",
+        "kind": "anti",
+        "text": "does not verify that invalid state is prevented",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The example asserts the page does not navigate to the confirmation URL, verifying the invalid state is prevented.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-008",
+        "kind": "anti",
+        "text": "no mention of first-time user perspective",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The Familiarity lens and the 'never used this product before' what-if scenario cover the first-time user perspective.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-008",
+        "kind": "anti",
+        "text": "missing at least 2 of the 3 F-E-W lenses",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "All three F-E-W lenses (Familiarity, Explainability, World) are present.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-008",
+        "kind": "anti",
+        "text": "no connection to how real users in different regions behave",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The World lens and what-if bank address different locales, time zones, RTL text, and number formats.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-009",
+        "kind": "anti",
+        "text": "does not address state transition scenarios from the heuristic",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document provides a full state transition heuristics bank and references it for regression charters.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-009",
+        "kind": "anti",
+        "text": "assumes the fix is complete without testing edge cases",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document requires verifying the test fails on the buggy build and passes on the fix, and varying conditions for findings.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-010",
+        "kind": "anti",
+        "text": "treats exploration as less rigorous than automation",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document lists treating exploration as 'not real testing' as an anti-pattern and asserts equal rigor.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-010",
+        "kind": "anti",
+        "text": "suggests automating first before exploration",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document positions exploration as the source of findings that then feed automation, not the reverse.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "etst-010",
+        "kind": "anti",
+        "text": "no pipeline from finding to regression test",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "An explicit exploration-to-automation pipeline with conversion steps and a worked example is provided.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.37433249999999996,
+    "duration_ms": 29232
+  }
+]

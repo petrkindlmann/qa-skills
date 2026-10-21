@@ -1,0 +1,154 @@
+[
+  {
+    "skill": "analytics-tracking-testing",
+    "scope": "skill_content",
+    "document_chars": 77205,
+    "calls": 1,
+    "items": [
+      {
+        "case": "ana-001",
+        "kind": "anti",
+        "text": "toBeVisible as the only tracking assertion",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document explicitly warns against using toBeVisible() as a tracking assertion; the one toBeVisible call in the paywall test follows beacon-param assertions and is not the only assertion.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-002",
+        "kind": "anti",
+        "text": "assert only the event name and ignore parameters",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Anti-pattern 3 warns that name-only assertions pass while params are wrong, and every example asserts parameters beyond the event name.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-002",
+        "kind": "anti",
+        "text": "hardcode expected values inline without a plan file",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document lists hardcoding inline values without a plan file as an anti-pattern and recommends a versioned tracking plan validated via validateEvent.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-003",
+        "kind": "anti",
+        "text": "count the pixel fired and stop",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document warns that load/count checks for pixels prove nothing and instead requires event_id deduplication assertions.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-005",
+        "kind": "anti",
+        "text": "read GA4 network beacon instead of the dataLayer push",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "When the dataLayer push is the contract, the document says to assert the push and 'never reach for the GA4 beacon instead'.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-005",
+        "kind": "anti",
+        "text": "asserting element visibility or role instead of the dataLayer payload",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The dataLayer examples assert the ecommerce payload (currency, value, items); toBeVisible and role checks are explicitly rejected as tracking evidence.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-007",
+        "kind": "anti",
+        "text": "only capture GA4 and ignore pixels",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document states the capture fixture 'must capture pixels too, not GA4 only' and supplies a Meta pixel adapter.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-007",
+        "kind": "anti",
+        "text": "re-implement capture in every test",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says 'Don't re-implement beacon capture in every test' and provides a reusable test.extend fixture.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-008",
+        "kind": "anti",
+        "text": "manual QA in GA4 DebugView as the gate",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "GA4 DebugView manual checks are listed under 'What NOT to do' and called theater.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-008",
+        "kind": "anti",
+        "text": "only run against production traffic",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Production-only monitoring is explicitly rejected as the pre-merge gate.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-008",
+        "kind": "anti",
+        "text": "warn but do not fail the build",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says 'Warn but pass' is decoration and the job must exit non-zero.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-009",
+        "kind": "anti",
+        "text": "recommend Segment Protocols as the only validation",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says 'Don't recommend Segment Protocols as the only validation'.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-009",
+        "kind": "anti",
+        "text": "Playwright is always the answer regardless of scale",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The Buy vs Build section states DIY Playwright stops paying off at scale and recommends buying for hundreds of events or continuous monitoring.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ana-009",
+        "kind": "anti",
+        "text": "Google Tag Assistant as a CI gate",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says 'never call Google Tag Assistant a CI gate' and only references it as an interactive debug/evidence tool.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.7032025,
+    "duration_ms": 25550
+  }
+]

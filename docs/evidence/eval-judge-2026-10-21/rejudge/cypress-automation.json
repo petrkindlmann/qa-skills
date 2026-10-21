@@ -1,0 +1,154 @@
+[
+  {
+    "skill": "cypress-automation",
+    "scope": "skill_content",
+    "document_chars": 30976,
+    "calls": 1,
+    "items": [
+      {
+        "case": "cy-001",
+        "kind": "anti",
+        "text": "storing return value in variable",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document shows storing cy.get() in a variable only as a WRONG example and states you cannot store the return value in a variable.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-001",
+        "kind": "anti",
+        "text": "checking DOM without assertion chaining",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "All DOM checks use .should chains, and the document explicitly lists conditional DOM checks like $body.find(...).length as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-002",
+        "kind": "anti",
+        "text": "UI-based login in every test",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "UI login in every test is listed as an anti-pattern; the document recommends cy.session with API login instead.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-002",
+        "kind": "anti",
+        "text": "Chainable without proper TypeScript types",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document models full TypeScript declarations for custom commands in index.d.ts and requires tsc to pass.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-003",
+        "kind": "anti",
+        "text": "stubbing the fixture response but still waiting on a real network call",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The fixture-backed intercept waits on its own alias; no real network call is awaited after stubbing.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-003",
+        "kind": "anti",
+        "text": "pasting a large response body inline instead of a fixture file",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Inline stub bodies shown are small, and the document provides a fixture-file pattern for canned responses.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-004",
+        "kind": "anti",
+        "text": "hardcoded localhost in CI environment",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "baseUrl is read from env with localhost only as a local fallback, and the document explicitly says never hardcode it for CI.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-004",
+        "kind": "anti",
+        "text": "no component config when component tests exist",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "cypress.config.ts includes a component block with devServer, specPattern, and supportFile.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-005",
+        "kind": "anti",
+        "text": "testing full app instead of isolated component",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Component tests mount a single component in isolation and the document forbids cy.visit in component tests.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-006",
+        "kind": "anti",
+        "text": "mocking without controlling state transitions",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The conditional-response example deliberately controls the 202\u2192200 state transition and the document says to control state deterministically.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-008",
+        "kind": "anti",
+        "text": "not handling intercept setup before action",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document repeatedly instructs registering the intercept before the triggering action and all examples do so.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-008",
+        "kind": "anti",
+        "text": "not verifying error message appears",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The network-error example verifies the error message with cy.contains(...).should('be.visible').",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "cy-010",
+        "kind": "expected",
+        "text": "chains Cypress commands directly without storing the return value in a variable",
+        "verdict": "yes",
+        "evidence": "// CORRECT -- chain commands; use .then() when you need a value",
+        "reason": "The document teaches chaining commands directly and using .then() for values instead of storing the Chainable in a variable.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "cy-010",
+        "kind": "anti",
+        "text": "storing Chainable in a variable for reuse",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Storing a Chainable in a variable is shown only as the WRONG example; cy.stub() and cy.now() variables are not Chainables.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.4375825,
+    "duration_ms": 42056
+  }
+]

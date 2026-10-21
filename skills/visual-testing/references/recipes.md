@@ -151,10 +151,13 @@ The Storybook test-runner can also iterate every story automatically if you want
 ### Percy (any framework)
 
 ```typescript
+import { test, expect } from '@playwright/test';
 import { percySnapshot } from '@percy/playwright';
 
 test('checkout page visual', async ({ page }) => {
   await page.goto('/checkout');
+  // Wait for the page's own content, not a timer, before capturing.
+  await expect(page.getByRole('heading', { name: 'Checkout' })).toBeVisible();
   await percySnapshot(page, 'Checkout Page', {
     widths: [375, 768, 1280],
     percyCSS: `.ad-banner { display: none !important; }`,
@@ -166,10 +169,12 @@ test('checkout page visual', async ({ page }) => {
 ### Argos CI (open source)
 
 ```typescript
+import { test, expect } from '@playwright/test';
 import { argosScreenshot } from '@argos-ci/playwright';
 
 test('pricing page visual', async ({ page }) => {
   await page.goto('/pricing');
+  await expect(page.getByRole('heading', { name: 'Pricing' })).toBeVisible();
   // Confirm preset names against argos-ci.com/docs/viewports before pinning them.
   await argosScreenshot(page, 'pricing-page', { viewports: ['iphone-x', 'macbook-16'] });
 });

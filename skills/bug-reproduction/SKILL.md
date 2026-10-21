@@ -131,7 +131,9 @@ the 14-step version to the developer and do **not** rewrite it wholesale. Run th
    keep the cut; if it no longer fails, that element was load-bearing — restore it. Repeat,
    one variable at a time, until every remaining piece is necessary. This is the core
    ordering rule: never minimize before confirming it reproduces, and never omit verifying
-   it still fails after each cut.
+   it still fails after each cut. When the report does not reproduce on your build (Step 7),
+   there is no failing repro to cut; minimize the discriminating observation instead, the
+   smallest call sequence whose outcome differs between the contract and the report.
 3. **ISOLATE.** Narrow the failure to the smallest layer that still shows it — drop from a
    3-page UI flow to a single page, then to a unit/API call against the offending function
    if the bug lives below the UI.
@@ -286,6 +288,21 @@ judging — replicate their config (timezone, locale, OS, browser version) and r
 their env, then re-run. `--repeat-each` in the *same* env isolates true flakiness; cross-env
 divergence points to environment-specific; input-dependence points to data-specific.
 
+**Not reproducible, but the team still wants a guard.** Step 5 as written needs a red run
+against the application, and a healthy build cannot give you one. Do not skip the test and
+do not mark it pending. Go back to Step 5 with a stand-in red:
+
+1. Write the regression test against the real application exactly as in Step 5. It passes
+   now; that is the expected state on a build without the defect.
+2. Prove the assertion can fail. Prefer a fault switch the application exposes for test
+   runs. Otherwise stand up a throwaway stub that answers the way the report describes and
+   run the same oracle function against it. The oracle must go red there.
+3. Say in the ticket what was verified: the test against a stub or fault, not the reported
+   defect. The reporter's build stays unconfirmed until they supply the SHA, client or data.
+4. Run `--repeat-each 10` against the real application so the guard is known stable.
+
+This is a check of the test, not of the application, and the write-up has to say so.
+
 ---
 
 ## Step 8: Write the evidence back into the ticket
@@ -297,7 +314,8 @@ just write "reproduced, closing." Include all seven elements:
 1. **Minimal steps / repro command** — the smallest path, not the walkthrough.
 2. **Environment + build/commit** — exact SHA and platform.
 3. **Expected vs actual** — the concrete numbers.
-4. **Introducing commit** — the offending commit from `git bisect`.
+4. **Introducing commit** — the offending commit from `git bisect`, or `none: not a regression
+   on this build` when HEAD is good or the repository history is not the application's.
 5. **Regression test** — link to the committed test file and path.
 6. **Evidence** — logs, screenshot, trace, or artifact.
 7. **Determinism notes** — seed, frozen time, and stubs so anyone can re-run identically.

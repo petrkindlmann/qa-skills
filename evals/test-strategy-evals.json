@@ -209,7 +209,7 @@
       "expected_patterns": [
         "(shard|sharding|parallel)",
         "coverage targets scaled to the larger team capacity",
-        "integration testing gaps in the monolith architecture",
+        "missing middle OR integration gap OR integration layer",
         "test impact analysis OR (only.*affected.*tests)",
         "hourglass",
         "integration test growth plan for the missing middle layer",

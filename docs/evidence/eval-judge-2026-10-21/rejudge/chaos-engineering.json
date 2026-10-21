@@ -1,0 +1,154 @@
+[
+  {
+    "skill": "chaos-engineering",
+    "scope": "skill_content",
+    "document_chars": 30014,
+    "calls": 1,
+    "items": [
+      {
+        "case": "ce-002",
+        "kind": "anti",
+        "text": "no approval or stakeholder notification",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document requires leadership approval and stakeholder/on-call notification before runs and lists skipping them as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ce-003",
+        "kind": "anti",
+        "text": "latency not reversed after test",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Injected latency is explicitly reversed via tc qdisc del and the toxiproxy test re-enables the proxy in a finally block.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ce-003",
+        "kind": "anti",
+        "text": "hardcoded IP or port without parametrization",
+        "verdict": "yes",
+        "evidence": "const response = await fetch('http://localhost:3000/api/products');",
+        "reason": "The model integration test hardcodes the application host and port despite claiming hosts and ports come from the environment.",
+        "evidence_verified": true,
+        "status": "recommended"
+      },
+      {
+        "case": "ce-003",
+        "kind": "anti",
+        "text": "no assertion on response time",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The toxiproxy test asserts latency is under 5000ms via expect(latency).toBeLessThan(5000).",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ce-005",
+        "kind": "expected",
+        "text": "Action items WITH owner AND due date",
+        "verdict": "yes",
+        "evidence": "- [ ] Configure connection pool health checks \u2014 assigned to @maria, due 2026-03-31",
+        "reason": "Findings action items carry a named owner and a due date, and the Done When section requires both.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "ce-005",
+        "kind": "anti",
+        "text": "no action items or all deferred",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Action items are present and the document states no item is deferred.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ce-005",
+        "kind": "anti",
+        "text": "no owner assigned to fixes",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Every fix is assigned an owner (@maria, @dan) and a ticket with a named owner is required.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ce-006",
+        "kind": "anti",
+        "text": "choosing AWS FIS for non-AWS workloads",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "AWS FIS is recommended only for cloud-managed AWS workloads in the decision tree and tool table.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ce-006",
+        "kind": "anti",
+        "text": "no justification for the choice",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Tool choices are justified via a decision tree with reasons and each starter experiment has a 'Why first/second/third' rationale.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ce-007",
+        "kind": "anti",
+        "text": "experiments that are too complex",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document consistently recommends small, single-service, reversible experiments and warns against starting too big.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ce-008",
+        "kind": "anti",
+        "text": "assuming 5 minutes means no rollback needed",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The 'No rollback plan' anti-pattern explicitly rejects the idea that a short experiment needs no rollback.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ce-009",
+        "kind": "anti",
+        "text": "running in production without approval",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Production runs without approval are listed as an anti-pattern with required approval and notification steps.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ce-009",
+        "kind": "anti",
+        "text": "vague scope or unbounded duration",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Every experiment template specifies explicit target, scope, duration, and blast radius.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ce-010",
+        "kind": "anti",
+        "text": "no plan to re-run the experiment",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document schedules re-runs after fixes with specific metrics to check and requires a scheduled re-run in Done When.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.3695425,
+    "duration_ms": 32272
+  }
+]

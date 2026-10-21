@@ -1,0 +1,254 @@
+[
+  {
+    "skill": "selector-drift-recovery",
+    "scope": "skill_content",
+    "document_chars": 45303,
+    "calls": 1,
+    "items": [
+      {
+        "case": "sdr-001",
+        "kind": "anti",
+        "text": "auto-applying score-1 or score-2 candidates",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document forbids auto-applying score-0/1/2 candidates and lists it as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-001",
+        "kind": "anti",
+        "text": "single commit with all changes",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document recommends one commit per test file, not a single commit with all changes.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-001",
+        "kind": "anti",
+        "text": "just fixing one flaky test",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document redirects single flaky-test fixes to test-reliability and does not model fixing one flaky test.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-002",
+        "kind": "anti",
+        "text": "guessing intent without reading code",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document explicitly requires inspecting trace and source and keeping intent null rather than guessing.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-002",
+        "kind": "anti",
+        "text": "mixing score-1 candidates into result",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Score-1 candidates are never auto-applied and the generator does not produce them; nothing recommends mixing them in.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-002",
+        "kind": "anti",
+        "text": "no line numbers in output",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Output rows and the PR table include line numbers throughout.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-003",
+        "kind": "anti",
+        "text": "Copy HTML at this step",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document states the 'Copy HTML at this step' menu no longer exists and tells readers to use the snapshot panel instead.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-004",
+        "kind": "anti",
+        "text": "recommending score-1 as primary candidate",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Score-1 CSS candidates are ranked lowest and never auto-applied; data-testid and role are primary.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-005",
+        "kind": "expected",
+        "text": "clear marking of flagged tests",
+        "verdict": "yes",
+        "evidence": "Flagged tests are clearly marked, not silently included.",
+        "reason": "The Phase 5 gate explicitly requires clear marking of flagged tests.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "sdr-005",
+        "kind": "anti",
+        "text": "not reverting individual broken replacements",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document instructs reverting the single failing line and flagging it for review.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-005",
+        "kind": "anti",
+        "text": "skipping the full suite run",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document insists on running the full affected suite, not just previously failing tests.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-006",
+        "kind": "anti",
+        "text": "no confidence scores in table",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The per-file PR table includes a Score column for every change.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-006",
+        "kind": "anti",
+        "text": "all changes in one block without grouping",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Changes are grouped by test file with per-change evidence.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-006",
+        "kind": "anti",
+        "text": "flagged tests mixed with recovered ones",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Recovered and flagged items are summarized in separate sections and lists.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-007",
+        "kind": "expected",
+        "text": "recovered tests should have higher score",
+        "verdict": "yes",
+        "evidence": "The recovery PR is your chance to ratchet the average selector stability score up",
+        "reason": "The document teaches that recovery should raise the stability score and only score \u22653 candidates land.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "sdr-007",
+        "kind": "expected",
+        "text": "update or revert low-scoring candidates",
+        "verdict": "yes",
+        "evidence": "Revert candidates with score < 3 in `candidates.json`; only role/label/testid should land",
+        "reason": "The failure-modes table directs reverting low-scoring candidates.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "sdr-007",
+        "kind": "anti",
+        "text": "accepting lower stability as acceptable",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "A drop in stability score is treated as a failure mode to fix, not as acceptable.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-007",
+        "kind": "anti",
+        "text": "no review of candidate quality",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document requires human review of per-change evidence and forbids auto-merge.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-008",
+        "kind": "expected",
+        "text": "not regenerating selectors for missing elements",
+        "verdict": "yes",
+        "evidence": "do not regenerate selectors for elements that no longer exist",
+        "reason": "Core principle 6 and anti-pattern 6 state this practice directly.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "sdr-008",
+        "kind": "anti",
+        "text": "generating replacement for deleted component",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Generating replacements for deleted features is listed as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-008",
+        "kind": "anti",
+        "text": "keeping tests for removed features",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says to prune tests for removed features after confirming the removal.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-009",
+        "kind": "anti",
+        "text": "using test-reliability for mass update",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says test-reliability is for one flaky test and mass updates should switch to this skill.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-009",
+        "kind": "anti",
+        "text": "one giant PR with 200 changes",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document says to split 200+ selectors by area into multiple PRs.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sdr-009",
+        "kind": "anti",
+        "text": "no mention of review scope",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document specifies who reviews, a 'How to review' section, and that the PR must be reviewable in one sitting.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.4998525,
+    "duration_ms": 32126
+  }
+]

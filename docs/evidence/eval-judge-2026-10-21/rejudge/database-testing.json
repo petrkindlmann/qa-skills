@@ -1,0 +1,124 @@
+[
+  {
+    "skill": "database-testing",
+    "scope": "skill_content",
+    "document_chars": 37702,
+    "calls": 1,
+    "items": [
+      {
+        "case": "dbt-001",
+        "kind": "anti",
+        "text": "hardcoded database name without env override",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Database names are read from the environment with literals only as local defaults (`process.env.TEST_DATABASE ?? 'test_migrations'`), and Testcontainers supplies the URL programmatically.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "dbt-002",
+        "kind": "anti",
+        "text": "testing constraints at the ORM level only",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document explicitly directs constraint assertions to the `pool.query` level, not the ORM or application-validation layer, which it says can mask a missing DB constraint.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "dbt-004",
+        "kind": "anti",
+        "text": "shared database state between tests",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Shared state is listed as Anti-Pattern #2 and the document prescribes transaction rollback or per-test cleanup for isolation.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "dbt-005",
+        "kind": "anti",
+        "text": "assume rollback is possible without testing",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document mandates forward AND backward migration tests and provides a runnable rollback test using down.sql.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "dbt-005",
+        "kind": "anti",
+        "text": "use sync instead of migrate",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Using `prisma db push` / `synchronize: true` instead of real migrations is listed as Anti-Pattern #5 and warned against.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "dbt-006",
+        "kind": "anti",
+        "text": "waitForTimeout instead of real timing",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Timing uses EXPLAIN ANALYZE Execution Time and `performance.now()`; no waitForTimeout appears anywhere.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "dbt-008",
+        "kind": "anti",
+        "text": "no data inserted before migration",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The data-preservation test inserts a user row before applying the migration under test.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "dbt-008",
+        "kind": "anti",
+        "text": "no assertion on preserved data",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The preservation test asserts the inserted email survives and the new nullable column is null.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "dbt-010",
+        "kind": "anti",
+        "text": "no NULL check in WHERE clause",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Orphan-detection anti-joins include `WHERE u.id IS NULL` / `WHERE o.id IS NULL` checks, and null-count audits are included.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "dbt-010",
+        "kind": "anti",
+        "text": "only test the happy path",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Testing only happy-path queries is listed as Anti-Pattern #6; constraint-rejection and empty-result tests are required.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "dbt-010",
+        "kind": "anti",
+        "text": "assume referential integrity without verification",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document runs explicit orphan-record anti-join queries and foreign_key_check pragmas rather than assuming integrity.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.4489225,
+    "duration_ms": 33808
+  }
+]

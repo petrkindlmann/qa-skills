@@ -1,0 +1,184 @@
+[
+  {
+    "skill": "service-virtualization",
+    "scope": "skill_content",
+    "document_chars": 47564,
+    "calls": 1,
+    "items": [
+      {
+        "case": "sv-001",
+        "kind": "anti",
+        "text": "hardcoded delay without using MSW delay utility",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "All mock delays use MSW's delay utility (await delay(100), await delay(500)); no hand-rolled setTimeout delay is modeled inside handlers.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-001",
+        "kind": "anti",
+        "text": "mocking SDK method instead of HTTP layer",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document explicitly warns against mocking the SDK method and instructs stubbing at the HTTP layer instead.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-002",
+        "kind": "anti",
+        "text": "mocking everything in unit tests",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Mocking everything is listed as Anti-Pattern 1; unit tests are told to mock internal logic but real services are recommended for databases and caches.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-002",
+        "kind": "anti",
+        "text": "shared mock server across jobs",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Shared, long-lived mock servers are listed as Anti-Pattern 6 and each test run is told to start its own isolated stub server.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-004",
+        "kind": "anti",
+        "text": "no priority field for error variants",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The WireMock error mapping is modeled with priority: 1 so it shadows the happy path only on opt-in.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-005",
+        "kind": "anti",
+        "text": "not cleaning up toxics between tests",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document models afterEach(() => removeToxics(\"postgres\")) and warns toxics leak across tests otherwise.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-006",
+        "kind": "expected",
+        "text": "do not own the API",
+        "verdict": "yes",
+        "evidence": "Never mock what you don't own without a contract",
+        "reason": "Core Principle 3 and the discovery questions teach treating third-party APIs you do not own as a risk requiring a contract or sandbox.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "sv-006",
+        "kind": "anti",
+        "text": "mocking without contract test to detect drift",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document repeatedly recommends contract tests to detect drift and lists not updating stubs when the API changes as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-007",
+        "kind": "anti",
+        "text": "not maintaining state across requests",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Stateful handlers backed by a Map are modeled for payments and sessions; the document does not recommend stateless mocks for stateful flows.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-007",
+        "kind": "anti",
+        "text": "mock at SDK level instead of HTTP",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Stubbing the wrong layer (SDK method) is Anti-Pattern 4; HTTP-layer stubbing is recommended throughout.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-008",
+        "kind": "anti",
+        "text": "missing wait for service health",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The compose job uses --wait --wait-timeout 120 with healthchecks and Testcontainers uses explicit wait strategies.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-008",
+        "kind": "anti",
+        "text": "hardcoded URLs in tests instead of env vars",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "CI injects DATABASE_URL and WIREMOCK_URL via env, the Toxiproxy helper reads TOXIPROXY_API from process.env, and hardcoding ports is forbidden for Testcontainers.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-008",
+        "kind": "anti",
+        "text": "real API calls in CI",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document enforces onUnhandledRequest: \"error\" in CI so any escaping real call fails the run.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-009",
+        "kind": "expected",
+        "text": "decouples the test from the SDK version",
+        "verdict": "yes",
+        "evidence": "that decouples the test from the SDK version",
+        "reason": "The document states HTTP-layer stubbing decouples the test from the SDK version and repeats this in Anti-Pattern 4.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "sv-009",
+        "kind": "expected",
+        "text": "works with any HTTP client",
+        "verdict": "yes",
+        "evidence": "so the test works regardless of HTTP client or SDK",
+        "reason": "Anti-Pattern 4 states HTTP-layer stubs make the test work regardless of HTTP client or SDK version.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "sv-009",
+        "kind": "anti",
+        "text": "continuing to mock SDK method",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document tells readers never to stub at the SDK method and shows the HTTP-layer alternative instead.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "sv-010",
+        "kind": "anti",
+        "text": "recordings go stale without maintenance",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Record-replay without expiration is listed as Anti-Pattern 7 and a 30-day recordedAt freshness check is required.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.6477125,
+    "duration_ms": 59525
+  }
+]
