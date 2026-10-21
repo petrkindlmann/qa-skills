@@ -99,7 +99,7 @@
       "expected_patterns": [
         "redundant.*(another test|covers the same|subsumed)",
         "obsolete.*(feature removed|dead code|no longer)",
-        "low.?value.*(never failed|trivial|getter|no assertion)",
+        "Low-value.*(never failed|trivial|getter|no assertion) OR low value.*(never failed|trivial|getter|no assertion)",
         "keep.*(unique coverage|catches defects|risk)",
         "different (action|disposition) per (category|class)",
         "redundant => (delete|merge) OR obsolete => delete OR low-value => (quarantine|review)"
@@ -122,7 +122,7 @@
         "smoke.*(fast|critical|minutes|few)",
         "extended OR full OR nightly OR slow",
         "risk OR business-critical OR critical path",
-        "defect.?detection history OR tests that (caught|found) (real )?bugs OR fault-finding",
+        "defect-detection history OR defect detection history OR caught real bugs OR tests that caught bugs OR fault-finding",
         "(runtime|duration|execution time) as a (tier|tiering) input",
         "tag OR marker OR pytest mark OR @pytest.mark OR label"
       ],
@@ -189,7 +189,7 @@
       "expected_patterns": [
         "not (sufficient|enough) on its own OR still verify OR not automatically",
         "(mutation|mutant) OR does the OTHER test (assert|catch|kill) what this one does",
-        "never failed (because|may mean) (low (risk|change)|stable code) not (worthless|redundant)",
+        "never-failing does not mean delete OR never failed.*not (worthless|redundant|useless)",
         "different (assertion|input|edge case|oracle) could still be unique",
         "quarantine OR observe OR grace period (before|then) delete"
       ],

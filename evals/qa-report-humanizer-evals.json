@@ -42,7 +42,8 @@
         "bug-report",
         "impact-clarity",
         "specificity"
-      ]
+      ],
+      "static": false
     },
     {
       "id": "qah-003",
@@ -98,14 +99,15 @@
       "anti_patterns": [
         "registration",
         "password reset",
-        "SSO",
+        " SSO OR single sign-on",
         "adding test coverage that the source never mentions"
       ],
       "tags": [
         "synonym-cycling",
         "concision",
         "dedup"
-      ]
+      ],
+      "static": false
     },
     {
       "id": "qah-006",
@@ -189,7 +191,8 @@
         "bug-padding",
         "passive-voice",
         "specificity"
-      ]
+      ],
+      "static": false
     },
     {
       "id": "qah-010",
@@ -250,7 +253,8 @@
         "slack-message",
         "channel-fit",
         "concision"
-      ]
+      ],
+      "static": false
     },
     {
       "id": "qah-013",
@@ -281,7 +285,8 @@
         "build-identity",
         "uncertainty",
         "held-out-style-case"
-      ]
+      ],
+      "static": false
     }
   ]
 }

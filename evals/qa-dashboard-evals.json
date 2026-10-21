@@ -7,7 +7,7 @@
       "prompt": "Set up Allure Report integration with Playwright tests in playwright.config.ts with environment variables",
       "expected_patterns": [
         "allure-playwright",
-        "reporter: [\"allure-playwright\"",
+        "reporter:.*[\"allure-playwright\" OR reporter:.*['allure-playwright'",
         "resultsDir",
         "environmentInfo",
         "process.env"

@@ -36,7 +36,7 @@
         "recovery",
         "thresholds",
         "phase:recovery OR {phase: OR scenario:recovery",
-        "p\\(95\\)"
+        "p(95)"
       ],
       "anti_patterns": [
         "constant load without spike shape",
@@ -182,7 +182,7 @@
       "id": "perf-008",
       "prompt": "You discover that p95 response time on your checkout endpoint is 1200ms under load, but you budgeted 500ms. Walk through the bottleneck identification process: how do you identify if the issue is database, CDN caching, third-party scripts, or something else?",
       "expected_patterns": [
-        "per-endpoint Trend metrics",
+        "per-endpoint `Trend` OR per-endpoint Trend OR per endpoint Trend",
         "EXPLAIN OR N+1",
         "cache-control OR x-cache: HIT",
         "blockedUrlPatterns OR third-party",

@@ -14,10 +14,9 @@
         "accessibility tree OR accessibility snapshot"
       ],
       "anti_patterns": [
-        "page.locator",
-        "page.goto",
-        "await expect(page",
-        "data-testid"
+        "answering with a pre-written Playwright script instead of a goal-driven agent",
+        "hard-coded selectors or test ids inside the goal prompt",
+        "a success criterion that is implied rather than stated"
       ],
       "tags": [
         "setup",

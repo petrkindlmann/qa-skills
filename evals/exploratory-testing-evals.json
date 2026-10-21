@@ -53,7 +53,7 @@
       "expected_patterns": [
         "History OR I - Image OR Comparable OR Claims OR User expectations OR Product OR Standards",
         "past behavior OR consistency OR brand OR spec OR expectations OR standards OR WCAG",
-        "at least 4 of: H, I, C, C, U, P, S"
+        "names at least four of the seven HICCUPS oracles"
       ],
       "anti_patterns": [
         "missing the oracle lens concept",

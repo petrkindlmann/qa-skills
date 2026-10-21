@@ -19,7 +19,11 @@
         "test the login (single vague step)",
         "should be fine"
       ],
-      "tags": ["anatomy", "manual-case", "acceptance-criteria"]
+      "tags": [
+        "anatomy",
+        "manual-case",
+        "acceptance-criteria"
+      ]
     },
     {
       "id": "tcm-002",
@@ -30,7 +34,7 @@
         "custom_steps_separated",
         "expected",
         "expired OR invalid code",
-        "already.used OR already redeemed"
+        "already-used OR already used OR already redeemed"
       ],
       "anti_patterns": [
         "custom_steps (single text field for separated steps)",
@@ -39,7 +43,11 @@
         "basic auth with username and password only",
         "one giant case for all three rules"
       ],
-      "tags": ["testrail", "bulk-authoring", "api-payload"]
+      "tags": [
+        "testrail",
+        "bulk-authoring",
+        "api-payload"
+      ]
     },
     {
       "id": "tcm-003",
@@ -58,7 +66,12 @@
         "username/password basic auth for Xray Cloud",
         "import everything as Generic test"
       ],
-      "tags": ["xray", "jira-cloud", "graphql", "gherkin"]
+      "tags": [
+        "xray",
+        "jira-cloud",
+        "graphql",
+        "gherkin"
+      ]
     },
     {
       "id": "tcm-004",
@@ -76,7 +89,11 @@
         "leaving 'everything works' as a valid expected result",
         "approving 'wait a bit' without a concrete condition"
       ],
-      "tags": ["linting", "ambiguous-steps", "review-hygiene"]
+      "tags": [
+        "linting",
+        "ambiguous-steps",
+        "review-hygiene"
+      ]
     },
     {
       "id": "tcm-005",
@@ -95,17 +112,21 @@
         "JSON instead of CSV when CSV was requested",
         "no column-to-field mapping"
       ],
-      "tags": ["testrail", "csv-import", "field-mapping"]
+      "tags": [
+        "testrail",
+        "csv-import",
+        "field-mapping"
+      ]
     },
     {
       "id": "tcm-006",
       "prompt": "We use Qase. Give me the API call to create three test cases in bulk under suite 'Checkout', each with structured steps (action, expected result, input data). Include auth header and the suite reference.",
       "expected_patterns": [
         "api.qase.io/v1 OR /case/.*/bulk",
-        "Token (Qase auth header)",
+        "Token: <key> OR Token:",
         "suite_id",
         "steps.*action.*expected_result OR action.*expected_result.*data",
-        "cases (array)"
+        "\"cases\": ["
       ],
       "anti_patterns": [
         "Authorization: Bearer (Qase uses Token header)",
@@ -113,7 +134,11 @@
         "custom_steps_separated (TestRail field on Qase)",
         "one POST per case when bulk endpoint exists"
       ],
-      "tags": ["qase", "bulk-api", "structured-steps"]
+      "tags": [
+        "qase",
+        "bulk-api",
+        "structured-steps"
+      ]
     },
     {
       "id": "tcm-007",
@@ -131,7 +156,11 @@
         "put every test in the root section",
         "duplicate the same case across suites"
       ],
-      "tags": ["organization", "testrail", "suites-sections"]
+      "tags": [
+        "organization",
+        "testrail",
+        "suites-sections"
+      ]
     },
     {
       "id": "tcm-008",
@@ -149,7 +178,12 @@
         "link tests to test executions instead of requirements",
         "ignore uncovered requirements"
       ],
-      "tags": ["traceability", "xray", "coverage", "requirements"]
+      "tags": [
+        "traceability",
+        "xray",
+        "coverage",
+        "requirements"
+      ]
     },
     {
       "id": "tcm-009",
@@ -167,7 +201,11 @@
         "automate flaky or frequently changing UI first",
         "automate one-off exploratory cases"
       ],
-      "tags": ["automation-graduation", "prioritization", "zephyr"]
+      "tags": [
+        "automation-graduation",
+        "prioritization",
+        "zephyr"
+      ]
     },
     {
       "id": "tcm-010",
@@ -186,7 +224,12 @@
         "/v1/ (wrong Zephyr Scale Cloud version)",
         "steps embedded in the create-case body as a single text blob"
       ],
-      "tags": ["zephyr-scale", "jira-cloud", "rest-api", "test-steps"]
+      "tags": [
+        "zephyr-scale",
+        "jira-cloud",
+        "rest-api",
+        "test-steps"
+      ]
     }
   ]
 }

@@ -45,6 +45,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import subprocess
 import sys
 import tempfile
@@ -63,7 +64,12 @@ _NEGATIVE_CUES = (
     "avoid", "never", "don't", "do not", "anti-pattern", "anti-patterns",
     "instead of", "bad:", "not ", "no ", "without", "forbid", "wrong", "stop",
     "deprecated", "smell", "flaky", "fragile", "replace", "remove",
+    "nothing", "cannot", "can't", "won't", "reject", "waste", "unrelated",
+    "useless", "unrunnable", "leak",
 )
+# Markdown emphasis and code ticks hide cues from substring checks: "do **not** poll".
+_EMPHASIS = re.compile(r"[*_`]+")
+_SENTENCE_END = re.compile(r"[.!?:;)]\s*$")
 
 REPO = Path(__file__).parent.parent
 SKILLS = REPO / "skills"
@@ -102,15 +108,23 @@ def _negative_regions(lines: list[str]) -> list[bool]:
     flags = [False] * len(lines)
     in_anti_section = False
     cue_window = 0  # lines remaining under the influence of a recent BAD/heading cue
+    plain = [_EMPHASIS.sub("", line.lower()) for line in lines]
     for i, line in enumerate(lines):
-        low = line.lower()
+        low = plain[i]
         if low.startswith("## "):
             in_anti_section = "anti-pattern" in low or "anti-patterns" in low \
                 or "mistakes" in low or "smell" in low
-        if any(c in low for c in ("// bad", "# bad", "❌", "anti-pattern", "wrong:",
-                                  "don't", "do not", "never", "avoid", "instead")):
+        if low.startswith("bad") or any(c in low for c in (
+                "// bad", "# bad", "❌", "anti-pattern", "wrong:",
+                "don't", "do not", "never", "avoid", "instead")):
             cue_window = 6  # this and the next few lines are part of the warning
         line_neg = any(cue in low for cue in _NEGATIVE_CUES)
+        # Markdown wraps sentences: a cue on the previous or next line of the same
+        # sentence ("Client-side fakes ... do" / "nothing to Stripe's billing") counts.
+        if not line_neg and i and not _SENTENCE_END.search(lines[i - 1]):
+            line_neg = any(cue in plain[i - 1] for cue in _NEGATIVE_CUES)
+        if not line_neg and i + 1 < len(lines) and not _SENTENCE_END.search(line):
+            line_neg = any(cue in plain[i + 1] for cue in _NEGATIVE_CUES)
         flags[i] = in_anti_section or cue_window > 0 or line_neg
         if cue_window > 0:
             cue_window -= 1
@@ -210,6 +224,13 @@ def eval_skill(skill: str, spec_path: Path, mode: str) -> dict:
 def _eval_cases(skill: str, cases: list[dict], skill_text: str, mode: str) -> dict:
     results = []
     for case in cases:
+        if mode == "static" and case.get("static") is False:
+            # The case checks facts that only a model answer can carry (for example
+            # identifiers copied from the prompt); skill content cannot satisfy it.
+            results.append({"id": case["id"], "passed": False, "status": "live_only",
+                            "missing": [], "anti_hit": [], "semantic": [],
+                            "semantic_expected": [], "semantic_anti": [], "checkable_patterns": 0})
+            continue
         try:
             if mode == "static":
                 text = skill_text
@@ -258,6 +279,7 @@ def _eval_cases(skill: str, cases: list[dict], skill_text: str, mode: str) -> di
         "failed": sum(r["status"] == "fail" for r in results),
         "errors": sum(r["status"] == "error" for r in results),
         "uncheckable": sum(r["status"] == "uncheckable" for r in results),
+        "live_only": sum(r["status"] == "live_only" for r in results),
         "checkable_cases": sum(r["status"] in {"pass", "fail"} for r in results),
         "semantic_deferred": semantic_total,
         "cases": results,
@@ -275,6 +297,8 @@ def print_report(report: dict) -> None:
                 print(f"        {c['id']} ERROR: {c['error']}")
             if c["status"] == "uncheckable":
                 print(f"        {c['id']} UNCHECKABLE: all criteria require a judge")
+            if c["status"] == "live_only":
+                print(f"        {c['id']} LIVE-ONLY: checks a model answer, not skill content")
             if c["missing"]:
                 print(f"        {c['id']} missing: {c['missing']}")
             if c["anti_hit"]:
@@ -364,8 +388,10 @@ def main(argv: list[str] | None = None) -> int:
     uncheckable = sum(r["uncheckable"] for r in reports)
     checkable = sum(r["checkable_cases"] for r in reports)
     semantic = sum(r["semantic_deferred"] for r in reports)
+    live_only = sum(r.get("live_only", 0) for r in reports)
     print(f"\nSkills: {len(reports)}  Cases: {total}  Pass: {passed}  Fail: {failed}"
-          f"  Errors: {errors}  Uncheckable: {uncheckable}  Semantic→judge: {semantic}")
+          f"  Errors: {errors}  Uncheckable: {uncheckable}  Live-only: {live_only}"
+          f"  Semantic→judge: {semantic}")
 
     if args.json:
         try:

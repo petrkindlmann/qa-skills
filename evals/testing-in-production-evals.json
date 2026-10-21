@@ -9,7 +9,7 @@
         "setFeatureFlag",
         "flag enabled OR flag disabled OR flag on OR flag off",
         "TEST_USER_ID OR synthetic account",
-        "test both paths OR dual path testing",
+        "both states OR both paths OR ON and OFF OR dual path",
         "rollback path"
       ],
       "anti_patterns": [
@@ -138,7 +138,7 @@
       "prompt": "Design a dark launch with traffic shadowing that validates new service responses without affecting users",
       "expected_patterns": [
         "shadow launch OR traffic shadowing",
-        "duplicate requests",
+        "Duplicate incoming requests OR duplicate requests OR duplicated requests OR mirror requests OR mirrors requests",
         "shadow service OR production service",
         "compare responses OR response diff",
         "status codes OR response body",

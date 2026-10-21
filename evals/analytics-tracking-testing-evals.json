@@ -16,7 +16,7 @@
       "anti_patterns": [
         "page.evaluate(() => window.dataLayer) as the only assertion",
         "waitForTimeout(",
-        "toBeVisible"
+        "toBeVisible as the only tracking assertion"
       ],
       "tags": [
         "ga4",
@@ -104,7 +104,7 @@
       "anti_patterns": [
         "page.route to mock the dataLayer",
         "read GA4 network beacon instead of the dataLayer push",
-        "toBeVisible OR getByRole"
+        "asserting element visibility or role instead of the dataLayer payload"
       ],
       "tags": [
         "gtm",

@@ -182,7 +182,7 @@
         "WIREMOCK_URL OR DATABASE_URL",
         "docker compose down OR always()",
         "wait-timeout",
-        "onUnhandledRequest: error"
+        "onUnhandledRequest: \"error\" OR onUnhandledRequest: 'error'"
       ],
       "anti_patterns": [
         "no teardown on failure",

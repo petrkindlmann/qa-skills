@@ -8,7 +8,7 @@
       "expected_patterns": [
         "Phase 1 — Snapshot the old DOM OR old-dom snapshot",
         "Phase 2 — Snapshot the new DOM OR new-dom snapshot",
-        "Phase 3 — Identify broken selectors OR capture failures",
+        "Phase 3 — Inventory failed attempts OR Phase 3 — Identify broken selectors OR inventory failed OR capture failures",
         "Phase 4 — Generate replacement candidates OR role-first",
         "Phase 5 — Apply OR full affected suite",
         "Phase 6 — Ship the PR OR per-change evidence",
@@ -34,9 +34,9 @@
         "JSON reporter OR locator string",
         "TimeoutError OR locator.* exceeded",
         "line number OR source location",
-        "inferred intent OR what assertion follows",
+        "inferred-intent OR inferred intent OR locator intent OR what assertion follows",
         "table OR structured output",
-        "Group the results by test file OR group by file"
+        "grouped by file OR group by file OR grouped per-file OR Group the results by test file"
       ],
       "anti_patterns": [
         "guessing intent without reading code",

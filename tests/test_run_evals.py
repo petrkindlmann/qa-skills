@@ -137,6 +137,25 @@ class RepoFixture(unittest.TestCase):
         self.assertNotIn("Traceback", result.stderr)
 
 
+class WarningRegionTests(unittest.TestCase):
+    def test_cue_hidden_by_emphasis_still_marks_a_warning(self):
+        self.assertFalse(run_evals._recommends_antipattern(
+            "poll the api", "Do **not** expose the endpoint and do **not** poll the API.\n"))
+
+    def test_cue_on_the_next_line_of_the_same_sentence_counts(self):
+        text = ("Client-side fakes (`jest.useFakeTimers`, sinon, mocking `Date`) do\n"
+                "nothing to Stripe's billing engine.\n")
+        self.assertFalse(run_evals._recommends_antipattern("jest.useFakeTimers", text))
+
+    def test_cue_on_the_previous_line_of_the_same_sentence_counts(self):
+        text = "- Goal prompt is natural language (no `page.locator` /\n  `data-testid` in the goal).\n"
+        self.assertFalse(run_evals._recommends_antipattern("data-testid", text))
+
+    def test_plain_recommendation_is_still_detected(self):
+        self.assertTrue(run_evals._recommends_antipattern(
+            "jest.useFakeTimers", "Use jest.useFakeTimers to move the billing date.\nThen assert.\n"))
+
+
 class InputValidationTests(RepoFixture):
     def test_empty_suite_is_an_error(self):
         self.spec.unlink()
@@ -239,6 +258,27 @@ class ModelProcessTests(unittest.TestCase):
 
 
 class CLITests(RepoFixture):
+    def test_live_only_case_is_reported_but_not_scored_in_static_mode(self):
+        self.write_spec([case(), case(id="sample-002", static=False,
+                                      expected_patterns=["https://ci.example.com/run/4821"])])
+        output = self.repo / "result.json"
+        result = self.run_cli("--static", "--min-pass-rate", "100", "--json", str(output))
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        report = json.loads(output.read_text())[0]
+        self.assertEqual((report["passed"], report["failed"], report["live_only"]), (1, 0, 1))
+        self.assertEqual(report["checkable_cases"], 1)
+        self.assertIn("LIVE-ONLY", result.stdout)
+        env = self.fake_claude("print('Run https://ci.example.com/run/4821 is still under investigation; toHaveURL')")
+        result = self.run_cli("--live", "--json", str(output), env=env)
+        report = json.loads(output.read_text())[0]
+        live_case = next(c for c in report["cases"] if c["id"] == "sample-002")
+        self.assertEqual(live_case["status"], "pass", result.stdout + result.stderr)
+        self.assertEqual(report["live_only"], 0)
+
+    def test_static_field_must_be_boolean(self):
+        self.write_spec([case(static="no")])
+        self.assert_input_error(self.run_cli("--static"))
+
     def test_normal_static_run_records_scope(self):
         output = self.repo / "result.json"
         result = self.run_cli("--static", "--json", str(output))

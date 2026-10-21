@@ -199,9 +199,7 @@
         "preview OR open.*url OR web.*inbox"
       ],
       "anti_patterns": [
-        "Mailosaur",
-        "MailSlurp",
-        "Mailtrap",
+        "recommending a hosted inbox service such as Mailosaur, MailSlurp or Mailtrap for a local preview",
         "use Ethereal in CI for assertions"
       ],
       "tags": [

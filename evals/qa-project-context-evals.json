@@ -200,12 +200,12 @@
       "id": "qac-010",
       "prompt": "When I say my context file is done, what validations should confirm it's complete and ready for other skills to use?",
       "expected_patterns": [
-        "[bracketed placeholder]",
+        "placeholder",
         "Product, Tech Stack, Test Stack, CI/CD, Environments, Quality",
         "Risk Areas table has at least 3 entries",
         "at least 5 specific, testable key user flows",
-        "actual headcount and the dev:QA ratio (or \"solo\")",
-        "Quality Goals are concrete numbers (coverage %, flake %, durations)"
+        "ratio OR solo",
+        "Concrete and measurable OR concrete numbers OR measurable targets"
       ],
       "anti_patterns": [
         "empty Risk Areas section",

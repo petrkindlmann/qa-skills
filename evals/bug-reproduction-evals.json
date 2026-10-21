@@ -161,7 +161,7 @@
       ],
       "anti_patterns": [
         "write the test after the fix",
-        "skip.* OR test.skip OR it.skip the failing test",
+        "test.skip OR it.skip OR xit( OR skipping the failing test until the fix lands",
         "expect(true).toBe(true)",
         "mark it pending until the fix lands",
         "fix first then add a test",

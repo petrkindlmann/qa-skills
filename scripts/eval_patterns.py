@@ -126,6 +126,8 @@ def validate_case(case: object) -> None:
     for field in ("id", "prompt"):
         if not isinstance(case.get(field), str) or not case[field].strip():
             raise ValueError(f"case {case.get('id', '?')!r}: {field} must be a nonblank string")
+    if "static" in case and not isinstance(case["static"], bool):
+        raise ValueError(f"case {case['id']!r}: static must be true or false when present")
     for field in ("expected_patterns", "anti_patterns"):
         patterns = case.get(field)
         if not isinstance(patterns, list) or (field == "expected_patterns" and not patterns):

@@ -346,6 +346,8 @@ import { test, expect } from '@playwright/test';
 import { isStrictlyNecessary } from './helpers/cookies';
 import { installConsentObserver, readConsentTrace, assertDefaultConsent, assertConsentUpdate } from './helpers/consent';
 import { waitForConsentUpdate, waitForPrivacyPhase, deniedConsent, grantedConsent } from './helpers/consent';
+// deniedConsent and grantedConsent carry the four Consent Mode v2 signals:
+// ad_storage, analytics_storage, ad_user_data, ad_personalization.
 
 test.describe('Advanced gtag consent transitions', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
