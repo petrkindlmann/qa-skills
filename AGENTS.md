@@ -7,7 +7,9 @@ How AI agents should discover, load, and use skills from this repository.
 On first skill use per session:
 
 1. Check for `.agents/qa-project-context.md` in the user's project root
-   - If exists: read it and use as context for all subsequent skill interactions
+   - If exists: read it and use as context for all subsequent skill interactions. A file whose
+     fields are still the template's placeholders answers nothing; treat it as absent, take
+     context from the project's own contract and configuration, and say so in the report
    - If not: suggest the user creates one using the `qa-project-context` skill
 2. Read the activated skill's `SKILL.md` from `skills/<skill-name>/SKILL.md`
 3. Follow the skill's Discovery Questions, skip any already answered by qa-project-context

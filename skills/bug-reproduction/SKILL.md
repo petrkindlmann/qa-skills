@@ -49,7 +49,8 @@ and confirm the fix flips it green — and that reverting the fix turns it red a
 
 First, check `.agents/qa-project-context.md` in the project root — it carries the tech
 stack, test runner, known-flaky areas, and environment matrix. Pass over any question it
-already answers. If it is missing, suggest creating one with the `qa-project-context` skill.
+already answers. If it is missing, suggest creating one with the `qa-project-context` skill; an
+unfilled template answers nothing, so treat it as missing.
 
 - **What is the report, verbatim?** The thinner it is, the more you must extract before
   touching code — a one-line report sets the whole intake agenda (Step 1).
