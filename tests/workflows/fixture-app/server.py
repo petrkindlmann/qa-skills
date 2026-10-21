@@ -191,6 +191,12 @@ class Runtime:
                 raise HTTPProblem(503, "email_unavailable")
 
 
+class ShopServer(ThreadingHTTPServer):
+    # The default listen backlog of 5 makes macOS reset new connections when a test sends
+    # a burst of concurrent requests; the contract promises concurrent handling.
+    request_queue_size = 128
+
+
 def public_order(row):
     return {key: row[key] for key in ("id", "user_id", "currency", "amount", "status", "fulfillment_count")} | {
         "items": json.loads(row["items"])}
@@ -534,7 +540,7 @@ def main():
     if args.email_suffix and not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", args.email_suffix):
         parser.error("--email-suffix must contain 1–64 ASCII letters, digits, underscores or hyphens")
     runtime = Runtime(args)
-    server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
+    server = ShopServer(("127.0.0.1", args.port), Handler)
     server.daemon_threads = True
     server.app = runtime
     runtime.base_url = f"http://127.0.0.1:{server.server_port}"
