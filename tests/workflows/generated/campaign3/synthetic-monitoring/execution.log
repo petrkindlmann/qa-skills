@@ -1,0 +1,104 @@
+# Execution log: synthetic-monitoring probes against the Shop
+# Repo /Users/petr/projects/qa-skills, branch main, HEAD 736b88e, macOS (Darwin 27.0.0),
+# Node 26, Python 3.14.6, @playwright/test 1.62.1 (bundled Chromium), Mailpit v1.31.6
+# via tests/workflows/mailpit/mailpit_service.py. All commands run from the repo root.
+# Session local time 19:45–20:05 on 2026-10-21.
+
+## Reading (no execution)
+cat skills/synthetic-monitoring/SKILL.md
+cat skills/synthetic-monitoring/references/probe-implementations.md
+cat skills/synthetic-monitoring/references/platforms-and-ci.md
+cat tests/workflows/fixture-app-contract.md
+cat .agents/qa-project-context.md              # unfilled template, no project answers
+cat tests/workflows/support/fixtures.mjs tests/workflows/support/runtime.mjs tests/workflows/playwright.config.mjs
+sed -n 1,80p tests/workflows/mailpit/README.md; head -120 tests/workflows/mailpit/mailpit_helpers.cjs   # Mailpit API shape
+node -e "console.log(require('/Users/petr/projects/qa-skills/node_modules/@playwright/test/package.json').version)"
+  -> 1.62.1
+which mailpit -> not found (the wrapper installs its own pinned binary under /tmp/qa-mailpit-runtime)
+
+## Exploration 1: foreground Shop + Mailpit, health latency, page HTML, login, Mailpit API
+node <scratchpad>/explore.mjs
+  shop http://127.0.0.1:63821 mailpit http://127.0.0.1:63812 smtp 63813
+  users alice+bed84754...@example.test / bob+bed84754...@example.test
+  health 200 370.4ms {"status": "ok", "build": "shop-lab-v1"}  cache-control: no-store   (first call through a fresh Playwright request context)
+  health 200 36.5ms
+  health 200 7.9ms
+  home status 200  (labels: "Email", "Password", "Account email", "New password"; buttons: Sign in, Sign out, Place order, Refresh orders, Send reset link, Reset password)
+  login 200 {"user": {"id": "alice", ...}} shop_session=...; HttpOnly; SameSite=Lax; Path=/
+  orders before 200 {"orders": []}
+  mailpit info 200 {"Version":"v1.31.6",...}
+  mailpit messages 200 {"total":0,...}
+
+## Exploration 2: startup time, fetch vs Playwright latency, page script tail, catalog, reset email, Mailpit delete
+node <scratchpad>/explore2.mjs
+  shop startup ms 307
+  node fetch health 200 31.8ms / 5.6ms / 5.8ms
+  pw ctx (warmed on mailpit) health 4.3ms / 8.5ms / 1.6ms
+  (page script: products rendered as "<name> · EUR x.xx" with label "<name> quantity" and input #quantity-<sku>, TEA-50 defaults to 1;
+   notice "Order created: <id>. Amount: EUR 12.00"; list item "Order <id>" + "EUR 12.00 · Status: pending · Fulfillments: 0")
+  catalog 200 {"currency": "EUR", "products": [{"sku": "TEA-50", "name": "Mountain tea 50 g", "unit_amount": 1200}, {"sku": "CUP-01", "name": "Tea cup", "unit_amount": 1800}]}
+  reset request 202 {"message": "If this account exists, a reset email has been sent."} 31.5ms
+  email visible after ms 42.2  Subject "Reset your Shop password", To exactly the account, Tags [namespace]
+  TEXT: ... http://127.0.0.1:63892/reset-password?token=6tqRHLG7... ; HTML: <a href="http://127.0.0.1:63892/reset-password?token=...">Reset password</a>
+  state {"orders":[],"receipts":[],"reset_tokens":[{"user_id":"alice","expires":...,"consumed":null}],"sessions":{},"smtp_errors":0}
+  delete 200 ok ; after delete count 0
+
+## Authoring
+wrote probe-support.mjs, probes.mjs, health.probe.spec.mjs, storefront.probe.spec.mjs, sign-in.probe.spec.mjs,
+      order-journey.probe.spec.mjs, password-reset-email.probe.spec.mjs (all in this folder)
+wrote <scratchpad>/negative/broken-cases.spec.mjs (broken-case checks, kept outside the scheduled suite)
+
+## Healthy run 1
+QA_WORKFLOW_SUITE=/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/synthetic-monitoring \
+QA_WORKFLOW_OUTPUT=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-synthetic-monitoring \
+node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+  WORKFLOW RUN: 5 scheduled cases
+  WORKFLOW RESULT: passed; attempts=5; {"passed":5}
+  per probe (test duration incl. fixture startup | probe wall clock | measured timings | warnings):
+  health                 669ms  |   71ms | health samples 28/15/5 ms (fail > 500, warn > 250)        | none
+  storefront            1090ms  |  183ms | navigation 42 + catalogue-render 81 = 123 ms (fail > 3000, warn > 1000) | none
+  sign-in               1693ms  |  499ms | submit-to-signed-in 377 ms (fail > 5000, warn > 2000)       | none
+  order-journey         1902ms  | 1003ms | click-to-listed 135 ms (fail > 5000, warn > 2500); ledger order 826f359c... amount 1200 pending | none
+  password-reset-email  1029ms  |  230ms | request-to-delivered 141 ms (fail > 10000, warn > 2000); message 3HaJnTcG... deleted | none
+  (verbose.json copied to verbose-run1.json, test-results to run1-artifacts)
+
+## Healthy run 2 (same command)
+  WORKFLOW RUN: 5 scheduled cases
+  WORKFLOW RESULT: passed; attempts=5; {"passed":5}
+  EXIT 0
+  health                1706ms  |  222ms | samples 46/10/39 ms   | none
+  storefront            1246ms  |  338ms | 35 + 152 = 187 ms    | none
+  sign-in               1628ms  |  720ms | 578 ms               | none
+  order-journey         2886ms  | 1626ms | 367 ms               | none
+  password-reset-email  1634ms  |  344ms | 244 ms               | none
+
+## Broken-case run A (6 cases; each probe must reject on a known-bad condition)
+QA_WORKFLOW_SUITE=<scratchpad>/negative QA_WORKFLOW_OUTPUT=<scratchpad>/negative-output \
+node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+  WORKFLOW RUN: 6 scheduled cases ; WORKFLOW RESULT: passed; attempts=6; {"passed":6} ; EXIT 0
+  health probe fails when the Shop is down                                    passed  774ms
+  health probe fails on a wrong path (404)                                    passed  670ms
+  health probe fails when the latency budget is set below the observed latency passed 847ms
+  storefront probe fails when the page is not the storefront                  passed 4452ms
+  sign-in probe fails on a wrong password                                     passed 6424ms
+  password-reset probe fails when no email arrives (unknown account)          passed 10667ms
+
+## Broken-case run B (7 cases: run A plus the warning path)
+  same command
+  WORKFLOW RUN: 7 scheduled cases ; WORKFLOW RESULT: passed; attempts=7; {"passed":7} ; EXIT 0
+  ... six cases as above ...
+  health probe stays green but warns when latency crosses the warning line only passed 602ms
+  (asserts one `warning` annotation, mirrored in probe-result.json with status "passed")
+
+## Recipe evidence: getByLabel('Email') and /login on the live page
+node <scratchpad>/label-check.mjs
+  getByLabel('Email') count: 2
+  getByLabel('Email', {exact:true}) count: 1
+  recipe fill failed: locator.fill: Error: strict mode violation: getByLabel('Email') resolved to 2 elements:
+  GET /login status: 404
+
+## Scope check
+git status --porcelain | grep synthetic-monitoring   -> only files in this folder are new
+git diff --stat -- tests/workflows/support tests/workflows/playwright.config.mjs skills/synthetic-monitoring package.json package-lock.json -> empty
+Files outside this folder that changed during the session, not by this task (mtimes 19:56–19:59, 224 insertions):
+  docs/QA-RUNNER.md tests/qa/runtime.test.mjs tools/qa/README.md tools/qa/config.mjs tools/qa/discover.mjs tools/qa/report.mjs tools/qa/results.mjs tools/qa/run.mjs

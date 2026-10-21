@@ -57,9 +57,13 @@ const campaign3Cases = [
   { id: 'todo-duplicates', suite: 'campaign3/selector-drift-recovery', count: 9, env: { QA_TODO_FAULT: 'redesign-classes+delete-wrong-duplicate' }, title: 'duplicate titles remain independent' },
   { id: 'todo-filter', suite: 'campaign3/selector-drift-recovery', count: 9, env: { QA_TODO_FAULT: 'redesign-classes+filter-state-error' }, title: 'filters visibly select' },
   { id: 'todo-cancel', suite: 'campaign3/selector-drift-recovery', count: 9, env: { QA_TODO_FAULT: 'redesign-classes+escape-commits-edit' }, title: 'Escape preserves' },
+  { id: 'c3-synth-healthy', suite: 'campaign3/synthetic-monitoring', healthy: true, count: 5 },
+  { id: 'c3-synth-slow-health', suite: 'campaign3/synthetic-monitoring', count: 5, env: { QA_SHOP_FAULT: 'slow_health' }, title: 'GET /health answers ok' },
+  { id: 'c3-synth-reset-email', suite: 'campaign3/synthetic-monitoring', count: 5, env: { QA_SHOP_FAULT: 'reset_email_dropped' }, title: 'reset request delivers' },
 ];
 const oracleMatchers = {
   'c3-visual-style': 'toHaveScreenshot', 'c3-bugrepro-logout': 'toBe', 'c3-bugrepro-idempotency': 'toBe',
+  'c3-synth-slow-health': 'toBeLessThanOrEqual', 'c3-synth-reset-email': 'toBe',
   'shop-ownership': 'toBe', 'shop-pricing': 'toBe', 'shop-deduplication': 'toMatchObject',
   'shop-transaction': 'toHaveLength', 'shop-key-conflict': 'toBe', 'shop-reset-reuse': 'toBe',
   'todo-persistence': 'toHaveText', 'todo-duplicates': 'toHaveText', 'todo-filter': 'toHaveText',

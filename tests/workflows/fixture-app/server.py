@@ -174,6 +174,10 @@ class Runtime:
             f'<p>Reset your Shop password.</p><p><a href="{html.escape(link, quote=True)}">'
             'Reset password</a></p><p>This link expires in five minutes and can be used once.</p>',
             subtype="html")
+        if self.faults.has("reset_email_dropped"):
+            # Fixture fault: the message never reaches SMTP while the endpoint still answers 202.
+            print(json.dumps({"event": "reset_email_dropped"}), file=sys.stderr, flush=True)
+            return
         try:
             with smtplib.SMTP("127.0.0.1", self.smtp_port, timeout=5) as smtp:
                 smtp.send_message(message)

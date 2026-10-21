@@ -4,6 +4,13 @@ Runnable probe code for synthetic monitoring. The probe-design decision table, n
 
 ## Playwright login-flow probe
 
+The route, the label names and the signed-in signal below are placeholders for the
+application's own contract. Check each against the live page before trusting the probe:
+a shop may sign in on `/` with no `/login`, `getByLabel('Email')` also matches an
+"Account email" field (strict-mode violation; use `{ exact: true }`), and a single-page
+app keeps its URL after sign-in, so assert the signed-in state (a `Signed in as` text, a
+server-side `GET /api/me` with the new session) rather than a URL or a dashboard heading.
+
 ```typescript
 // probes/login-flow.ts
 import { test, expect } from '@playwright/test';
@@ -21,11 +28,12 @@ test.describe('Synthetic: Login Flow', () => {
     expect(loginResponse?.status()).toBeLessThan(400);
 
     // Step 2: Authenticate
-    await page.getByLabel('Email').fill(SYNTH_EMAIL);
-    await page.getByLabel('Password').fill(SYNTH_PASS);
+    await page.getByLabel('Email', { exact: true }).fill(SYNTH_EMAIL);   // exact: a second label may contain "Email"
+    await page.getByLabel('Password', { exact: true }).fill(SYNTH_PASS);
     await page.getByRole('button', { name: 'Sign in' }).click();
 
-    // Step 3: Verify dashboard loads with data
+    // Step 3: Verify the signed-in state the contract promises. Replace the URL check with a
+    // signed-in text or a session endpoint when the app does not navigate after sign-in.
     await expect(page).toHaveURL(/dashboard/, { timeout: 10_000 });
     await expect(page.getByRole('heading', { name: /dashboard/i })).toBeVisible();
   });
@@ -34,7 +42,7 @@ test.describe('Synthetic: Login Flow', () => {
 
 ## API health-check probe
 
-Validates database connection and cache connection without mutating data — the `/health` endpoint reports dependency status, and the probe asserts each is `connected`.
+Validates database connection and cache connection without mutating data — the `/health` endpoint reports dependency status, and the probe asserts each is `connected`. Assert the body the contract documents, no more and no less: a `{ status: "ok", build }` body has no dependency fields, and asserting the `build` value catches an unexpected release serving. Apps with cookie sessions have no bearer token; verify the session through the sign-in probe (`GET /api/me` after sign-in) and drop the bearer test. Budget the slowest of three sequential samples, never a single one: the first request through a fresh Playwright request context measured 370 ms in one lab where Node `fetch` took 32 ms, a harness artefact that would eat most of a 500 ms budget. When the application is started by a fixture, `test.describe.configure({ timeout })` also covers that startup; set `testInfo.setTimeout(wallClock + allowance)` as the backstop and assert the probe's own wall clock separately.
 
 ```typescript
 // probes/api-health.ts
@@ -66,18 +74,25 @@ test.describe('Synthetic: API Health', () => {
   });
 
   test('core endpoint responds within latency budget', async ({ request }) => {
-    const start = Date.now();
-    const response = await request.get(`${API_URL}/v1/items?limit=10`, {
-      headers: { Authorization: `Bearer ${API_KEY}` },
-    });
-    const duration = Date.now() - start;
-    expect(response.ok()).toBeTruthy();
-    expect(duration).toBeLessThan(2000); // 2 second latency budget
+    // Three sequential samples; the slowest must fit the budget. One cold sample measures
+    // the request context as much as the endpoint.
+    const samples: number[] = [];
+    for (let i = 0; i < 3; i++) {
+      const start = performance.now();
+      const response = await request.get(`${API_URL}/v1/items?limit=10`, {
+        headers: { Authorization: `Bearer ${API_KEY}` },
+      });
+      samples.push(performance.now() - start);
+      expect(response.ok()).toBeTruthy();
+    }
+    expect(Math.max(...samples)).toBeLessThan(2000); // 2 second latency budget
   });
 });
 ```
 
 ## Search probe (fill query, submit, assert on results + latency budget)
+
+An application without search gets the equivalent content probe instead: load the main page and assert the catalogue, prices or listing the contract promises, not only a 200.
 
 A search probe must type a query, submit it, and assert on returned results — not just status. Status-only search probes pass while search returns zero results.
 
@@ -111,7 +126,7 @@ test.describe('Synthetic: Search', () => {
 
 ## Environment-aware probe config
 
-Probes should adapt to the environment they run against without code changes — `getProbeConfig()` returns a different baseUrl, credentials per environment, and thresholds (staging thresholds are looser than production) keyed off `PROBE_ENVIRONMENT`.
+Probes should adapt to the environment they run against without code changes — `getProbeConfig()` returns a different baseUrl, credentials per environment, and thresholds (staging thresholds are looser than production) keyed off `PROBE_ENVIRONMENT`. It fits fixed staging and production hosts. When the target is per instance (a preview environment, a fixture-started server with namespaced accounts), the environment is a fixture or a runtime argument, and the probe body takes `baseURL` and the account explicitly so a scheduler, a spec file and a broken-case check can all drive the same code.
 
 ```typescript
 // probes/config.ts

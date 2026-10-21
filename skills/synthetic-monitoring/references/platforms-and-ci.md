@@ -4,6 +4,8 @@ Config for running synthetic probes on a schedule. The platform comparison table
 
 ## Custom implementation: Playwright + GitHub Actions
 
+Cost before copying: `*/5 * * * *` is 288 runs a day, and each run below does `npm ci` and a browser install, roughly 1.5 billed minutes, so about 430 minutes a day; GitHub's 3,000 free minutes are gone within a week. For a minute-level cadence use a self-hosted runner or a managed platform (Checkly, Grafana Synthetic Monitoring); on hosted runners cache dependencies and the browser, and lengthen the interval. State the runs and minutes per day whenever you add or change such a workflow.
+
 ```yaml
 # .github/workflows/synthetic-monitoring.yml
 name: Synthetic Monitoring

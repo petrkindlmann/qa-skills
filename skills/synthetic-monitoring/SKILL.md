@@ -107,6 +107,12 @@ Safe patterns:
   - Read-only operations: GET requests, page loads, searches
   - Sandbox transactions: payment in test mode, email to internal addresses
   - Create-then-delete: create a draft, verify, delete immediately
+  - Create-and-own: when the system creates but cannot delete (orders, tickets), a
+    dedicated account owns the records, nothing downstream is triggered (no payment
+    event, so nothing ships), every run writes a ledger of the ids it created, and a
+    purge the team signed off runs on a schedule. Say what accumulates: 144 pending
+    orders a day at a 10-minute cadence. Do not drop the journey probe because the
+    cleanup is manual; say so in the plan.
   - Synthetic flag: operations tagged as synthetic, excluded from processing
 
 Dangerous patterns (avoid):
@@ -126,7 +132,8 @@ Account requirements:
   - Excluded from RUM and SLO/error-budget pipelines (synthetic traffic is not real traffic)
   - Pre-populated with stable test data that probes can rely on
   - Credentials in a secrets manager (process.env), rotated quarterly
-  - Separate accounts per concurrent probe (avoid state conflicts)
+  - Separate accounts per concurrent probe (avoid state conflicts); with fewer accounts
+    than probes, share one between read-only probes and keep the writing probe alone
 ```
 
 ---
@@ -166,7 +173,7 @@ Alerting rules:
   - Any probe timeout: alert if 3 consecutive (service unresponsive)
 ```
 
-**Routing.** Critical failures on revenue paths (login, checkout, api-health) page on-call (PagerDuty + Slack incidents) with a short repeat interval; warnings on secondary probes go to a Slack monitoring channel; info-level events use a long repeat interval. The probe must tag each result with a `severity` and `probe` label for these routes to match — see the routing note in `references/platforms-and-ci.md` for the full `alerting-rules.yaml` and the tagging step.
+**Routing.** Critical failures on revenue paths (login, checkout, api-health) page on-call (PagerDuty + Slack incidents) with a short repeat interval; warnings on secondary probes go to a Slack monitoring channel; info-level events use a long repeat interval. The probe must tag each result with a `severity` and `probe` label for these routes to match — see the routing note in `references/platforms-and-ci.md` for the full `alerting-rules.yaml` and the tagging step. Severity comes from the consecutive-failure count, so the reporter derives it, not the probe. Before a reporter or alert manager exists, tag each result with `probe` and `alert-route` annotations, attach the probe's timings, and write the derivation rule into the monitoring plan so the first reporter implements it rather than inventing it.
 
 **Suppress synthetic alerts during planned maintenance.** A maintenance window should silence synthetic paging (the probes will fail by design) and exclude that window from error-budget math, or scheduled work burns budget and pages on-call for nothing.
 
@@ -315,7 +322,7 @@ An alert fires at 3 AM. On-call sees "Login probe failing" but has no idea what 
 
 Prove the monitoring works before trusting it — smallest check first.
 
-1. **Probes pass against staging.** Run `npx playwright test probes/ --reporter=list` against staging and confirm every probe passes within its declared timeout (no probe exceeds the 30s ceiling).
+1. **Probes pass against staging.** Run `npx playwright test probes/ --reporter=list` (or the project's own test command when it pins a config and reporters) against staging twice and confirm every probe passes within its declared timeout (no probe exceeds the 30s ceiling).
 2. **A failure actually pages.** Point one probe at a known-bad URL (a `503` or a wrong path), let it run the configured consecutive-failure count, and confirm the alert routes to on-call within the SLA detection time — and resolves when you revert.
 3. **Assertions are meaningful, not status-only.** Temporarily break the asserted content (rename the dashboard heading on staging) and confirm the probe fails. A probe that stays green here is asserting on the wrong thing.
 4. **Synthetic traffic is excluded.** Query the analytics/RUM/billing pipeline for `is_synthetic` traffic and confirm it is filtered out.
@@ -326,7 +333,7 @@ Prove the monitoring works before trusting it — smallest check first.
 
 - A probe exists for every critical user journey identified in discovery (not only homepage uptime or a single health endpoint), and each asserts on the goal, not just a 2xx.
 - Each probe's wall-clock budget is under 30s, with `retries: 0`.
-- Alerting config encodes a ≥2 consecutive-failure rule AND a multi-region confirmation rule, and probe results are tagged with `severity` + `probe` so routes match.
+- Alerting config encodes a ≥2 consecutive-failure rule AND a multi-region confirmation rule, and probe results are tagged with `severity` + `probe` so routes match. A single-region or loopback deployment records the region rule as not applicable, not as done.
 - The SLA dashboard shows current availability and error-budget consumption, and synthetic traffic is excluded from RUM, billing, and error-budget pipelines.
 - A test alert (probe pointed at a failing URL) reaches on-call within the SLA detection time — confirmed once, not assumed.
 - Every probe links a non-empty runbook with first checks, manual repro, and an escalation path.
