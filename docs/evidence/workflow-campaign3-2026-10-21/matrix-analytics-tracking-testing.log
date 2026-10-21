@@ -1,0 +1,8 @@
+campaign3 matrix (analytics-tracking-testing) started 2026-10-21T18:34:21.649Z node v26.0.0 playwright 1.62.1 method Fresh-agent acceptance assertions with explicit oracle wrappers; full suite per variant; retries disabled. Detection requires a designated matcher failure, a structured oracle record, and a matching per-run token. Broader causal interpretation still requires review.
+c3-analytics-healthy: healthy_pass; 8 tests; 0 failed; 10202ms; code 0
+c3-analytics-currency: assertion_detection_verified; 8 tests; 4 failed; 16669ms; code 1 oracle={"id":"c3-analytics-currency","matcher":"toEqual"} verified=true
+  failing: purchase carries the created order: transaction_id, major-unit value, currency and items match the API
+  failing: two orders push two purchase inputs, one per created order, with distinct transaction ids
+  failing: a double-click on Place order creates one order and pushes purchase once
+  failing: a rejected order pushes no purchase; the next accepted order pushes exactly one
+finished 2026-10-21T18:34:48.614Z

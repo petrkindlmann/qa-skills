@@ -39,7 +39,7 @@ Tracking that "looks fine" in GA4 DebugView still drops events silently after a 
 
 ## Discovery Questions
 
-First: check `.agents/qa-project-context.md` in the project root and skip anything it already answers (stack, tag manager, consent platform, target environments).
+First: check `.agents/qa-project-context.md` in the project root and skip anything it already answers (stack, tag manager, consent platform, target environments). An unfilled template answers nothing; treat it as absent and take the answers from the application's contract or configuration.
 
 - **Which tracking destinations are live?** GA4 (`/g/collect`), Meta Pixel (`facebook.com/tr`), TikTok (`analytics.tiktok.com`), LinkedIn (`px.ads.linkedin.com`), ad-tech tags — each has a different endpoint grammar, so the capture helper must know them all.
 - **GTM or hardcoded gtag?** GTM means the truth flows through `window.dataLayer.push` first, then GTM fires the beacon. You may assert at the push layer (input contract) AND the beacon (output contract); they are different tests.
@@ -164,6 +164,15 @@ corresponding command adapter rather than an object-event parser.
 The reference contains the observer and full example. Use both observed input and
 network output when the question concerns the whole tracking path, while recording
 what each observation establishes.
+
+**When the push is the only observable.** Some applications push to `dataLayer` and
+load no tag manager and no collect endpoint; the push is the whole tracking contract.
+Then the push tests are the gate, not a stopgap: keep the versioned plan, the schema
+validation, the count assertions and the scenario literals, and cross-check each
+purchase against the order the public API reports. In the report mark the beacon,
+deduplication, consent, pixel-fixture and news-media items of Done When as not
+applicable with the reason, rather than leaving them unmet; a reviewer must see that
+nothing left the browser because nothing was meant to.
 
 ---
 
@@ -327,7 +336,7 @@ GA4 DebugView, production-only monitoring, or warn-but-pass do not stop a regres
 Smallest check first — prove the suite actually catches a regression, don't just trust a green run:
 
 - **One event, one beacon:** `npx playwright test -g add_to_cart` passes, and its trace (`--trace on`) shows the captured `/g/collect` request with `en=add_to_cart`. A green test with no matching request in the trace means you asserted on the wrong thing.
-- **The gate can fail:** rename a required param in a branch (e.g. `value` → `amount` in the app) and re-run the CI project — the build must exit non-zero with a `missing`/violation message. If it still passes, the gate is theater.
+- **The gate can fail:** rename a required param in a branch (e.g. `value` → `amount` in the app) and re-run the CI project — the build must exit non-zero with a `missing`/violation message. If it still passes, the gate is theater. When the application cannot be edited (a black-box target, a frozen fixture), prove it from the test side instead: feed the validator one good payload and several broken ones (missing param, wrong type, minor units where major units are required) and drive a deliberately broken static page (a `data:` URL that pushes the wrong object) through the same observer and assertions. Both must fail, and the broken-page run belongs in the execution log.
 - **Consent gate detects the wrong app state:** the real default matches the selected
   policy; missing or granted defaults fail an all-denied-policy fixture. A new action
   requires a new update and planned event. Both healthy and deliberately broken basic
@@ -336,7 +345,7 @@ Smallest check first — prove the suite actually catches a regression, don't ju
 
 ## Done When
 
-- Each tracked event has a test that intercepts the real collect-endpoint beacon (`/g/collect`, `facebook.com/tr`, etc.) and parses `en=`/`ev=` plus params from `searchParams`/`postData` — no DOM-only or dataLayer-only assertions.
+- Each tracked event has a test that intercepts the real collect-endpoint beacon (`/g/collect`, `facebook.com/tr`, etc.) and parses `en=`/`ev=` plus params from `searchParams`/`postData` — no DOM-only or dataLayer-only assertions. Exception: an application whose contract is the push itself, with no tag manager or collect endpoint, is done when every planned push is asserted against the plan and the backing record (see "When the push is the only observable"), and the beacon items below are recorded as not applicable.
 - A versioned tracking plan file exists (JSON/YAML/TS) with required params and types; tests validate captured events against it and report `missing`/type violations, not just the event name.
 - Purchase (or any client+server event) has a deduplication assertion: client beacon `event_id` equals the server CAPI `event_id`.
 - Consent tests observe all four actual signals, require the configured events, and

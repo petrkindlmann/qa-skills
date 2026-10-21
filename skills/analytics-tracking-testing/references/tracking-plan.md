@@ -11,6 +11,11 @@ puts `currency` and `value` at event level and product details in `items[]`. For
 object pushes, these fields are normally inside `ecommerce`; for gtag event commands,
 they are in the event payload. The example below is an application contract requiring
 an ID, price and quantity per item, which is stricter than Google's minimum fields.
+Take the required fields from the application's own contract: an application whose
+items carry no price must not be made to fail a plan copied from this example. Keep
+the scenario literals (`currency: "EUR"`, `method: "password"`) versioned beside the
+schema in an `expected` block per event that the validator ignores and the tests read,
+so that a literal change is a plan change and not a hidden edit in one test.
 
 ```json
 {
@@ -99,6 +104,9 @@ export function validateEvent(plan: Plan, eventName: string, payload: unknown): 
 import { expect } from '@playwright/test';
 import plan from './tracking-plan.json';
 import { validateEvent } from './validate';
+// In an ESM .mjs suite a bare JSON import needs `with { type: 'json' }` under Node 22+;
+// if the test runner's loader is in doubt, read the file once in a small loader
+// (readFileSync + JSON.parse) and export the parsed plan instead.
 
 // viewItem is an observed GTM object event from the passive data-layer observer.
 expect(validateEvent(plan, 'add_to_cart', addToCart.ecommerce)).toEqual([]);

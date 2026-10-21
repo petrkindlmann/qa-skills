@@ -1,0 +1,49 @@
+# Execution log: analytics-tracking-testing (campaign 3)
+Repo: /Users/petr/projects/qa-skills, branch main, HEAD 7b85619 (working tree dirty in unrelated files). Node v26.0.0, @playwright/test 1.62.1, macOS 27.0.1.
+
+## 1. Exploration: boot a real Shop and dump the served page (foreground Node script in scratchpad)
+cmd: node /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/explore/dump-page.mjs
+out: BASE http://127.0.0.1:49744; page is a single inline script: window.dataLayer = window.dataLayer || []; track = e => window.dataLayer.push(e);
+     login handler: account(user); track({event:"login",method:"password"}); await refreshOrders(); say("Signed in.")
+     checkout handler: POST /api/orders -> track({event:"purchase", ecommerce:{transaction_id, value: amount/100, currency, items:[{item_id, quantity}]}}); await refreshOrders(); say("Order created: ID. Amount: EUR x.xx")
+     errors go to say(error.message) -> #notice[role=status]; html[data-ready=true] after start(). Catalog: TEA-50 1200, CUP-01 1800, EUR.
+
+## 2. Syntax check and validator self-check
+cmd: node --check <each .mjs>; node /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/analytics-tracking-testing/selfcheck-validator.mjs
+out: all files syntax ok; validator self-check: 2 good payloads pass; broken payloads produce the expected 3 + 3 + 1 + 1 violations
+
+## 3. Suite run 1 (first version of the suite, before the two raw-layer "never cleared" assertions were added)
+cmd: QA_WORKFLOW_SUITE=.../campaign3/analytics-tracking-testing QA_WORKFLOW_OUTPUT=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-analytics-tracking-testing node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+out: WORKFLOW RUN: 8 scheduled cases / WORKFLOW RESULT: passed; attempts=8; {"passed":8}
+     verbose.json stats: expected 8, unexpected 0, flaky 0, skipped 0, duration 6.3 s (per-test 0.7-1.3 s). Saved as run1-verbose.json in the output dir.
+
+## 4. Suite run 2 (same version)
+cmd: same
+out: 8 scheduled, {"passed":8}; stats expected 8, unexpected 0, flaky 0, duration 11.8 s. Saved as run2-verbose.json.
+
+## 5. Edit: added two raw-layer assertions (login-events.spec.mjs:73 after sign-out, purchase-events.spec.mjs:83 after two orders) for the contract clause "never cleared"; node --check both files: ok
+
+## 6. Suite run 3 (final version)
+cmd: same
+out: 8 scheduled, {"passed":8}; stats expected 8, unexpected 0, flaky 0, duration 11.6 s. Saved as run3-verbose.json.
+
+## 7. Suite run 4 (final version, second consecutive pass)
+cmd: same
+out: 8 scheduled, {"passed":8}; stats expected 8, unexpected 0, flaky 0, duration 9.2 s. Saved as run4-verbose.json.
+     Per test (run 3 / run 4, ms): L1 1524/1457, L2 1607/1387, L3 1470/1405, P1 1295/1357, P2 1750/1598, P3 1290/1394, P4 1991/1396, P5 1597/1252.
+
+## 8. Detector check against a deliberately broken page (scratch script, no Shop)
+cmd: node /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/explore/broken-page.mjs
+first attempt: page.setContent() -> "page.evaluate: Error: Install the dataLayer observer before navigation" (setContent is not a navigation, so addInitScript never ran; my mistake, and the recipe guard reported it accurately). Switched to page.goto("data:text/html,...").
+out:
+     observed events: ["purchase","purchase","login","login"] replacements: 1 errors: []
+     FAIL (expected) exactly one purchase -> expect(received).toHaveLength(expected)
+     schema check on a minor-unit value (expected to pass, the schema cannot see units): []
+     FAIL (expected) value in major units -> expect(received).toBe(expected) // Object.is equality
+     FAIL (expected) no layer replacement -> expect(received).toBe(expected) // Object.is equality
+     FAIL (expected) login method nonempty (validator) -> expect(received).toEqual(expected) // deep equality
+     FAIL (expected) login events exactly once -> expect(received).toHaveLength(expected)
+
+## 9. Scope check
+cmd: git status --porcelain --untracked-files=all | grep campaign3/analytics-tracking-testing
+out: 11 untracked files, all inside tests/workflows/generated/campaign3/analytics-tracking-testing/ (coverage.md, execution.log, final-response.md added after, helpers/{datalayer,plan,shop,validate}.mjs, login-events.spec.mjs, purchase-events.spec.mjs, selfcheck-validator.mjs, task-prompt.txt, tracking-plan.json). Other dirty paths in the tree (experiment/with-1/task-prompt.txt, campaign3/test-migration/) are not mine. No commits made.

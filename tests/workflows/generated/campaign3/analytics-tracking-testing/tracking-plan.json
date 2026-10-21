@@ -1,0 +1,16 @@
+{
+  "$comment": "Derived from tests/workflows/fixture-app-contract.md, section 'Service health and analytics events'. Items carry no price in this application; the skill's example plan requires one, this contract does not.",
+  "login": {
+    "required": { "method": "string" },
+    "expected": { "method": "password" }
+  },
+  "purchase": {
+    "required": {
+      "transaction_id": "string",
+      "currency": "string",
+      "value": "number",
+      "items": { "array": { "item_id": "string", "quantity": "number" } }
+    },
+    "expected": { "currency": "EUR" }
+  }
+}

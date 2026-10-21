@@ -1,0 +1,270 @@
+{
+  "startedAt": "2026-10-21T18:34:21.649Z",
+  "phase": "campaign3",
+  "node": "v26.0.0",
+  "artifactLayout": "Each run uses <case-id>/<run-id>; artifactDirectory is relative to the matrix output root.",
+  "playwright": "1.62.1",
+  "browserExecutable": "Playwright-installed Chromium",
+  "method": "Fresh-agent acceptance assertions with explicit oracle wrappers; full suite per variant; retries disabled. Detection requires a designated matcher failure, a structured oracle record, and a matching per-run token. Broader causal interpretation still requires review.",
+  "sourceHashes": {
+    "tests/workflows/generated/baseline-shop/final-response.md": "16d07616c3644fd6245c9aa2416a88148fa2c2413c54304feff8266529cb0984",
+    "tests/workflows/generated/baseline-shop/helpers.mjs": "80964eab222c8777a92b703faa8715cf2fffe8f6e634994594459e6ce6cf477a",
+    "tests/workflows/generated/baseline-shop/probe.mjs": "1b15812046ca4debc16231201d89cd4117e42f8d6c7784a0bbb9937375f6bd0c",
+    "tests/workflows/generated/baseline-shop/shop.spec.mjs": "36bca2fa255500003c3cc4fa4e80ef6cc2ad16b13597f29bd783ae9c9dce578e",
+    "tests/workflows/generated/baseline-todo/design.md": "7e5fb62ccaec5f1ef372140184fc0f66088112c37defdf67b95795750a2e6f0e",
+    "tests/workflows/generated/baseline-todo/execution-summary.json": "d8c61e56a9108313f3912279e36d4409dc30b9ef4d0bd327a98cfe37920fd166",
+    "tests/workflows/generated/baseline-todo/final-response.md": "bbdf100d8a2dafcd821cd7d6dc150563304797c2913503bc0b294607a426145f",
+    "tests/workflows/generated/baseline-todo/initial-failure-evidence/error-context.md": "a7cfd96e0e9b74bf152e151ac39c5b8b4eda6984fc85db7de949314becd566d7",
+    "tests/workflows/generated/baseline-todo/review.md": "7b16997ab8bb66b0fa6f0ee7cf9a4690c72f5106811b863c8bad7d4ed4e83eb9",
+    "tests/workflows/generated/baseline-todo/todo-ui.mjs": "bfcd542ab26419f6eb064e95f7934d4b5a67e163346596825e98cf7b6b547d6c",
+    "tests/workflows/generated/baseline-todo/todomvc.spec.mjs": "075cebb0719c7cc24d74b6d7a03572f6e36706573313b0f0f57ec29866b59f95",
+    "tests/workflows/fixture-app/faults.py": "ee48688d4ffbba79c718e5df2404da8e565bafa5525156f1c00ac0eebe0113ef",
+    "tests/workflows/fixture-app/index.html": "53d9691494eeb750e92f4bf38469d30e2174c47340ddf8bec5e79c634af640a4",
+    "tests/workflows/fixture-app/server.py": "d71cf8ce863d2c75b05b66f3b72e1339f6c6c1d1716e5664f4302465629cb4ae",
+    "tests/workflows/support/fixtures.mjs": "a07e6cfb9908ac0b35a060f88464f55062c37d86a4d93d7e7661d945a79fe489",
+    "tests/workflows/support/matrix-lock.mjs": "3b0f2482e6d30aefdab5ede9002a62e50aa3fa71c31ad56b6852282921e1bb56",
+    "tests/workflows/support/oracle.mjs": "d9f3e6f6bee36023c4bfc9be24119b64a692356716a0e434ec4f6d4b780371c1",
+    "tests/workflows/support/outcome.mjs": "30fd478c812b3709dde1c733c2f3d8edfcbba38bf662d25fe5ab6146989dfbd2",
+    "tests/workflows/support/process.mjs": "0c34b2b6b3fe053fbb345936c05cf84cdbdd50c468768b589c5fed33a980202c",
+    "tests/workflows/support/runtime.mjs": "30deab42ac0a9e2d319e2fddf4267e6048b1b8c077308d8ce5bfcf532b45f0af",
+    "tests/workflows/upstream-todomvc/README.md": "8c9765c9928f243978ce28e0c8523645565b20a777dca173590dd67b330e6d99",
+    "tests/workflows/upstream-todomvc/faults/delete-persistence-lost.mjs": "ba59d1a4180f7dcd5bf6288b6db030c1275f8e95de9279515caab952eb11838e",
+    "tests/workflows/upstream-todomvc/faults/mutations.mjs": "58280e82ebd21d6e08fa5b80cfd237cbffec945b8e720ab06101f66b297ef31b",
+    "tests/workflows/upstream-todomvc/faults/probe-delete-persistence.mjs": "a9e7a85b39de44621b68b86b9062d99770106515fc4b5575bf46000d9da19847",
+    "tests/workflows/upstream-todomvc/faults/probe.mjs": "c56486e6a2271f31b3fbe4dfce94e89e54636bbec6804e0f75f07b600c2bc739",
+    "tests/workflows/upstream-todomvc/observations/current-es5/examples/javascript-es5/dist/index.html": "fa135782c7bd9bca4eac3a665759c0698d3829b2f97b99fdc26761ee7084ecd5",
+    "tests/workflows/upstream-todomvc/observations/current-es5/license.md": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d",
+    "tests/workflows/upstream-todomvc/observations/current-es5-provenance.json": "0cefa7eaf4964d98fb833f47f7737d500aeb7f6fb8df3d61f782baa69a1ab923",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-preservation.json": "c8a066965ac5dadfe23b797587bdb4fd442596a625b84987158dec754453455a",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-results.json": "a08b63be16a231ee3b06719bf3bff97725d1847e317283792c74a04aa7491ce8",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-summary.md": "12b49af28de21c8f58396fb7c5159711c8cb27e70b1eecc77aaf1076e72dc154",
+    "tests/workflows/upstream-todomvc/observations/probe-results.json": "c232f16bbe22f06e5ad07d5193373e0ade085d6bbe73b11bdc4c0b9069c937e0",
+    "tests/workflows/upstream-todomvc/provenance.json": "3f8b0c9ee6462f43967f4563b989bb9bc689302b26496ffcdfda1777dd1a9d20",
+    "tests/workflows/upstream-todomvc/server.mjs": "bd47d4c6d7946e60d6eab066f56b69bbf683fff3f312cf4198dbe13f55f99b88",
+    "tests/workflows/upstream-todomvc/upstream/examples/vanillajs/index.html": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e",
+    "tests/workflows/upstream-todomvc/upstream/examples/vanillajs/package.json": "861dd4872b19132c99161161ff032f3e52368dfec39ad18680ce4c620543efdd",
+    "tests/workflows/upstream-todomvc/upstream/license.md": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-app-css/2.4.1/package.json": "95b2dc61769730bf06ad0d0abc1a611ab417b13c14ee979920b1d5c61f491a0f",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-app-css/2.4.1/readme.md": "bcfd25e122c41039722b4e4bdf4b122ae240ad2f95bd1823d5358bdee316cbe0",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-common/1.0.5/package.json": "b58875806d8f06f234edf0b5d1bff8b20a4e8e84582d19057a62320267073e93",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-common/1.0.5/readme.md": "5dafddbb1d858af4a2528d7c620d5b7848e9987623012757c3d022e9802796bc",
+    "tests/workflows/generated/campaign3/analytics-tracking-testing/coverage.md": "f6f079a0a3b2e64786b01a8c79add6a6afe4bd5f270b3cbf41f23fac1d482cda",
+    "tests/workflows/generated/campaign3/analytics-tracking-testing/final-response.md": "d27456518938b8378446f581202aa269a78156a8567c5c9ec2ee0eb1a7c1f566",
+    "tests/workflows/generated/campaign3/analytics-tracking-testing/helpers/datalayer.mjs": "ad4729837c3b104920016168b7cefc5cba59e9900eb0b9aea4eb44baaa56d9e1",
+    "tests/workflows/generated/campaign3/analytics-tracking-testing/helpers/plan.mjs": "99e621e15f3cd6df863ad634e85ba3e02a33820ef71e4c79978aaccfc8095764",
+    "tests/workflows/generated/campaign3/analytics-tracking-testing/helpers/shop.mjs": "316987ccb0a491d4b3fe0710fb3c6ed2b07b5d8d853fac04ac1ca788722d9f16",
+    "tests/workflows/generated/campaign3/analytics-tracking-testing/helpers/validate.mjs": "a313c7ea999a108456899015439866b8f2b9380a1fc4b2e474f36dc6f60488b5",
+    "tests/workflows/generated/campaign3/analytics-tracking-testing/login-events.spec.mjs": "574af965a0e49f117541e0e267c8859c11c059a24a2d0527fa7a509eda479990",
+    "tests/workflows/generated/campaign3/analytics-tracking-testing/purchase-events.spec.mjs": "e92108e56acaf31c469d47070631bbaf60b014bd159a688fc14adb30fe61ad08",
+    "tests/workflows/generated/campaign3/analytics-tracking-testing/selfcheck-validator.mjs": "7c4333d2baf12f34cb4dd215e257ca15e9bb601a471f1a72cea21494c298f864",
+    "tests/workflows/generated/campaign3/analytics-tracking-testing/tracking-plan.json": "946132a1eac72c9234d3a4ddc00146e7af552feea330eddaa2bd2d272f23beab",
+    "tests/workflows/generated/campaign3/bug-reproduction/final-response.md": "b96789934d989ac90007b94c5340ea7364ba3053b6717bee9a7787dc82f00804",
+    "tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs": "c8b75fd911492fad7eb81bd38f1179ce69bc9c5e63c64cec0dfa82fe1a4166c3",
+    "tests/workflows/generated/campaign3/bug-reproduction/oracle-sensitivity.mjs": "68d3ba513eff48cdddbc52c681312ff78cf25b7ed6af012ccd2329e48a9cc388",
+    "tests/workflows/generated/campaign3/bug-reproduction/report-1-session-revocation.spec.mjs": "0308f068cbb40a200481728c19f931f53fb5177cc557789eda55d8646cc5f08b",
+    "tests/workflows/generated/campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs": "656467efd91abfbbb30f7627abfeb151fcbc4f48f3f74c947b77cedc0e3d47f6",
+    "tests/workflows/generated/campaign3/bug-reproduction/reproduction-notes.md": "4a6101e4bae72395f60038aa9a23532e1d44caabefd74afe6a43966e382ddecd",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/candidates.json": "c40ab1469b946a897848338be609b7152691e1b15a65e43ecd3ddceb5e458ef7",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/failure-inventory.json": "d0b7a32f064cd68495fc1afd1017a81efb891d811029d5789a637939f50c5b27",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/editing.html": "2b77c2780cbe9acc88151eded595dd4770315a17fb01f5b82191e700beff56ae",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/empty.html": "2da73dcab33811aeffbae574a31c97809e72aeda87293db6124305ab452fed48",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/filter-active.html": "f0536fe3f8b6d9560ebe3f1d567968d5a8187afd2ba4e999ea55d4f78d3c62ab",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/filter-completed.html": "1a06d1e8146109c4b19ad4d5f72bb811306f7e45133de53503c77b70d9ea9c61",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/hover.html": "0a1774877d87009de95519fc489df2b3b59fd896a7e892367c524c4bf15f81e7",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/items.html": "8d9c259ff2f3c7ff71eb02a21219fb15ec4a8f1ddbb7268704026cc95c823302",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/editing.html": "9cdc914c8b39e4b1b6ec0a7162627f4424cf1fe2a5609970d64f52a918e4d09c",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/empty.html": "d56081f77da5f14a7029bb6cd32eba562e17a6a500328853ebae01bbab3f152d",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/filter-active.html": "24c5ebfcd3a319da7c14d63748f82fa6e7728befd2dd0e9dce7617b8862a5aa8",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/filter-completed.html": "9af1d1f895a7e1fe23e36cbf94f76d0b92d023855566950ea2261a07476c3fce",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/hover.html": "d3abd100eecea09ff2792181bec7d17f8e649aead67d69f2f0672bebf834f343",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/items.html": "edbdee4120436bf87ac02bb8019b33709517c23ec73560141b21e227152417b4",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/post-recovery-new-run1.json": "e9ae07d2c16833e9a6ed327cc3faed425c30ef81920e1b48bf77243fb4c47c29",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/post-recovery-new-run2.json": "210f9376b6d66a27f7245b17dee290056da66310daff15918bea1440cdbfac02",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/post-recovery-old-build.json": "f199ec6105812639f43bdda2be56ea9da73c449c4c3251efe601de863180935b",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/pr-body.md": "ea09bcc93fdd866e8313a2c423d866399216e651a4e3a0c445467b8fa0f7a8b6",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/results.json": "d2a46175487d4351217a4811adbd57bf0a51c7665a8d833a8b5efe5877144b2d",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/reviewed-targets.json": "2f4e2180553e2f0e836bbc3c304b99691f15c84f15b541a066baaa3141c73ac1",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/apply-candidates.mjs": "61aabdf3d5452798f1ecaaa421abb90388c994e49707617af4663e3913945e46",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/build-pr-body.mjs": "9581d431f0283fac33e112e40888e3464923d862bed42434d66eda69528019b5",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/failure-inventory.mjs": "94913fd4648065050052809f33e679b8b724c15ca3edef33a0ee17cc203b3699",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/generate-candidates.mjs": "4d5b19c2f5d5f2ab597928b2de690a68a69923a9e03e020977e548ef60db3107",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/identify-drift.mjs": "caf8b1fee1d2eba4e466ee9ee64b3a37970ad171b4b2c2a7ac1e6e65f7d237a4",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/recovery-candidates.mjs": "d5878d6095b5fabb0e3cc6312a5fcd53f13208c8f9f324ad770c5efc2d2cce97",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/recovery-summary.mjs": "1892c6f35107029d80eb876b232cb22b8db350c6a9db825ebb535a5143291296",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/snapshot-dom.mjs": "22a3948c47e6645fb8825a05054b537579331feb034b6f62e69d42d743c9f971",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/triage.mjs": "9b15ec051c60e131729330725e1c79122e23bd2337461596e113324dedc64ac9",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/verify-locators.mjs": "ba72a9f5c04251efaaddce212b6d7955c7d3e7fcfb30b4e8405d148a10959761",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/drift-report.md": "884a5be640a147f99e78d7593b6a5ef3242e5589eb8b7770812b114bba3da625",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/final-response.md": "75b4b927f88cbbb0e1cb675c464cef3f58fe7bbcb308b773bef2c5660b0f5e64",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs": "c9972a52e778189dfda2bb717909a4252123be586a97c7aa672481263b94ce60",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs": "0f03f09dc4b41e5197a8047a62a7381922a5236d91eb5c1b7b7ed991d16f2d66",
+    "tests/workflows/generated/campaign3/synthetic-monitoring/final-response.md": "dacfbd7e7bcadccb47c6044768872f3ac1bba5bd0a7ea945975a6ddcbfc2fe9c",
+    "tests/workflows/generated/campaign3/synthetic-monitoring/health.probe.spec.mjs": "1a8aab6d28b6e4ba30153eba01121340f00828dde03fb04451407f8296ed5b2b",
+    "tests/workflows/generated/campaign3/synthetic-monitoring/monitoring-plan.md": "834a84605091d05e555b42dd2e8dd43ca44e2d271cd4761bc22a2df57daf37a1",
+    "tests/workflows/generated/campaign3/synthetic-monitoring/order-journey.probe.spec.mjs": "9c1b2f849da73ea33c2b1cafcb8a5c148fddc3c3c28f4bf41350332a9f0d91ff",
+    "tests/workflows/generated/campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs": "a811e29bb77b03b2d77993416f2f13130632d7dbc37833554ead555bf257e4ff",
+    "tests/workflows/generated/campaign3/synthetic-monitoring/probe-support.mjs": "434124314396114189e51252d63fd73850a5d89addfc91a502c7e9175c7c54cb",
+    "tests/workflows/generated/campaign3/synthetic-monitoring/probes.mjs": "dc3d6535fdfabbed2a1d725e18ac7febbbe1135cdf814083b4f2c93ee9f980b9",
+    "tests/workflows/generated/campaign3/synthetic-monitoring/runbooks.md": "99667c9376e3f39ec36c41e100704c0805e95e4776f65447de0f1e40099eeed7",
+    "tests/workflows/generated/campaign3/synthetic-monitoring/sign-in.probe.spec.mjs": "3326c50cef56a52a8c9c799d165410827db645231714f4421060a6f791cd3f98",
+    "tests/workflows/generated/campaign3/synthetic-monitoring/storefront.probe.spec.mjs": "a5289639d3c69c381165cc6e2221dd10162f21782ee434a361432f8d8759e9ba",
+    "tests/workflows/generated/campaign3/visual-testing/final-response.md": "c74ca8b1e1cd75ca26ffa798f258ea12f58f22a899f9fdae4fbb4eb8fbe24a9b",
+    "tests/workflows/generated/campaign3/visual-testing/todomvc-visual.spec.mjs": "5ccc7fc8227bab7eee4bb9441b90ca72c31b886311fa7f62593d2338ef6d8e77",
+    "tests/workflows/generated/campaign3/visual-testing/visual-helpers.mjs": "de947be2916deeb03f6266792fedec3d4e9fda2c463352fc9953f74bc8243bac"
+  },
+  "runs": [
+    {
+      "id": "c3-analytics-healthy",
+      "suite": "campaign3/analytics-tracking-testing",
+      "healthy": true,
+      "count": 8,
+      "runId": "34535d80-fd5a-4696-90c1-2ebd9ebd1be0",
+      "artifactDirectory": "c3-analytics-healthy/34535d80-fd5a-4696-90c1-2ebd9ebd1be0",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 0,
+      "signal": null,
+      "wallMs": 10202,
+      "stats": {
+        "startTime": "2026-10-21T18:34:22.789Z",
+        "duration": 9097.432,
+        "expected": 8,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "executed": 8,
+      "failed": [],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "healthy_pass",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": false
+    },
+    {
+      "id": "c3-analytics-currency",
+      "suite": "campaign3/analytics-tracking-testing",
+      "count": 8,
+      "env": {
+        "QA_SHOP_FAULT": "wrong_currency_event"
+      },
+      "title": "purchase carries the created order",
+      "runId": "288d75c6-6321-4120-82b8-737f52d34e48",
+      "oracle": {
+        "id": "c3-analytics-currency",
+        "matcher": "toEqual"
+      },
+      "artifactDirectory": "c3-analytics-currency/288d75c6-6321-4120-82b8-737f52d34e48",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 16669,
+      "stats": {
+        "startTime": "2026-10-21T18:34:32.820Z",
+        "duration": 15568.456,
+        "expected": 4,
+        "skipped": 0,
+        "unexpected": 4,
+        "flaky": 0
+      },
+      "executed": 8,
+      "failed": [
+        {
+          "title": "purchase carries the created order: transaction_id, major-unit value, currency and items match the API",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"c3-analytics-currency\",\"matcher\":\"toEqual\",\"token\":\"88e3a73b-218b-4853-bdab-8b8b28eafa0e\",\"runId\":\"288d75c6-6321-4120-82b8-737f52d34e48\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1078,
+              "errors": [
+                "Error: QA_ORACLE:c3-analytics-currency:88e3a73b-218b-4853-bdab-8b8b28eafa0e\npush equals the order the API created\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -1,8 +1,8 @@\u001b[39m\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"ecommerce\": Object {\u001b[22m\n\u001b[32m-     \"currency\": \"EUR\",\u001b[39m\n\u001b[31m+     \"currency\": \"USD\",\u001b[39m\n\u001b[2m      \"items\": Array [\u001b[22m\n\u001b[2m        Object {\u001b[22m\n\u001b[2m          \"item_id\": \"CUP-01\",\u001b[22m\n\u001b[2m          \"quantity\": 1,\u001b[22m\n\u001b[2m        },\u001b[22m\n\n  40 |   expect(apiOrder).toMatchObject({ id: order.id, amount: 4200, currency: 'EUR', status: 'pending' });\n  41 |   await oracle('c3-analytics-currency', 'toEqual', () =>\n> 42 |     expect(pushed, 'push equals the order the API created').toEqual(expectedPurchase(apiOrder)));\n     |                                                             ^\n  43 |\n  44 |   // Scenario values, stated from the contract rather than derived from the API.\n  45 |   expect(pushed.ecommerce.transaction_id).toBe(order.id);\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/analytics-tracking-testing/purchase-events.spec.mjs:42:61)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/analytics-tracking-testing/purchase-events.spec.mjs:41:9"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "two orders push two purchase inputs, one per created order, with distinct transaction ids",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1133,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 2\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[33m@@ -1,9 +1,9 @@\u001b[39m\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Object {\u001b[22m\n\u001b[2m      \"ecommerce\": Object {\u001b[22m\n\u001b[32m-       \"currency\": \"EUR\",\u001b[39m\n\u001b[31m+       \"currency\": \"USD\",\u001b[39m\n\u001b[2m        \"items\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"item_id\": \"TEA-50\",\u001b[22m\n\u001b[2m            \"quantity\": 1,\u001b[22m\n\u001b[2m          },\u001b[22m\n\u001b[33m@@ -13,11 +13,11 @@\u001b[39m\n\u001b[2m      },\u001b[22m\n\u001b[2m      \"event\": \"purchase\",\u001b[22m\n\u001b[2m    },\u001b[22m\n\u001b[2m    Object {\u001b[22m\n\u001b[2m      \"ecommerce\": Object {\u001b[22m\n\u001b[32m-       \"currency\": \"EUR\",\u001b[39m\n\u001b[31m+       \"currency\": \"USD\",\u001b[39m\n\u001b[2m        \"items\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"item_id\": \"CUP-01\",\u001b[22m\n\u001b[2m            \"quantity\": 3,\u001b[22m\n\u001b[2m          },\u001b[22m\n\n  82 |   const purchases = trace.entries.slice(checkpoint);\n  83 |   expect(purchases.map(entry => entry.event)).toEqual(['purchase', 'purchase']);\n> 84 |   expect(purchases).toEqual(created.map(expectedPurchase));\n     |                     ^\n  85 |   expect(await page.evaluate(() => window.dataLayer.map(entry => entry.event)), 'raw layer: login then both purchases, nothing cleared').toEqual(['login', 'purchase', 'purchase']);\n  86 |\n  87 |   const apiOrders = await ordersFromApi(page, app);\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/analytics-tracking-testing/purchase-events.spec.mjs:84:21"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "a double-click on Place order creates one order and pushes purchase once",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1643,
+              "errors": [
+                "Error: one purchase for one order\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -1,9 +1,9 @@\u001b[39m\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Object {\u001b[22m\n\u001b[2m      \"ecommerce\": Object {\u001b[22m\n\u001b[32m-       \"currency\": \"EUR\",\u001b[39m\n\u001b[31m+       \"currency\": \"USD\",\u001b[39m\n\u001b[2m        \"items\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"item_id\": \"TEA-50\",\u001b[22m\n\u001b[2m            \"quantity\": 1,\u001b[22m\n\u001b[2m          },\u001b[22m\n\n  114 |   expect(trace.errors).toEqual([]);\n  115 |   const purchases = trace.entries.slice(checkpoint);\n> 116 |   expect(purchases, 'one purchase for one order').toEqual([expectedPurchase(apiOrders[0])]);\n      |                                                   ^\n  117 |   expect(await page.evaluate(() => window.dataLayer.filter(entry => entry.event === 'purchase').length)).toBe(1);\n  118 | });\n  119 |\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/analytics-tracking-testing/purchase-events.spec.mjs:116:51"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "a rejected order pushes no purchase; the next accepted order pushes exactly one",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1699,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -1,9 +1,9 @@\u001b[39m\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    Object {\u001b[22m\n\u001b[2m      \"ecommerce\": Object {\u001b[22m\n\u001b[32m-       \"currency\": \"EUR\",\u001b[39m\n\u001b[31m+       \"currency\": \"USD\",\u001b[39m\n\u001b[2m        \"items\": Array [\u001b[22m\n\u001b[2m          Object {\u001b[22m\n\u001b[2m            \"item_id\": \"TEA-50\",\u001b[22m\n\u001b[2m            \"quantity\": 1,\u001b[22m\n\u001b[2m          },\u001b[22m\n\n  145 |   const trace = await readDataLayerTrace(page);\n  146 |   const purchases = trace.entries.slice(checkpoint);\n> 147 |   expect(purchases).toEqual([expectedPurchase(order)]);\n      |                     ^\n  148 |   expect(purchases[0].ecommerce.value).toBe(12);\n  149 |   expect(await ordersFromApi(page, app)).toHaveLength(1);\n  150 | });\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/analytics-tracking-testing/purchase-events.spec.mjs:147:21"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_verified",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": true,
+      "review": "designated assertion verified"
+    }
+  ],
+  "finishedAt": "2026-10-21T18:34:48.614Z"
+}

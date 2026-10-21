@@ -10,6 +10,10 @@ initialization pass. GA4 request emission is a separate contract; use
 
 Copy this block into `helpers/datalayer.ts`. It follows the assignment/push observer
 pattern in [`consent-mode.md`](consent-mode.md), scoped to serializable object events.
+For a plain-JavaScript suite (`.mjs`, `.js`) save it as `helpers/datalayer.mjs` and drop
+the type annotations: the `Page` import, the `DataLayerTrace` type and the parameter and
+return types. The body passed to `addInitScript` is serialized as source, so it must be
+plain JavaScript in either case; keep `const trace = ...` there without an annotation.
 It records initial queue entries and later push inputs, preserves array identity,
 the push receiver and arguments, the delegated return value or exception, and
 repeated inputs. Rewrapping `push` around its previous implementation does not count
@@ -40,6 +44,11 @@ export async function installDataLayerObserver(page: Page, layerName = 'dataLaye
       if (Object.prototype.toString.call(item) !== '[object Object]') return;
       try { trace.entries.push(structuredClone(item)); }
       catch { trace.errors.push('Could not snapshot a dataLayer object'); }
+      // An ordering clause ("after the order response, before the list refreshes") needs
+      // the page state at the instant of the push, which the object alone does not carry.
+      // Add a parallel trace.context[] here: a timestamp plus serializable probes of the
+      // UI (text of a status element, a disabled flag, a row count) passed in through the
+      // init script's argument. Keep trace.entries unchanged so the assertions below hold.
     }
     function tap(layer) {
       if (layer === undefined) return;
@@ -121,8 +130,12 @@ export async function readDataLayerTrace(page: Page): Promise<DataLayerTrace> {
 
 `analytics-state` below is a documented application milestone meaning initial
 product tracking work is complete. Replace that selector and phase with the real
-signal; do not set it from the test. With no completion signal, define a bounded
-observation window and report its duration. A first-event wait alone cannot exclude
+signal; do not set it from the test. Many applications document no tracking milestone
+at all; then use the last state the handler reaches that the contract does document
+(a status message such as "Order created", a `data-ready` attribute after load, the
+order row appearing) and say in the notes that it is a handler-end signal, not a
+tracking milestone. With no such signal either, define a bounded observation window
+and report its duration. A first-event wait alone cannot exclude
 a later duplicate. After actions, checkpoint `trace.entries.length` and assert only
 new entries, so a page-load event cannot satisfy a click that emits nothing.
 
