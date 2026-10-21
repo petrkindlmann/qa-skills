@@ -71,8 +71,8 @@ Example config:
 | Setting | Meaning |
 |---|---|
 | `version` | Required literal `1`. |
-| `checks[].reporter` | `tap`, `playwright-json`, `junit-xml`, or `exit-code`. |
-| `checks[].resultFile` | Optional, `junit-xml` only: the relative path the command writes its JUnit XML to (pytest `--junitxml`, jest-junit, gotestsum `--junitfile`). The file counts only when this command produced or rewrote it. |
+| `checks[].reporter` | `tap`, `playwright-json`, `junit-xml`, `ctrf-json`, or `exit-code`. |
+| `checks[].resultFile` | The relative path the command writes its report to. Optional for `junit-xml` (pytest `--junitxml`, jest-junit, gotestsum `--junitfile`), required for `ctrf-json`. The file counts only when this command produced or rewrote it. |
 | `checks[].timeoutMs` | 100 to 900000 ms; default 90000. |
 | `budgetMs` | Total execution budget, 100 to 3600000 ms; default 180000. |
 | `browser.timeoutMs` | 100 to 90000 ms; default 15000, with bounded worker setup/cleanup allowance. |
@@ -83,7 +83,7 @@ Example config:
 
 ## Results that do not hide missing work
 
-The Node TAP adapter requires a header, root plan, observed test records, and reconciling counters from one run. The Playwright adapter reads an entire fresh JSON report from the running process's output. No earlier report file is reused. It requires actual result attempts with typed retry and error records. The JUnit XML adapter accepts the shape pytest, Vitest, jest-junit, mocha-junit-reporter, gotestsum and Surefire write: one root, one `<testcase>` per test, and suite counters that must reconcile with the recorded cases. It reads the command output, or the declared `resultFile` when the command produced or rewrote it during the run; a stale, missing, symlinked or oversized file is reported as incomplete, and Surefire's flaky and rerun records count as retries. No adapter treats skips, cancellation, TODO tests, retries, expected failures, or an empty suite as a clean run.
+The Node TAP adapter requires a header, root plan, observed test records, and reconciling counters from one run. The Playwright adapter reads an entire fresh JSON report from the running process's output. No earlier report file is reused. It requires actual result attempts with typed retry and error records. The JUnit XML adapter accepts the shape pytest, Vitest, jest-junit, mocha-junit-reporter, gotestsum and Surefire write: one root, one `<testcase>` per test, and suite counters that must reconcile with the recorded cases. It reads the command output, or the declared `resultFile` when the command produced or rewrote it during the run; a stale, missing, symlinked or oversized file is reported as incomplete, and Surefire's flaky and rerun records count as retries. The CTRF adapter reads a `reportFormat: "CTRF"` document from `resultFile` (jest-ctrf-json-reporter, cypress-ctrf-json-reporter, vitest-ctrf-json-reporter, pytest-json-ctrf); its summary must reconcile with the test list, `pending` counts as skipped, and `other`, flaky or retried tests stay incomplete. No adapter treats skips, cancellation, TODO tests, retries, expected failures, or an empty suite as a clean run.
 
 | Outcome | Meaning | CLI exit |
 |---|---|---:|

@@ -316,7 +316,7 @@ A clean first run that writes `*-snapshots/*.png` files, plus a second run that 
 
 ## Reference Files (in `references/`)
 
-- **recipes.md** — frozen-data capture (clock + route + font-abort), `stylePath` masking, component-state screenshots, the responsive-viewport loop, Chromatic/Percy/Argos snippets, Storybook-without-Chromatic, and the Docker CI job.
+- **recipes.md** — frozen-data capture (clock + route + font-abort), `stylePath` masking, component-state screenshots, the responsive-viewport loop, Chromatic/Percy/Argos snippets, an odiff local-diff script for renders outside `toHaveScreenshot`, Storybook-without-Chromatic, and the Docker CI job.
 
 ## Related Skills
 

@@ -180,6 +180,38 @@ test('pricing page visual', async ({ page }) => {
 });
 ```
 
+### odiff (local pixel diff, no service)
+
+[odiff](https://github.com/dmtrKovalenko/odiff) (MIT, `npm i -D odiff-bin`) is a native
+comparator with anti-aliasing detection and ignore regions, for teams that keep baselines
+in the repository and want a diff tool outside Playwright's `toHaveScreenshot` (a Storybook
+export, a PDF render, a screenshot taken by another tool). Treat a size mismatch and a
+missing file as failures, not as "nothing to compare".
+
+```typescript
+// scripts/visual-diff.ts
+import { compare } from 'odiff-bin';
+import fs from 'node:fs';
+
+export async function diffAgainstBaseline(name: string, actual: string, threshold = 0.005) {
+  const base = `visual/baselines/${name}.png`;
+  const diff = `visual/diffs/${name}.png`;
+  if (!fs.existsSync(base)) throw new Error(`No baseline for ${name}; add ${base} from a reviewed render`);
+  fs.mkdirSync('visual/diffs', { recursive: true });
+  const result = await compare(base, actual, diff, { antialiasing: true, threshold: 0.1, ignoreRegions: [] });
+  if (result.match) return;
+  // layout-diff: the images differ in size; file-not-exists: an input is missing.
+  if (result.reason !== 'pixel-diff') throw new Error(`${name}: ${result.reason}`);
+  if (result.diffPercentage > threshold * 100) {
+    throw new Error(`${name}: ${result.diffCount} pixels (${result.diffPercentage.toFixed(3)}%) differ; see ${diff}`);
+  }
+}
+```
+
+Baselines stay platform-tagged the same way as Playwright's (`name-linux.png`), and the
+diff image is the review artifact to attach. The `--server` stdio mode of the CLI can drive
+many comparisons from one process when the suite grows.
+
 ## Platform-specific baselines in CI
 
 Playwright renders differently per OS, so baselines are tagged `*-chromium-linux.png` etc.

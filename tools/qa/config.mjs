@@ -3,7 +3,7 @@ import path from 'node:path';
 
 export const defaultBudgetMs = 180_000;
 const idPattern = /^[a-z][a-z0-9-]{0,63}$/;
-const reporters = new Set(['tap', 'playwright-json', 'junit-xml', 'exit-code']);
+const reporters = new Set(['tap', 'playwright-json', 'junit-xml', 'ctrf-json', 'exit-code']);
 
 function assert(condition, message) { if (!condition) throw new Error(message); }
 function object(value) { return value !== null && typeof value === 'object' && !Array.isArray(value); }
@@ -41,13 +41,14 @@ export function validateConfig(input) {
       assert(Array.isArray(check.command) && check.command.length > 0 && check.command.length <= 100 &&
         check.command.every(arg => typeof arg === 'string' && arg.length > 0 && arg.length <= 32_768 && !arg.includes('\0')),
       `checks[${i}].command must be a nonempty argv array`);
-      assert(reporters.has(check.reporter), `checks[${i}].reporter must be tap, playwright-json, junit-xml, or exit-code`);
+      assert(reporters.has(check.reporter), `checks[${i}].reporter must be tap, playwright-json, junit-xml, ctrf-json, or exit-code`);
       if (check.resultFile !== undefined) {
-        assert(check.reporter === 'junit-xml', `checks[${i}].resultFile is read only by the junit-xml reporter`);
+        assert(['junit-xml', 'ctrf-json'].includes(check.reporter), `checks[${i}].resultFile is read only by the junit-xml and ctrf-json reporters`);
         assert(typeof check.resultFile === 'string' && check.resultFile.length > 0 && check.resultFile.length <= 1024 && !check.resultFile.includes('\0') &&
           !path.isAbsolute(check.resultFile) && !/^[A-Za-z]:/.test(check.resultFile) && !check.resultFile.split(/[\\/]/).includes('..'),
         `checks[${i}].resultFile must be a relative path inside the project`);
       }
+      if (check.reporter === 'ctrf-json') assert(check.resultFile !== undefined, `checks[${i}].resultFile is required for ctrf-json; CTRF reporters write a file`);
       if (check.timeoutMs !== undefined) duration(check.timeoutMs, `checks[${i}].timeoutMs`);
       return { ...check, timeoutMs: check.timeoutMs ?? 90_000 };
     });

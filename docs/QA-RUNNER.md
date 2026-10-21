@@ -128,7 +128,8 @@ Check IDs `browser` and `browser-*` are reserved for the native browser phase.
 ```
 
 Supported evidence formats are Node TAP, Playwright JSON and JUnit XML as pytest, Vitest,
-jest-junit, Mocha, gotestsum and Surefire write it. A `junit-xml` check reads the command
+jest-junit, Mocha, gotestsum and Surefire write it, and CTRF JSON from the ctrf-io reporters
+(`reporter: "ctrf-json"`, always with a `resultFile`). A `junit-xml` check reads the command
 output, or the file named by `resultFile` when the command produced or rewrote it during
 this run; a report left by an earlier run is reported as incomplete, never reused. Other
 declared test commands can execute with `reporter: "exit-code"`; an uninterpreted

@@ -29,6 +29,9 @@ Central registry of QA tools referenced across qaskills. Each skill declares whi
 | Percy | Visual | No | visual-testing |
 | BrowserStack | Cross-browser, Mobile | No | cross-browser-testing, mobile-testing |
 | axe-core | Accessibility | No | accessibility-testing |
+| odiff | Visual (local pixel diff) | No | visual-testing |
+| CTRF reporters (jest, cypress, vitest, pytest) | Reporting (one JSON schema for test results) | No | QA runner `ctrf-json` adapter (`tools/qa`) |
+| JUnit XML (pytest `--junitxml`, Vitest/jest-junit, gotestsum, Surefire) | Reporting | No | QA runner `junit-xml` adapter (`tools/qa`) |
 
 ## CI/CD
 

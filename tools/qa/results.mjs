@@ -191,13 +191,50 @@ export function parseJunit(text) {
   return { status: 'passed', reason: 'Every recorded test case passed with no skips or reruns.', counts };
 }
 
+// CTRF (Common Test Report Format) 0.2.x as the ctrf-io Jest, Cypress, Vitest and
+// pytest reporters write it: one document with results.summary and results.tests.
+// The status set is closed; "other", a flaky or retried test and a summary that
+// does not reconcile with the test list stay incomplete.
+const ctrfStatuses = ['passed', 'failed', 'skipped', 'pending', 'other'];
+export function parseCtrf(text) {
+  let report;
+  try { report = JSON.parse(text); } catch { return incomplete('The CTRF result file is not valid JSON.'); }
+  if (!report || typeof report !== 'object' || report.reportFormat !== 'CTRF' || typeof report.specVersion !== 'string') return incomplete('The result file is not a CTRF report.');
+  const results = report.results;
+  if (!results || typeof results !== 'object' || !results.summary || typeof results.summary !== 'object' || !Array.isArray(results.tests)) return incomplete('The CTRF report has no summary or test list.');
+  const summary = {};
+  for (const field of ['tests', ...ctrfStatuses]) {
+    summary[field] = results.summary[field];
+    if (!Number.isSafeInteger(summary[field]) || summary[field] < 0) return incomplete(`CTRF summary.${field} is not a count.`);
+  }
+  if (!results.tests.length) return incomplete('The CTRF report records no tests.');
+  const counts = { total: results.tests.length, passed: 0, failed: 0, skipped: 0, cancelled: 0, todo: 0, retried: 0, observed: 0 };
+  const seen = { passed: 0, failed: 0, skipped: 0, pending: 0, other: 0 };
+  let unsupported = 0;
+  for (const test of results.tests) {
+    if (!test || typeof test !== 'object' || !ctrfStatuses.includes(test.status)) { unsupported++; continue; }
+    seen[test.status]++;
+    if (test.flaky === true || (Number.isInteger(test.retries) && test.retries > 0) || (Array.isArray(test.retryAttempts) && test.retryAttempts.length)) counts.retried++;
+    if (test.status === 'passed') counts.passed++;
+    else if (test.status === 'failed') counts.failed++;
+    else if (test.status === 'other') unsupported++;
+    else counts.skipped++;
+  }
+  counts.observed = counts.passed + counts.failed;
+  const reconciled = summary.tests === results.tests.length && ctrfStatuses.every(field => summary[field] === seen[field]);
+  if (counts.failed) return { status: 'failed', reason: `${counts.failed} test${counts.failed === 1 ? '' : 's'} failed.`, counts };
+  if (!reconciled) return { status: 'incomplete', reason: 'CTRF summary counts do not reconcile with the test list.', counts };
+  if (unsupported || counts.skipped || counts.retried || !counts.observed) return { status: 'incomplete', reason: 'The report contains skipped, pending, retried, "other", or malformed results.', counts };
+  return { status: 'passed', reason: 'Every recorded test passed on its first attempt.', counts };
+}
+
 // A check that names a resultFile is judged by that file, never by its output,
 // so a report written by an earlier run cannot stand in for this one.
-function assessJunit(check, processResult) {
-  if (!check.resultFile) return parseJunit(processResult.log);
+function assessResultFile(check, processResult, parse) {
+  if (!check.resultFile) return parse(processResult.log);
   if (!processResult.resultFile) return incomplete('The declared result file was not read after the command.');
   if (processResult.resultFile.error) return incomplete(processResult.resultFile.error);
-  return parseJunit(processResult.resultFile.text);
+  return parse(processResult.resultFile.text);
 }
 
 export function assessCommand(check, processResult) {
@@ -207,7 +244,8 @@ export function assessCommand(check, processResult) {
   if (processResult.outputTruncated) return { status: 'incomplete', reason: 'Command output exceeded the evidence size limit. Narrow the check or use a smaller reporter.', counts: null };
   const assessment = check.reporter === 'tap' ? parseTap(processResult.log) :
     check.reporter === 'playwright-json' ? parsePlaywright(processResult.log) :
-    check.reporter === 'junit-xml' ? assessJunit(check, processResult) :
+    check.reporter === 'junit-xml' ? assessResultFile(check, processResult, parseJunit) :
+    check.reporter === 'ctrf-json' ? assessResultFile(check, processResult, parseCtrf) :
       { status: 'unverified', reason: 'The command completed, but exit status alone does not establish a test result. Configure a supported reporter.', counts: null };
   if (processResult.code !== 0 && assessment.status !== 'blocked') {
     return { ...assessment, status: 'failed', reason: `${assessment.counts?.failed ? assessment.reason : 'The declared command failed without a complete test verdict.'} Exit code ${processResult.code}.` };

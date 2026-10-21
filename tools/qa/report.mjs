@@ -3,7 +3,7 @@ import { escapeHtml as e } from './privacy.mjs';
 const labels = { passed: 'Passed', failed: 'Failed', blocked: 'Blocked', incomplete: 'Incomplete', unverified: 'Unverified' };
 function duration(ms) { return `${(ms / 1000).toFixed(1)}s`; }
 function details(value) { return `<pre>${e(JSON.stringify(value, null, 2))}</pre>`; }
-function artifactLink(value) { return typeof value === 'string' && /^evidence\/[a-z][a-z0-9-]{0,63}\.(?:log|result\.xml)$/.test(value) ? value : null; }
+function artifactLink(value) { return typeof value === 'string' && /^evidence\/[a-z][a-z0-9-]{0,63}\.(?:log|result\.(?:xml|json))$/.test(value) ? value : null; }
 
 export function renderReport(result) {
   const { summary, plan } = result;

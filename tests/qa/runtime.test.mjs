@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { runBounded } from '../../tests/workflows/support/process.mjs';
 import { routeSkills } from '../../tools/qa/route.mjs';
 import { validateConfig } from '../../tools/qa/config.mjs';
-import { parseTap, parsePlaywright, parseJunit, assessCommand } from '../../tools/qa/results.mjs';
+import { parseTap, parsePlaywright, parseJunit, parseCtrf, assessCommand } from '../../tools/qa/results.mjs';
 import { initialize, makePlan, runPlan } from '../../tools/qa/run.mjs';
 import { redactText, secretValues } from '../../tools/qa/privacy.mjs';
 import { discoverChecks } from '../../tools/qa/discover.mjs';
@@ -89,7 +89,9 @@ test('config rejects shell strings, duplicate ids, unknown fields, credentials a
     { version: 1, checks: [{ id: 'py', command: ['pytest'], reporter: 'junit-xml', resultFile: '../junit.xml' }] },
     { version: 1, checks: [{ id: 'py', command: ['pytest'], reporter: 'junit-xml', resultFile: '' }] },
     { version: 1, checks: [{ id: 'py', command: ['pytest'], reporter: 'tap', resultFile: 'junit.xml' }] },
+    { version: 1, checks: [{ id: 'js', command: ['jest'], reporter: 'ctrf-json' }] },
   ]) assert.throws(() => validateConfig(config));
+  assert.doesNotThrow(() => validateConfig({ version: 1, checks: [{ id: 'js', command: ['jest'], reporter: 'ctrf-json', resultFile: 'ctrf/ctrf-report.json' }] }));
   assert.doesNotThrow(() => validateConfig({ version: 1, checks: [{ id: 'py', command: ['pytest'], reporter: 'junit-xml', resultFile: 'reports/junit.xml' }] }));
   assert.doesNotThrow(() => validateConfig({ version: 1, checks: [], browser: { readySelector: '[data-ready="true"]' }, budgetMs: 5000 }));
 });
@@ -176,6 +178,36 @@ test('JUnit gate reads pytest and Vitest shapes and rejects skips, reruns, stale
   assert.equal(assessCommand({ reporter: 'junit-xml', resultFile: 'junit.xml' }, { code: 0, log: junit([junitPassed]) }).status, 'incomplete');
 });
 
+// A minimal CTRF 0.2 document with the fields the ctrf-io reporters always write.
+const ctrf = (tests, overrides = {}) => {
+  const seen = { passed: 0, failed: 0, skipped: 0, pending: 0, other: 0 };
+  for (const test of tests) if (test.status in seen) seen[test.status]++;
+  return JSON.stringify({ reportFormat: 'CTRF', specVersion: '0.2.0', results: {
+    tool: { name: 'vitest' }, summary: { tests: tests.length, ...seen, start: 1761040000000, stop: 1761040001200, ...overrides },
+    tests: tests.map((test, i) => ({ name: `case ${i + 1}`, duration: 3, ...test })) } });
+};
+
+test('CTRF gate reads the ctrf-io shape and rejects other statuses, retries and stale summaries', () => {
+  assert.equal(parseCtrf(ctrf([{ status: 'passed' }, { status: 'passed' }])).status, 'passed');
+  const red = parseCtrf(ctrf([{ status: 'passed' }, { status: 'failed', message: 'expected 9 to be 10' }]));
+  assert.equal(red.status, 'failed');
+  assert.deepEqual([red.counts.total, red.counts.failed, red.counts.observed], [2, 1, 2]);
+  assert.equal(parseCtrf(ctrf([{ status: 'passed' }, { status: 'skipped' }])).status, 'incomplete');
+  assert.equal(parseCtrf(ctrf([{ status: 'passed' }, { status: 'pending' }])).status, 'incomplete');
+  assert.equal(parseCtrf(ctrf([{ status: 'passed' }, { status: 'other' }])).status, 'incomplete');
+  assert.equal(parseCtrf(ctrf([{ status: 'passed', flaky: true }])).status, 'incomplete');
+  assert.equal(parseCtrf(ctrf([{ status: 'passed', retries: 1 }])).status, 'incomplete');
+  assert.equal(parseCtrf(ctrf([{ status: 'passed' }], { passed: 2, tests: 2 })).status, 'incomplete');
+  assert.equal(parseCtrf(ctrf([{ status: 'passed' }], { passed: 'all' })).status, 'incomplete');
+  assert.equal(parseCtrf(ctrf([{ status: 'unknown' }])).status, 'incomplete');
+  assert.equal(parseCtrf(ctrf([])).status, 'incomplete');
+  assert.equal(parseCtrf(ctrf([{ status: 'passed' }]).replace('"CTRF"', '"JUnit"')).status, 'incomplete');
+  assert.equal(parseCtrf('{"results":').status, 'incomplete');
+  assert.equal(assessCommand({ reporter: 'ctrf-json', resultFile: 'ctrf/ctrf-report.json' }, { code: 0, log: '', resultFile: { text: ctrf([{ status: 'passed' }]) } }).status, 'passed');
+  assert.equal(assessCommand({ reporter: 'ctrf-json', resultFile: 'ctrf/ctrf-report.json' }, { code: 0, log: '', resultFile: { error: 'The declared result file was not produced by the command.' } }).status, 'incomplete');
+  assert.equal(assessCommand({ reporter: 'ctrf-json', resultFile: 'ctrf/ctrf-report.json' }, { code: 1, log: '', resultFile: { text: ctrf([{ status: 'failed' }]) } }).status, 'failed');
+});
+
 async function fixture(t, files = {}) {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), 'qa-runtime-'));
   t.after(() => fs.rm(directory, { recursive: true, force: true }));
@@ -250,6 +282,19 @@ test('real CLI reads a JUnit result file only when the command produced or rewro
       assert.match(await fs.readFile(path.join(directory, 'report.html'), 'utf8'), /evidence\/py\.result\.xml/);
     } else assert.match(result.checks[0].reason, /not (?:rewritten|produced)/);
   }
+});
+
+test('real CLI reads a CTRF result file the command wrote and links it as evidence', async t => {
+  const write = "const fs=require('fs');fs.mkdirSync('ctrf',{recursive:true});fs.copyFileSync('expected.json','ctrf/ctrf-report.json')";
+  const project = await fixture(t, { 'expected.json': ctrf([{ status: 'passed' }, { status: 'passed' }]),
+    'qa.config.json': JSON.stringify({ version: 1, checks: [{ id: 'js', command: [process.execPath, '-e', write], reporter: 'ctrf-json', resultFile: 'ctrf/ctrf-report.json' }] }) });
+  const execution = await execute(project);
+  assert.equal(execution.code, 0, execution.log);
+  const { result, directory } = await resultOf(project);
+  assert.equal(result.summary.status, 'passed');
+  assert.equal(result.summary.tests.observed, 2);
+  assert.equal(result.checks[0].resultEvidence, 'evidence/js.result.json');
+  assert.match(await fs.readFile(path.join(directory, 'report.html'), 'utf8'), /evidence\/js\.result\.json/);
 });
 
 test('an explicit npm reporter argument remains singular', async t => {

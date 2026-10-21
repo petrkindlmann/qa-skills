@@ -92,7 +92,7 @@ export async function runPlan(plan, options = {}) {
       if (resultFile) execution.resultFile = await readResultFile(resultFile, resultBefore);
       const evidence = `evidence/${check.id}.log`;
       await fs.writeFile(path.join(directory, evidence), redactText(execution.log, secrets));
-      const resultEvidence = execution.resultFile?.text !== undefined ? `evidence/${check.id}.result.xml` : null;
+      const resultEvidence = execution.resultFile?.text !== undefined ? `evidence/${check.id}.result.${check.reporter === 'ctrf-json' ? 'json' : 'xml'}` : null;
       if (resultEvidence) await fs.writeFile(path.join(directory, resultEvidence), redactText(execution.resultFile.text, secrets));
       verbose.push(`\nCHECK ${check.id}\nARGV ${JSON.stringify(check.command)}\n${execution.log}${resultEvidence ? `\nRESULT FILE ${check.resultFile}\n${execution.resultFile.text}` : ''}`);
       const outcome = assessCommand(check, execution);
