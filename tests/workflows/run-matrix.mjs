@@ -3,7 +3,7 @@ import { createHash, randomUUID } from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runBounded } from './support/process.mjs';
-import { prepareRunDirectory, assessRun, unrunAfterFailedHealthy } from './support/outcome.mjs';
+import { prepareRunDirectory, assessRun, unrun, unrunAfterFailedHealthy } from './support/outcome.mjs';
 import { acquireMatrixLock } from './support/matrix-lock.mjs';
 
 const root = fileURLToPath(new URL('../../', import.meta.url));
@@ -130,12 +130,11 @@ for (const scenario of cases) {
   await writeFile(path.join(output, 'matrix.json'), JSON.stringify(manifest, null, 2) + '\n');
   console.log(`${scenario.id}: ${run.outcome}; ${tests.length} tests; ${failed.length} failed; ${run.wallMs}ms`);
   const remaining = cases.slice(cases.indexOf(scenario) + 1);
-  const unrun = cancellation.signal.aborted ? remaining.map(next => ({ ...next, expectedCount: next.count, executed: 0,
-    failed: [], outcome: 'not_run', code: null, reason: 'Matrix interrupted; remaining variants were not run', oracleVerified: false }))
+  const skipped = cancellation.signal.aborted ? unrun(remaining, 'Matrix interrupted; remaining variants were not run')
     : unrunAfterFailedHealthy(scenario, outcome, remaining);
-  if (unrun.length) {
-    manifest.runs.push(...unrun);
-    console.log(`Stopped after ${cancellation.signal.aborted ? 'interruption' : 'failed healthy control'}; ${unrun.length} requested variants not run`);
+  if (skipped.length) {
+    manifest.runs.push(...skipped);
+    console.log(`Stopped after ${cancellation.signal.aborted ? 'interruption' : 'failed healthy control'}; ${skipped.length} requested variants not run`);
     break;
   }
 }

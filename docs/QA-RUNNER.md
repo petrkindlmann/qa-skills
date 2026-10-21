@@ -126,6 +126,14 @@ Use a structured adapter before promoting another runner's exit code to a test v
 An explicit empty `checks` array is useful for a browser-only run, and does not silently
 add an unrelated package test command.
 
+Declared commands run with `CI=1`, `FORCE_COLOR=0` and, when a URL is configured,
+`BASE_URL`. Project configuration keyed on `process.env.CI` (retries, workers, reporters)
+applies, and a test that passed only on a retry is reported as incomplete. A discovered
+`node --test` script gets the TAP reporter injected only when it declares none; a script
+that declares another reporter is recorded by exit code until the check sets `reporter`
+and the command explicitly. Discovery inserts `--` before extra arguments for npm only:
+pnpm forwards that token to the script, and test runners then read it as end-of-options.
+
 Optional browser configuration:
 
 ```json

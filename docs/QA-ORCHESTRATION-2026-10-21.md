@@ -201,6 +201,54 @@ The graphic illustrates the controlled campaign at the reviewed base commit. It 
 not live footage of an agent making a source repair. The shipping example supplies
 separate evidence for an actual host-agent repair.
 
+## Review pass before landing
+
+An independent code review of the implementation commit on 21 October 2026 reported
+fifteen findings. These were repaired before the change reached `main`:
+
+- `parsePlaywright` parsed from the first `{` to the end of the log, so pnpm's trailing
+  `ELIFECYCLE` line or bun's "script exited" line after a failing report made the whole
+  report unreadable and dropped the per-test counts. The adapter now extracts complete
+  top-level JSON objects and still rejects a log that contains two reports.
+- Discovery inserted `--` before extra arguments for every package manager. npm and bun
+  strip it; pnpm forwards it, and Playwright then treats `--reporter=json` as a test
+  filter. The separator is now npm-only (checked with npm 11, pnpm 10.22, bun 1.3.14).
+- The routing rule for `report` matched the README's own example goal and routed it to
+  `qa-dashboard` alone. A reporting skill no longer displaces the executing skill, and
+  the bare word `regression` no longer selects `bug-reproduction`.
+- A discovered `node --test` script that declares a non-TAP reporter was given the TAP
+  adapter it could never satisfy; it is now recorded by exit code, and the node-test
+  detection lives in one helper instead of three copies.
+- A `results: [null]` entry threw inside the check loop and the run ended without
+  `result.json`. The entry is now unsupported, and an unexpected throw records a blocked
+  `runner-error` check while the evidence already observed is still written.
+- Any environment value under a name containing `token`, `key`, `password`, `secret` or
+  `credential` was redacted everywhere, so `TOKENIZERS_PARALLELISM=false` blanked every
+  `false` in the evidence. Values shorter than eight characters, booleans and plain
+  numbers are no longer treated as secrets.
+- Lockfiles over 10 MB made `plan`, `run` and `init` fail; they are now hashed by stream.
+- The browser worker wrote its observations only at the end, so an axe scan that overran
+  the budget lost the HTTP and readiness results. It now publishes after each phase and
+  races the scan against the remaining budget; the parent keeps partial observations and
+  adds one blocked record. The `browser-browser-launch` double prefix and the shared
+  cumulative duration are gone.
+- The repository's own `qa.config.json` budget (180 s) was smaller than the sum of its
+  per-check deadlines (210 s); it is now 240 s.
+- The matrix lock's `child()` wrote its record in place and `release()` could throw from
+  the matrix's `finally` block; the record is now replaced atomically and release failures
+  are logged. A PID reused after a crash still reads as live; the message names the
+  fresh-output remedy. The two `not_run` record shapes share one helper.
+- `oracle()` called `test.info()` unconditionally and duplicated multi-line Playwright
+  messages in the rebuilt stack; it now annotates only inside a running test.
+
+Left as designed and documented in the runner guide: `CI=1` is set for declared commands,
+so configuration keyed on it applies and a pass on retry stays incomplete.
+
+After these repairs the complete verification ran on macOS arm64 (Node 26, Python 3.14),
+which the implementation commit had not exercised: 133 Python tests, 116 helper, 92
+browser-recipe and 37 runner tests, the healthy workflow control 36/36, the Mailpit
+verification, and the 23-variant matrix with 22 verified detections.
+
 ## Remaining boundaries
 
 - A host must interpret the selected skills and execute domain-specific work. No

@@ -10,7 +10,7 @@ From this repository:
 node scripts/qa.mjs run --project /path/to/app --goal 'Check the account changes'
 ```
 
-With no config, the runner discovers `package.json`'s `test` script and invokes the project's package manager. It recognizes npm, pnpm, Yarn, and Bun from the declared package manager or lockfile. It does not install missing dependencies, start servers, run builds, or deploy. A declared test script remains executable project code, including any package-manager lifecycle scripts it invokes. Use a project you are authorized to test.
+With no config, the runner discovers `package.json`'s `test` script and invokes the project's package manager. It recognizes npm, pnpm, Yarn, and Bun from the declared package manager or lockfile. Extra arguments such as `--reporter=json` are separated with `--` for npm only; pnpm forwards that token to the script. It does not install missing dependencies, start servers, run builds, or deploy. A declared test script remains executable project code, including any package-manager lifecycle scripts it invokes. Use a project you are authorized to test.
 
 For Node's test runner, discovery requests TAP through `NODE_OPTIONS` when no reporter is already declared in the script, argv, or existing options. For a Playwright test script, discovery appends `--reporter=json`. A script with multiple test processes must be split into separate configured checks. A custom reporter, shell chain, or other framework can require an explicit command.
 

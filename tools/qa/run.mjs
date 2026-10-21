@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { randomUUID, createHash } from 'node:crypto';
 import { runBounded } from '../../tests/workflows/support/process.mjs';
 import { defaultBudgetMs, readConfig, validateConfig } from './config.mjs';
-import { discoverProject } from './discover.mjs';
+import { discoverProject, isNodeTestScript, declaredReporter } from './discover.mjs';
 import { routeSkills, nextActions } from './route.mjs';
 import { assessCommand, summarize } from './results.mjs';
 import { secretValues, sanitized, redactText } from './privacy.mjs';
@@ -55,64 +55,72 @@ export async function runPlan(plan, options = {}) {
   const log = message => { minimal.push(message); options.onLog?.(redactText(message, secrets)); };
   const remaining = () => Math.max(0, plan.budgetMs - (Date.now() - started));
   await fs.writeFile(path.join(directory, 'plan.json'), json(safePlan));
-  for (const check of plan.checks) {
-    if (remaining() < 500) {
-      checks.push({ id: check.id, command: check.command, reporter: check.reporter, source: check.source, status: 'blocked', reason: 'The total run budget was exhausted before this check started.', counts: null, durationMs: 0 });
-      log(`BLOCKED ${check.id}: total run budget exhausted`);
-      continue;
-    }
-    log(`RUN ${check.id}`);
-    const checkStarted = Date.now();
-    const discovered = plan.project.checks.find(item => JSON.stringify(item.command) === JSON.stringify(check.command));
-    const script = check.declaredScript ?? discovered?.declaredScript ?? '';
-    const nodeRunner = /\bnode\b[^\n]*\s--test(?:\s|$|=)/.test(script) ||
-      /^node(?:\.exe)?$/.test(path.basename(check.command[0])) && check.command.includes('--test');
-    const existingReporter = /--test-reporter(?:[=\s]|$)/.test([script, ...check.command, executionEnv.NODE_OPTIONS ?? ''].join(' '));
-    const execution = await runBounded({ command: check.command[0], args: check.command.slice(1), cwd: plan.project.root,
-      env: { ...executionEnv, CI: '1', FORCE_COLOR: '0',
-        ...(check.reporter === 'tap' && nodeRunner && !existingReporter ? { NODE_OPTIONS: `${executionEnv.NODE_OPTIONS ?? ''} --test-reporter=tap`.trim() } : {}),
-        ...(plan.url ? { BASE_URL: plan.url } : {}) },
-      timeoutMs: Math.min(check.timeoutMs, remaining() - 400), killGraceMs: 200, settlementGraceMs: 200,
-      maxOutputBytes: 4 * 1024 * 1024 });
-    const evidence = `evidence/${check.id}.log`;
-    await fs.writeFile(path.join(directory, evidence), redactText(execution.log, secrets));
-    verbose.push(`\nCHECK ${check.id}\nARGV ${JSON.stringify(check.command)}\n${execution.log}`);
-    const outcome = assessCommand(check, execution);
-    checks.push({ id: check.id, command: check.command, reporter: check.reporter, source: check.source,
-      ...outcome, exitCode: execution.code, timedOut: execution.timedOut, durationMs: Date.now() - checkStarted, evidence });
-    log(`${outcome.status.toUpperCase()} ${check.id}: ${outcome.reason}`);
-  }
-  if (plan.url) {
-    if (remaining() < 500) {
-      checks.push({ id: 'browser', status: 'blocked', reason: 'The total run budget was exhausted before browser checks started.', counts: null, durationMs: 0 });
-      log('BLOCKED browser: total run budget exhausted');
-    } else {
-      log('RUN browser');
-      const browserStarted = Date.now();
-      const filename = path.join(directory, '.browser-result.json');
-      const browserBudget = Math.min((plan.browser.timeoutMs ?? 15_000) + 10_000, remaining() - 400);
-      const execution = await runBounded({ command: process.execPath, args: [path.join(repositoryRoot, 'tools/qa/browser-check.mjs')], cwd: plan.project.root,
-        env: { ...executionEnv, QA_BROWSER_INPUT: JSON.stringify({ ...plan.browser, url: plan.url, timeoutMs: Math.max(100, browserBudget - 3000) }), QA_BROWSER_RESULT: filename },
-        timeoutMs: browserBudget, killGraceMs: 200, settlementGraceMs: 200, maxOutputBytes: 1024 * 1024 });
-      let browserChecks;
-      try {
-        if (execution.code !== 0 || execution.timedOut || execution.signal || execution.launchError) throw new Error(execution.timedOut ? 'Browser execution exceeded its budget.' : execution.launchError ?? 'Browser worker could not complete; check browser installation and the log.');
-        const contents = await fs.readFile(filename, 'utf8');
-        browserChecks = JSON.parse(contents);
-        if (!Array.isArray(browserChecks) || !browserChecks.length || browserChecks.some(item => !['passed', 'failed', 'blocked', 'incomplete'].includes(item.status) || typeof item.id !== 'string')) throw new Error('Browser worker returned no usable observations.');
-      } catch (error) {
-        browserChecks = [{ id: 'worker', status: 'blocked', reason: error.message, counts: null }];
-      } finally { await fs.rm(filename, { force: true }); }
-      for (const check of browserChecks) {
-        check.id = `browser-${check.id}`;
-        check.durationMs = Date.now() - browserStarted;
-        checks.push(check);
-        log(`${check.status.toUpperCase()} ${check.id}: ${check.reason}`);
+  // An unexpected throw must not discard the checks already observed; record it and report.
+  try {
+    for (const check of plan.checks) {
+      if (remaining() < 500) {
+        checks.push({ id: check.id, command: check.command, reporter: check.reporter, source: check.source, status: 'blocked', reason: 'The total run budget was exhausted before this check started.', counts: null, durationMs: 0 });
+        log(`BLOCKED ${check.id}: total run budget exhausted`);
+        continue;
       }
-      await fs.writeFile(path.join(directory, 'evidence/browser.log'), redactText(execution.log || json(browserChecks), secrets));
-      for (const check of browserChecks) check.evidence = 'evidence/browser.log';
-      verbose.push(`\nBROWSER\n${execution.log}\n${json(browserChecks)}`);
+      log(`RUN ${check.id}`);
+      const checkStarted = Date.now();
+      const discovered = plan.project.checks.find(item => JSON.stringify(item.command) === JSON.stringify(check.command));
+      const script = check.declaredScript ?? discovered?.declaredScript ?? '';
+      const nodeRunner = isNodeTestScript(script) ||
+        /^node(?:\.exe)?$/.test(path.basename(check.command[0])) && check.command.includes('--test');
+      const existingReporter = declaredReporter([script, ...check.command, executionEnv.NODE_OPTIONS ?? ''].join(' ')) !== null;
+      const execution = await runBounded({ command: check.command[0], args: check.command.slice(1), cwd: plan.project.root,
+        env: { ...executionEnv, CI: '1', FORCE_COLOR: '0',
+          ...(check.reporter === 'tap' && nodeRunner && !existingReporter ? { NODE_OPTIONS: `${executionEnv.NODE_OPTIONS ?? ''} --test-reporter=tap`.trim() } : {}),
+          ...(plan.url ? { BASE_URL: plan.url } : {}) },
+        timeoutMs: Math.min(check.timeoutMs, remaining() - 400), killGraceMs: 200, settlementGraceMs: 200,
+        maxOutputBytes: 4 * 1024 * 1024 });
+      const evidence = `evidence/${check.id}.log`;
+      await fs.writeFile(path.join(directory, evidence), redactText(execution.log, secrets));
+      verbose.push(`\nCHECK ${check.id}\nARGV ${JSON.stringify(check.command)}\n${execution.log}`);
+      const outcome = assessCommand(check, execution);
+      checks.push({ id: check.id, command: check.command, reporter: check.reporter, source: check.source,
+        ...outcome, exitCode: execution.code, timedOut: execution.timedOut, durationMs: Date.now() - checkStarted, evidence });
+      log(`${outcome.status.toUpperCase()} ${check.id}: ${outcome.reason}`);
     }
+    if (plan.url) {
+      if (remaining() < 500) {
+        checks.push({ id: 'browser', status: 'blocked', reason: 'The total run budget was exhausted before browser checks started.', counts: null, durationMs: 0 });
+        log('BLOCKED browser: total run budget exhausted');
+      } else {
+        log('RUN browser');
+        const browserStarted = Date.now();
+        const filename = path.join(directory, '.browser-result.json');
+        const browserBudget = Math.min((plan.browser.timeoutMs ?? 15_000) + 10_000, remaining() - 400);
+        const execution = await runBounded({ command: process.execPath, args: [path.join(repositoryRoot, 'tools/qa/browser-check.mjs')], cwd: plan.project.root,
+          env: { ...executionEnv, QA_BROWSER_INPUT: JSON.stringify({ ...plan.browser, url: plan.url, timeoutMs: Math.max(100, browserBudget - 3000) }), QA_BROWSER_RESULT: filename },
+          timeoutMs: browserBudget, killGraceMs: 200, settlementGraceMs: 200, maxOutputBytes: 1024 * 1024 });
+        // The worker publishes after every phase, so a late timeout keeps the observations
+        // made so far and adds one blocked record for what did not complete.
+        let browserChecks = [];
+        try {
+          browserChecks = JSON.parse(await fs.readFile(filename, 'utf8'));
+          if (!Array.isArray(browserChecks) || browserChecks.some(item => !['passed', 'failed', 'blocked', 'incomplete'].includes(item?.status) || typeof item?.id !== 'string')) browserChecks = [];
+        } catch { browserChecks = []; }
+        finally { await fs.rm(filename, { force: true }); }
+        const failure = execution.timedOut ? 'Browser execution exceeded its budget.' : execution.launchError ??
+          (execution.code !== 0 || execution.signal ? 'Browser worker could not complete; check browser installation and the log.' : null);
+        if (failure || !browserChecks.length) browserChecks.push({ id: 'worker', status: 'blocked', reason: failure ?? 'Browser worker returned no usable observations.', counts: null });
+        for (const check of browserChecks) {
+          if (!check.id.startsWith('browser-')) check.id = `browser-${check.id}`;
+          check.durationMs ??= Date.now() - browserStarted;
+          checks.push(check);
+          log(`${check.status.toUpperCase()} ${check.id}: ${check.reason}`);
+        }
+        await fs.writeFile(path.join(directory, 'evidence/browser.log'), redactText(execution.log || json(browserChecks), secrets));
+        for (const check of browserChecks) check.evidence = 'evidence/browser.log';
+        verbose.push(`\nBROWSER\n${execution.log}\n${json(browserChecks)}`);
+      }
+    }
+  } catch (error) {
+    checks.push({ id: 'runner-error', status: 'blocked', reason: `The runner stopped before every check completed: ${error.message}`, counts: null, durationMs: 0 });
+    log(`BLOCKED runner-error: ${error.message}`);
   }
   const result = sanitized({ schemaVersion: 1, runId, startedAt: new Date(started).toISOString(), finishedAt: new Date().toISOString(), durationMs: Date.now() - started,
     plan: safePlan, checks, summary: summarize(checks) }, secrets);

@@ -12,7 +12,7 @@ const rules = [
   ['selector-drift-recovery', /(?:many|all|bulk|refactor|redesign).*(?:selector|locator|test)|selector drift|bulk.*regenerat/i, 'A UI change broke a group of selectors.'],
   ['test-reliability', /flaky|flakiness|quarantine|one.*(?:locator|selector)|self[- ]healing/i, 'An individual check is unreliable at runtime.'],
   ['ai-bug-triage', /triage|classif|cluster|dedup.*(?:bug|failure)|(?:batch|many|multiple).*(?:CI|failure|bug)/i, 'The goal is to classify a collection of failures.'],
-  ['bug-reproduction', /reproduc|repro\b|regression|(?:bug|defect|broken|wrong|fails?).*(?:logout|login|account|session)|logout|old session/i, 'The goal needs a concrete reproduction and a regression assertion.'],
+  ['bug-reproduction', /reproduc|repro\b|regression (?:test|assertion)|(?:bug|defect|broken|wrong|fails?).*(?:logout|login|account|session|failing test)|old session/i, 'The goal needs a concrete reproduction and a regression assertion.'],
   ['performance-testing', /performance|\bk6\b|load test|lighthouse|web vitals|layout shift|\bcls\b|slow/i, 'The goal includes latency, load, or visible layout stability.'],
   ['security-testing', /security|\bowasp\b|vulnerab|\bxss\b|authorization|access control|session.*revok/i, 'The goal includes authorization or a security boundary.'],
   ['database-testing', /database|migration|\bsql\b|data integrity|idempotency.*index/i, 'The goal includes stored data and schema invariants.'],
@@ -69,11 +69,14 @@ export function routeSkills({ goal = '', project, hasUrl = false }) {
     [/migration|schema|\.sql\b/i, 'database-testing', 'Changed paths include database structure.'],
     [/auth|login|session|logout/i, 'security-testing', 'Changed paths include an authentication boundary.'],
   ]) if (pattern.test(changed)) supporting.push({ skill, reason });
-  if (!selected.length) {
-    if (hasUrl || project.frameworks.includes('playwright')) selected.push({ skill: 'playwright-automation', reason: 'A browser target or an existing Playwright suite is available.' });
-    else if (project.frameworks.includes('cypress')) selected.push({ skill: 'cypress-automation', reason: 'An existing Cypress suite is available.' });
-    else if (project.checks.length) selected.push({ skill: 'unit-testing', reason: 'Run the existing project test contract first.' });
-    else selected.push({ skill: 'qa-start', reason: 'No executable test contract was discovered.' });
+  // A reporting skill describes evidence; it never replaces the skill that produces it.
+  // "Check the flows and report the results" must still lead with an executing skill.
+  const reporting = new Set(['qa-dashboard']);
+  if (!selected.some(item => !reporting.has(item.skill))) {
+    selected.unshift(hasUrl || project.frameworks.includes('playwright') ? { skill: 'playwright-automation', reason: 'A browser target or an existing Playwright suite is available.' }
+      : project.frameworks.includes('cypress') ? { skill: 'cypress-automation', reason: 'An existing Cypress suite is available.' }
+        : project.checks.length ? { skill: 'unit-testing', reason: 'Run the existing project test contract first.' }
+          : { skill: 'qa-start', reason: 'No executable test contract was discovered.' });
   }
   const primary = selected.slice(0, 2);
   const used = new Set(primary.map(item => item.skill));

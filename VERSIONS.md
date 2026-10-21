@@ -20,6 +20,13 @@
 - Honor `QA_PYTHON` through the shared npm launcher and service runtime. Repair stale
   skill counts, links, and CI documentation; add executable QA runner controls to CI.
 - Add a reproducible eight-second motion-graphic renderer and three video storyboards.
+- Review pass before landing: the Playwright JSON adapter reads a report followed by a
+  package manager's failure line, discovery stops inserting `--` for pnpm, a goal that
+  only mentions a report still routes to an executing skill, a malformed result entry or
+  an unexpected throw no longer discards the evidence of earlier checks, environment
+  values are redacted only when they look like secrets, lockfiles are hashed by stream,
+  the browser worker publishes each phase and bounds the axe scan, and the matrix lock
+  and oracle helper fail safe. Verified on macOS arm64 as well as hosted Linux CI.
 
 Usage: [QA runner](docs/QA-RUNNER.md). Campaign evidence and limits:
 [delivery report](docs/QA-ORCHESTRATION-2026-10-21.md).

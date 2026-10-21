@@ -24,7 +24,12 @@ export function redactText(value, secrets = []) {
 
 export function secretValues(env = process.env, urls = []) {
   const values = [];
-  for (const [key, value] of Object.entries(env)) if (/(?:token|secret|password|passwd|api_?key|private_?key|credential)/i.test(key) && value) values.push(value);
+  // A name is a weak signal on its own: TOKENIZERS_PARALLELISM=false or TOKEN_LIMIT=100000
+  // would otherwise blank every "false" or "100000" in the evidence.
+  const trivial = /^(?:true|false|null|undefined|\d+)$/i;
+  for (const [key, value] of Object.entries(env)) {
+    if (/(?:token|secret|password|passwd|api_?key|private_?key|credential)/i.test(key) && value && value.length >= 8 && !trivial.test(value)) values.push(value);
+  }
   for (const text of urls) {
     try { const url = new URL(text); for (const value of url.searchParams.values()) if (value) values.push(value); } catch {}
   }

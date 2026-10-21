@@ -10,10 +10,18 @@ export async function oracle(id, matcher, assertion) {
     if (error?.matcherResult?.name === matcher && typeof error.matcherResult.pass === 'boolean') {
       const token = randomUUID();
       const marker = `QA_ORACLE:${id}:${token}`;
-      const originalStack = error.stack;
-      error.message = `${marker}\n${error.message}`;
-      error.stack = `${error.name}: ${error.message}\n${originalStack?.split('\n').slice(1).join('\n') ?? ''}`;
-      test.info().annotations.push({ type: 'qa-oracle-failure', description: JSON.stringify({
+      const originalMessage = error.message;
+      const originalStack = error.stack ?? '';
+      // Playwright messages span several lines; keep only the frames after the full header.
+      const header = `${error.name}: ${originalMessage}`;
+      const frames = originalStack.startsWith(header) ? originalStack.slice(header.length) : `\n${originalStack.split('\n').slice(1).join('\n')}`;
+      error.message = `${marker}\n${originalMessage}`;
+      error.stack = `${error.name}: ${error.message}${frames}`;
+      // Outside a running test (hooks, fixtures) there is no record to annotate. The
+      // marker still names the assertion; the matrix treats such a run as unverified.
+      let info = null;
+      try { info = test.info(); } catch {}
+      info?.annotations.push({ type: 'qa-oracle-failure', description: JSON.stringify({
         schemaVersion: 1, id, matcher, token, runId: process.env.QA_MATRIX_RUN_ID ?? null,
       }) });
     }

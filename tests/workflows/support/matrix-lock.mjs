@@ -1,4 +1,4 @@
-import { openSync, closeSync, writeFileSync, readFileSync, unlinkSync, linkSync, mkdirSync } from 'node:fs';
+import { openSync, closeSync, writeFileSync, readFileSync, unlinkSync, linkSync, mkdirSync, renameSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { hostname } from 'node:os';
 import path from 'node:path';
@@ -38,6 +38,8 @@ function readOwner(file) {
   return owner;
 }
 
+// A PID reused by an unrelated process after a crash reads as live. There is no
+// portable way to tell the two apart, so the message names the remedy instead.
 function assertDead(owner, file) {
   if (owner && (alive(owner.pid) || alive(owner.childPid))) {
     throw new Error(`Matrix output is in use by PID ${owner.pid}${owner.childPid ? ` (child ${owner.childPid})` : ''}: ${file}`);
@@ -74,10 +76,15 @@ export function acquireMatrixLock(directory) {
       const current = readOwner(file);
       if (current?.token !== record.token) throw new Error('Matrix output lock was replaced');
       record.childPid = pid;
-      writeFileSync(file, JSON.stringify(record));
+      // Replace the record atomically so a competing reader never sees a partial write.
+      const temporary = `${file}.${randomUUID()}.tmp`;
+      writeFileSync(temporary, JSON.stringify(record), { mode: 0o600 });
+      renameSync(temporary, file);
     },
     release() {
-      if (readOwner(file)?.token === record.token) unlinkSync(file);
+      // Called from a finally block: a lock problem must not replace the matrix result.
+      try { if (readOwner(file)?.token === record.token) unlinkSync(file); }
+      catch (error) { console.error(`Matrix lock release skipped: ${error.message}`); }
     },
   };
 }

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "goal": "Exercise the documented recipes and the QA execution workflow",
-  "budgetMs": 180000,
+  "budgetMs": 240000,
   "checks": [
     {
       "id": "documented-helpers",

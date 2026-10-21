@@ -28,16 +28,40 @@ export function parseTap(text) {
   return { status: 'passed', reason: 'All observed tests passed with no skips or cancellations.', counts };
 }
 
+// Every complete top-level JSON object in a command log. Package managers print a
+// preamble before the reporter and, on failure, a trailing line after it (pnpm's
+// ELIFECYCLE, bun's "script exited"). Text outside an object is ignored; an object
+// cut off by truncation is dropped rather than guessed at.
+function topLevelObjects(text) {
+  const objects = [];
+  let depth = 0, start = -1, inString = false, escaped = false;
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (depth === 0) { if (char === '{') { depth = 1; start = i; } continue; }
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (char === '\\') escaped = true;
+      else if (char === '"') inString = false;
+      continue;
+    }
+    if (char === '"') inString = true;
+    else if (char === '{' || char === '[') depth++;
+    else if (char === '}' || char === ']') { depth--; if (depth === 0) objects.push(text.slice(start, i + 1)); }
+  }
+  return objects;
+}
+
 function playwrightObject(text) {
-  // npm can print a preamble before the JSON reporter. Do not guess around
-  // truncated JSON or concatenate separate reports into one apparent success.
-  const start = text.indexOf('{');
-  if (start === -1) return null;
-  try {
-    const report = JSON.parse(text.slice(start));
-    if (report && Array.isArray(report.suites) && Array.isArray(report.errors)) return report;
-  } catch {}
-  return null;
+  // Exactly one report may be accepted. Two reports in one log (a rerun appended to
+  // the first attempt) must not be merged into one apparent result.
+  const reports = [];
+  for (const candidate of topLevelObjects(text)) {
+    try {
+      const report = JSON.parse(candidate);
+      if (report && Array.isArray(report.suites) && Array.isArray(report.errors)) reports.push(report);
+    } catch {}
+  }
+  return reports.length === 1 ? reports[0] : null;
 }
 
 export function parsePlaywright(text) {
@@ -63,7 +87,7 @@ export function parsePlaywright(text) {
   let unsupported = 0;
   for (const test of tests) {
     if (!Array.isArray(test.results)) { unsupported++; continue; }
-    if (test.status === 'skipped' || (test.results.length === 1 && test.results[0].status === 'skipped')) { counts.skipped++; continue; }
+    if (test.status === 'skipped' || (test.results.length === 1 && test.results[0]?.status === 'skipped')) { counts.skipped++; continue; }
     if (!test.results.length) { unsupported++; continue; }
     if (test.results.some(result => !result || !Number.isInteger(result.retry) || result.retry < 0 || !Array.isArray(result.errors))) { unsupported++; continue; }
     const final = test.results.at(-1);

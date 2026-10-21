@@ -8,11 +8,14 @@ export async function prepareRunDirectory(directory) {
   await rm(path.join(directory, 'minimal.txt'), { force: true });
 }
 
+export function unrun(remaining, reason) {
+  return remaining.map(next => ({ ...next, expectedCount: next.count, executed: 0, failed: [],
+    outcome: 'not_run', code: null, reason, oracleVerified: false }));
+}
+
 export function unrunAfterFailedHealthy(scenario, outcome, remaining) {
   if (!scenario.healthy || outcome === 'healthy_pass') return [];
-  return remaining.map(next => ({ ...next, expectedCount: next.count, executed: 0, failed: [],
-    outcome: 'not_run', code: null, reason: `Healthy control ${scenario.id} failed; fault interpretation is blocked`,
-    oracleVerified: false }));
+  return unrun(remaining, `Healthy control ${scenario.id} failed; fault interpretation is blocked`);
 }
 
 export function testsFrom(report) {

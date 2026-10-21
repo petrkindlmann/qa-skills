@@ -9,7 +9,8 @@ import { routeSkills } from '../../tools/qa/route.mjs';
 import { validateConfig } from '../../tools/qa/config.mjs';
 import { parseTap, parsePlaywright, assessCommand } from '../../tools/qa/results.mjs';
 import { initialize, makePlan, runPlan } from '../../tools/qa/run.mjs';
-import { redactText } from '../../tools/qa/privacy.mjs';
+import { redactText, secretValues } from '../../tools/qa/privacy.mjs';
+import { discoverChecks } from '../../tools/qa/discover.mjs';
 import { renderReport } from '../../tools/qa/report.mjs';
 
 const repo = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
@@ -48,6 +49,25 @@ test('changed paths add focused supporting skills without loading the catalog', 
   assert.deepEqual(routing.primary.map(item => item.skill), ['unit-testing']);
   assert.deepEqual(routing.supporting.map(item => item.skill), ['database-testing', 'security-testing']);
   assert.equal(routing.supporting.length, 2);
+});
+
+test('a goal that only mentions a report still leads with a skill that produces evidence', () => {
+  const routing = routeSkills({ goal: 'Check the critical user flows and report the results', project: { ...baseProject, frameworks: ['playwright'] } });
+  assert.deepEqual(routing.primary.map(item => item.skill), ['playwright-automation', 'qa-dashboard']);
+  assert.deepEqual(routeSkills({ goal: 'Run the regression suite before release', project: baseProject }).primary.map(item => item.skill), ['release-readiness']);
+  assert.deepEqual(routeSkills({ goal: 'Turn this bug into a failing test', project: baseProject }).primary.map(item => item.skill), ['bug-reproduction']);
+});
+
+test('discovery separates extra arguments per package manager and respects a declared reporter', () => {
+  assert.deepEqual(discoverChecks({ scripts: { test: 'playwright test' } }, 'npm')[0].command, ['npm', 'run', 'test', '--', '--reporter=json']);
+  assert.deepEqual(discoverChecks({ scripts: { test: 'playwright test' } }, 'pnpm')[0].command, ['pnpm', 'run', 'test', '--reporter=json']);
+  assert.equal(discoverChecks({ scripts: { test: 'node --test' } })[0].reporter, 'tap');
+  assert.equal(discoverChecks({ scripts: { test: 'node --test --test-reporter=tap' } })[0].reporter, 'tap');
+  assert.equal(discoverChecks({ scripts: { test: 'node --test --test-reporter=spec' } })[0].reporter, 'exit-code');
+});
+
+test('environment values are treated as secrets only when they look like one', () => {
+  assert.deepEqual(secretValues({ TOKENIZERS_PARALLELISM: 'false', TOKEN_LIMIT: '100000', API_KEY_HEADER: 'key', GITHUB_TOKEN: 'ghp_abcdefgh' }), ['ghp_abcdefgh']);
 });
 
 test('config rejects shell strings, duplicate ids, unknown fields, credentials and missing reporter', () => {
@@ -90,6 +110,13 @@ test('Playwright gate rejects missing results, empty suites, flaky retries and e
   assert.equal(parsePlaywright(playwright([], [{ message: 'global setup unavailable' }])).status, 'blocked');
   assert.equal(parsePlaywright(playwright([passed]).slice(0, -2)).status, 'incomplete');
   assert.equal(parsePlaywright(playwright([null])).status, 'incomplete');
+  assert.equal(parsePlaywright(playwright([{ ...passed, results: [null] }])).status, 'incomplete');
+  // A package manager's trailing failure line must not hide the per-test counts.
+  assert.equal(parsePlaywright(`${playwright([passed])}\n ELIFECYCLE  Command failed with exit code 1.\n`).status, 'passed');
+  const failing = { expectedStatus: 'passed', status: 'unexpected', results: [{ status: 'failed', retry: 0, errors: [{ message: 'defect {"nested": "}"}' }] }] };
+  const trailing = parsePlaywright(`> app@1.0.0 test\n${playwright([failing])}\nerror: script "test" exited with code 1\n`);
+  assert.equal(trailing.status, 'failed');
+  assert.equal(trailing.counts.failed, 1);
   assert.equal(parsePlaywright(playwright([{ ...passed, results: [{ status: 'passed', errors: [] }] }])).status, 'incomplete');
   const skipped = { expectedStatus: 'passed', status: 'skipped', results: [{ status: 'skipped', retry: 0, errors: [] }] };
   assert.equal(parsePlaywright(`${playwright([skipped])}\n${playwright([passed])}`).status, 'incomplete');
