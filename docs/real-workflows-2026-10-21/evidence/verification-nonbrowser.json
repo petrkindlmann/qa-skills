@@ -1,0 +1,98 @@
+{
+  "recordedAt": "2026-10-21T00:52:57.837530+00:00",
+  "checks": [
+    {
+      "name": "python",
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "exitCode": 1,
+      "durationSeconds": 4.903,
+      "error": null,
+      "log": "final-python.log"
+    },
+    {
+      "name": "javascript",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 2.056,
+      "error": null,
+      "log": "final-javascript.log"
+    },
+    {
+      "name": "structure",
+      "command": [
+        "python",
+        "scripts/validate_skills.py"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.517,
+      "error": null,
+      "log": "final-structure.log"
+    },
+    {
+      "name": "index",
+      "command": [
+        "python",
+        "scripts/build_index.py",
+        "--check"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.082,
+      "error": null,
+      "log": "final-index.log"
+    },
+    {
+      "name": "scanner",
+      "command": [
+        "python",
+        "skills/ai-system-testing/scripts/detect_injection.py",
+        "--selftest"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.039,
+      "error": null,
+      "log": "final-scanner.log"
+    },
+    {
+      "name": "static",
+      "command": [
+        "python",
+        "scripts/run_evals.py",
+        "--static",
+        "--all",
+        "--min-pass-rate",
+        "90",
+        "--json",
+        "docs/real-workflows-2026-10-21/evidence/static-final.json"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 3.208,
+      "error": null,
+      "log": "final-static.log"
+    },
+    {
+      "name": "whitespace",
+      "command": [
+        "git",
+        "diff",
+        "--check"
+      ],
+      "exitCode": 0,
+      "durationSeconds": 0.005,
+      "error": null,
+      "log": "final-whitespace.log"
+    }
+  ]
+}

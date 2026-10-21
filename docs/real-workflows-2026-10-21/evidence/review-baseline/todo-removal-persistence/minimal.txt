@@ -1,0 +1,21 @@
+WORKFLOW RUN: 9 scheduled cases
+FAILED:  /  / todomvc.spec.mjs / whitespace Enter and empty blur edits remove only their targeted records (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator: locator('.todo-list').locator('label')
+Timeout: 4000ms
+[32m- Expected  - 0[39m
+[31m+ Received  + 2[39m
+
+[2m  Array [[22m
+[31m+   "Check mailbox",[39m
+[31m+   "Check mailbox",[39m
+[2m    "Keep stamped letter",[22m
+[2m  ][22m
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').locator('label')[22m
+[2m    12 × locator resolved to 3 elements[22m
+
+WORKFLOW RESULT: failed; attempts=9; {"passed":8,"failed":1}

@@ -1,0 +1,483 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/scratch/db79cfa7c2bc/qa-skills/node_modules/playwright/cli.js",
+      "test",
+      "--config",
+      "tests/workflows/playwright.config.mjs",
+      "--workers=2",
+      "--retries=0",
+      "--global-timeout=90000"
+    ],
+    "configFile": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/playwright.config.mjs",
+    "rootDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 90000,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-cancel/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.mjs"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/reporters/minimal.mjs",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-cancel/verbose.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-cancel/html",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "todomvc.spec.mjs",
+      "file": "todomvc.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "creates trimmed nonblank titles in order and clears the entry field",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 566,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:47:00.417Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-f06aafe085ae70e922de",
+          "file": "todomvc.spec.mjs",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "duplicate titles remain independent through complete edit and delete",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 843,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:47:00.421Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-40b1a35f4c3b03137c36",
+          "file": "todomvc.spec.mjs",
+          "line": 28,
+          "column": 1
+        },
+        {
+          "title": "individual completion and restoration keep the active count global under filters",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 732,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:47:01.242Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-00f4b006ff7fa7c0bbcf",
+          "file": "todomvc.spec.mjs",
+          "line": 49,
+          "column": 1
+        },
+        {
+          "title": "bulk toggle affects hidden records and works from an empty filtered view",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 928,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:47:01.546Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-3a04733bb193d86b1fcc",
+          "file": "todomvc.spec.mjs",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "filters visibly select the correct subset without losing or duplicating records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 839,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:47:01.987Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-c03435a1e4af1f4bce67",
+          "file": "todomvc.spec.mjs",
+          "line": 106,
+          "column": 1
+        },
+        {
+          "title": "Enter and blur save edits while Escape preserves the saved title on reload",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 4731,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Book evening train\",\u001b[22m\n\u001b[32m-   \"Pack overnight bag\",\u001b[39m\n\u001b[31m+   \"Discard this draft\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 2 elements\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Book evening train\",\u001b[22m\n\u001b[32m-   \"Pack overnight bag\",\u001b[39m\n\u001b[31m+   \"Discard this draft\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 2 elements\u001b[22m\n\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:143:27",
+                    "location": {
+                      "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                      "column": 27,
+                      "line": 143
+                    },
+                    "snippet": "  141 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n  142 |   await ui.edit(1, 'Discard this draft', 'Escape');\n> 143 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n      |                           ^\n  144 |   await ui.edit(0, '', 'Escape');\n  145 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n  146 |   await page.reload();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                        "column": 27,
+                        "line": 143
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Book evening train\",\u001b[22m\n\u001b[32m-   \"Pack overnight bag\",\u001b[39m\n\u001b[31m+   \"Discard this draft\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 2 elements\u001b[22m\n\n\n  141 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n  142 |   await ui.edit(1, 'Discard this draft', 'Escape');\n> 143 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n      |                           ^\n  144 |   await ui.edit(0, '', 'Escape');\n  145 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n  146 |   await page.reload();\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:143:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:47:02.486Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-cancel/test-results/todomvc-Enter-and-blur-sav-3783c-s-the-saved-title-on-reload/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-cancel/test-results/todomvc-Enter-and-blur-sav-3783c-s-the-saved-title-on-reload/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-cancel/test-results/todomvc-Enter-and-blur-sav-3783c-s-the-saved-title-on-reload/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                    "column": 27,
+                    "line": 143
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-14b344040278ca81d220",
+          "file": "todomvc.spec.mjs",
+          "line": 133,
+          "column": 1
+        },
+        {
+          "title": "whitespace Enter and empty blur edits remove only their targeted records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 625,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:47:02.837Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-5b2d1eb1af1363f77c7a",
+          "file": "todomvc.spec.mjs",
+          "line": 154,
+          "column": 1
+        },
+        {
+          "title": "delete and clear completed preserve active rows and empty controls recover",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 797,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:47:03.471Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-1826dc7ae3e33b02fff6",
+          "file": "todomvc.spec.mjs",
+          "line": 172,
+          "column": 1
+        },
+        {
+          "title": "saved edits completion order and removals persist through reload and further keyboard input",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4968,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"Water balcony plants\",\u001b[39m\n\u001b[31m+   \"Canceled after reload\",\u001b[39m\n\u001b[2m    \"Walk dog\",\u001b[22m\n\u001b[2m    \"Call parents\",\u001b[22m\n\u001b[2m    \"Set alarm\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"Water balcony plants\",\u001b[39m\n\u001b[31m+   \"Canceled after reload\",\u001b[39m\n\u001b[2m    \"Walk dog\",\u001b[22m\n\u001b[2m    \"Call parents\",\u001b[22m\n\u001b[2m    \"Set alarm\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:225:27",
+                    "location": {
+                      "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                      "column": 27,
+                      "line": 225
+                    },
+                    "snippet": "  223 |   await ui.edit(0, 'Canceled after reload', 'Escape');\n  224 |   await ui.add('Set alarm');\n> 225 |   await expect(ui.titles).toHaveText(['Water balcony plants', 'Walk dog', 'Call parents', 'Set alarm']);\n      |                           ^\n  226 |   await expect(ui.count).toHaveText('3 items left');\n  227 |   await expect(ui.input).toHaveValue('');\n  228 | });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                        "column": 27,
+                        "line": 225
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"Water balcony plants\",\u001b[39m\n\u001b[31m+   \"Canceled after reload\",\u001b[39m\n\u001b[2m    \"Walk dog\",\u001b[22m\n\u001b[2m    \"Call parents\",\u001b[22m\n\u001b[2m    \"Set alarm\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n\n\n  223 |   await ui.edit(0, 'Canceled after reload', 'Escape');\n  224 |   await ui.add('Set alarm');\n> 225 |   await expect(ui.titles).toHaveText(['Water balcony plants', 'Walk dog', 'Call parents', 'Set alarm']);\n      |                           ^\n  226 |   await expect(ui.count).toHaveText('3 items left');\n  227 |   await expect(ui.input).toHaveValue('');\n  228 | });\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:225:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:47:04.280Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-cancel/test-results/todomvc-saved-edits-comple-f3a5a--and-further-keyboard-input/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-cancel/test-results/todomvc-saved-edits-comple-f3a5a--and-further-keyboard-input/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-cancel/test-results/todomvc-saved-edits-comple-f3a5a--and-further-keyboard-input/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                    "column": 27,
+                    "line": 225
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-e94fcaa5bcc6b6afcf09",
+          "file": "todomvc.spec.mjs",
+          "line": 204,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-21T00:47:00.029Z",
+    "duration": 9429.145,
+    "expected": 7,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

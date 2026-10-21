@@ -1,0 +1,6 @@
+{
+  "predicate": "result.code === 0 && tests.length === scenario.count && tests.every(test => test.outcome === 'expected') && errors.length === 0",
+  "expectedFailureIncorrectlyAccepted": true,
+  "actualAttempt": "failed",
+  "staleReportCouldSatisfyOldGate": true
+}

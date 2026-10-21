@@ -1,0 +1,277 @@
+{
+  "startedAt": "2026-10-21T00:49:29.157Z",
+  "phase": "review-baseline",
+  "node": "v24.19.0",
+  "playwright": "1.62.1",
+  "browserExecutable": "/tmp/qa-skills-chrome/opt/google/chrome/chrome",
+  "method": "Frozen fresh-agent acceptance suites; full suite per variant; retries disabled. Nonzero exit alone is not a detection. Inspect assertion evidence before accepting each candidate.",
+  "sourceHashes": {
+    "tests/workflows/generated/baseline-shop/final-response.md": "16d07616c3644fd6245c9aa2416a88148fa2c2413c54304feff8266529cb0984",
+    "tests/workflows/generated/baseline-shop/helpers.mjs": "80964eab222c8777a92b703faa8715cf2fffe8f6e634994594459e6ce6cf477a",
+    "tests/workflows/generated/baseline-shop/probe.mjs": "1b15812046ca4debc16231201d89cd4117e42f8d6c7784a0bbb9937375f6bd0c",
+    "tests/workflows/generated/baseline-shop/shop.spec.mjs": "8eba10ebb18bd93001baa99a524dc6a1ead85fda2e4302df83867b0e67183967",
+    "tests/workflows/generated/baseline-todo/design.md": "7e5fb62ccaec5f1ef372140184fc0f66088112c37defdf67b95795750a2e6f0e",
+    "tests/workflows/generated/baseline-todo/execution-summary.json": "d8c61e56a9108313f3912279e36d4409dc30b9ef4d0bd327a98cfe37920fd166",
+    "tests/workflows/generated/baseline-todo/final-response.md": "bbdf100d8a2dafcd821cd7d6dc150563304797c2913503bc0b294607a426145f",
+    "tests/workflows/generated/baseline-todo/initial-failure-evidence/error-context.md": "a7cfd96e0e9b74bf152e151ac39c5b8b4eda6984fc85db7de949314becd566d7",
+    "tests/workflows/generated/baseline-todo/review.md": "7b16997ab8bb66b0fa6f0ee7cf9a4690c72f5106811b863c8bad7d4ed4e83eb9",
+    "tests/workflows/generated/baseline-todo/todo-ui.mjs": "bfcd542ab26419f6eb064e95f7934d4b5a67e163346596825e98cf7b6b547d6c",
+    "tests/workflows/generated/baseline-todo/todomvc.spec.mjs": "5beab50682cf35011c3a7d6520edfaa2cb26f19f97156b59a11cc94785869143",
+    "tests/workflows/fixture-app/faults.py": "a5fca58b9d4aea59173769d62b9efa9920e3473164c884b22c2fd6470ce65750",
+    "tests/workflows/fixture-app/index.html": "b4a49e52321ca59c9fb28847aafdd2687832c50f833ef961bbba6d35cbe3463a",
+    "tests/workflows/fixture-app/server.py": "4e8518762a19ffaac5b41639e16aa5875f84ac9425daaf434f5900218a746caa",
+    "tests/workflows/support/fixtures.mjs": "a07e6cfb9908ac0b35a060f88464f55062c37d86a4d93d7e7661d945a79fe489",
+    "tests/workflows/support/runtime.mjs": "0ab13fff93cd99c7bd8463e8f6edf8077a100c6156eaecdec03cdfd18f502ceb",
+    "tests/workflows/upstream-todomvc/README.md": "8c9765c9928f243978ce28e0c8523645565b20a777dca173590dd67b330e6d99",
+    "tests/workflows/upstream-todomvc/faults/delete-persistence-lost.mjs": "ba59d1a4180f7dcd5bf6288b6db030c1275f8e95de9279515caab952eb11838e",
+    "tests/workflows/upstream-todomvc/faults/mutations.mjs": "62d01e8196fe6e0d4e47a516fabe1cede166d0d1b65f55d3cef0a76462438696",
+    "tests/workflows/upstream-todomvc/faults/probe-delete-persistence.mjs": "a9e7a85b39de44621b68b86b9062d99770106515fc4b5575bf46000d9da19847",
+    "tests/workflows/upstream-todomvc/faults/probe.mjs": "c56486e6a2271f31b3fbe4dfce94e89e54636bbec6804e0f75f07b600c2bc739",
+    "tests/workflows/upstream-todomvc/observations/current-es5/examples/javascript-es5/dist/index.html": "fa135782c7bd9bca4eac3a665759c0698d3829b2f97b99fdc26761ee7084ecd5",
+    "tests/workflows/upstream-todomvc/observations/current-es5/license.md": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d",
+    "tests/workflows/upstream-todomvc/observations/current-es5-provenance.json": "0cefa7eaf4964d98fb833f47f7737d500aeb7f6fb8df3d61f782baa69a1ab923",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-preservation.json": "c8a066965ac5dadfe23b797587bdb4fd442596a625b84987158dec754453455a",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-results.json": "a08b63be16a231ee3b06719bf3bff97725d1847e317283792c74a04aa7491ce8",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-summary.md": "12b49af28de21c8f58396fb7c5159711c8cb27e70b1eecc77aaf1076e72dc154",
+    "tests/workflows/upstream-todomvc/observations/probe-results.json": "c232f16bbe22f06e5ad07d5193373e0ade085d6bbe73b11bdc4c0b9069c937e0",
+    "tests/workflows/upstream-todomvc/provenance.json": "3f8b0c9ee6462f43967f4563b989bb9bc689302b26496ffcdfda1777dd1a9d20",
+    "tests/workflows/upstream-todomvc/server.mjs": "347634c22f0e581f1dad069df7bab76ec57f8bbc9f776d3146f6a6e8af6a4778",
+    "tests/workflows/upstream-todomvc/upstream/examples/vanillajs/index.html": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e",
+    "tests/workflows/upstream-todomvc/upstream/examples/vanillajs/package.json": "861dd4872b19132c99161161ff032f3e52368dfec39ad18680ce4c620543efdd",
+    "tests/workflows/upstream-todomvc/upstream/license.md": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-app-css/2.4.1/package.json": "95b2dc61769730bf06ad0d0abc1a611ab417b13c14ee979920b1d5c61f491a0f",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-app-css/2.4.1/readme.md": "bcfd25e122c41039722b4e4bdf4b122ae240ad2f95bd1823d5358bdee316cbe0",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-common/1.0.5/package.json": "b58875806d8f06f234edf0b5d1bff8b20a4e8e84582d19057a62320267073e93",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-common/1.0.5/readme.md": "5dafddbb1d858af4a2528d7c620d5b7848e9987623012757c3d022e9802796bc"
+  },
+  "runs": [
+    {
+      "id": "shop-healthy",
+      "suite": "baseline-shop",
+      "healthy": true,
+      "count": 10,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 0,
+      "signal": null,
+      "wallMs": 5714,
+      "stats": {
+        "startTime": "2026-10-21T00:49:29.679Z",
+        "duration": 5172.44,
+        "expected": 10,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "executed": 10,
+      "failed": [],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "healthy_pass"
+    },
+    {
+      "id": "todo-healthy",
+      "suite": "baseline-todo",
+      "healthy": true,
+      "count": 9,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 0,
+      "signal": null,
+      "wallMs": 5500,
+      "stats": {
+        "startTime": "2026-10-21T00:49:35.377Z",
+        "duration": 4981.3369999999995,
+        "expected": 9,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "executed": 9,
+      "failed": [],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "healthy_pass"
+    },
+    {
+      "id": "shop-logout",
+      "suite": "baseline-shop",
+      "count": 10,
+      "env": {
+        "QA_SHOP_FAULT": "logout_cookie_only"
+      },
+      "title": "copied",
+      "expectedGap": true,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 0,
+      "signal": null,
+      "wallMs": 6008,
+      "stats": {
+        "startTime": "2026-10-21T00:49:40.885Z",
+        "duration": 5475.799,
+        "expected": 10,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "executed": 10,
+      "failed": [],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "coverage_gap_confirmed",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "shop-unit-prices",
+      "suite": "baseline-shop",
+      "count": 10,
+      "env": {
+        "QA_SHOP_FAULT": "compensating_prices"
+      },
+      "title": "unit",
+      "expectedGap": true,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 0,
+      "signal": null,
+      "wallMs": 5343,
+      "stats": {
+        "startTime": "2026-10-21T00:49:46.818Z",
+        "duration": 4888.393,
+        "expected": 10,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "executed": 10,
+      "failed": [],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "coverage_gap_confirmed",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "shop-signed-whitespace",
+      "suite": "baseline-shop",
+      "count": 10,
+      "env": {
+        "QA_SHOP_FAULT": "canonicalized_signature"
+      },
+      "title": "noncanonical",
+      "expectedGap": true,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 0,
+      "signal": null,
+      "wallMs": 5395,
+      "stats": {
+        "startTime": "2026-10-21T00:49:52.205Z",
+        "duration": 4898.0560000000005,
+        "expected": 10,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "executed": 10,
+      "failed": [],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "coverage_gap_confirmed",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "todo-removal-persistence",
+      "suite": "baseline-todo",
+      "count": 9,
+      "env": {
+        "QA_TODO_FAULT": "delete-persistence-lost"
+      },
+      "title": "reload",
+      "expectedGap": true,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 8433,
+      "stats": {
+        "startTime": "2026-10-21T00:49:57.570Z",
+        "duration": 7956.380999999999,
+        "expected": 8,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "executed": 9,
+      "failed": [
+        {
+          "title": "whitespace Enter and empty blur edits remove only their targeted records",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4811,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[31m+   \"Check mailbox\",\u001b[39m\n\u001b[31m+   \"Check mailbox\",\u001b[39m\n\u001b[2m    \"Keep stamped letter\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 3 elements\u001b[22m\n\n\n  166 |   await expect(ui.count).toHaveText('0 items left');\n  167 |   await page.reload();\n> 168 |   await expect(ui.titles).toHaveText(['Keep stamped letter']);\n      |                           ^\n  169 | });\n  170 |\n  171 | // Scenario: SC-008; Requirements: REQ-6, REQ-8.\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:168:27"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "gap_not_confirmed",
+      "review": "pending evidence review"
+    }
+  ],
+  "finishedAt": "2026-10-21T00:50:05.575Z"
+}

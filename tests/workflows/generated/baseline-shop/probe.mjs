@@ -1,0 +1,2 @@
+import {test,expect} from '../../support/fixtures.mjs';
+test('discover public UI',async({page,app})=>{await page.goto(app.baseURL);await page.getByLabel('Email',{exact:true}).fill(app.users.alice.email);await page.getByLabel('Password',{exact:true}).fill(app.users.alice.password);await page.getByRole('button',{name:'Sign in',exact:true}).click();await expect(page.getByRole('button',{name:'Place order'})).toBeEnabled();console.log(await page.locator('body').ariaSnapshot());});

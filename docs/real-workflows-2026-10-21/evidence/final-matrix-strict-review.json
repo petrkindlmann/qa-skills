@@ -1,0 +1,111 @@
+{
+  "method": "Reclassified actual raw reports with the strict final gate; full suite count is25. Executed application and acceptance source hashes checked against the run manifest.",
+  "runs": [
+    {
+      "id": "combined-healthy",
+      "outcome": "healthy_pass",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 0
+    },
+    {
+      "id": "shop-ownership",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 1
+    },
+    {
+      "id": "shop-pricing",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 1
+    },
+    {
+      "id": "shop-deduplication",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 3
+    },
+    {
+      "id": "shop-transaction",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 1
+    },
+    {
+      "id": "shop-key-conflict",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 1
+    },
+    {
+      "id": "shop-reset-reuse",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 1
+    },
+    {
+      "id": "todo-persistence",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 5
+    },
+    {
+      "id": "todo-duplicates",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 2
+    },
+    {
+      "id": "todo-filter",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 4
+    },
+    {
+      "id": "todo-cancel",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 2
+    },
+    {
+      "id": "shop-logout",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 1
+    },
+    {
+      "id": "shop-unit-prices",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 2
+    },
+    {
+      "id": "shop-signed-whitespace",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 1
+    },
+    {
+      "id": "todo-removal-persistence",
+      "outcome": "assertion_detection_candidate",
+      "acceptable": true,
+      "cases": 25,
+      "failures": 4
+    }
+  ],
+  "changedExecutedSources": []
+}

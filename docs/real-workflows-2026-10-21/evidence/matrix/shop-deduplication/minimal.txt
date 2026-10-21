@@ -1,0 +1,24 @@
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / shop.spec.mjs / concurrent payment redelivery, conflict and distinct event IDs fulfill once durably (attempt 1)
+Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoMatchObject[2m([22m[32mexpected[39m[2m)[22m
+
+[32m- Expected  - 1[39m
+[31m+ Received  + 1[39m
+
+[2m  Object {[22m
+[32m-   "fulfillment_count": 1,[39m
+[31m+   "fulfillment_count": 7,[39m
+[2m    "status": "paid",[22m
+[2m  }[22m
+FAILED:  /  / shop.spec.mjs / transient fulfillment rolls back receipt then same event succeeds after restart (attempt 1)
+Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoMatchObject[2m([22m[32mexpected[39m[2m)[22m
+
+[32m- Expected  - 1[39m
+[31m+ Received  + 1[39m
+
+[2m  Object {[22m
+[32m-   "fulfillment_count": 1,[39m
+[31m+   "fulfillment_count": 2,[39m
+[2m    "status": "paid",[22m
+[2m  }[22m
+WORKFLOW RESULT: failed; attempts=11; {"passed":9,"failed":2}

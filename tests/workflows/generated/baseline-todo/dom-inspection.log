@@ -1,0 +1,6 @@
+Live inspection used a real local server from the supplied runtime and a fresh Chromium context; no application source was opened.
+Initial DOM: .todoapp contains input placeholder="What needs to be done?", hidden .main and .footer, empty ul.todo-list, #toggle-all checkbox with label "Mark all as complete".
+Created row: li[data-id] contains input.toggle[type=checkbox], label with title text, and unnamed button.destroy. The button becomes visible on hover.
+Editing row: double-click title adds input.edit; role textbox is unique within the row.
+Global active count: span.todo-count. Filters are links All, Active and Completed; selection is class selected, with no aria-current.
+After restoring the sole visible completed record, failure snapshot showed an empty todo list and global count "3 items left". This supports a test-action postcondition issue rather than a product failure.

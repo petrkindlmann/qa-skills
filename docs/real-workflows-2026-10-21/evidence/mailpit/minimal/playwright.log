@@ -1,0 +1,9 @@
+
+Running 4 tests using 4 workers
+
+  ✓  2 mailpit.spec.cjs:150:1 › cleanup deletes only owned IDs and preserves another test recipient (413ms)
+  ✓  4 mailpit.spec.cjs:133:1 › bounded waits reject absent recipients and stale-only messages after observing real mail (817ms)
+  ✓  3 mailpit.spec.cjs:106:1 › rejects real captured reset templates with missing, unsafe or ambiguous links (1.1s)
+  ✓  1 mailpit.spec.cjs:60:1 › captures delayed reset by exact recipient beyond the unfiltered first page (1.9s)
+
+  4 passed (2.6s)

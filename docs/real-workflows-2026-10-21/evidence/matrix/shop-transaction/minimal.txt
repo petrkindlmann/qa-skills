@@ -1,0 +1,8 @@
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / shop.spec.mjs / transient fulfillment rolls back receipt then same event succeeds after restart (attempt 1)
+Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoHaveLength[2m([22m[32mexpected[39m[2m)[22m
+
+Expected length: [32m0[39m
+Received length: [31m1[39m
+Received array:  [31m[{"created": 1792543563.399042, "id": "evt-test", "order_id": "6b3f14c5-8024-40f2-8627-a69dcce7178f"}][39m
+WORKFLOW RESULT: failed; attempts=11; {"passed":10,"failed":1}

@@ -1,0 +1,18 @@
+WORKFLOW RUN: 10 scheduled cases
+WORKFLOW RESULT: passed; attempts=10; {"passed":10}
+
+Execution provenance
+Candidate commit: e876dcfd6194066d1d697aea9ca6d7e08d2ce123 (authored suite is uncommitted)
+Playwright installed: 1.62.1
+Mailpit runtime: 1.31.6 (provided fixture)
+Browser: /tmp/qa-skills-chrome/opt/google/chrome/chrome
+Final run start: 2026-10-21T00:42:00.654Z
+Final run duration: 5179.041 ms
+Result: expected=10; skipped=0; unexpected=0; flaky=0; exit=0
+Command:
+QA_BROWSER_EXECUTABLE=/tmp/qa-skills-chrome/opt/google/chrome/chrome QA_WORKFLOW_SUITE=/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop QA_WORKFLOW_OUTPUT=/tmp/qa-shop-baseline node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+
+Infrastructure observation:
+An initial temporary public UI probe under default sandboxing failed before page creation:
+[third_party/crashpad/crashpad/util/linux/socket.cc:45] setsockopt: Operation not permitted (1)
+Chrome exited with SIGTRAP. It already received --no-sandbox. The identical command with require_escalated passed automatic approval review and ran successfully. No Chrome/config/runtime changes were made. Two successful temporary UI discovery runs observed public accessible labels; the temporary probe spec was removed before the final 10-test run. probe.log records the final discovery run.

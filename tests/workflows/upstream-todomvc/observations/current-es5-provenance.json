@@ -1,0 +1,65 @@
+{
+  "commit": "ff43b02e59dfa604386bb382034b2cd07c2bcd8a",
+  "files": [
+    {
+      "path": "observations/current-es5/license.md",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/license.md",
+      "sha256": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d"
+    },
+    {
+      "path": "observations/current-es5/examples/javascript-es5/dist/base.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/examples/javascript-es5/dist/base.js",
+      "sha256": "84090789021f5f8206800503e18adbc38b5fddbfb0a84bfe36e86e683da60c20"
+    },
+    {
+      "path": "observations/current-es5/examples/javascript-es5/dist/model.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/examples/javascript-es5/dist/model.js",
+      "sha256": "7f3dd8368e8b1aded3c004a8fe86b7594d43495aec2fa4f0a5b3933f98654ff1"
+    },
+    {
+      "path": "observations/current-es5/examples/javascript-es5/dist/index.html",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/examples/javascript-es5/dist/index.html",
+      "sha256": "fa135782c7bd9bca4eac3a665759c0698d3829b2f97b99fdc26761ee7084ecd5"
+    },
+    {
+      "path": "observations/current-es5/examples/javascript-es5/dist/store.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/examples/javascript-es5/dist/store.js",
+      "sha256": "0bc9d37949d094d104a5a0050f68a0b20d2a2b536d5c31fac70c95185ff08303"
+    },
+    {
+      "path": "observations/current-es5/examples/javascript-es5/dist/base.css",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/examples/javascript-es5/dist/base.css",
+      "sha256": "5c67ddc771b558bc07b58695c9c4b7f663d2ba813edb4810341799c47ba0822d"
+    },
+    {
+      "path": "observations/current-es5/examples/javascript-es5/dist/index.css",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/examples/javascript-es5/dist/index.css",
+      "sha256": "9744ab180420e503eaa7e0c69c2a9a283ef68d99f9678cbb8167a7476aa2f04a"
+    },
+    {
+      "path": "observations/current-es5/examples/javascript-es5/dist/helpers.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/examples/javascript-es5/dist/helpers.js",
+      "sha256": "34db108cf9cc1399c83add4c09bd5e51f9978626e7a486d76b98097c59fcc1c8"
+    },
+    {
+      "path": "observations/current-es5/examples/javascript-es5/dist/template.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/examples/javascript-es5/dist/template.js",
+      "sha256": "bbb8b7acefebb215f23e9d3e1d9e5c3b3197382b5ddf4218e86a83842b3ed447"
+    },
+    {
+      "path": "observations/current-es5/examples/javascript-es5/dist/view.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/examples/javascript-es5/dist/view.js",
+      "sha256": "0d731d4ef1f4af7a570f82418fd698f26aba516d52c40dc0ca2a6a47dd81a977"
+    },
+    {
+      "path": "observations/current-es5/examples/javascript-es5/dist/app.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/examples/javascript-es5/dist/app.js",
+      "sha256": "9290627e7bdfee646075b232f400a297676ebbcdb7de5dfe315e42d5668fec26"
+    },
+    {
+      "path": "observations/current-es5/examples/javascript-es5/dist/controller.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/ff43b02e59dfa604386bb382034b2cd07c2bcd8a/examples/javascript-es5/dist/controller.js",
+      "sha256": "96ee4d40995a3fb3d1928eb1d25ab3f66dca64036609bc9f44d9c4f973c205f6"
+    }
+  ]
+}

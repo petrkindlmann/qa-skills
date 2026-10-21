@@ -1,0 +1,38 @@
+
+Running 1 test using 1 worker
+
+  ✘  1 mailpit.spec.cjs:60:1 › captures delayed reset by exact recipient beyond the unfiltered first page (2.4s)
+
+
+  1) mailpit.spec.cjs:60:1 › captures delayed reset by exact recipient beyond the unfiltered first page 
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: "Reset your password"
+    Received: "Account newsletter"
+
+      87 |     await delayed;
+      88 |     expect(message.ID).not.toBe(stale.ID);
+    > 89 |     expect(message.Subject).toBe('Reset your password');
+         |                             ^
+      90 |     expect(message.From.Address).toBe('no-reply@example.test');
+      91 |     expect(message.To.map(a => a.Address)).toEqual([recipient]);
+      92 |     expect(message.ReplyTo.map(a => a.Address)).toEqual(['support@example.test']);
+        at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/mailpit/mailpit.spec.cjs:89:29
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    artifacts/negative-subject/test-results/mailpit-captures-delayed-r-3fc72-d-the-unfiltered-first-page/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: artifacts/negative-subject/test-results/mailpit-captures-delayed-r-3fc72-d-the-unfiltered-first-page/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts/negative-subject/test-results/mailpit-captures-delayed-r-3fc72-d-the-unfiltered-first-page/trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts/negative-subject/test-results/mailpit-captures-delayed-r-3fc72-d-the-unfiltered-first-page/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    mailpit.spec.cjs:60:1 › captures delayed reset by exact recipient beyond the unfiltered first page 

@@ -3,7 +3,7 @@ name: playwright-automation
 description: >-
   Write production-grade Playwright tests in TypeScript: Page Object Model,
   fixtures, auto-waiting, user-facing locators, parallel execution, CI
-  integration, sharding, and 2025-2026 feature awareness. Includes an explicit
+  integration, sharding, and installed-version checks. Includes an explicit
   "do not" list for AI agents.
   Use when: "Playwright," "write E2E test," "page object," "new Playwright suite,"
   "Playwright config."
@@ -15,7 +15,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: automation
 ---
 
@@ -38,7 +38,7 @@ Check `.agents/qa-project-context.md` first — if it exists, use it and skip an
 
 1. **User-facing locators first.** `getByRole` > `getByLabel` > `getByTestId` > CSS (last resort). Locators must reflect what the user sees, not how the DOM is structured. See `references/selector-strategies.md`.
 2. **Auto-waiting — NEVER use `waitForTimeout`.** Every Playwright action and web-first assertion auto-waits. If you think you need a timeout, you need a better locator or assertion.
-3. **Test isolation.** Each test gets a fresh `BrowserContext`. Tests must never depend on other tests' state or execution order.
+3. **Test isolation.** Each test gets a fresh `BrowserContext`, but this does not isolate server-side accounts, carts, orders or password changes. Allocate independent records/accounts or a fresh database where tests mutate shared state. Tests must not depend on execution order.
 4. **Parallel by default, serial only when necessary.** Use `fullyParallel: true`. Reserve `test.describe.serial` for flows that genuinely cannot be isolated (rare).
 5. **Fixtures for setup, not hooks.** Fixtures compose, provide type safety, and tear down automatically. Prefer them over `beforeEach`/`afterEach` for anything non-trivial. See `references/fixtures-and-projects.md`.
 
@@ -76,7 +76,8 @@ const isCI = !!process.env.CI;
 const baseURL = process.env.BASE_URL ?? 'http://localhost:3000';
 
 export default defineConfig({
-  testDir: './e2e/tests',
+  testDir: './e2e', // Includes global-setup.ts as well as tests/.
+  testMatch: '**/*.spec.ts',
   fullyParallel: true,
   forbidOnly: isCI,
   retries: isCI ? 2 : 0,
@@ -94,11 +95,8 @@ export default defineConfig({
     // action. Set per-action only where a known-slow widget needs it.
   },
   projects: [
-    { name: 'setup', testMatch: /global-setup\.ts/, teardown: 'teardown' },
-    { name: 'teardown', testMatch: /global-teardown\.ts/ },
+    { name: 'setup', testMatch: /global-setup\.ts/ },
     { name: 'chromium', use: { ...devices['Desktop Chrome'], storageState: '.auth/user.json' }, dependencies: ['setup'] },
-    { name: 'firefox', use: { ...devices['Desktop Firefox'], storageState: '.auth/user.json' }, dependencies: ['setup'] },
-    { name: 'webkit', use: { ...devices['Desktop Safari'], storageState: '.auth/user.json' }, dependencies: ['setup'] },
   ],
   webServer: isCI ? undefined : {
     command: 'npm run dev', url: baseURL, reuseExistingServer: !isCI, timeout: 120_000,
@@ -106,7 +104,7 @@ export default defineConfig({
 });
 ```
 
-The `blob` reporter in CI is what makes sharded runs mergeable — see the sharding section. The `setup` project writes `storageState` once before the browser projects depend on it.
+The `blob` reporter in CI makes sharded runs mergeable; see the sharding section. The `setup` project writes `storageState` before Chromium runs. Add browser projects from `references/fixtures-and-projects.md` when the supported-browser contract requires them. Add a teardown dependency only with an actual teardown test inside `testDir`.
 
 ### Global setup (storageState)
 
@@ -123,7 +121,9 @@ setup('authenticate as default user', async ({ page }) => {
 });
 ```
 
-This is the `setup` project pattern: the setup project (or a `globalSetup` file) runs UI login once, and every browser project replays the saved cookies/localStorage via `storageState` in config. For multi-role auth (admin/user/guest) and token seeding, see `references/auth-patterns.md`.
+This is the setup-project pattern: a regular Playwright test saves the session and dependent projects load it. A `globalSetup` function is a different API; do not interchange the file formats. Shared authentication suits read-only tests. Tests that change passwords, account settings or other shared backend state need separate accounts or per-test provisioning. For multi-role auth and token seeding, see `references/auth-patterns.md`.
+
+Before writing a large suite, run `npx playwright test --list --project=chromium` and one authenticated smoke test. Confirm setup discovery, the actual application URL and saved-session use. Add `.auth/` to `.gitignore`; do not publish storage-state files with reports.
 
 ---
 
@@ -183,6 +183,21 @@ POM methods return state (locators, values); they do not assert. Assertions live
 ---
 
 ## Test Patterns
+
+### Observe each consequential transition
+
+For persistence, reload immediately after the mutation under test, before another action
+can write the whole state and hide a missing save. Exercise removals and empty states as
+well as additions. Use independent expected values; a single aggregate can hide errors.
+
+When an action removes its own control from a filtered view, establish the starting state,
+perform the action, and assert the stable resulting list/count. A checkbox helper may try
+to inspect a control that no longer exists; use a normal locator click for that transition
+with explicit before/after assertions. Do not force the click or swallow its timeout.
+
+Keep coherent user journeys in one test with `test.step` when their sequence is the
+behavior being checked. Give separate tests independent starting data. Browser storage
+isolation does not replace server data isolation or prove session revocation.
 
 ### Form interactions with test.step
 
@@ -349,25 +364,27 @@ See `references/debugging-and-triage.md` for flaky-test triage and artifact anal
 
 ---
 
-## New Features (2025-2026)
+## Installed-Version Checks
 
-Current latest is **Playwright 1.60.0** (May 2026). Pin the same version in `package.json` and your CI Docker image. Recent additions worth knowing:
+Read the lockfile and run the installed CLI before choosing version-sensitive APIs:
 
-| Version | Feature | What it does |
-|---------|---------|-------------|
-| v1.45 | Clock API | `page.clock.install()` / `fastForward()` — control time without monkey-patching `Date` |
-| v1.45 | `--fail-on-flaky-tests` | Fail the CI run if any test needed a retry to pass |
-| v1.46 | `--only-changed` | Run only tests affected by changed files (git-diff aware) |
-| v1.46 | ARIA snapshots | `toMatchAriaSnapshot()` for accessibility-tree assertions |
-| v1.48 | `routeWebSocket` | First-class WebSocket interception (replaces CDP hacks) |
-| v1.55 | Test Migrator | Automated Cypress→/Selenium→Playwright via `npx playwright migrate` |
-| v1.56 | Test Agents | `npx playwright init-agents --loop=claude\|vscode\|opencode` — planner/generator/healer agents inside the coding agent's loop |
-| v1.57 | Chrome for Testing default | Headed uses `chrome`, headless uses `chrome-headless-shell` instead of bundled Chromium. Caveat: a high-memory regression was reported (microsoft/playwright #38489) — pin a known-good image tag for CI. |
-| v1.57 | `toHaveScreenshot` options | `maskColor`, `stylePath`, `pathTemplate` for masking color, custom stylesheet, and output path control |
-| v1.59 | Screencast API | `page.screencast.start()` / `.stop()` for mid-test video with start/stop control — an alternative to `recordVideo`, not a replacement. Adds action annotations, chapter markers, custom HTML overlays, and `screencast.showOverlays()` / `hideOverlays()`. Useful for agent self-verification: a coding agent can hand off a reviewable video receipt. |
-| v1.59 | `--debug=cli` | Pause-and-attach so an agent can step through a test |
-| v1.60 | `locator.drop()` | Simulate an external file/clipboard drag-and-drop onto an element |
-| v1.60 | `tracing.startHar()` | HAR recording as a first-class tracing API |
+```bash
+npm ls @playwright/test playwright
+npx playwright --version
+npx playwright test --help
+```
+
+Keep the test package, browser install and CI image on compatible pinned versions.
+Check [official release notes](https://playwright.dev/docs/release-notes) and the
+installed TypeScript declarations for APIs not already used by the project. A release
+table in a skill cannot establish which command the user's installation supports.
+For migration, use `test-migration` and execute a representative migrated test; do not
+invent a migration command.
+
+Useful capabilities include `page.clock` for browser time, `routeWebSocket` for isolated
+WebSocket tests, ARIA snapshots, and `--fail-on-flaky-tests` for retry-sensitive CI gates.
+Browser clock control does not advance server token expiry or database time. Check the
+contract and use an application-owned test clock when server time is the variable.
 
 ### AI-augmented authoring (Test Agents vs MCP)
 

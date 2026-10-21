@@ -1,0 +1,156 @@
+{
+  "repository": "https://github.com/tastejs/todomvc",
+  "commit": "25a9e31eb32db752d959df18e4d214295a2875e8",
+  "directory": "examples/vanillajs",
+  "selection_reason": "This pinned official revision uses localStorage. Current ES5 main uses in-memory storage and is recorded separately rather than called a persistence bug.",
+  "source_is_unmodified": true,
+  "runtime_adapter": "Serve original files locally; optional remote-learning metadata receives HTTP204 and outbound connections are prohibited by CSP. Core todo behavior is unchanged.",
+  "files": [
+    {
+      "path": "upstream/license.md",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/25a9e31eb32db752d959df18e4d214295a2875e8/license.md",
+      "bytes": 1166,
+      "sha256": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d"
+    },
+    {
+      "path": "upstream/examples/vanillajs/index.html",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/25a9e31eb32db752d959df18e4d214295a2875e8/examples/vanillajs/index.html",
+      "bytes": 1666,
+      "sha256": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e"
+    },
+    {
+      "path": "upstream/examples/vanillajs/package.json",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/25a9e31eb32db752d959df18e4d214295a2875e8/examples/vanillajs/package.json",
+      "bytes": 168,
+      "sha256": "861dd4872b19132c99161161ff032f3e52368dfec39ad18680ce4c620543efdd"
+    },
+    {
+      "path": "upstream/examples/vanillajs/js/model.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/25a9e31eb32db752d959df18e4d214295a2875e8/examples/vanillajs/js/model.js",
+      "bytes": 3161,
+      "sha256": "61cdd205e26a689cb31466e30016987be2b67e71300110e81335e53f64828982"
+    },
+    {
+      "path": "upstream/examples/vanillajs/js/store.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/25a9e31eb32db752d959df18e4d214295a2875e8/examples/vanillajs/js/store.js",
+      "bytes": 3707,
+      "sha256": "bba76f0f9383f6f38d9d9d4e9d4ed3a8952e024610ef679503688f7ab33eb7ad"
+    },
+    {
+      "path": "upstream/examples/vanillajs/js/helpers.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/25a9e31eb32db752d959df18e4d214295a2875e8/examples/vanillajs/js/helpers.js",
+      "bytes": 1600,
+      "sha256": "6121f0d7e1c91dd4edaac22ac7e685c1749eb411ede762175a7b008c7892222e"
+    },
+    {
+      "path": "upstream/examples/vanillajs/js/template.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/25a9e31eb32db752d959df18e4d214295a2875e8/examples/vanillajs/js/template.js",
+      "bytes": 2812,
+      "sha256": "d1b876a1a1766829ab76e68384fc25dbeb70b09114c484052cc4b89f3fcef2b8"
+    },
+    {
+      "path": "upstream/examples/vanillajs/js/view.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/25a9e31eb32db752d959df18e4d214295a2875e8/examples/vanillajs/js/view.js",
+      "bytes": 5680,
+      "sha256": "854375de3fbc297ede8ba286c6ef2fb4eb30cf19e0b0a7a46d9fa49bbf107c75"
+    },
+    {
+      "path": "upstream/examples/vanillajs/js/app.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/25a9e31eb32db752d959df18e4d214295a2875e8/examples/vanillajs/js/app.js",
+      "bytes": 604,
+      "sha256": "5aac9bc01a71ca4300722c0a96e7c6a94dd0b51a9f6ea530ad0587faba06f140"
+    },
+    {
+      "path": "upstream/examples/vanillajs/js/controller.js",
+      "source_url": "https://raw.githubusercontent.com/tastejs/todomvc/25a9e31eb32db752d959df18e4d214295a2875e8/examples/vanillajs/js/controller.js",
+      "bytes": 6796,
+      "sha256": "e580e4f9e15d365a767013a7ca4b65a39dcbc6ab727e4a68831e9d2ef9e6e40b"
+    },
+    {
+      "path": "vendor/todomvc-common/1.0.5/base.js",
+      "source_url": "https://registry.npmjs.org/todomvc-common/-/todomvc-common-1.0.5.tgz#package/base.js",
+      "bytes": 7253,
+      "sha256": "84090789021f5f8206800503e18adbc38b5fddbfb0a84bfe36e86e683da60c20"
+    },
+    {
+      "path": "vendor/todomvc-common/1.0.5/base.css",
+      "source_url": "https://registry.npmjs.org/todomvc-common/-/todomvc-common-1.0.5.tgz#package/base.css",
+      "bytes": 1818,
+      "sha256": "5c67ddc771b558bc07b58695c9c4b7f663d2ba813edb4810341799c47ba0822d"
+    },
+    {
+      "path": "vendor/todomvc-common/1.0.5/package.json",
+      "source_url": "https://registry.npmjs.org/todomvc-common/-/todomvc-common-1.0.5.tgz#package/package.json",
+      "bytes": 347,
+      "sha256": "b58875806d8f06f234edf0b5d1bff8b20a4e8e84582d19057a62320267073e93"
+    },
+    {
+      "path": "vendor/todomvc-common/1.0.5/license",
+      "source_url": "https://registry.npmjs.org/todomvc-common/-/todomvc-common-1.0.5.tgz#package/license",
+      "bytes": 1059,
+      "sha256": "6732b03a358734a0e09054abd6b62a261d5f308521ceeae3f2d1b4627bf0c525"
+    },
+    {
+      "path": "vendor/todomvc-common/1.0.5/readme.md",
+      "source_url": "https://registry.npmjs.org/todomvc-common/-/todomvc-common-1.0.5.tgz#package/readme.md",
+      "bytes": 164,
+      "sha256": "5dafddbb1d858af4a2528d7c620d5b7848e9987623012757c3d022e9802796bc"
+    },
+    {
+      "path": "vendor/todomvc-app-css/2.4.1/index.css",
+      "source_url": "https://registry.npmjs.org/todomvc-app-css/-/todomvc-app-css-2.4.1.tgz#package/index.css",
+      "bytes": 7254,
+      "sha256": "473cdf4e493c4cd4dc0fe87c00d0ca599bcfb57ba1dd3c40a1774582d4ad2cd0"
+    },
+    {
+      "path": "vendor/todomvc-app-css/2.4.1/package.json",
+      "source_url": "https://registry.npmjs.org/todomvc-app-css/-/todomvc-app-css-2.4.1.tgz#package/package.json",
+      "bytes": 434,
+      "sha256": "95b2dc61769730bf06ad0d0abc1a611ab417b13c14ee979920b1d5c61f491a0f"
+    },
+    {
+      "path": "vendor/todomvc-app-css/2.4.1/license",
+      "source_url": "https://registry.npmjs.org/todomvc-app-css/-/todomvc-app-css-2.4.1.tgz#package/license",
+      "bytes": 18752,
+      "sha256": "122727cc5edb17bae34682f3b0f35ecfe42cf3f38152be8a27d8a0668895254e"
+    },
+    {
+      "path": "vendor/todomvc-app-css/2.4.1/readme.md",
+      "source_url": "https://registry.npmjs.org/todomvc-app-css/-/todomvc-app-css-2.4.1.tgz#package/readme.md",
+      "bytes": 371,
+      "sha256": "bcfd25e122c41039722b4e4bdf4b122ae240ad2f95bd1823d5358bdee316cbe0"
+    }
+  ],
+  "packages": [
+    {
+      "name": "todomvc-common",
+      "version": "1.0.5",
+      "license": "MIT",
+      "repository": {
+        "url": "git+https://github.com/tastejs/todomvc-common.git",
+        "type": "git"
+      },
+      "git_head": "3b6156d98fdc7070fc284038ac10e4ec4a5d1d1f",
+      "metadata_url": "https://registry.npmjs.org/todomvc-common/1.0.5",
+      "tarball_url": "https://registry.npmjs.org/todomvc-common/-/todomvc-common-1.0.5.tgz",
+      "registry_shasum": "8c3e799ac9f1fc1573e0c204f984510826914730",
+      "registry_integrity": "sha512-D8kEJmxVMQIWwztEdH+WeiAfXRbbSCpgXq4NkYi+gduJ2tr8CNq7sYLfJvjpQ10KD9QxJwig57rvMbV2QAESwQ==",
+      "tarball_sha256": "b76a322960144b4c3363dd33419442cca53bc3c3b060847669800103f81b3a2c"
+    },
+    {
+      "name": "todomvc-app-css",
+      "version": "2.4.1",
+      "license": "CC-BY-4.0",
+      "repository": {
+        "url": "git+https://github.com/tastejs/todomvc-app-css.git",
+        "type": "git"
+      },
+      "git_head": "f0f1534269656da931d0eb360c795c1cf480890f",
+      "metadata_url": "https://registry.npmjs.org/todomvc-app-css/2.4.1",
+      "tarball_url": "https://registry.npmjs.org/todomvc-app-css/-/todomvc-app-css-2.4.1.tgz",
+      "registry_shasum": "528b7e40a2d82e01d2756333c8ac34e23b750ff8",
+      "registry_integrity": "sha512-1mZYRG435VmqIw1WahBYhAJbyfH4HnRNI8EgF4ypK4R1RjwgBBvXd0N57ZwCa1lbHzYBraA6+dVyAg3GAPEACQ==",
+      "tarball_sha256": "faea8079a15145c7db16150b88bc9adda0856eec7d72d65317ede64e87b8bdf4"
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+
+Running 4 tests using 4 workers
+
+  ✘  3 mailpit.spec.cjs:107:1 › rejects real captured reset templates with missing, unsafe or ambiguous links (2ms)
+  ✘  2 mailpit.spec.cjs:60:1 › captures delayed reset by exact recipient beyond the unfiltered first page (3ms)
+  ✓  1 mailpit.spec.cjs:151:1 › cleanup deletes only owned IDs and preserves another test recipient (230ms)
+  ✓  4 mailpit.spec.cjs:134:1 › bounded waits reject absent recipients and stale-only messages after observing real mail (723ms)
+
+
+  1) mailpit.spec.cjs:60:1 › captures delayed reset by exact recipient beyond the unfiltered first page 
+
+    Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+    ╔════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright was just installed or updated.       ║
+    ║ Please run the following command to download new browsers: ║
+    ║                                                            ║
+    ║     npx playwright install                                 ║
+    ║                                                            ║
+    ║ <3 Playwright Team                                         ║
+    ╚════════════════════════════════════════════════════════════╝
+
+    Error Context: artifacts/test-results/mailpit-captures-delayed-r-3fc72-d-the-unfiltered-first-page/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts/test-results/mailpit-captures-delayed-r-3fc72-d-the-unfiltered-first-page/trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts/test-results/mailpit-captures-delayed-r-3fc72-d-the-unfiltered-first-page/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) mailpit.spec.cjs:107:1 › rejects real captured reset templates with missing, unsafe or ambiguous links 
+
+    Error: browserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1234/chrome-headless-shell-linux64/chrome-headless-shell
+    ╔════════════════════════════════════════════════════════════╗
+    ║ Looks like Playwright was just installed or updated.       ║
+    ║ Please run the following command to download new browsers: ║
+    ║                                                            ║
+    ║     npx playwright install                                 ║
+    ║                                                            ║
+    ║ <3 Playwright Team                                         ║
+    ╚════════════════════════════════════════════════════════════╝
+
+    Error Context: artifacts/test-results/mailpit-rejects-real-captu-cb1b4-g-unsafe-or-ambiguous-links/error-context.md
+
+    attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+    artifacts/test-results/mailpit-rejects-real-captu-cb1b4-g-unsafe-or-ambiguous-links/trace.zip
+    Usage:
+
+        npx playwright show-trace artifacts/test-results/mailpit-rejects-real-captu-cb1b4-g-unsafe-or-ambiguous-links/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2 failed
+    mailpit.spec.cjs:60:1 › captures delayed reset by exact recipient beyond the unfiltered first page 
+    mailpit.spec.cjs:107:1 › rejects real captured reset templates with missing, unsafe or ambiguous links 
+  2 passed (1.4s)
+(node:9388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9392) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9387) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:9389) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)

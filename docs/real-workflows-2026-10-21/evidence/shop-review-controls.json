@@ -1,0 +1,135 @@
+{
+  "scope": "Fixture developer control: real loopback HTTP and SQLite; independent fresh processes and databases. The exact pre-logout cookie is explicitly replayed after logout. No browser cookie jar, external services, or SMTP requests.",
+  "command": "python3 /tmp/shop-logout-control.py",
+  "python_version": "3.12.14",
+  "source_sha256": {
+    "server.py": "4e8518762a19ffaac5b41639e16aa5875f84ac9425daaf434f5900218a746caa",
+    "faults.py": "a5fca58b9d4aea59173769d62b9efa9920e3473164c884b22c2fd6470ce65750"
+  },
+  "cases": [
+    {
+      "case": "healthy",
+      "login_status": 200,
+      "copied_cookie_before_logout_status": 200,
+      "logout_status": 204,
+      "logout_clears_browser_cookie": true,
+      "copied_original_cookie_after_logout_status": 401,
+      "request_without_cookie_after_logout_status": 401,
+      "catalog_unit_amounts": {
+        "TEA-50": 1200,
+        "CUP-01": 1800
+      },
+      "single_tea_single_cup_and_baseline_basket_amounts": [
+        1200,
+        1800,
+        4200
+      ],
+      "correctly_signed_exact_bytes": {
+        "compact": {
+          "http_status": 200,
+          "order_status": "paid",
+          "fulfillment_count": 1
+        },
+        "pretty": {
+          "http_status": 200,
+          "order_status": "paid",
+          "fulfillment_count": 1
+        }
+      },
+      "passed_expected_control": true
+    },
+    {
+      "case": "logout_cookie_only",
+      "login_status": 200,
+      "copied_cookie_before_logout_status": 200,
+      "logout_status": 204,
+      "logout_clears_browser_cookie": true,
+      "copied_original_cookie_after_logout_status": 200,
+      "request_without_cookie_after_logout_status": 401,
+      "catalog_unit_amounts": {
+        "TEA-50": 1200,
+        "CUP-01": 1800
+      },
+      "single_tea_single_cup_and_baseline_basket_amounts": [
+        1200,
+        1800,
+        4200
+      ],
+      "correctly_signed_exact_bytes": {
+        "compact": {
+          "http_status": 200,
+          "order_status": "paid",
+          "fulfillment_count": 1
+        },
+        "pretty": {
+          "http_status": 200,
+          "order_status": "paid",
+          "fulfillment_count": 1
+        }
+      },
+      "passed_expected_control": true
+    },
+    {
+      "case": "compensating_prices",
+      "login_status": 200,
+      "copied_cookie_before_logout_status": 200,
+      "logout_status": 204,
+      "logout_clears_browser_cookie": true,
+      "copied_original_cookie_after_logout_status": 401,
+      "request_without_cookie_after_logout_status": 401,
+      "catalog_unit_amounts": {
+        "TEA-50": 1500,
+        "CUP-01": 1200
+      },
+      "single_tea_single_cup_and_baseline_basket_amounts": [
+        1500,
+        1200,
+        4200
+      ],
+      "correctly_signed_exact_bytes": {
+        "compact": {
+          "http_status": 200,
+          "order_status": "paid",
+          "fulfillment_count": 1
+        },
+        "pretty": {
+          "http_status": 200,
+          "order_status": "paid",
+          "fulfillment_count": 1
+        }
+      },
+      "passed_expected_control": true
+    },
+    {
+      "case": "canonicalized_signature",
+      "login_status": 200,
+      "copied_cookie_before_logout_status": 200,
+      "logout_status": 204,
+      "logout_clears_browser_cookie": true,
+      "copied_original_cookie_after_logout_status": 401,
+      "request_without_cookie_after_logout_status": 401,
+      "catalog_unit_amounts": {
+        "TEA-50": 1200,
+        "CUP-01": 1800
+      },
+      "single_tea_single_cup_and_baseline_basket_amounts": [
+        1200,
+        1800,
+        4200
+      ],
+      "correctly_signed_exact_bytes": {
+        "compact": {
+          "http_status": 200,
+          "order_status": "paid",
+          "fulfillment_count": 1
+        },
+        "pretty": {
+          "http_status": 401,
+          "order_status": "pending",
+          "fulfillment_count": 0
+        }
+      },
+      "passed_expected_control": true
+    }
+  ]
+}

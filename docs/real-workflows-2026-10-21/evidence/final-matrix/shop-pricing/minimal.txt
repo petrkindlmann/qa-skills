@@ -1,0 +1,7 @@
+WORKFLOW RUN: 25 scheduled cases
+FAILED:  /  / baseline-shop/shop.spec.mjs / catalog controls money and malformed orders never create state (attempt 1)
+Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32m4200[39m
+Received: [31m1[39m
+WORKFLOW RESULT: failed; attempts=25; {"passed":24,"failed":1}

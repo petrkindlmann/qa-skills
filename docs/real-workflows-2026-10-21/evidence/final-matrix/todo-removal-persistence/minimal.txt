@@ -1,0 +1,75 @@
+WORKFLOW RUN: 25 scheduled cases
+FAILED:  /  / baseline-todo/todomvc.spec.mjs / whitespace Enter and empty blur edits remove only their targeted records (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator: locator('.todo-list').locator('label')
+Timeout: 4000ms
+[32m- Expected  - 0[39m
+[31m+ Received  + 2[39m
+
+[2m  Array [[22m
+[31m+   "Check mailbox",[39m
+[31m+   "Check mailbox",[39m
+[2m    "Keep stamped letter",[22m
+[2m  ][22m
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').locator('label')[22m
+[2m    12 × locator resolved to 3 elements[22m
+
+FAILED:  /  / review-followup/todo-review.spec.mjs / single delete persists immediately with survivor order and completion intact (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator: locator('.todo-list').locator('label')
+Timeout: 4000ms
+[32m- Expected  - 0[39m
+[31m+ Received  + 1[39m
+
+[2m  Array [[22m
+[2m    "Keep first",[22m
+[31m+   "Delete second",[39m
+[2m    "Keep third",[22m
+[2m    "Keep completed",[22m
+[2m  ][22m
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').locator('label')[22m
+[2m    12 × locator resolved to 4 elements[22m
+
+FAILED:  /  / review-followup/todo-review.spec.mjs / clear completed persists immediately and preserves active titles and order (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator: locator('.todo-list').locator('label')
+Timeout: 4000ms
+[32m- Expected  - 0[39m
+[31m+ Received  + 2[39m
+
+[2m  Array [[22m
+[2m    "Active first",[22m
+[31m+   "Completed second",[39m
+[2m    "Active third",[22m
+[31m+   "Completed fourth",[39m
+[2m  ][22m
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').locator('label')[22m
+[2m    12 × locator resolved to 4 elements[22m
+
+FAILED:  /  / review-followup/todo-review.spec.mjs / clearing the final completed item persists the empty state immediately (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveCount[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator:  locator('.todo-list').getByRole('listitem')
+Expected: [32m0[39m
+Received: [31m1[39m
+Timeout:  4000ms
+
+Call log:
+[2m  - Expect "toHaveCount" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').getByRole('listitem')[22m
+[2m    12 × locator resolved to 1 element[22m
+[2m       - unexpected value "1"[22m
+
+WORKFLOW RESULT: failed; attempts=25; {"passed":21,"failed":4}

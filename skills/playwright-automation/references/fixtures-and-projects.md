@@ -13,40 +13,51 @@ Fixtures are Playwright's mechanism for test setup, teardown, and dependency inj
 
 ```typescript
 import { test as base } from '@playwright/test';
-
-type TestFixtures = {
-  dashboardPage: DashboardPage;   // fresh per test
-};
+import path from 'node:path';
+import { rm } from 'node:fs/promises';
 
 type WorkerFixtures = {
   authState: string;              // shared across tests in a worker
 };
 
-export const test = base.extend<TestFixtures, WorkerFixtures>({
-  // Test-scoped (default)
-  dashboardPage: async ({ page }, use) => {
-    const dashboard = new DashboardPage(page);
-    await dashboard.goto();
-    await use(dashboard);
-    // Automatic teardown: page is closed by Playwright after test
+export const test = base.extend<{}, WorkerFixtures>({
+  // Connect the saved state to the builtin context/page fixtures.
+  storageState: async ({ authState }, use) => {
+    await use(authState);
   },
 
   // Worker-scoped (explicit)
-  authState: [async ({ browser }, use) => {
-    const ctx = await browser.newContext();
-    const page = await ctx.newPage();
-    await page.goto('/login');
-    await page.getByLabel('Email').fill(process.env.TEST_USER_EMAIL!);
-    await page.getByLabel('Password').fill(process.env.TEST_USER_PASSWORD!);
-    await page.getByRole('button', { name: 'Sign in' }).click();
-    await page.waitForURL('**/dashboard');
-    const path = `.auth/user-${test.info().parallelIndex}.json`;
-    await ctx.storageState({ path });
-    await ctx.close();
-    await use(path);
+  authState: [async ({ browser }, use, workerInfo) => {
+    const baseURL = workerInfo.project.use.baseURL;
+    if (!baseURL) throw new Error('Configure use.baseURL for the login flow');
+    const file = path.join(workerInfo.project.outputDir, `.auth/user-${workerInfo.workerIndex}.json`);
+    const ctx = await browser.newContext({ baseURL, storageState: { cookies: [], origins: [] } });
+    try {
+      const page = await ctx.newPage();
+      await page.goto('/login');
+      await page.getByLabel('Email').fill(process.env.TEST_USER_EMAIL!);
+      await page.getByLabel('Password').fill(process.env.TEST_USER_PASSWORD!);
+      await page.getByRole('button', { name: 'Sign in' }).click();
+      await page.waitForURL('**/dashboard');
+      await ctx.storageState({ path: file });
+    } finally {
+      await ctx.close();
+    }
+    try { await use(file); } finally { await rm(file, { force: true }); }
   }, { scope: 'worker' }],
 });
 ```
+
+This example shares a read-only account. Different context objects or state-file names
+do not isolate backend mutations. For tests that change account data, allocate accounts
+per worker or test using your application's provisioning API; include project, shard and
+run identity in that allocation. A password-reset test needs its own account. Worker
+restarts must recreate state, and cleanup must remove only resources that run owns.
+
+The `storageState` override is essential: defining `authState` alone neither runs it for
+ordinary `page` tests nor loads its cookies. Exercise a test that requests only `page`
+before expanding the suite. See Playwright's [authentication guidance](https://playwright.dev/docs/auth)
+and [fixture scopes](https://playwright.dev/docs/test-fixtures).
 
 ---
 
@@ -54,7 +65,7 @@ export const test = base.extend<TestFixtures, WorkerFixtures>({
 
 ```typescript
 // e2e/fixtures/auth.fixture.ts
-import { test as base, type BrowserContext } from '@playwright/test';
+import { test as base, type BrowserContext, type Page } from '@playwright/test';
 
 type AuthFixtures = {
   adminContext: BrowserContext;

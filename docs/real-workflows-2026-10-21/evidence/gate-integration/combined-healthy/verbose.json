@@ -1,0 +1,985 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/scratch/db79cfa7c2bc/qa-skills/node_modules/playwright/cli.js",
+      "test",
+      "--config",
+      "tests/workflows/playwright.config.mjs",
+      "--workers=2",
+      "--retries=0",
+      "--global-timeout=90000"
+    ],
+    "configFile": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/playwright.config.mjs",
+    "rootDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 90000,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-integration/combined-healthy/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.mjs"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/reporters/minimal.mjs",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-integration/combined-healthy/verbose.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-integration/combined-healthy/html",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "baseline-shop/shop.spec.mjs",
+      "file": "baseline-shop/shop.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "API auth, cookie contract and logout revoke access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 528,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:40.197Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-fccc2fe1ce1e95605f51",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "catalog controls money and malformed orders never create state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 442,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:40.193Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-597f5b5aa88e50f33016",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "order ownership is private and idempotency keys belong to users",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 540,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:40.862Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-2f40f64fad0de2100a0f",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 27,
+          "column": 1
+        },
+        {
+          "title": "concurrent equivalent checkout replays once and persists across restart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 490,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:40.961Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-ede3c21fe47febb3d87f",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 33,
+          "column": 1
+        },
+        {
+          "title": "payment signatures, exact raw bytes and mismatched values reject without side effects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 486,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:41.419Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-5264ad29be88211b2cd3",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 41,
+          "column": 1
+        },
+        {
+          "title": "concurrent payment redelivery, conflict and distinct event IDs fulfill once durably",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 671,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:41.463Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-5dd16f2a2463efeb2996",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 52,
+          "column": 1
+        },
+        {
+          "title": "transient fulfillment rolls back receipt then same event succeeds after restart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 886,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:41.917Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-285efb258e66febef865",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 62,
+          "column": 1
+        },
+        {
+          "title": "browser checkout restores order on reload and reflects server payment",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1027,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:42.146Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-de18684bb90e574cd443",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 70,
+          "column": 1
+        },
+        {
+          "title": "actual reset email completes browser flow and revokes all sessions",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1290,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:42.817Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-f6058573a05a9da92262",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 81,
+          "column": 1
+        },
+        {
+          "title": "reset requests resist account enumeration and tokens expire on the server clock",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 652,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:43.277Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-147d5679bb74e555f3b9",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 92,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "baseline-todo/todomvc.spec.mjs",
+      "file": "baseline-todo/todomvc.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "creates trimmed nonblank titles in order and clears the entry field",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 496,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:43.952Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-db50da15589a020e9107",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "duplicate titles remain independent through complete edit and delete",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 699,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:44.227Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-97f8fb0191b9811a634f",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 28,
+          "column": 1
+        },
+        {
+          "title": "individual completion and restoration keep the active count global under filters",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 722,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:44.563Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-2bf09d0cada3d4b5a0fc",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 49,
+          "column": 1
+        },
+        {
+          "title": "bulk toggle affects hidden records and works from an empty filtered view",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 821,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:45.073Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-2ab4651ce012376bc6ed",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "filters visibly select the correct subset without losing or duplicating records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 794,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:45.297Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-abbcb87535ba4b0fa276",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 106,
+          "column": 1
+        },
+        {
+          "title": "Enter and blur save edits while Escape preserves the saved title on reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 921,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:45.907Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-5d594b15db0544d7e508",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 133,
+          "column": 1
+        },
+        {
+          "title": "whitespace Enter and empty blur edits remove only their targeted records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 777,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:46.101Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-2b2f1851316890819a76",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 154,
+          "column": 1
+        },
+        {
+          "title": "delete and clear completed preserve active rows and empty controls recover",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1175,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:46.841Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-fe36a819319fec6bc40b",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 172,
+          "column": 1
+        },
+        {
+          "title": "saved edits completion order and removals persist through reload and further keyboard input",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1350,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:46.890Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-181c1a188123d984563e",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 204,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "review-followup/shop-review.spec.mjs",
+      "file": "review-followup/shop-review.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "logout revokes a previously valid copied session on the server",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 357,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:48.034Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "409d9812859d4ff11302-852e2130e6a00f555b93",
+          "file": "review-followup/shop-review.spec.mjs",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "each SKU has its contracted unit price and quantity ten is accepted",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 690,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "TEA-50 x 1 costs 1200",
+                      "duration": 116
+                    },
+                    {
+                      "title": "CUP-01 x 1 costs 1800",
+                      "duration": 118
+                    },
+                    {
+                      "title": "TEA-50 x 10 costs 12000",
+                      "duration": 108
+                    }
+                  ],
+                  "startTime": "2026-10-21T00:58:48.267Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "409d9812859d4ff11302-01a691c177c133547e7f",
+          "file": "review-followup/shop-review.spec.mjs",
+          "line": 32,
+          "column": 1
+        },
+        {
+          "title": "correctly signed noncanonical JSON is accepted and identical bytes replay once",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 606,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:48.406Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "409d9812859d4ff11302-3123ef5909e1d7d570de",
+          "file": "review-followup/shop-review.spec.mjs",
+          "line": 62,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "review-followup/todo-review.spec.mjs",
+      "file": "review-followup/todo-review.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "single delete persists immediately with survivor order and completion intact",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 888,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:48.972Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "173aaa1d204cf0681f96-b71609289715fbdf6373",
+          "file": "review-followup/todo-review.spec.mjs",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "clear completed persists immediately and preserves active titles and order",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 947,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:49.027Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "173aaa1d204cf0681f96-205b05e9a627d6ffdfd5",
+          "file": "review-followup/todo-review.spec.mjs",
+          "line": 24,
+          "column": 1
+        },
+        {
+          "title": "clearing the final completed item persists the empty state immediately",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 546,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:58:49.873Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "173aaa1d204cf0681f96-3c554781c6e5de5fca87",
+          "file": "review-followup/todo-review.spec.mjs",
+          "line": 47,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-21T00:58:39.735Z",
+    "duration": 11249.308,
+    "expected": 25,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

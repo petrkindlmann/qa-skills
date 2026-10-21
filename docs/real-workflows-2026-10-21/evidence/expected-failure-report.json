@@ -1,0 +1,163 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/scratch/db79cfa7c2bc/qa-skills/node_modules/playwright/cli.js",
+      "test",
+      "--config",
+      "tests/workflows/artifacts/gate-probes/playwright.config.mjs"
+    ],
+    "configFile": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-probes/playwright.config.mjs",
+    "rootDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-probes",
+    "failOnFlakyTests": false,
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 1
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-probes",
+        "testIgnore": [],
+        "testMatch": [
+          "expected-failure.spec.mjs"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "json",
+        null
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "expected-failure.spec.mjs",
+      "file": "expected-failure.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "known failure annotation",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [
+                {
+                  "type": "fail",
+                  "location": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-probes/expected-failure.spec.mjs",
+                    "line": 2,
+                    "column": 48
+                  }
+                }
+              ],
+              "expectedStatus": "failed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 8,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m1\u001b[39m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m1\u001b[39m\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-probes/expected-failure.spec.mjs:2:65",
+                    "location": {
+                      "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-probes/expected-failure.spec.mjs",
+                      "column": 65,
+                      "line": 2
+                    },
+                    "snippet": "  1 | import {test,expect} from '@playwright/test';\n> 2 | test('known failure annotation',async()=>{test.fail();expect(1).toBe(2);});\n    |                                                                 ^\n  3 |"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-probes/expected-failure.spec.mjs",
+                        "column": 65,
+                        "line": 2
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m2\u001b[39m\nReceived: \u001b[31m1\u001b[39m\n\n  1 | import {test,expect} from '@playwright/test';\n> 2 | test('known failure annotation',async()=>{test.fail();expect(1).toBe(2);});\n    |                                                                 ^\n  3 |\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-probes/expected-failure.spec.mjs:2:65"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:45.138Z",
+                  "annotations": [
+                    {
+                      "type": "fail",
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-probes/expected-failure.spec.mjs",
+                        "line": 2,
+                        "column": 48
+                      }
+                    }
+                  ],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/test-results/expected-failure-known-failure-annotation/error-context.md"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/gate-probes/expected-failure.spec.mjs",
+                    "column": 65,
+                    "line": 2
+                  }
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "578c36d855960ec7de6f-6630fec4466be895ac60",
+          "file": "expected-failure.spec.mjs",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-21T00:54:44.677Z",
+    "duration": 518.0550000000001,
+    "expected": 1,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

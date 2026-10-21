@@ -1,0 +1,553 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/scratch/db79cfa7c2bc/qa-skills/node_modules/playwright/cli.js",
+      "test",
+      "--config",
+      "tests/workflows/playwright.config.mjs",
+      "--workers=2",
+      "--retries=0",
+      "--global-timeout=90000"
+    ],
+    "configFile": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/playwright.config.mjs",
+    "rootDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 90000,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/shop-deduplication/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.mjs"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/reporters/minimal.mjs",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/shop-deduplication/verbose.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/shop-deduplication/html",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "probe.spec.mjs",
+      "file": "probe.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "discover public UI",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 535,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "- main:\n  - heading \"Shop Workflow Lab\" [level=1]\n  - paragraph: A local checkout and account application for QA workflows.\n  - status\n  - heading \"Account\" [level=2]\n  - paragraph: Signed in as alice+4aea154cef704ba0a55e5c0123f20ebf@example.test\n  - button \"Sign out\"\n  - heading \"Catalogue\" [level=2]\n  - paragraph: Mountain tea 50 g · EUR 12.00\n  - text: Mountain tea 50 g quantity\n  - spinbutton \"Mountain tea 50 g quantity\": \"1\"\n  - paragraph: Tea cup · EUR 18.00\n  - text: Tea cup quantity\n  - spinbutton \"Tea cup quantity\": \"0\"\n  - paragraph: \"Cart total: EUR 12.00\"\n  - button \"Place order\"\n  - heading \"Your orders\" [level=2]\n  - button \"Refresh orders\"\n  - list\n  - heading \"Forgot your password?\" [level=2]\n  - text: Account email\n  - textbox \"Account email\"\n  - button \"Send reset link\"\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:45:53.988Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "33459b0cee36fa0488f7-a0f8cb35c68face56796",
+          "file": "probe.spec.mjs",
+          "line": 2,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "shop.spec.mjs",
+      "file": "shop.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "API auth, cookie contract and logout revoke access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 511,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:45:54.032Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "06242ac6098711d3bafe-84c01b16ae6d2fd0c8ea",
+          "file": "shop.spec.mjs",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "catalog controls money and malformed orders never create state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 417,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:45:54.813Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "06242ac6098711d3bafe-4d916f362a3d37118c67",
+          "file": "shop.spec.mjs",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "order ownership is private and idempotency keys belong to users",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 558,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:45:54.901Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "06242ac6098711d3bafe-e5741d6e64c312294dcd",
+          "file": "shop.spec.mjs",
+          "line": 27,
+          "column": 1
+        },
+        {
+          "title": "concurrent equivalent checkout replays once and persists across restart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 507,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:45:55.249Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "06242ac6098711d3bafe-d4bcba0cefd9abd2f5d5",
+          "file": "shop.spec.mjs",
+          "line": 33,
+          "column": 1
+        },
+        {
+          "title": "payment signatures, exact raw bytes and mismatched values reject without side effects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 505,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:45:55.469Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "06242ac6098711d3bafe-b9dc1f05cccd1981132b",
+          "file": "shop.spec.mjs",
+          "line": 41,
+          "column": 1
+        },
+        {
+          "title": "concurrent payment redelivery, conflict and distinct event IDs fulfill once durably",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 493,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"fulfillment_count\": 1,\u001b[39m\n\u001b[31m+   \"fulfillment_count\": 7,\u001b[39m\n\u001b[2m    \"status\": \"paid\",\u001b[22m\n\u001b[2m  }\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"fulfillment_count\": 1,\u001b[39m\n\u001b[31m+   \"fulfillment_count\": 7,\u001b[39m\n\u001b[2m    \"status\": \"paid\",\u001b[22m\n\u001b[2m  }\u001b[22m\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs:57:89",
+                    "location": {
+                      "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs",
+                      "column": 89,
+                      "line": 57
+                    },
+                    "snippet": "  55 |   expect(await json(await deliver(app,request,{...event,data:{...event.data,amount:1}}),409)).toEqual({error:'event_conflict'});\n  56 |   expect((await json(await deliver(app,request,payment(order,'evt-other')),200)).duplicate).toBe(false);\n> 57 |   let s=await state(app,request);expect(s.receipts).toHaveLength(2);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});\n     |                                                                                         ^\n  58 |   await app.restart({failFulfillmentOnce:false});expect((await json(await deliver(app,request,event),200)).duplicate).toBe(true);\n  59 |   s=await state(app,request);expect(s.receipts).toHaveLength(2);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});\n  60 | });"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs",
+                        "column": 89,
+                        "line": 57
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"fulfillment_count\": 1,\u001b[39m\n\u001b[31m+   \"fulfillment_count\": 7,\u001b[39m\n\u001b[2m    \"status\": \"paid\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\n  55 |   expect(await json(await deliver(app,request,{...event,data:{...event.data,amount:1}}),409)).toEqual({error:'event_conflict'});\n  56 |   expect((await json(await deliver(app,request,payment(order,'evt-other')),200)).duplicate).toBe(false);\n> 57 |   let s=await state(app,request);expect(s.receipts).toHaveLength(2);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});\n     |                                                                                         ^\n  58 |   await app.restart({failFulfillmentOnce:false});expect((await json(await deliver(app,request,event),200)).duplicate).toBe(true);\n  59 |   s=await state(app,request);expect(s.receipts).toHaveLength(2);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});\n  60 | });\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs:57:89"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:45:55.767Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/shop-deduplication/test-results/shop-concurrent-payment-re-11d71-nt-IDs-fulfill-once-durably/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/shop-deduplication/test-results/shop-concurrent-payment-re-11d71-nt-IDs-fulfill-once-durably/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs",
+                    "column": 89,
+                    "line": 57
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "06242ac6098711d3bafe-66b2897ea2fa9987de4b",
+          "file": "shop.spec.mjs",
+          "line": 52,
+          "column": 1
+        },
+        {
+          "title": "transient fulfillment rolls back receipt then same event succeeds after restart",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 812,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"fulfillment_count\": 1,\u001b[39m\n\u001b[31m+   \"fulfillment_count\": 2,\u001b[39m\n\u001b[2m    \"status\": \"paid\",\u001b[22m\n\u001b[2m  }\u001b[22m",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"fulfillment_count\": 1,\u001b[39m\n\u001b[31m+   \"fulfillment_count\": 2,\u001b[39m\n\u001b[2m    \"status\": \"paid\",\u001b[22m\n\u001b[2m  }\u001b[22m\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs:67:171",
+                    "location": {
+                      "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs",
+                      "column": 171,
+                      "line": 67
+                    },
+                    "snippet": "  65 |   expect((await json(await clients.alice.get(`/api/orders/${order.id}`),200)).order).toMatchObject({status:'pending',fulfillment_count:0});expect((await state(app,request)).receipts).toHaveLength(0);\n  66 |   await app.restart({failFulfillmentOnce:false});expect((await json(await deliver(app,request,event),200)).duplicate).toBe(false);\n> 67 |   expect((await json(await deliver(app,request,event),200)).duplicate).toBe(true);const s=await state(app,request);expect(s.receipts).toHaveLength(1);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});\n     |                                                                                                                                                                           ^\n  68 | });\n  69 |\n  70 | test('browser checkout restores order on reload and reflects server payment',async({page,app,request})=>{"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs",
+                        "column": 171,
+                        "line": 67
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"fulfillment_count\": 1,\u001b[39m\n\u001b[31m+   \"fulfillment_count\": 2,\u001b[39m\n\u001b[2m    \"status\": \"paid\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\n  65 |   expect((await json(await clients.alice.get(`/api/orders/${order.id}`),200)).order).toMatchObject({status:'pending',fulfillment_count:0});expect((await state(app,request)).receipts).toHaveLength(0);\n  66 |   await app.restart({failFulfillmentOnce:false});expect((await json(await deliver(app,request,event),200)).duplicate).toBe(false);\n> 67 |   expect((await json(await deliver(app,request,event),200)).duplicate).toBe(true);const s=await state(app,request);expect(s.receipts).toHaveLength(1);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});\n     |                                                                                                                                                                           ^\n  68 | });\n  69 |\n  70 | test('browser checkout restores order on reload and reflects server payment',async({page,app,request})=>{\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs:67:171"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:45:55.984Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/shop-deduplication/test-results/shop-transient-fulfillment-078eb-vent-succeeds-after-restart/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/shop-deduplication/test-results/shop-transient-fulfillment-078eb-vent-succeeds-after-restart/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs",
+                    "column": 171,
+                    "line": 67
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "06242ac6098711d3bafe-f6f646f911c278979deb",
+          "file": "shop.spec.mjs",
+          "line": 62,
+          "column": 1
+        },
+        {
+          "title": "browser checkout restores order on reload and reflects server payment",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1086,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:45:57.120Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "06242ac6098711d3bafe-25cc5a7f96395dccd1d4",
+          "file": "shop.spec.mjs",
+          "line": 70,
+          "column": 1
+        },
+        {
+          "title": "actual reset email completes browser flow and revokes all sessions",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1263,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:45:57.790Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "06242ac6098711d3bafe-c5f0099a0657713e8c93",
+          "file": "shop.spec.mjs",
+          "line": 81,
+          "column": 1
+        },
+        {
+          "title": "reset requests resist account enumeration and tokens expire on the server clock",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 674,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:45:58.582Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "06242ac6098711d3bafe-b46b87042ce85615cc4d",
+          "file": "shop.spec.mjs",
+          "line": 92,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-21T00:45:53.583Z",
+    "duration": 6361.624,
+    "expected": 9,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

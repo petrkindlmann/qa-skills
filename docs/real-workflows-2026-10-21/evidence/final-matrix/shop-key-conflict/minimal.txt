@@ -1,0 +1,9 @@
+WORKFLOW RUN: 25 scheduled cases
+FAILED:  /  / baseline-shop/shop.spec.mjs / concurrent equivalent checkout replays once and persists across restart (attempt 1)
+Error: http://127.0.0.1:34797/api/orders {"order": {"id": "d9029ed9-030b-48a6-b0e0-a2c1f84d6e53", "user_id": "alice", "currency": "EUR", "amount": 4200, "status": "pending", "fulfillment_count": 0, "items": [{"sku": "CUP-01", "quantity": 1}, {"sku": "TEA-50", "quantity": 2}]}, "replayed": true}
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32m409[39m
+Received: [31m200[39m
+WORKFLOW RESULT: failed; attempts=25; {"passed":24,"failed":1}

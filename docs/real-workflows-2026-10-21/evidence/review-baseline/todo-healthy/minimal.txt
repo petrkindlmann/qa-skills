@@ -1,0 +1,2 @@
+WORKFLOW RUN: 9 scheduled cases
+WORKFLOW RESULT: passed; attempts=9; {"passed":9}

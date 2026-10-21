@@ -1,0 +1,32 @@
+{
+  "regressions": {
+    "python": 127,
+    "javascript": 85,
+    "browser": 84,
+    "total": 296
+  },
+  "workflowCases": 25,
+  "matrix": {
+    "variants": 14,
+    "executions": 375,
+    "passes": 346,
+    "intentionalFailures": 29,
+    "skipped": 0
+  },
+  "healthyRun": {
+    "startTime": "2026-10-21T00:58:39.735Z",
+    "duration": 11249.308,
+    "expected": 25,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "narrowRepeat": {
+    "startTime": "2026-10-21T01:00:01.495Z",
+    "duration": 14555.037,
+    "expected": 50,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}

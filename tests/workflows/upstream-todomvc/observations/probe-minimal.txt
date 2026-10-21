@@ -1,0 +1,15 @@
+TodoMVC fixture verification
+
+Ordinary healthy user journey: matched expected behavior.
+Four healthy controls: matched expected behavior.
+Four deliberately broken variants: produced the intended observable differences.
+JavaScript page errors in those nine runs: 0.
+External browser requests in those nine runs: 0.
+
+Separate current-upstream observation: one todo before reload, zero after reload.
+Classification: in-memory behavior, not an upstream defect claim.
+
+Browser: Chrome 156.0.8078.47.
+Node: v24.19.0.
+Detailed records: probe-results.json and probe-verbose.log.
+These are fixture probes, not the fresh agent's authored test-suite results.

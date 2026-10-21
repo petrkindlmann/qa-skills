@@ -82,6 +82,29 @@ The `run_evals.py --live` and `--baseline` modes require Claude Code and are res
 pattern checks. Their generated code still needs execution and their deferred criteria
 still need a judge. Never substitute a fake model process for evidence of model quality.
 
+### Actual application workflows
+
+The second campaign uses a checksum-pinned official TodoMVC, a local Shop with SQLite,
+and the real Mailpit binary. They use loopback sockets and synthetic accounts, without
+request interception or external payment/email delivery. On Linux AMD64:
+
+```bash
+npm ci
+npx playwright install chromium
+npm run workflow:setup
+npm run test:workflows
+npm run test:mailpit
+npm run test:workflow-controls
+```
+
+`test:workflows` is the ordinary healthy acceptance suite. `test:workflow-controls` also
+expects the designated assertions to fail for deliberate defects; it exits nonzero if
+a healthy control fails, a defect escapes, input is absent or infrastructure prevents
+an observation. Reports keep each failed assertion; an expected negative control is
+not counted as a passing application test. Keep baseline authoring separate from
+review-driven repairs and record skill/source hashes. See
+`docs/REAL-WORKFLOWS-2026-10-21.md` for provenance and the exact coverage boundary.
+
 ## Reference files
 
 Reference files go in `skills/skill-name/references/` for content that would make SKILL.md too long. Agents load these on demand.

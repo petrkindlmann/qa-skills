@@ -1,0 +1,27 @@
+{
+  "contract_sha256": "43e35d9915a6806b3c7eb2d0c14f14a7842b6172c479b28b5f2a82a09e7655c6",
+  "skills": {
+    "playwright-automation": "2.0",
+    "ai-test-generation": "2.0"
+  },
+  "model_advertised": "GPT-6 Astra Pro; exact backend identifier not exposed",
+  "playwright_version": "1.62.1",
+  "browser_executable": "/tmp/qa-skills-chrome/opt/google/chrome/chrome",
+  "workers": 2,
+  "retries": 0,
+  "final_run_stats": {
+    "startTime": "2026-10-21T00:43:20.053Z",
+    "duration": 5708.223,
+    "expected": 9,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "initial_run": {
+    "scheduled": 9,
+    "passed": 8,
+    "failed": 1,
+    "cause": "Filtered-row uncheck postcondition waited after clicked row was removed; UI already showed correct state."
+  },
+  "command": "QA_BROWSER_EXECUTABLE=/tmp/qa-skills-chrome/opt/google/chrome/chrome QA_WORKFLOW_SUITE=/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo QA_WORKFLOW_OUTPUT=/tmp/qa-todo-baseline node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2"
+}

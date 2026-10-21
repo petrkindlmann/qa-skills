@@ -1,0 +1,9 @@
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / shop.spec.mjs / actual reset email completes browser flow and revokes all sessions (attempt 1)
+Error: http://127.0.0.1:35725/api/password-reset/confirm {"reset": true}
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32m400[39m
+Received: [31m200[39m
+WORKFLOW RESULT: failed; attempts=11; {"passed":10,"failed":1}

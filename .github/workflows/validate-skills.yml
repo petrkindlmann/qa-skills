@@ -95,3 +95,39 @@ jobs:
 
       - name: Execute browser recipes against good and broken fixtures
         run: npm run test:browser
+
+  application-workflows:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Install checksum-pinned local Mailpit
+        run: npm run workflow:setup
+      - name: Real SMTP and recipient isolation
+        run: npm run test:mailpit
+      - name: Healthy applications and controlled defect detection
+        run: npm run test:workflow-controls
+      - name: Retain workflow evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-workflow-evidence
+          path: |
+            tests/workflows/artifacts/**/matrix.json
+            tests/workflows/artifacts/**/verbose.json
+            tests/workflows/artifacts/**/minimal.txt
+            tests/workflows/artifacts/**/trace.zip
+            tests/workflows/artifacts/**/test-failed-*.png
+            tests/workflows/mailpit/artifacts/**/evidence.json
+            tests/workflows/mailpit/artifacts/**/playwright.log
+            tests/workflows/mailpit/artifacts/**/results.json
+          if-no-files-found: error

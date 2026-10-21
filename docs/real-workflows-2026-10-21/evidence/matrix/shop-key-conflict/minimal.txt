@@ -1,0 +1,9 @@
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / shop.spec.mjs / concurrent equivalent checkout replays once and persists across restart (attempt 1)
+Error: http://127.0.0.1:36589/api/orders {"order": {"id": "9566f604-b059-4f41-ba61-02c08f314bf9", "user_id": "alice", "currency": "EUR", "amount": 4200, "status": "pending", "fulfillment_count": 0, "items": [{"sku": "CUP-01", "quantity": 1}, {"sku": "TEA-50", "quantity": 2}]}, "replayed": true}
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32m409[39m
+Received: [31m200[39m
+WORKFLOW RESULT: failed; attempts=11; {"passed":10,"failed":1}

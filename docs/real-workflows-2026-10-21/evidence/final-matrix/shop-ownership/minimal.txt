@@ -1,0 +1,9 @@
+WORKFLOW RUN: 25 scheduled cases
+FAILED:  /  / baseline-shop/shop.spec.mjs / order ownership is private and idempotency keys belong to users (attempt 1)
+Error: http://127.0.0.1:44717/api/orders/18ca2094-ac76-4420-87de-3b63b5dbcb78 {"order": {"id": "18ca2094-ac76-4420-87de-3b63b5dbcb78", "user_id": "alice", "currency": "EUR", "amount": 4200, "status": "pending", "fulfillment_count": 0, "items": [{"sku": "CUP-01", "quantity": 1}, {"sku": "TEA-50", "quantity": 2}]}}
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+Expected: [32m404[39m
+Received: [31m200[39m
+WORKFLOW RESULT: failed; attempts=25; {"passed":24,"failed":1}

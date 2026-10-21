@@ -1,0 +1,61 @@
+{
+  "purpose": "Fixture developer smoke, not skill-quality evaluation",
+  "healthy_checks": [
+    "actual HTTP health",
+    "unique ready-file recipient aliases",
+    "anonymous order endpoint rejects before payload parsing",
+    "server amount ignores tampered client amount",
+    "equivalent idempotency replay returns original order",
+    "changed idempotent intent conflicts",
+    "cross-user and nonexistent orders share404",
+    "twelve concurrent creates produce one order",
+    "missing signature rejected",
+    "transient fulfillment returns503",
+    "failed transaction leaves no receipt or fulfillment",
+    "same failed event can be retried",
+    "twelve duplicate deliveries acknowledged",
+    "new event does not double fulfill paid order",
+    "changed body under recorded event ID conflicts",
+    "invalid quantity has no order",
+    "same-port process restart serves durable order/session",
+    "recorded event stays deduplicated after restart",
+    "actual Mailpit received app SMTP reset",
+    "unknown reset response remains generic",
+    "valid reset changes password",
+    "old session is invalidated",
+    "old credentials fail",
+    "new credentials work",
+    "reset token is single use",
+    "reset token expires via deterministic clock"
+  ],
+  "healthy_count": 26,
+  "fault_controls": [
+    {
+      "fault": "cross_user_order_read",
+      "expected_defect_observed": true
+    },
+    {
+      "fault": "trust_client_amount",
+      "expected_defect_observed": true
+    },
+    {
+      "fault": "duplicate_fulfillment",
+      "expected_defect_observed": true
+    },
+    {
+      "fault": "receipt_before_commit",
+      "expected_defect_observed": true
+    },
+    {
+      "fault": "idempotency_payload_conflict",
+      "expected_defect_observed": true
+    },
+    {
+      "fault": "reusable_reset_token",
+      "expected_defect_observed": true
+    }
+  ],
+  "real_smtp_messages_observed_and_deleted": 3,
+  "mailpit_url": "http://127.0.0.1:53841",
+  "scope": "Real local HTTP/SQLite/SMTP, sequential fixture processes, twelve concurrent requests in two healthy controls."
+}

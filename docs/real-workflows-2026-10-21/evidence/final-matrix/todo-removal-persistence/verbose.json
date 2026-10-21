@@ -1,0 +1,1145 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/scratch/db79cfa7c2bc/qa-skills/node_modules/playwright/cli.js",
+      "test",
+      "--config",
+      "tests/workflows/playwright.config.mjs",
+      "--workers=2",
+      "--retries=0",
+      "--global-timeout=90000"
+    ],
+    "configFile": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/playwright.config.mjs",
+    "rootDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 90000,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.mjs"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/reporters/minimal.mjs",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/verbose.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/html",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "baseline-shop/shop.spec.mjs",
+      "file": "baseline-shop/shop.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "API auth, cookie contract and logout revoke access",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 521,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:36.750Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-fccc2fe1ce1e95605f51",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 3,
+          "column": 1
+        },
+        {
+          "title": "catalog controls money and malformed orders never create state",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 443,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:36.717Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-597f5b5aa88e50f33016",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 19,
+          "column": 1
+        },
+        {
+          "title": "order ownership is private and idempotency keys belong to users",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 578,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:37.424Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-2f40f64fad0de2100a0f",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 27,
+          "column": 1
+        },
+        {
+          "title": "concurrent equivalent checkout replays once and persists across restart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 611,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:37.538Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-ede3c21fe47febb3d87f",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 33,
+          "column": 1
+        },
+        {
+          "title": "payment signatures, exact raw bytes and mismatched values reject without side effects",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 512,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:38.012Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-5264ad29be88211b2cd3",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 41,
+          "column": 1
+        },
+        {
+          "title": "concurrent payment redelivery, conflict and distinct event IDs fulfill once durably",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 691,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:38.158Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-5dd16f2a2463efeb2996",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 52,
+          "column": 1
+        },
+        {
+          "title": "transient fulfillment rolls back receipt then same event succeeds after restart",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 900,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:38.535Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-285efb258e66febef865",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 62,
+          "column": 1
+        },
+        {
+          "title": "browser checkout restores order on reload and reflects server payment",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 1082,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:38.858Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-de18684bb90e574cd443",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 70,
+          "column": 1
+        },
+        {
+          "title": "actual reset email completes browser flow and revokes all sessions",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1263,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:39.454Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-f6058573a05a9da92262",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 81,
+          "column": 1
+        },
+        {
+          "title": "reset requests resist account enumeration and tokens expire on the server clock",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 600,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:40.059Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "372a51bc163cfabe39c3-147d5679bb74e555f3b9",
+          "file": "baseline-shop/shop.spec.mjs",
+          "line": 92,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "baseline-todo/todomvc.spec.mjs",
+      "file": "baseline-todo/todomvc.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "creates trimmed nonblank titles in order and clears the entry field",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 518,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:40.681Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-db50da15589a020e9107",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "duplicate titles remain independent through complete edit and delete",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 753,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:40.833Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-97f8fb0191b9811a634f",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 28,
+          "column": 1
+        },
+        {
+          "title": "individual completion and restoration keep the active count global under filters",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 686,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:41.307Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-2bf09d0cada3d4b5a0fc",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 49,
+          "column": 1
+        },
+        {
+          "title": "bulk toggle affects hidden records and works from an empty filtered view",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 804,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:41.700Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-2ab4651ce012376bc6ed",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "filters visibly select the correct subset without losing or duplicating records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 802,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:42.002Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-abbcb87535ba4b0fa276",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 106,
+          "column": 1
+        },
+        {
+          "title": "Enter and blur save edits while Escape preserves the saved title on reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 774,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:42.513Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-5d594b15db0544d7e508",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 133,
+          "column": 1
+        },
+        {
+          "title": "whitespace Enter and empty blur edits remove only their targeted records",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4695,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[31m+   \"Check mailbox\",\u001b[39m\n\u001b[31m+   \"Check mailbox\",\u001b[39m\n\u001b[2m    \"Keep stamped letter\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 3 elements\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[31m+   \"Check mailbox\",\u001b[39m\n\u001b[31m+   \"Check mailbox\",\u001b[39m\n\u001b[2m    \"Keep stamped letter\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 3 elements\u001b[22m\n\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:168:27",
+                    "location": {
+                      "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                      "column": 27,
+                      "line": 168
+                    },
+                    "snippet": "  166 |   await expect(ui.count).toHaveText('0 items left');\n  167 |   await page.reload();\n> 168 |   await expect(ui.titles).toHaveText(['Keep stamped letter']);\n      |                           ^\n  169 | });\n  170 |\n  171 | // Scenario: SC-008; Requirements: REQ-6, REQ-8."
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                        "column": 27,
+                        "line": 168
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[31m+   \"Check mailbox\",\u001b[39m\n\u001b[31m+   \"Check mailbox\",\u001b[39m\n\u001b[2m    \"Keep stamped letter\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 3 elements\u001b[22m\n\n\n  166 |   await expect(ui.count).toHaveText('0 items left');\n  167 |   await page.reload();\n> 168 |   await expect(ui.titles).toHaveText(['Keep stamped letter']);\n      |                           ^\n  169 | });\n  170 |\n  171 | // Scenario: SC-008; Requirements: REQ-6, REQ-8.\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:168:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:42.816Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/baseline-todo-todomvc-whit-20a7b-only-their-targeted-records/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/baseline-todo-todomvc-whit-20a7b-only-their-targeted-records/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/baseline-todo-todomvc-whit-20a7b-only-their-targeted-records/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                    "column": 27,
+                    "line": 168
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-2b2f1851316890819a76",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 154,
+          "column": 1
+        },
+        {
+          "title": "delete and clear completed preserve active rows and empty controls recover",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 904,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:43.296Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-fe36a819319fec6bc40b",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 172,
+          "column": 1
+        },
+        {
+          "title": "saved edits completion order and removals persist through reload and further keyboard input",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 1121,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:44.210Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "e990aea2aa9e40ced1fb-181c1a188123d984563e",
+          "file": "baseline-todo/todomvc.spec.mjs",
+          "line": 204,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "review-followup/shop-review.spec.mjs",
+      "file": "review-followup/shop-review.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "logout revokes a previously valid copied session on the server",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 298,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:45.345Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "409d9812859d4ff11302-852e2130e6a00f555b93",
+          "file": "review-followup/shop-review.spec.mjs",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "each SKU has its contracted unit price and quantity ten is accepted",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 522,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "TEA-50 x 1 costs 1200",
+                      "duration": 101
+                    },
+                    {
+                      "title": "CUP-01 x 1 costs 1800",
+                      "duration": 100
+                    },
+                    {
+                      "title": "TEA-50 x 10 costs 12000",
+                      "duration": 103
+                    }
+                  ],
+                  "startTime": "2026-10-21T00:54:45.650Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "409d9812859d4ff11302-01a691c177c133547e7f",
+          "file": "review-followup/shop-review.spec.mjs",
+          "line": 32,
+          "column": 1
+        },
+        {
+          "title": "correctly signed noncanonical JSON is accepted and identical bytes replay once",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 504,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:46.179Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "409d9812859d4ff11302-3123ef5909e1d7d570de",
+          "file": "review-followup/shop-review.spec.mjs",
+          "line": 62,
+          "column": 1
+        }
+      ]
+    },
+    {
+      "title": "review-followup/todo-review.spec.mjs",
+      "file": "review-followup/todo-review.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "single delete persists immediately with survivor order and completion intact",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 4540,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Keep first\",\u001b[22m\n\u001b[31m+   \"Delete second\",\u001b[39m\n\u001b[2m    \"Keep third\",\u001b[22m\n\u001b[2m    \"Keep completed\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Keep first\",\u001b[22m\n\u001b[31m+   \"Delete second\",\u001b[39m\n\u001b[2m    \"Keep third\",\u001b[22m\n\u001b[2m    \"Keep completed\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs:17:27",
+                    "location": {
+                      "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs",
+                      "column": 27,
+                      "line": 17
+                    },
+                    "snippet": "  15 |   await page.reload();\n  16 |\n> 17 |   await expect(ui.titles).toHaveText(['Keep first', 'Keep third', 'Keep completed']);\n     |                           ^\n  18 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  19 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n  20 |   await expect(ui.rows.nth(2).getByRole('checkbox')).toBeChecked();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs",
+                        "column": 27,
+                        "line": 17
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Keep first\",\u001b[22m\n\u001b[31m+   \"Delete second\",\u001b[39m\n\u001b[2m    \"Keep third\",\u001b[22m\n\u001b[2m    \"Keep completed\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n\n\n  15 |   await page.reload();\n  16 |\n> 17 |   await expect(ui.titles).toHaveText(['Keep first', 'Keep third', 'Keep completed']);\n     |                           ^\n  18 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  19 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n  20 |   await expect(ui.rows.nth(2).getByRole('checkbox')).toBeChecked();\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs:17:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:46.698Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/review-followup-todo-revie-32665-order-and-completion-intact/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/review-followup-todo-revie-32665-order-and-completion-intact/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/review-followup-todo-revie-32665-order-and-completion-intact/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs",
+                    "column": 27,
+                    "line": 17
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "173aaa1d204cf0681f96-b71609289715fbdf6373",
+          "file": "review-followup/todo-review.spec.mjs",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "clear completed persists immediately and preserves active titles and order",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 4754,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Active first\",\u001b[22m\n\u001b[31m+   \"Completed second\",\u001b[39m\n\u001b[2m    \"Active third\",\u001b[22m\n\u001b[31m+   \"Completed fourth\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Active first\",\u001b[22m\n\u001b[31m+   \"Completed second\",\u001b[39m\n\u001b[2m    \"Active third\",\u001b[22m\n\u001b[31m+   \"Completed fourth\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs:38:27",
+                    "location": {
+                      "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs",
+                      "column": 27,
+                      "line": 38
+                    },
+                    "snippet": "  36 |   await page.reload();\n  37 |\n> 38 |   await expect(ui.titles).toHaveText(['Active first', 'Active third']);\n     |                           ^\n  39 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  40 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n  41 |   await expect(ui.count).toHaveText('2 items left');"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs",
+                        "column": 27,
+                        "line": 38
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Active first\",\u001b[22m\n\u001b[31m+   \"Completed second\",\u001b[39m\n\u001b[2m    \"Active third\",\u001b[22m\n\u001b[31m+   \"Completed fourth\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n\n\n  36 |   await page.reload();\n  37 |\n> 38 |   await expect(ui.titles).toHaveText(['Active first', 'Active third']);\n     |                           ^\n  39 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  40 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n  41 |   await expect(ui.count).toHaveText('2 items left');\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs:38:27"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:48.454Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/review-followup-todo-revie-a34f2-ves-active-titles-and-order/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/review-followup-todo-revie-a34f2-ves-active-titles-and-order/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/review-followup-todo-revie-a34f2-ves-active-titles-and-order/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs",
+                    "column": 27,
+                    "line": 38
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "173aaa1d204cf0681f96-205b05e9a627d6ffdfd5",
+          "file": "review-followup/todo-review.spec.mjs",
+          "line": 24,
+          "column": 1
+        },
+        {
+          "title": "clearing the final completed item persists the empty state immediately",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 3,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 4473,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.todo-list').getByRole('listitem')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  4000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem')\u001b[22m\n\u001b[2m    12 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.todo-list').getByRole('listitem')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  4000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem')\u001b[22m\n\u001b[2m    12 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs:61:25",
+                    "location": {
+                      "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs",
+                      "column": 25,
+                      "line": 61
+                    },
+                    "snippet": "  59 |   await page.reload();\n  60 |\n> 61 |   await expect(ui.rows).toHaveCount(0);\n     |                         ^\n  62 |   await expect(ui.main).toBeHidden();\n  63 |   await expect(ui.footer).toBeHidden();\n  64 |   await expect(ui.input).toBeVisible();"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs",
+                        "column": 25,
+                        "line": 61
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.todo-list').getByRole('listitem')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  4000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem')\u001b[22m\n\u001b[2m    12 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n\n  59 |   await page.reload();\n  60 |\n> 61 |   await expect(ui.rows).toHaveCount(0);\n     |                         ^\n  62 |   await expect(ui.main).toBeHidden();\n  63 |   await expect(ui.footer).toBeHidden();\n  64 |   await expect(ui.input).toBeVisible();\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs:61:25"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:54:52.283Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/review-followup-todo-revie-71563-the-empty-state-immediately/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/review-followup-todo-revie-71563-the-empty-state-immediately/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/final-matrix/todo-removal-persistence/test-results/review-followup-todo-revie-71563-the-empty-state-immediately/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs",
+                    "column": 25,
+                    "line": 61
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "173aaa1d204cf0681f96-3c554781c6e5de5fca87",
+          "file": "review-followup/todo-review.spec.mjs",
+          "line": 47,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-21T00:54:36.237Z",
+    "duration": 20894.437,
+    "expected": 21,
+    "skipped": 0,
+    "unexpected": 4,
+    "flaky": 0
+  }
+}

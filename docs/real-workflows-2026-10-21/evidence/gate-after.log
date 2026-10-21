@@ -1,0 +1,60 @@
+✔ workflow gate accepts a complete healthy passing run (1.035744ms)
+✔ expected failure annotations cannot count as healthy passes (0.231459ms)
+✔ skipped and interrupted cases cannot satisfy the healthy count (0.211689ms)
+✔ missing and empty reports fail closed (0.176307ms)
+✔ missing cases and retry passes cannot replace the intended execution (0.174093ms)
+✔ global errors and abnormal process termination reject otherwise passing output (0.186772ms)
+✔ designated actual assertion failure establishes a detection candidate (0.275246ms)
+✔ a nonzero exit without the designated assertion is not detection (0.13932ms)
+✔ browser infrastructure failures and incomplete negative runs do not count (0.196717ms)
+✔ unexpected passes of test.fail cases are not broken-application detections (3.499382ms)
+✔ preparing a reused run directory removes stale evidence and preserves unrelated files (8.818551ms)
+✖ bounded process runner records actual successful and failed child exits (34.633952ms)
+✔ spawn errors settle without waiting for a nonexistent child (1.939083ms)
+✖ inherited pipes and SIGTERM-resistant descendants cannot keep the runner pending (662.228817ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 12
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 726.32011
+
+✖ failing tests:
+
+test at tests/examples/workflow-gate.test.mjs:85:1
+✖ bounded process runner records actual successful and failed child exits (34.633952ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /child ran/. Input:
+  
+  ''
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/workflow-gate.test.mjs:87:80)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: /child ran/,
+    operator: 'match',
+    diff: 'simple'
+  }
+
+test at tests/examples/workflow-gate.test.mjs:95:1
+✖ inherited pipes and SIGTERM-resistant descendants cannot keep the runner pending (662.228817ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(pid > 0)
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/workflow-gate.test.mjs:102:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

@@ -1,0 +1,109 @@
+{
+  "campaignDate": "2026-10-21",
+  "baseCommit": "e876dcfd6194066d1d697aea9ca6d7e08d2ce123",
+  "branch": "codex/skills-real-workflows-2026-10-21",
+  "execution": "Local worktree; source hashes bind tested code. Hosted GitHub Actions was not run.",
+  "checks": [
+    {
+      "name": "python",
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py",
+        "-v"
+      ],
+      "cases": 127,
+      "passed": 127,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "log": "final-python-permitted.log",
+      "logSha256": "31c24e622967ee2543e3816351ae34ef87bc9dbc33e02949962848aded296b1e"
+    },
+    {
+      "name": "javascript",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "cases": 85,
+      "passed": 85,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "log": "final-javascript-permitted.log",
+      "logSha256": "368ad17f618a8f313a44658ae076cdd53ba0afca5b997e3b6fdfde0f2c708c92"
+    },
+    {
+      "name": "browser",
+      "command": [
+        "npm",
+        "run",
+        "test:browser"
+      ],
+      "cases": 84,
+      "passed": 84,
+      "failed": 0,
+      "skipped": 0,
+      "exitCode": 0,
+      "log": "final-browser.log",
+      "logSha256": "022121b573805b11d60c5bb1aad90d5e1ee31fffa6527439afee71f3e2d463a6"
+    }
+  ],
+  "static": {
+    "skills": 50,
+    "cases": 513,
+    "lexicalMatches": 481,
+    "contentFlags": 32,
+    "semanticCriteriaDeferred": 811
+  },
+  "controlledWorkflowEvidence": "final-matrix-strict-review.json",
+  "freshFinalGateEvidence": "gate-integration/matrix.json",
+  "sourceSha256": {
+    ".github/workflows/validate-skills.yml": "3f360d30e3260fa6d2df87f4ff7b7e39c14df5aee6139a8ecf68e7231a76e869",
+    "package-lock.json": "d6ec52e510a23b4e01feeb379ead61e745bf11c0f1650eadee72bba65d934fc3",
+    "package.json": "79be607361ce0585e44358277970523125ae62d53cbf3acfbc9a26119d6b1b0b",
+    "skills/api-testing/SKILL.md": "47503141ae9d8d38539e6e4f99fc8c5d2dd1bdce8f6e46f94de7e87c9c2f2a33",
+    "skills/playwright-automation/SKILL.md": "ca3142f0ed9341f6f58033273077eba8bcb06c8ef5c25176030e858243fe318a",
+    "skills/playwright-automation/references/fixtures-and-projects.md": "9431f4cb09c17f4c10206d7ce240547b990336e641ca3e25529e78d55ff4456a",
+    "tests/browser/playwright-runner.test.mjs": "8d274061a29cf34d2914cbe27efaf0c4ad042b6442344d6017a65584ad31a573",
+    "tests/examples/workflow-gate.test.mjs": "a89fe8358977c37369fcfad65ef82d9da216d4c9a0f89c69b360b94214b99f3b",
+    "tests/workflows/fixture-app/faults.py": "a5fca58b9d4aea59173769d62b9efa9920e3473164c884b22c2fd6470ce65750",
+    "tests/workflows/fixture-app/index.html": "b4a49e52321ca59c9fb28847aafdd2687832c50f833ef961bbba6d35cbe3463a",
+    "tests/workflows/fixture-app/server.py": "4e8518762a19ffaac5b41639e16aa5875f84ac9425daaf434f5900218a746caa",
+    "tests/workflows/generated/baseline-shop/helpers.mjs": "80964eab222c8777a92b703faa8715cf2fffe8f6e634994594459e6ce6cf477a",
+    "tests/workflows/generated/baseline-shop/probe.mjs": "1b15812046ca4debc16231201d89cd4117e42f8d6c7784a0bbb9937375f6bd0c",
+    "tests/workflows/generated/baseline-shop/shop.spec.mjs": "8eba10ebb18bd93001baa99a524dc6a1ead85fda2e4302df83867b0e67183967",
+    "tests/workflows/generated/baseline-todo/todo-ui.mjs": "bfcd542ab26419f6eb064e95f7934d4b5a67e163346596825e98cf7b6b547d6c",
+    "tests/workflows/generated/baseline-todo/todomvc.spec.mjs": "5beab50682cf35011c3a7d6520edfaa2cb26f19f97156b59a11cc94785869143",
+    "tests/workflows/generated/review-followup/helpers.mjs": "7c58c0c0e714264e9f6176680d08f33049d2818907a23cb0a7d9db9455c26598",
+    "tests/workflows/generated/review-followup/shop-review.spec.mjs": "4393e7c0c12bc6ac92e276c3add8d916d4f12a1c2aa8a0860ccd741fde59bd04",
+    "tests/workflows/generated/review-followup/todo-review.spec.mjs": "398f296fc8b5313bd68a3f24d637a632b045e08395890494673b497cdbb57828",
+    "tests/workflows/mailpit/check_lifecycle.py": "b71bb35ab0a5b6f1ae6fb5539870ed21b68d441de428d19a9eb56f3de6cb2174",
+    "tests/workflows/mailpit/mailpit.spec.cjs": "05b1c8e67ecea8ed0573bce6bc03daca3e9ec286c78f078055660415edffe9a6",
+    "tests/workflows/mailpit/mailpit_helpers.cjs": "ce22da7b8ce3901b5bfeeb0ddaf03f1768f26f487965bb7b360a9d1149cae20d",
+    "tests/workflows/mailpit/mailpit_service.py": "d18d8365b0005e5dea5c5c2ff12ebdbc72a6b77307d6d1471b17bb20ea7ccfb7",
+    "tests/workflows/mailpit/playwright.config.cjs": "150aa0662a06554193305ce4d38c95e87873d7f6997f1440026d6320249b0428",
+    "tests/workflows/mailpit/run_verification.py": "3bdc6980e9474df613dd7a94b4fad6fb7b0df8ce2173840ba7a5cf9d4a9f5df3",
+    "tests/workflows/mailpit/smtp_send.py": "c49f94f77c0a1c3fba74e2e129f1b630f379d6026f4912c558cdcf4a77a96fc5",
+    "tests/workflows/playwright.config.mjs": "224fe66b9ad0225f206bfb6e6420bd8cd32e3bc8da93a7a7f0f80669166f7d4d",
+    "tests/workflows/reporters/minimal.mjs": "ca7bec875b665fe8de191747fb1b17e8f7c6ae51388888d6879faac04a0d3629",
+    "tests/workflows/run-matrix.mjs": "5248faf19624992345f7ab0a079626c603e89de45292dcc064511b89eda77961",
+    "tests/workflows/support/fixtures.mjs": "a07e6cfb9908ac0b35a060f88464f55062c37d86a4d93d7e7661d945a79fe489",
+    "tests/workflows/support/outcome.mjs": "961c52663623bf8390ce13c0cec520bb73734cd07aa2c54c34275c1e21e53799",
+    "tests/workflows/support/process.mjs": "a2d4df47999ab2e14a8960ee7161748896dfd849edaa53f7fb87338cd928a056",
+    "tests/workflows/support/runtime.mjs": "0ab13fff93cd99c7bd8463e8f6edf8077a100c6156eaecdec03cdfd18f502ceb",
+    "tests/workflows/upstream-todomvc/faults/delete-persistence-lost.mjs": "ba59d1a4180f7dcd5bf6288b6db030c1275f8e95de9279515caab952eb11838e",
+    "tests/workflows/upstream-todomvc/faults/mutations.mjs": "62d01e8196fe6e0d4e47a516fabe1cede166d0d1b65f55d3cef0a76462438696",
+    "tests/workflows/upstream-todomvc/faults/probe-delete-persistence.mjs": "a9e7a85b39de44621b68b86b9062d99770106515fc4b5575bf46000d9da19847",
+    "tests/workflows/upstream-todomvc/faults/probe.mjs": "c56486e6a2271f31b3fbe4dfce94e89e54636bbec6804e0f75f07b600c2bc739",
+    "tests/workflows/upstream-todomvc/observations/current-es5/examples/javascript-es5/dist/index.html": "fa135782c7bd9bca4eac3a665759c0698d3829b2f97b99fdc26761ee7084ecd5",
+    "tests/workflows/upstream-todomvc/server.mjs": "347634c22f0e581f1dad069df7bab76ec57f8bbc9f776d3146f6a6e8af6a4778",
+    "tests/workflows/upstream-todomvc/upstream/examples/vanillajs/index.html": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e"
+  }
+}

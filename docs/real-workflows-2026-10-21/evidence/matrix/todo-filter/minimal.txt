@@ -1,0 +1,78 @@
+WORKFLOW RUN: 9 scheduled cases
+FAILED:  /  / todomvc.spec.mjs / individual completion and restoration keep the active count global under filters (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator: locator('.todo-list').locator('label')
+Timeout: 4000ms
+[32m- Expected  - 5[39m
+[31m+ Received  + 1[39m
+
+[32m- Array [[39m
+[32m-   "Call dentist",[39m
+[32m-   "Pick up parcel",[39m
+[32m-   "Water plants",[39m
+[32m- ][39m
+[31m+ Array [][39m
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').locator('label')[22m
+[2m    12 × locator resolved to 0 elements[22m
+
+FAILED:  /  / todomvc.spec.mjs / bulk toggle affects hidden records and works from an empty filtered view (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator: locator('.todo-list').locator('label')
+Timeout: 4000ms
+[32m- Expected  - 2[39m
+[31m+ Received  + 1[39m
+
+[2m  Array [[22m
+[32m-   "Buy groceries",[39m
+[32m-   "Cook dinner",[39m
+[31m+   "Plan meals",[39m
+[2m  ][22m
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').locator('label')[22m
+[2m    12 × locator resolved to 1 element[22m
+
+FAILED:  /  / todomvc.spec.mjs / filters visibly select the correct subset without losing or duplicating records (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator: locator('.todo-list').locator('label')
+Timeout: 4000ms
+[32m- Expected  - 2[39m
+[31m+ Received  + 1[39m
+
+[2m  Array [[22m
+[32m-   "Read chapter",[39m
+[32m-   "Reserve sequel",[39m
+[31m+   "Return book",[39m
+[2m  ][22m
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').locator('label')[22m
+[2m    12 × locator resolved to 1 element[22m
+
+FAILED:  /  / todomvc.spec.mjs / delete and clear completed preserve active rows and empty controls recover (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator: locator('.todo-list').locator('label')
+Timeout: 4000ms
+[32m- Expected  - 3[39m
+[31m+ Received  + 1[39m
+
+[32m- Array [[39m
+[32m-   "Keep active",[39m
+[32m- ][39m
+[31m+ Array [][39m
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').locator('label')[22m
+[2m    12 × locator resolved to 0 elements[22m
+
+WORKFLOW RESULT: failed; attempts=9; {"passed":5,"failed":4}

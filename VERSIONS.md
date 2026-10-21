@@ -1,5 +1,23 @@
 # Versions
 
+## v3.2.0 (2026-10-21)
+
+### Application workflows and assertion sensitivity
+
+- Exercise pinned official TodoMVC, a real local HTTP/SQLite Shop, and checksum-pinned
+  Mailpit through Playwright Test. Retain fresh authoring, code review, review-driven
+  follow-up and deliberate-defect results as separate evidence.
+- Repair Playwright setup discovery and connect worker authentication to the builtin
+  page fixture. Replace an unsupported migration-command claim with installed-CLI checks.
+- Teach immediate persistence observations, independent session replay after logout,
+  independent unit-value checks, accepted boundaries and exact-byte signature success.
+- Keep backend data isolated per scenario, recipient cleanup scoped, service startup
+  and shutdown bounded, and normal output concise with detailed JSON/trace evidence.
+- Add an application-workflow CI job and repeatable healthy/defect controls. This is
+  bounded regression evidence, not a guarantee that every skill always works.
+
+Details and measured results: [workflow report](docs/REAL-WORKFLOWS-2026-10-21.md).
+
 ## v3.1.0 (2026-10-21)
 
 ### Stress tests and evidence-aware skill recipes

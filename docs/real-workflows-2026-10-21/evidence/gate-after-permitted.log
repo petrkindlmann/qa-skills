@@ -1,0 +1,22 @@
+✔ workflow gate accepts a complete healthy passing run (1.070977ms)
+✔ expected failure annotations cannot count as healthy passes (0.266653ms)
+✔ skipped and interrupted cases cannot satisfy the healthy count (0.202376ms)
+✔ missing and empty reports fail closed (0.356318ms)
+✔ missing cases and retry passes cannot replace the intended execution (0.188805ms)
+✔ global errors and abnormal process termination reject otherwise passing output (0.212691ms)
+✔ designated actual assertion failure establishes a detection candidate (0.213122ms)
+✔ a nonzero exit without the designated assertion is not detection (0.130858ms)
+✔ browser infrastructure failures and incomplete negative runs do not count (0.225831ms)
+✔ unexpected passes of test.fail cases are not broken-application detections (0.255125ms)
+✔ preparing a reused run directory removes stale evidence and preserves unrelated files (8.300693ms)
+✔ bounded process runner records actual successful and failed child exits (61.739674ms)
+✔ spawn errors settle without waiting for a nonexistent child (1.742571ms)
+✔ inherited pipes and SIGTERM-resistant descendants cannot keep the runner pending (658.206756ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 747.837491

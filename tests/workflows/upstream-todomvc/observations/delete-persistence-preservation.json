@@ -1,0 +1,481 @@
+{
+  "originalFilesVerified": 19,
+  "existingVariantFilesUnchanged": 95,
+  "checked": [
+    {
+      "fault": "none",
+      "path": "/upstream/license.md",
+      "sha256": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d"
+    },
+    {
+      "fault": "none",
+      "path": "/index.html",
+      "sha256": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e"
+    },
+    {
+      "fault": "none",
+      "path": "/package.json",
+      "sha256": "861dd4872b19132c99161161ff032f3e52368dfec39ad18680ce4c620543efdd"
+    },
+    {
+      "fault": "none",
+      "path": "/js/model.js",
+      "sha256": "61cdd205e26a689cb31466e30016987be2b67e71300110e81335e53f64828982"
+    },
+    {
+      "fault": "none",
+      "path": "/js/store.js",
+      "sha256": "bba76f0f9383f6f38d9d9d4e9d4ed3a8952e024610ef679503688f7ab33eb7ad"
+    },
+    {
+      "fault": "none",
+      "path": "/js/helpers.js",
+      "sha256": "6121f0d7e1c91dd4edaac22ac7e685c1749eb411ede762175a7b008c7892222e"
+    },
+    {
+      "fault": "none",
+      "path": "/js/template.js",
+      "sha256": "d1b876a1a1766829ab76e68384fc25dbeb70b09114c484052cc4b89f3fcef2b8"
+    },
+    {
+      "fault": "none",
+      "path": "/js/view.js",
+      "sha256": "854375de3fbc297ede8ba286c6ef2fb4eb30cf19e0b0a7a46d9fa49bbf107c75"
+    },
+    {
+      "fault": "none",
+      "path": "/js/app.js",
+      "sha256": "5aac9bc01a71ca4300722c0a96e7c6a94dd0b51a9f6ea530ad0587faba06f140"
+    },
+    {
+      "fault": "none",
+      "path": "/js/controller.js",
+      "sha256": "e580e4f9e15d365a767013a7ca4b65a39dcbc6ab727e4a68831e9d2ef9e6e40b"
+    },
+    {
+      "fault": "none",
+      "path": "/vendor/todomvc-common/1.0.5/base.js",
+      "sha256": "84090789021f5f8206800503e18adbc38b5fddbfb0a84bfe36e86e683da60c20"
+    },
+    {
+      "fault": "none",
+      "path": "/vendor/todomvc-common/1.0.5/base.css",
+      "sha256": "5c67ddc771b558bc07b58695c9c4b7f663d2ba813edb4810341799c47ba0822d"
+    },
+    {
+      "fault": "none",
+      "path": "/vendor/todomvc-common/1.0.5/package.json",
+      "sha256": "b58875806d8f06f234edf0b5d1bff8b20a4e8e84582d19057a62320267073e93"
+    },
+    {
+      "fault": "none",
+      "path": "/vendor/todomvc-common/1.0.5/license",
+      "sha256": "6732b03a358734a0e09054abd6b62a261d5f308521ceeae3f2d1b4627bf0c525"
+    },
+    {
+      "fault": "none",
+      "path": "/vendor/todomvc-common/1.0.5/readme.md",
+      "sha256": "5dafddbb1d858af4a2528d7c620d5b7848e9987623012757c3d022e9802796bc"
+    },
+    {
+      "fault": "none",
+      "path": "/vendor/todomvc-app-css/2.4.1/index.css",
+      "sha256": "473cdf4e493c4cd4dc0fe87c00d0ca599bcfb57ba1dd3c40a1774582d4ad2cd0"
+    },
+    {
+      "fault": "none",
+      "path": "/vendor/todomvc-app-css/2.4.1/package.json",
+      "sha256": "95b2dc61769730bf06ad0d0abc1a611ab417b13c14ee979920b1d5c61f491a0f"
+    },
+    {
+      "fault": "none",
+      "path": "/vendor/todomvc-app-css/2.4.1/license",
+      "sha256": "122727cc5edb17bae34682f3b0f35ecfe42cf3f38152be8a27d8a0668895254e"
+    },
+    {
+      "fault": "none",
+      "path": "/vendor/todomvc-app-css/2.4.1/readme.md",
+      "sha256": "bcfd25e122c41039722b4e4bdf4b122ae240ad2f95bd1823d5358bdee316cbe0"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/upstream/license.md",
+      "sha256": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/index.html",
+      "sha256": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/package.json",
+      "sha256": "861dd4872b19132c99161161ff032f3e52368dfec39ad18680ce4c620543efdd"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/js/model.js",
+      "sha256": "61cdd205e26a689cb31466e30016987be2b67e71300110e81335e53f64828982"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/js/store.js",
+      "sha256": "7381b3b705cbac79ac894c89d6dd6458c2874563a9f75a121ae411e0ec3bec21"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/js/helpers.js",
+      "sha256": "6121f0d7e1c91dd4edaac22ac7e685c1749eb411ede762175a7b008c7892222e"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/js/template.js",
+      "sha256": "d1b876a1a1766829ab76e68384fc25dbeb70b09114c484052cc4b89f3fcef2b8"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/js/view.js",
+      "sha256": "854375de3fbc297ede8ba286c6ef2fb4eb30cf19e0b0a7a46d9fa49bbf107c75"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/js/app.js",
+      "sha256": "5aac9bc01a71ca4300722c0a96e7c6a94dd0b51a9f6ea530ad0587faba06f140"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/js/controller.js",
+      "sha256": "e580e4f9e15d365a767013a7ca4b65a39dcbc6ab727e4a68831e9d2ef9e6e40b"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/vendor/todomvc-common/1.0.5/base.js",
+      "sha256": "84090789021f5f8206800503e18adbc38b5fddbfb0a84bfe36e86e683da60c20"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/vendor/todomvc-common/1.0.5/base.css",
+      "sha256": "5c67ddc771b558bc07b58695c9c4b7f663d2ba813edb4810341799c47ba0822d"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/vendor/todomvc-common/1.0.5/package.json",
+      "sha256": "b58875806d8f06f234edf0b5d1bff8b20a4e8e84582d19057a62320267073e93"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/vendor/todomvc-common/1.0.5/license",
+      "sha256": "6732b03a358734a0e09054abd6b62a261d5f308521ceeae3f2d1b4627bf0c525"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/vendor/todomvc-common/1.0.5/readme.md",
+      "sha256": "5dafddbb1d858af4a2528d7c620d5b7848e9987623012757c3d022e9802796bc"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/vendor/todomvc-app-css/2.4.1/index.css",
+      "sha256": "473cdf4e493c4cd4dc0fe87c00d0ca599bcfb57ba1dd3c40a1774582d4ad2cd0"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/vendor/todomvc-app-css/2.4.1/package.json",
+      "sha256": "95b2dc61769730bf06ad0d0abc1a611ab417b13c14ee979920b1d5c61f491a0f"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/vendor/todomvc-app-css/2.4.1/license",
+      "sha256": "122727cc5edb17bae34682f3b0f35ecfe42cf3f38152be8a27d8a0668895254e"
+    },
+    {
+      "fault": "persistence-lost",
+      "path": "/vendor/todomvc-app-css/2.4.1/readme.md",
+      "sha256": "bcfd25e122c41039722b4e4bdf4b122ae240ad2f95bd1823d5358bdee316cbe0"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/upstream/license.md",
+      "sha256": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/index.html",
+      "sha256": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/package.json",
+      "sha256": "861dd4872b19132c99161161ff032f3e52368dfec39ad18680ce4c620543efdd"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/js/model.js",
+      "sha256": "61cdd205e26a689cb31466e30016987be2b67e71300110e81335e53f64828982"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/js/store.js",
+      "sha256": "4a0e0c95594806890192405b5af01a5883cae7950e0d1ee44975466c7cdbab5f"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/js/helpers.js",
+      "sha256": "6121f0d7e1c91dd4edaac22ac7e685c1749eb411ede762175a7b008c7892222e"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/js/template.js",
+      "sha256": "d1b876a1a1766829ab76e68384fc25dbeb70b09114c484052cc4b89f3fcef2b8"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/js/view.js",
+      "sha256": "854375de3fbc297ede8ba286c6ef2fb4eb30cf19e0b0a7a46d9fa49bbf107c75"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/js/app.js",
+      "sha256": "5aac9bc01a71ca4300722c0a96e7c6a94dd0b51a9f6ea530ad0587faba06f140"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/js/controller.js",
+      "sha256": "e580e4f9e15d365a767013a7ca4b65a39dcbc6ab727e4a68831e9d2ef9e6e40b"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/vendor/todomvc-common/1.0.5/base.js",
+      "sha256": "84090789021f5f8206800503e18adbc38b5fddbfb0a84bfe36e86e683da60c20"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/vendor/todomvc-common/1.0.5/base.css",
+      "sha256": "5c67ddc771b558bc07b58695c9c4b7f663d2ba813edb4810341799c47ba0822d"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/vendor/todomvc-common/1.0.5/package.json",
+      "sha256": "b58875806d8f06f234edf0b5d1bff8b20a4e8e84582d19057a62320267073e93"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/vendor/todomvc-common/1.0.5/license",
+      "sha256": "6732b03a358734a0e09054abd6b62a261d5f308521ceeae3f2d1b4627bf0c525"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/vendor/todomvc-common/1.0.5/readme.md",
+      "sha256": "5dafddbb1d858af4a2528d7c620d5b7848e9987623012757c3d022e9802796bc"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/vendor/todomvc-app-css/2.4.1/index.css",
+      "sha256": "473cdf4e493c4cd4dc0fe87c00d0ca599bcfb57ba1dd3c40a1774582d4ad2cd0"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/vendor/todomvc-app-css/2.4.1/package.json",
+      "sha256": "95b2dc61769730bf06ad0d0abc1a611ab417b13c14ee979920b1d5c61f491a0f"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/vendor/todomvc-app-css/2.4.1/license",
+      "sha256": "122727cc5edb17bae34682f3b0f35ecfe42cf3f38152be8a27d8a0668895254e"
+    },
+    {
+      "fault": "delete-wrong-duplicate",
+      "path": "/vendor/todomvc-app-css/2.4.1/readme.md",
+      "sha256": "bcfd25e122c41039722b4e4bdf4b122ae240ad2f95bd1823d5358bdee316cbe0"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/upstream/license.md",
+      "sha256": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/index.html",
+      "sha256": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/package.json",
+      "sha256": "861dd4872b19132c99161161ff032f3e52368dfec39ad18680ce4c620543efdd"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/js/model.js",
+      "sha256": "61cdd205e26a689cb31466e30016987be2b67e71300110e81335e53f64828982"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/js/store.js",
+      "sha256": "bba76f0f9383f6f38d9d9d4e9d4ed3a8952e024610ef679503688f7ab33eb7ad"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/js/helpers.js",
+      "sha256": "6121f0d7e1c91dd4edaac22ac7e685c1749eb411ede762175a7b008c7892222e"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/js/template.js",
+      "sha256": "d1b876a1a1766829ab76e68384fc25dbeb70b09114c484052cc4b89f3fcef2b8"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/js/view.js",
+      "sha256": "854375de3fbc297ede8ba286c6ef2fb4eb30cf19e0b0a7a46d9fa49bbf107c75"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/js/app.js",
+      "sha256": "5aac9bc01a71ca4300722c0a96e7c6a94dd0b51a9f6ea530ad0587faba06f140"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/js/controller.js",
+      "sha256": "d44629199b312c3ae4dcefc7da8ddfccdae5d5ed08a9b053b8cd06841a913162"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/vendor/todomvc-common/1.0.5/base.js",
+      "sha256": "84090789021f5f8206800503e18adbc38b5fddbfb0a84bfe36e86e683da60c20"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/vendor/todomvc-common/1.0.5/base.css",
+      "sha256": "5c67ddc771b558bc07b58695c9c4b7f663d2ba813edb4810341799c47ba0822d"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/vendor/todomvc-common/1.0.5/package.json",
+      "sha256": "b58875806d8f06f234edf0b5d1bff8b20a4e8e84582d19057a62320267073e93"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/vendor/todomvc-common/1.0.5/license",
+      "sha256": "6732b03a358734a0e09054abd6b62a261d5f308521ceeae3f2d1b4627bf0c525"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/vendor/todomvc-common/1.0.5/readme.md",
+      "sha256": "5dafddbb1d858af4a2528d7c620d5b7848e9987623012757c3d022e9802796bc"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/vendor/todomvc-app-css/2.4.1/index.css",
+      "sha256": "473cdf4e493c4cd4dc0fe87c00d0ca599bcfb57ba1dd3c40a1774582d4ad2cd0"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/vendor/todomvc-app-css/2.4.1/package.json",
+      "sha256": "95b2dc61769730bf06ad0d0abc1a611ab417b13c14ee979920b1d5c61f491a0f"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/vendor/todomvc-app-css/2.4.1/license",
+      "sha256": "122727cc5edb17bae34682f3b0f35ecfe42cf3f38152be8a27d8a0668895254e"
+    },
+    {
+      "fault": "filter-state-error",
+      "path": "/vendor/todomvc-app-css/2.4.1/readme.md",
+      "sha256": "bcfd25e122c41039722b4e4bdf4b122ae240ad2f95bd1823d5358bdee316cbe0"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/upstream/license.md",
+      "sha256": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/index.html",
+      "sha256": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/package.json",
+      "sha256": "861dd4872b19132c99161161ff032f3e52368dfec39ad18680ce4c620543efdd"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/js/model.js",
+      "sha256": "61cdd205e26a689cb31466e30016987be2b67e71300110e81335e53f64828982"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/js/store.js",
+      "sha256": "bba76f0f9383f6f38d9d9d4e9d4ed3a8952e024610ef679503688f7ab33eb7ad"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/js/helpers.js",
+      "sha256": "6121f0d7e1c91dd4edaac22ac7e685c1749eb411ede762175a7b008c7892222e"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/js/template.js",
+      "sha256": "d1b876a1a1766829ab76e68384fc25dbeb70b09114c484052cc4b89f3fcef2b8"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/js/view.js",
+      "sha256": "854375de3fbc297ede8ba286c6ef2fb4eb30cf19e0b0a7a46d9fa49bbf107c75"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/js/app.js",
+      "sha256": "5aac9bc01a71ca4300722c0a96e7c6a94dd0b51a9f6ea530ad0587faba06f140"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/js/controller.js",
+      "sha256": "b437a093957d68d21cccb2a0d9a89d8b30bfb335bb380775f88eb00006d47b3c"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/vendor/todomvc-common/1.0.5/base.js",
+      "sha256": "84090789021f5f8206800503e18adbc38b5fddbfb0a84bfe36e86e683da60c20"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/vendor/todomvc-common/1.0.5/base.css",
+      "sha256": "5c67ddc771b558bc07b58695c9c4b7f663d2ba813edb4810341799c47ba0822d"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/vendor/todomvc-common/1.0.5/package.json",
+      "sha256": "b58875806d8f06f234edf0b5d1bff8b20a4e8e84582d19057a62320267073e93"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/vendor/todomvc-common/1.0.5/license",
+      "sha256": "6732b03a358734a0e09054abd6b62a261d5f308521ceeae3f2d1b4627bf0c525"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/vendor/todomvc-common/1.0.5/readme.md",
+      "sha256": "5dafddbb1d858af4a2528d7c620d5b7848e9987623012757c3d022e9802796bc"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/vendor/todomvc-app-css/2.4.1/index.css",
+      "sha256": "473cdf4e493c4cd4dc0fe87c00d0ca599bcfb57ba1dd3c40a1774582d4ad2cd0"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/vendor/todomvc-app-css/2.4.1/package.json",
+      "sha256": "95b2dc61769730bf06ad0d0abc1a611ab417b13c14ee979920b1d5c61f491a0f"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/vendor/todomvc-app-css/2.4.1/license",
+      "sha256": "122727cc5edb17bae34682f3b0f35ecfe42cf3f38152be8a27d8a0668895254e"
+    },
+    {
+      "fault": "escape-commits-edit",
+      "path": "/vendor/todomvc-app-css/2.4.1/readme.md",
+      "sha256": "bcfd25e122c41039722b4e4bdf4b122ae240ad2f95bd1823d5358bdee316cbe0"
+    }
+  ]
+}

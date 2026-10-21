@@ -1,0 +1,59 @@
+WORKFLOW RUN: 9 scheduled cases
+FAILED:  /  / todomvc.spec.mjs / Enter and blur save edits while Escape preserves the saved title on reload (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator: locator('.todo-list').locator('label')
+Timeout: 4000ms
+[32m- Expected  - 4[39m
+[31m+ Received  + 1[39m
+
+[32m- Array [[39m
+[32m-   "Book evening train",[39m
+[32m-   "Pack overnight bag",[39m
+[32m- ][39m
+[31m+ Array [][39m
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').locator('label')[22m
+[2m    12 × locator resolved to 0 elements[22m
+
+FAILED:  /  / todomvc.spec.mjs / whitespace Enter and empty blur edits remove only their targeted records (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator: locator('.todo-list').locator('label')
+Timeout: 4000ms
+[32m- Expected  - 3[39m
+[31m+ Received  + 1[39m
+
+[32m- Array [[39m
+[32m-   "Keep stamped letter",[39m
+[32m- ][39m
+[31m+ Array [][39m
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').locator('label')[22m
+[2m    12 × locator resolved to 0 elements[22m
+
+FAILED:  /  / todomvc.spec.mjs / saved edits completion order and removals persist through reload and further keyboard input (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator: locator('.todo-list').locator('label')
+Timeout: 4000ms
+[32m- Expected  - 5[39m
+[31m+ Received  + 1[39m
+
+[32m- Array [[39m
+[32m-   "Water balcony plants",[39m
+[32m-   "Walk dog",[39m
+[32m-   "Call family",[39m
+[32m- ][39m
+[31m+ Array [][39m
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-list').locator('label')[22m
+[2m    12 × locator resolved to 0 elements[22m
+
+WORKFLOW RESULT: failed; attempts=9; {"passed":6,"failed":3}

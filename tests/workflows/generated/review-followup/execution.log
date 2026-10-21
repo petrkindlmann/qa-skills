@@ -1,0 +1,26 @@
+WORKFLOW RUN: 6 scheduled cases
+WORKFLOW RESULT: passed; attempts=6; {"passed":6}
+
+Review-driven implementation provenance
+Read: tests/workflows/generated/review/final-response.md
+Read: skills/api-testing/SKILL.md version 2.1
+Read: skills/playwright-automation/SKILL.md version 2.1
+Public contracts: tests/workflows/fixture-app-contract.md; tests/workflows/todomvc-contract.md
+Candidate commit: e876dcfd6194066d1d697aea9ca6d7e08d2ce123
+Changes remain uncommitted and confined to tests/workflows/generated/review-followup/.
+Installed Playwright: 1.62.1
+Browser: /tmp/qa-skills-chrome/opt/google/chrome/chrome
+Workers: 2; retries: 0
+Execution: require_escalated, authorized local healthy apps
+Start: 2026-10-21T00:49:41.018Z
+Duration: 3802.909 ms
+Exit: 0
+Totals: passed=6; failed=0; skipped=0; flaky=0
+Command:
+QA_BROWSER_EXECUTABLE=/tmp/qa-skills-chrome/opt/google/chrome/chrome QA_WORKFLOW_SUITE=/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup QA_WORKFLOW_OUTPUT=/tmp/qa-review-followup node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2 --retries 0
+passed: logout revokes a previously valid copied session on the server (368 ms)
+passed: each SKU has its contracted unit price and quantity ten is accepted (640 ms)
+passed: correctly signed noncanonical JSON is accepted and identical bytes replay once (525 ms)
+passed: single delete persists immediately with survivor order and completion intact (902 ms)
+passed: clear completed persists immediately and preserves active titles and order (934 ms)
+passed: clearing the final completed item persists the empty state immediately (659 ms)

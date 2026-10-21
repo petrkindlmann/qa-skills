@@ -1,0 +1,21 @@
+WORKFLOW RUN: 25 scheduled cases
+FAILED:  /  / baseline-todo/todomvc.spec.mjs / duplicate titles remain independent through complete edit and delete (attempt 1)
+Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoHaveText[2m([22m[32mexpected[39m[2m)[22m failed
+
+Locator:  locator('.todo-count')
+Expected: [32m"[7m2[27m item[7ms[27m left"[39m
+Received: [31m"[7m1[27m item left"[39m
+Timeout:  4000ms
+
+Call log:
+[2m  - Expect "toHaveText" with timeout 4000ms[22m
+[2m  - waiting for locator('.todo-count')[22m
+[2m    12 × locator resolved to <span class="todo-count">…</span>[22m
+[2m       - unexpected value "1 item left"[22m
+
+FAILED:  /  / baseline-todo/todomvc.spec.mjs / whitespace Enter and empty blur edits remove only their targeted records (attempt 1)
+TimeoutError: locator.fill: Timeout 8000ms exceeded.
+Call log:
+[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('textbox')[22m
+
+WORKFLOW RESULT: failed; attempts=25; {"passed":23,"failed":2}

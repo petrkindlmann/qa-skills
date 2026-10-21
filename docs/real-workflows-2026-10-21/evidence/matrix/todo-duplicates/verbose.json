@@ -1,0 +1,483 @@
+{
+  "config": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/scratch/db79cfa7c2bc/qa-skills/node_modules/playwright/cli.js",
+      "test",
+      "--config",
+      "tests/workflows/playwright.config.mjs",
+      "--workers=2",
+      "--retries=0",
+      "--global-timeout=90000"
+    ],
+    "configFile": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/playwright.config.mjs",
+    "rootDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo",
+    "failOnFlakyTests": false,
+    "forbidOnly": true,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 90000,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 2
+    },
+    "preserveOutput": "always",
+    "projects": [
+      {
+        "outputDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-duplicates/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {
+          "actualWorkers": 2
+        },
+        "id": "",
+        "name": "",
+        "testDir": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.spec.mjs"
+        ],
+        "timeout": 30000
+      }
+    ],
+    "quiet": false,
+    "reporter": [
+      [
+        "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/reporters/minimal.mjs",
+        null
+      ],
+      [
+        "json",
+        {
+          "outputFile": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-duplicates/verbose.json"
+        }
+      ],
+      [
+        "html",
+        {
+          "outputFolder": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-duplicates/html",
+          "open": "never"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 300000
+    },
+    "shard": null,
+    "tags": [],
+    "updateSnapshots": "missing",
+    "updateSourceMethod": "patch",
+    "version": "1.62.1",
+    "workers": 2,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "todomvc.spec.mjs",
+      "file": "todomvc.spec.mjs",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "creates trimmed nonblank titles in order and clears the entry field",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 549,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:46:33.573Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-f06aafe085ae70e922de",
+          "file": "todomvc.spec.mjs",
+          "line": 5,
+          "column": 1
+        },
+        {
+          "title": "duplicate titles remain independent through complete edit and delete",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 1,
+                  "status": "failed",
+                  "duration": 4829,
+                  "error": {
+                    "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.todo-count')\nExpected: \u001b[32m\"\u001b[7m2\u001b[27m item\u001b[7ms\u001b[27m left\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m1\u001b[27m item left\"\u001b[39m\nTimeout:  4000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-count')\u001b[22m\n\u001b[2m    12 × locator resolved to <span class=\"todo-count\">…</span>\u001b[22m\n\u001b[2m       - unexpected value \"1 item left\"\u001b[22m\n",
+                    "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.todo-count')\nExpected: \u001b[32m\"\u001b[7m2\u001b[27m item\u001b[7ms\u001b[27m left\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m1\u001b[27m item left\"\u001b[39m\nTimeout:  4000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-count')\u001b[22m\n\u001b[2m    12 × locator resolved to <span class=\"todo-count\">…</span>\u001b[22m\n\u001b[2m       - unexpected value \"1 item left\"\u001b[22m\n\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:45:26",
+                    "location": {
+                      "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                      "column": 26,
+                      "line": 45
+                    },
+                    "snippet": "  43 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  44 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n> 45 |   await expect(ui.count).toHaveText('2 items left');\n     |                          ^\n  46 | });\n  47 |\n  48 | // Scenario: SC-003; Requirements: REQ-3, REQ-4."
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                        "column": 26,
+                        "line": 45
+                      },
+                      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.todo-count')\nExpected: \u001b[32m\"\u001b[7m2\u001b[27m item\u001b[7ms\u001b[27m left\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m1\u001b[27m item left\"\u001b[39m\nTimeout:  4000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-count')\u001b[22m\n\u001b[2m    12 × locator resolved to <span class=\"todo-count\">…</span>\u001b[22m\n\u001b[2m       - unexpected value \"1 item left\"\u001b[22m\n\n\n  43 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  44 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n> 45 |   await expect(ui.count).toHaveText('2 items left');\n     |                          ^\n  46 | });\n  47 |\n  48 | // Scenario: SC-003; Requirements: REQ-3, REQ-4.\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:45:26"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:46:33.625Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-duplicates/test-results/todomvc-duplicate-titles-r-1a562-gh-complete-edit-and-delete/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-duplicates/test-results/todomvc-duplicate-titles-r-1a562-gh-complete-edit-and-delete/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-duplicates/test-results/todomvc-duplicate-titles-r-1a562-gh-complete-edit-and-delete/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs",
+                    "column": 26,
+                    "line": 45
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-40b1a35f4c3b03137c36",
+          "file": "todomvc.spec.mjs",
+          "line": 28,
+          "column": 1
+        },
+        {
+          "title": "individual completion and restoration keep the active count global under filters",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 612,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:46:34.442Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-00f4b006ff7fa7c0bbcf",
+          "file": "todomvc.spec.mjs",
+          "line": 49,
+          "column": 1
+        },
+        {
+          "title": "bulk toggle affects hidden records and works from an empty filtered view",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 722,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:46:35.066Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-3a04733bb193d86b1fcc",
+          "file": "todomvc.spec.mjs",
+          "line": 77,
+          "column": 1
+        },
+        {
+          "title": "filters visibly select the correct subset without losing or duplicating records",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 678,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:46:35.798Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-c03435a1e4af1f4bce67",
+          "file": "todomvc.spec.mjs",
+          "line": 106,
+          "column": 1
+        },
+        {
+          "title": "Enter and blur save edits while Escape preserves the saved title on reload",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 635,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:46:36.485Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-14b344040278ca81d220",
+          "file": "todomvc.spec.mjs",
+          "line": 133,
+          "column": 1
+        },
+        {
+          "title": "whitespace Enter and empty blur edits remove only their targeted records",
+          "ok": false,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 0,
+                  "parallelIndex": 0,
+                  "status": "failed",
+                  "duration": 8479,
+                  "error": {
+                    "message": "TimeoutError: locator.fill: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('textbox')\u001b[22m\n",
+                    "stack": "TimeoutError: locator.fill: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('textbox')\u001b[22m\n\n    at Object.edit (/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todo-ui.mjs:28:19)\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:163:3",
+                    "location": {
+                      "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todo-ui.mjs",
+                      "column": 19,
+                      "line": 28
+                    },
+                    "snippet": "\u001b[90m   at \u001b[39mtodo-ui.mjs:28\n\n  26 |       await row.locator('label').dblclick();\n  27 |       const input = row.getByRole('textbox');\n> 28 |       await input.fill(value);\n     |                   ^\n  29 |       if (key === 'blur') await this.input.click();\n  30 |       else await input.press(key);\n  31 |     },"
+                  },
+                  "errors": [
+                    {
+                      "location": {
+                        "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todo-ui.mjs",
+                        "column": 19,
+                        "line": 28
+                      },
+                      "message": "TimeoutError: locator.fill: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('textbox')\u001b[22m\n\n\n   at todo-ui.mjs:28\n\n  26 |       await row.locator('label').dblclick();\n  27 |       const input = row.getByRole('textbox');\n> 28 |       await input.fill(value);\n     |                   ^\n  29 |       if (key === 'blur') await this.input.click();\n  30 |       else await input.press(key);\n  31 |     },\n    at Object.edit (/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todo-ui.mjs:28:19)\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:163:3"
+                    }
+                  ],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:46:37.130Z",
+                  "annotations": [],
+                  "attachments": [
+                    {
+                      "name": "screenshot",
+                      "contentType": "image/png",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-duplicates/test-results/todomvc-whitespace-Enter-a-9ffa6-only-their-targeted-records/test-failed-1.png"
+                    },
+                    {
+                      "name": "error-context",
+                      "contentType": "text/markdown",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-duplicates/test-results/todomvc-whitespace-Enter-a-9ffa6-only-their-targeted-records/error-context.md"
+                    },
+                    {
+                      "name": "trace",
+                      "contentType": "application/zip",
+                      "path": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/matrix/todo-duplicates/test-results/todomvc-whitespace-Enter-a-9ffa6-only-their-targeted-records/trace.zip"
+                    }
+                  ],
+                  "errorLocation": {
+                    "file": "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todo-ui.mjs",
+                    "column": 19,
+                    "line": 28
+                  }
+                }
+              ],
+              "status": "unexpected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-5b2d1eb1af1363f77c7a",
+          "file": "todomvc.spec.mjs",
+          "line": 154,
+          "column": 1
+        },
+        {
+          "title": "delete and clear completed preserve active rows and empty controls recover",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 836,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:46:39.161Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-1826dc7ae3e33b02fff6",
+          "file": "todomvc.spec.mjs",
+          "line": 172,
+          "column": 1
+        },
+        {
+          "title": "saved edits completion order and removals persist through reload and further keyboard input",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 30000,
+              "annotations": [],
+              "expectedStatus": "passed",
+              "projectId": "",
+              "projectName": "",
+              "results": [
+                {
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
+                  "status": "passed",
+                  "duration": 910,
+                  "errors": [],
+                  "stdout": [],
+                  "stderr": [],
+                  "retry": 0,
+                  "startTime": "2026-10-21T00:46:40.228Z",
+                  "annotations": [],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "9131754c24c844b7c361-e94fcaa5bcc6b6afcf09",
+          "file": "todomvc.spec.mjs",
+          "line": 204,
+          "column": 1
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-10-21T00:46:33.128Z",
+    "duration": 12649.044,
+    "expected": 7,
+    "skipped": 0,
+    "unexpected": 2,
+    "flaky": 0
+  }
+}

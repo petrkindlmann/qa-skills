@@ -1,0 +1,1001 @@
+{
+  "startedAt": "2026-10-21T00:51:18.907Z",
+  "phase": "final",
+  "node": "v24.19.0",
+  "playwright": "1.62.1",
+  "browserExecutable": "/tmp/qa-skills-chrome/opt/google/chrome/chrome",
+  "method": "Frozen fresh-agent acceptance suites; full suite per variant; retries disabled. Nonzero exit alone is not a detection. Inspect assertion evidence before accepting each candidate.",
+  "sourceHashes": {
+    "tests/workflows/generated/baseline-shop/final-response.md": "16d07616c3644fd6245c9aa2416a88148fa2c2413c54304feff8266529cb0984",
+    "tests/workflows/generated/baseline-shop/helpers.mjs": "80964eab222c8777a92b703faa8715cf2fffe8f6e634994594459e6ce6cf477a",
+    "tests/workflows/generated/baseline-shop/probe.mjs": "1b15812046ca4debc16231201d89cd4117e42f8d6c7784a0bbb9937375f6bd0c",
+    "tests/workflows/generated/baseline-shop/shop.spec.mjs": "8eba10ebb18bd93001baa99a524dc6a1ead85fda2e4302df83867b0e67183967",
+    "tests/workflows/generated/baseline-todo/design.md": "7e5fb62ccaec5f1ef372140184fc0f66088112c37defdf67b95795750a2e6f0e",
+    "tests/workflows/generated/baseline-todo/execution-summary.json": "d8c61e56a9108313f3912279e36d4409dc30b9ef4d0bd327a98cfe37920fd166",
+    "tests/workflows/generated/baseline-todo/final-response.md": "bbdf100d8a2dafcd821cd7d6dc150563304797c2913503bc0b294607a426145f",
+    "tests/workflows/generated/baseline-todo/initial-failure-evidence/error-context.md": "a7cfd96e0e9b74bf152e151ac39c5b8b4eda6984fc85db7de949314becd566d7",
+    "tests/workflows/generated/baseline-todo/review.md": "7b16997ab8bb66b0fa6f0ee7cf9a4690c72f5106811b863c8bad7d4ed4e83eb9",
+    "tests/workflows/generated/baseline-todo/todo-ui.mjs": "bfcd542ab26419f6eb064e95f7934d4b5a67e163346596825e98cf7b6b547d6c",
+    "tests/workflows/generated/baseline-todo/todomvc.spec.mjs": "5beab50682cf35011c3a7d6520edfaa2cb26f19f97156b59a11cc94785869143",
+    "tests/workflows/fixture-app/faults.py": "a5fca58b9d4aea59173769d62b9efa9920e3473164c884b22c2fd6470ce65750",
+    "tests/workflows/fixture-app/index.html": "b4a49e52321ca59c9fb28847aafdd2687832c50f833ef961bbba6d35cbe3463a",
+    "tests/workflows/fixture-app/server.py": "4e8518762a19ffaac5b41639e16aa5875f84ac9425daaf434f5900218a746caa",
+    "tests/workflows/support/fixtures.mjs": "a07e6cfb9908ac0b35a060f88464f55062c37d86a4d93d7e7661d945a79fe489",
+    "tests/workflows/support/runtime.mjs": "0ab13fff93cd99c7bd8463e8f6edf8077a100c6156eaecdec03cdfd18f502ceb",
+    "tests/workflows/upstream-todomvc/README.md": "8c9765c9928f243978ce28e0c8523645565b20a777dca173590dd67b330e6d99",
+    "tests/workflows/upstream-todomvc/faults/delete-persistence-lost.mjs": "ba59d1a4180f7dcd5bf6288b6db030c1275f8e95de9279515caab952eb11838e",
+    "tests/workflows/upstream-todomvc/faults/mutations.mjs": "62d01e8196fe6e0d4e47a516fabe1cede166d0d1b65f55d3cef0a76462438696",
+    "tests/workflows/upstream-todomvc/faults/probe-delete-persistence.mjs": "a9e7a85b39de44621b68b86b9062d99770106515fc4b5575bf46000d9da19847",
+    "tests/workflows/upstream-todomvc/faults/probe.mjs": "c56486e6a2271f31b3fbe4dfce94e89e54636bbec6804e0f75f07b600c2bc739",
+    "tests/workflows/upstream-todomvc/observations/current-es5/examples/javascript-es5/dist/index.html": "fa135782c7bd9bca4eac3a665759c0698d3829b2f97b99fdc26761ee7084ecd5",
+    "tests/workflows/upstream-todomvc/observations/current-es5/license.md": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d",
+    "tests/workflows/upstream-todomvc/observations/current-es5-provenance.json": "0cefa7eaf4964d98fb833f47f7737d500aeb7f6fb8df3d61f782baa69a1ab923",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-preservation.json": "c8a066965ac5dadfe23b797587bdb4fd442596a625b84987158dec754453455a",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-results.json": "a08b63be16a231ee3b06719bf3bff97725d1847e317283792c74a04aa7491ce8",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-summary.md": "12b49af28de21c8f58396fb7c5159711c8cb27e70b1eecc77aaf1076e72dc154",
+    "tests/workflows/upstream-todomvc/observations/probe-results.json": "c232f16bbe22f06e5ad07d5193373e0ade085d6bbe73b11bdc4c0b9069c937e0",
+    "tests/workflows/upstream-todomvc/provenance.json": "3f8b0c9ee6462f43967f4563b989bb9bc689302b26496ffcdfda1777dd1a9d20",
+    "tests/workflows/upstream-todomvc/server.mjs": "347634c22f0e581f1dad069df7bab76ec57f8bbc9f776d3146f6a6e8af6a4778",
+    "tests/workflows/upstream-todomvc/upstream/examples/vanillajs/index.html": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e",
+    "tests/workflows/upstream-todomvc/upstream/examples/vanillajs/package.json": "861dd4872b19132c99161161ff032f3e52368dfec39ad18680ce4c620543efdd",
+    "tests/workflows/upstream-todomvc/upstream/license.md": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-app-css/2.4.1/package.json": "95b2dc61769730bf06ad0d0abc1a611ab417b13c14ee979920b1d5c61f491a0f",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-app-css/2.4.1/readme.md": "bcfd25e122c41039722b4e4bdf4b122ae240ad2f95bd1823d5358bdee316cbe0",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-common/1.0.5/package.json": "b58875806d8f06f234edf0b5d1bff8b20a4e8e84582d19057a62320267073e93",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-common/1.0.5/readme.md": "5dafddbb1d858af4a2528d7c620d5b7848e9987623012757c3d022e9802796bc",
+    "tests/workflows/generated/review-followup/final-response.md": "966d9308d6089bd223a8a757cb7c5664024fc373a69a3954a946d7547d9ae545",
+    "tests/workflows/generated/review-followup/helpers.mjs": "7c58c0c0e714264e9f6176680d08f33049d2818907a23cb0a7d9db9455c26598",
+    "tests/workflows/generated/review-followup/shop-review.spec.mjs": "4393e7c0c12bc6ac92e276c3add8d916d4f12a1c2aa8a0860ccd741fde59bd04",
+    "tests/workflows/generated/review-followup/todo-review.spec.mjs": "398f296fc8b5313bd68a3f24d637a632b045e08395890494673b497cdbb57828"
+  },
+  "runs": [
+    {
+      "id": "combined-healthy",
+      "suite": ".",
+      "healthy": true,
+      "count": 25,
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 0,
+      "signal": null,
+      "wallMs": 11634,
+      "stats": {
+        "startTime": "2026-10-21T00:51:19.418Z",
+        "duration": 11098.688,
+        "expected": 25,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "healthy_pass"
+    },
+    {
+      "id": "shop-ownership",
+      "suite": ".",
+      "env": {
+        "QA_SHOP_FAULT": "cross_user_order_read"
+      },
+      "title": "order ownership is private",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 12109,
+      "stats": {
+        "startTime": "2026-10-21T00:51:31.029Z",
+        "duration": 11594.23,
+        "expected": 24,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "order ownership is private and idempotency keys belong to users",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 536,
+              "errors": [
+                "Error: http://127.0.0.1:44717/api/orders/18ca2094-ac76-4420-87de-3b63b5dbcb78 {\"order\": {\"id\": \"18ca2094-ac76-4420-87de-3b63b5dbcb78\", \"user_id\": \"alice\", \"currency\": \"EUR\", \"amount\": 4200, \"status\": \"pending\", \"fulfillment_count\": 0, \"items\": [{\"sku\": \"CUP-01\", \"quantity\": 1}, {\"sku\": \"TEA-50\", \"quantity\": 2}]}}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m404\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n   at baseline-shop/helpers.mjs:38\n\n  36 | });\n  37 | export async function json(response, status) {\n> 38 |   expect(response.status(), `${response.url()} ${await response.text()}`).toBe(status);\n     |                                                                           ^\n  39 |   expect(response.headers()['content-type']).toContain('application/json');\n  40 |   return response.json();\n  41 | }\n    at json (/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/helpers.mjs:38:75)\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs:30:10"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "shop-pricing",
+      "suite": ".",
+      "env": {
+        "QA_SHOP_FAULT": "trust_client_amount"
+      },
+      "title": "catalog controls money",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 11731,
+      "stats": {
+        "startTime": "2026-10-21T00:51:43.087Z",
+        "duration": 11274.289,
+        "expected": 24,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "catalog controls money and malformed orders never create state",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 553,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m4200\u001b[39m\nReceived: \u001b[31m1\u001b[39m\n\n  22 |   for(const [i,data] of bad.entries()) expect(await json(await clients.alice.post('/api/orders',{headers:{'Idempotency-Key':`invalid-${i}`},data}),400)).toEqual({error:'invalid_order'});\n  23 |   expect((await state(app,request)).orders).toHaveLength(0);\n> 24 |   const {order}=await create(clients.alice,'priced',{...basket,amount:1});expect(order.amount).toBe(4200);expect(order.status).toBe('pending');expect(order.fulfillment_count).toBe(0);\n     |                                                                                                ^\n  25 | });\n  26 |\n  27 | test('order ownership is private and idempotency keys belong to users',async({clients})=>{\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs:24:96"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "shop-deduplication",
+      "suite": ".",
+      "env": {
+        "QA_SHOP_FAULT": "duplicate_fulfillment"
+      },
+      "title": "concurrent payment redelivery",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 12295,
+      "stats": {
+        "startTime": "2026-10-21T00:51:54.843Z",
+        "duration": 11804.285,
+        "expected": 22,
+        "skipped": 0,
+        "unexpected": 3,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "concurrent payment redelivery, conflict and distinct event IDs fulfill once durably",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 481,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"fulfillment_count\": 1,\u001b[39m\n\u001b[31m+   \"fulfillment_count\": 7,\u001b[39m\n\u001b[2m    \"status\": \"paid\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\n  55 |   expect(await json(await deliver(app,request,{...event,data:{...event.data,amount:1}}),409)).toEqual({error:'event_conflict'});\n  56 |   expect((await json(await deliver(app,request,payment(order,'evt-other')),200)).duplicate).toBe(false);\n> 57 |   let s=await state(app,request);expect(s.receipts).toHaveLength(2);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});\n     |                                                                                         ^\n  58 |   await app.restart({failFulfillmentOnce:false});expect((await json(await deliver(app,request,event),200)).duplicate).toBe(true);\n  59 |   s=await state(app,request);expect(s.receipts).toHaveLength(2);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});\n  60 | });\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs:57:89"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "transient fulfillment rolls back receipt then same event succeeds after restart",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 834,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"fulfillment_count\": 1,\u001b[39m\n\u001b[31m+   \"fulfillment_count\": 2,\u001b[39m\n\u001b[2m    \"status\": \"paid\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\n  65 |   expect((await json(await clients.alice.get(`/api/orders/${order.id}`),200)).order).toMatchObject({status:'pending',fulfillment_count:0});expect((await state(app,request)).receipts).toHaveLength(0);\n  66 |   await app.restart({failFulfillmentOnce:false});expect((await json(await deliver(app,request,event),200)).duplicate).toBe(false);\n> 67 |   expect((await json(await deliver(app,request,event),200)).duplicate).toBe(true);const s=await state(app,request);expect(s.receipts).toHaveLength(1);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});\n     |                                                                                                                                                                           ^\n  68 | });\n  69 |\n  70 | test('browser checkout restores order on reload and reflects server payment',async({page,app,request})=>{\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs:67:171"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "correctly signed noncanonical JSON is accepted and identical bytes replay once",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 388,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Object {\u001b[22m\n\u001b[2m    \"amount\": 1800,\u001b[22m\n\u001b[32m-   \"fulfillment_count\": 1,\u001b[39m\n\u001b[31m+   \"fulfillment_count\": 2,\u001b[39m\n\u001b[2m    \"id\": \"d1791b9a-f046-4786-9edd-31c182dc4cc4\",\u001b[22m\n\u001b[2m    \"status\": \"paid\",\u001b[22m\n\u001b[2m  }\u001b[22m\n\n  86 |     .toEqual({ received: true, duplicate: true, order_id: order.id });\n  87 |   const paid = await json(await request.get(`${app.baseURL}/api/orders/${order.id}`), 200);\n> 88 |   expect(paid.order).toMatchObject({ id: order.id, amount: 1800, status: 'paid', fulfillment_count: 1 });\n     |                      ^\n  89 |   const durable = await state(app, request);\n  90 |   expect(durable.receipts).toHaveLength(1);\n  91 |   expect(durable.orders).toHaveLength(1);\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/shop-review.spec.mjs:88:22"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "shop-transaction",
+      "suite": ".",
+      "env": {
+        "QA_SHOP_FAULT": "receipt_before_commit"
+      },
+      "title": "transient fulfillment rolls back",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 11414,
+      "stats": {
+        "startTime": "2026-10-21T00:52:07.147Z",
+        "duration": 10921.375,
+        "expected": 24,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "transient fulfillment rolls back receipt then same event succeeds after restart",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 676,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\nExpected length: \u001b[32m0\u001b[39m\nReceived length: \u001b[31m1\u001b[39m\nReceived array:  \u001b[31m[{\"created\": 1792543929.820776, \"id\": \"evt-test\", \"order_id\": \"844e6536-f54a-4203-a303-ab053f59daca\"}]\u001b[39m\n\n  63 |   const order=(await create(clients.alice)).order;const event=payment(order);\n  64 |   await app.restart({failFulfillmentOnce:true});expect(await json(await deliver(app,request,event),503)).toEqual({error:'fulfillment_unavailable'});\n> 65 |   expect((await json(await clients.alice.get(`/api/orders/${order.id}`),200)).order).toMatchObject({status:'pending',fulfillment_count:0});expect((await state(app,request)).receipts).toHaveLength(0);\n     |                                                                                                                                                                                        ^\n  66 |   await app.restart({failFulfillmentOnce:false});expect((await json(await deliver(app,request,event),200)).duplicate).toBe(false);\n  67 |   expect((await json(await deliver(app,request,event),200)).duplicate).toBe(true);const s=await state(app,request);expect(s.receipts).toHaveLength(1);expect(s.orders[0]).toMatchObject({status:'paid',fulfillment_count:1});\n  68 | });\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs:65:184"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "shop-key-conflict",
+      "suite": ".",
+      "env": {
+        "QA_SHOP_FAULT": "idempotency_payload_conflict"
+      },
+      "title": "concurrent equivalent checkout",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 11983,
+      "stats": {
+        "startTime": "2026-10-21T00:52:18.599Z",
+        "duration": 11452.675,
+        "expected": 24,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "concurrent equivalent checkout replays once and persists across restart",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 424,
+              "errors": [
+                "Error: http://127.0.0.1:34797/api/orders {\"order\": {\"id\": \"d9029ed9-030b-48a6-b0e0-a2c1f84d6e53\", \"user_id\": \"alice\", \"currency\": \"EUR\", \"amount\": 4200, \"status\": \"pending\", \"fulfillment_count\": 0, \"items\": [{\"sku\": \"CUP-01\", \"quantity\": 1}, {\"sku\": \"TEA-50\", \"quantity\": 2}]}, \"replayed\": true}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m409\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n   at baseline-shop/helpers.mjs:38\n\n  36 | });\n  37 | export async function json(response, status) {\n> 38 |   expect(response.status(), `${response.url()} ${await response.text()}`).toBe(status);\n     |                                                                           ^\n  39 |   expect(response.headers()['content-type']).toContain('application/json');\n  40 |   return response.json();\n  41 | }\n    at json (/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/helpers.mjs:38:75)\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs:36:104"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "shop-reset-reuse",
+      "suite": ".",
+      "env": {
+        "QA_SHOP_FAULT": "reusable_reset_token"
+      },
+      "title": "actual reset email completes",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 12195,
+      "stats": {
+        "startTime": "2026-10-21T00:52:30.594Z",
+        "duration": 11655.452000000001,
+        "expected": 24,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "actual reset email completes browser flow and revokes all sessions",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1272,
+              "errors": [
+                "Error: http://127.0.0.1:36583/api/password-reset/confirm {\"reset\": true}\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m400\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n   at baseline-shop/helpers.mjs:38\n\n  36 | });\n  37 | export async function json(response, status) {\n> 38 |   expect(response.status(), `${response.url()} ${await response.text()}`).toBe(status);\n     |                                                                           ^\n  39 |   expect(response.headers()['content-type']).toContain('application/json');\n  40 |   return response.json();\n  41 | }\n    at json (/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/helpers.mjs:38:75)\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-shop/shop.spec.mjs:88:10"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "todo-persistence",
+      "suite": ".",
+      "env": {
+        "QA_TODO_FAULT": "persistence-lost"
+      },
+      "title": "persist through reload",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 24005,
+      "stats": {
+        "startTime": "2026-10-21T00:52:42.765Z",
+        "duration": 23480.772,
+        "expected": 20,
+        "skipped": 0,
+        "unexpected": 5,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "Enter and blur save edits while Escape preserves the saved title on reload",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4841,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Book evening train\",\u001b[39m\n\u001b[32m-   \"Pack overnight bag\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n\n  145 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n  146 |   await page.reload();\n> 147 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n      |                           ^\n  148 |   await expect(ui.rows.nth(0).getByRole('checkbox')).toBeChecked();\n  149 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n  150 |   await expect(ui.count).toHaveText('1 item left');\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:147:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "whitespace Enter and empty blur edits remove only their targeted records",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4687,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 3\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Keep stamped letter\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n\n  166 |   await expect(ui.count).toHaveText('0 items left');\n  167 |   await page.reload();\n> 168 |   await expect(ui.titles).toHaveText(['Keep stamped letter']);\n      |                           ^\n  169 | });\n  170 |\n  171 | // Scenario: SC-008; Requirements: REQ-6, REQ-8.\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:168:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "saved edits completion order and removals persist through reload and further keyboard input",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 5191,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 5\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Water balcony plants\",\u001b[39m\n\u001b[32m-   \"Walk dog\",\u001b[39m\n\u001b[32m-   \"Call family\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n\n  215 |   await expect(ui.titles).toHaveText(['Water balcony plants', 'Walk dog', 'Call family']);\n  216 |   await page.reload();\n> 217 |   await expect(ui.titles).toHaveText(['Water balcony plants', 'Walk dog', 'Call family']);\n      |                           ^\n  218 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  219 |   await expect(ui.rows.nth(1).getByRole('checkbox')).toBeChecked();\n  220 |   await expect(ui.rows.nth(2).getByRole('checkbox')).not.toBeChecked();\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:217:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "single delete persists immediately with survivor order and completion intact",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4585,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 5\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Keep first\",\u001b[39m\n\u001b[32m-   \"Keep third\",\u001b[39m\n\u001b[32m-   \"Keep completed\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n\n  15 |   await page.reload();\n  16 |\n> 17 |   await expect(ui.titles).toHaveText(['Keep first', 'Keep third', 'Keep completed']);\n     |                           ^\n  18 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  19 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n  20 |   await expect(ui.rows.nth(2).getByRole('checkbox')).toBeChecked();\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs:17:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "clear completed persists immediately and preserves active titles and order",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4611,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Active first\",\u001b[39m\n\u001b[32m-   \"Active third\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n\n  36 |   await page.reload();\n  37 |\n> 38 |   await expect(ui.titles).toHaveText(['Active first', 'Active third']);\n     |                           ^\n  39 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  40 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n  41 |   await expect(ui.count).toHaveText('2 items left');\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs:38:27"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "todo-duplicates",
+      "suite": ".",
+      "env": {
+        "QA_TODO_FAULT": "delete-wrong-duplicate"
+      },
+      "title": "duplicate titles remain independent",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 17260,
+      "stats": {
+        "startTime": "2026-10-21T00:53:06.767Z",
+        "duration": 16746.649,
+        "expected": 23,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "duplicate titles remain independent through complete edit and delete",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4780,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.todo-count')\nExpected: \u001b[32m\"\u001b[7m2\u001b[27m item\u001b[7ms\u001b[27m left\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m1\u001b[27m item left\"\u001b[39m\nTimeout:  4000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-count')\u001b[22m\n\u001b[2m    12 × locator resolved to <span class=\"todo-count\">…</span>\u001b[22m\n\u001b[2m       - unexpected value \"1 item left\"\u001b[22m\n\n\n  43 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  44 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n> 45 |   await expect(ui.count).toHaveText('2 items left');\n     |                          ^\n  46 | });\n  47 |\n  48 | // Scenario: SC-003; Requirements: REQ-3, REQ-4.\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:45:26"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "whitespace Enter and empty blur edits remove only their targeted records",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 8520,
+              "errors": [
+                "TimeoutError: locator.fill: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('textbox')\u001b[22m\n\n\n   at baseline-todo/todo-ui.mjs:28\n\n  26 |       await row.locator('label').dblclick();\n  27 |       const input = row.getByRole('textbox');\n> 28 |       await input.fill(value);\n     |                   ^\n  29 |       if (key === 'blur') await this.input.click();\n  30 |       else await input.press(key);\n  31 |     },\n    at Object.edit (/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todo-ui.mjs:28:19)\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:163:3"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "todo-filter",
+      "suite": ".",
+      "env": {
+        "QA_TODO_FAULT": "filter-state-error"
+      },
+      "title": "filters visibly select",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 20195,
+      "stats": {
+        "startTime": "2026-10-21T00:53:24.011Z",
+        "duration": 19693.301,
+        "expected": 21,
+        "skipped": 0,
+        "unexpected": 4,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "individual completion and restoration keep the active count global under filters",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4604,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 5\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Call dentist\",\u001b[39m\n\u001b[32m-   \"Pick up parcel\",\u001b[39m\n\u001b[32m-   \"Water plants\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n\n  62 |   await expect(ui.footer).toBeVisible();\n  63 |   await ui.filter('Active').click();\n> 64 |   await expect(ui.titles).toHaveText(['Call dentist', 'Pick up parcel', 'Water plants']);\n     |                           ^\n  65 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  66 |   await ui.rows.nth(0).getByRole('checkbox').click();\n  67 |   await expect(ui.titles).toHaveText(['Pick up parcel', 'Water plants']);\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:64:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "bulk toggle affects hidden records and works from an empty filtered view",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4422,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 2\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"Buy groceries\",\u001b[39m\n\u001b[32m-   \"Cook dinner\",\u001b[39m\n\u001b[31m+   \"Plan meals\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 1 element\u001b[22m\n\n\n  81 |   await ui.rows.nth(0).getByRole('checkbox').check();\n  82 |   await ui.filter('Active').click();\n> 83 |   await expect(ui.titles).toHaveText(['Buy groceries', 'Cook dinner']);\n     |                           ^\n  84 |   await ui.allLabel.click();\n  85 |   await expect(ui.rows).toHaveCount(0);\n  86 |   await expect(ui.count).toHaveText('0 items left');\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:83:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "filters visibly select the correct subset without losing or duplicating records",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4590,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 2\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"Read chapter\",\u001b[39m\n\u001b[32m-   \"Reserve sequel\",\u001b[39m\n\u001b[31m+   \"Return book\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 1 element\u001b[22m\n\n\n  115 |   ]) {\n  116 |     await ui.filter(name).click();\n> 117 |     await expect(ui.titles).toHaveText(titles);\n      |                             ^\n  118 |     // Observed legacy UI uses selected class, not aria-current, for its visible border.\n  119 |     await expect(ui.filter(name)).toHaveClass(/selected/);\n  120 |     for (const other of ['All', 'Active', 'Completed'].filter(x => x !== name))\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:117:29"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "delete and clear completed preserve active rows and empty controls recover",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4634,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 3\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Keep active\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n\n  179 |   await ui.filter('Active').click();\n  180 |   await ui.clear.click();\n> 181 |   await expect(ui.titles).toHaveText(['Keep active']);\n      |                           ^\n  182 |   await expect(ui.count).toHaveText('1 item left');\n  183 |   await expect(ui.clear).toBeHidden();\n  184 |   await ui.filter('All').click();\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:181:27"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "todo-cancel",
+      "suite": ".",
+      "env": {
+        "QA_TODO_FAULT": "escape-commits-edit"
+      },
+      "title": "Escape preserves",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 16119,
+      "stats": {
+        "startTime": "2026-10-21T00:53:44.204Z",
+        "duration": 15624.446,
+        "expected": 23,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "Enter and blur save edits while Escape preserves the saved title on reload",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4703,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Book evening train\",\u001b[22m\n\u001b[32m-   \"Pack overnight bag\",\u001b[39m\n\u001b[31m+   \"Discard this draft\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 2 elements\u001b[22m\n\n\n  141 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n  142 |   await ui.edit(1, 'Discard this draft', 'Escape');\n> 143 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n      |                           ^\n  144 |   await ui.edit(0, '', 'Escape');\n  145 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n  146 |   await page.reload();\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:143:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "saved edits completion order and removals persist through reload and further keyboard input",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4895,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"Water balcony plants\",\u001b[39m\n\u001b[31m+   \"Canceled after reload\",\u001b[39m\n\u001b[2m    \"Walk dog\",\u001b[22m\n\u001b[2m    \"Call parents\",\u001b[22m\n\u001b[2m    \"Set alarm\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n\n\n  223 |   await ui.edit(0, 'Canceled after reload', 'Escape');\n  224 |   await ui.add('Set alarm');\n> 225 |   await expect(ui.titles).toHaveText(['Water balcony plants', 'Walk dog', 'Call parents', 'Set alarm']);\n      |                           ^\n  226 |   await expect(ui.count).toHaveText('3 items left');\n  227 |   await expect(ui.input).toHaveValue('');\n  228 | });\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:225:27"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "shop-logout",
+      "suite": ".",
+      "count": 10,
+      "env": {
+        "QA_SHOP_FAULT": "logout_cookie_only"
+      },
+      "title": "copied",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 12018,
+      "stats": {
+        "startTime": "2026-10-21T00:54:00.315Z",
+        "duration": 11537.975999999999,
+        "expected": 24,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "logout revokes a previously valid copied session on the server",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 307,
+              "errors": [
+                "Error: HTTP http://127.0.0.1:40331/api/me\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n   at review-followup/helpers.mjs:5\n\n  3 |\n  4 | export async function json(response, status) {\n> 5 |   expect(response.status(), `${response.request?.()?.method?.() ?? 'HTTP'} ${response.url()}`).toBe(status);\n    |                                                                                                ^\n  6 |   expect(response.headers()['content-type']).toContain('application/json');\n  7 |   return response.json();\n  8 | }\n    at json (/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/helpers.mjs:5:96)\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/shop-review.spec.mjs:24:18"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "shop-unit-prices",
+      "suite": ".",
+      "count": 10,
+      "env": {
+        "QA_SHOP_FAULT": "compensating_prices"
+      },
+      "title": "unit",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 11873,
+      "stats": {
+        "startTime": "2026-10-21T00:54:12.353Z",
+        "duration": 11366.219,
+        "expected": 23,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "each SKU has its contracted unit price and quantity ten is accepted",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 237,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m\n\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[33m@@ -1,7 +1,7 @@\u001b[39m\n\u001b[2m  Object {\u001b[22m\n\u001b[32m-   \"amount\": 1200,\u001b[39m\n\u001b[31m+   \"amount\": 1500,\u001b[39m\n\u001b[2m    \"currency\": \"EUR\",\u001b[22m\n\u001b[2m    \"fulfillment_count\": 0,\u001b[22m\n\u001b[2m    \"id\": Any<String>,\u001b[22m\n\u001b[2m    \"status\": \"pending\",\u001b[22m\n\u001b[2m    \"user_id\": \"alice\",\u001b[22m\n\n  42 |       const { order, replayed } = await createOrder(app, request, example.key, example.sku, example.quantity);\n  43 |       expect(replayed).toBe(false);\n> 44 |       expect(order).toMatchObject({\n     |                     ^\n  45 |         id: expect.any(String), user_id: app.users.alice.id, currency: 'EUR',\n  46 |         amount: example.amount, status: 'pending', fulfillment_count: 0,\n  47 |       });\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/shop-review.spec.mjs:44:21\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/shop-review.spec.mjs:41:5"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "correctly signed noncanonical JSON is accepted and identical bytes replay once",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 224,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m1800\u001b[39m\nReceived: \u001b[31m1200\u001b[39m\n\n  63 |   await login(app, request);\n  64 |   const { order } = await createOrder(app, request, 'raw-payment', 'CUP-01', 1);\n> 65 |   expect(order.amount).toBe(1800);\n     |                        ^\n  66 |   const event = {\n  67 |     type: 'payment.succeeded',\n  68 |     data: { currency: 'EUR', amount: 1800, order_id: order.id },\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/shop-review.spec.mjs:65:24"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "shop-signed-whitespace",
+      "suite": ".",
+      "count": 10,
+      "env": {
+        "QA_SHOP_FAULT": "canonicalized_signature"
+      },
+      "title": "noncanonical",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 11958,
+      "stats": {
+        "startTime": "2026-10-21T00:54:24.209Z",
+        "duration": 11471.741,
+        "expected": 24,
+        "skipped": 0,
+        "unexpected": 1,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "correctly signed noncanonical JSON is accepted and identical bytes replay once",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 302,
+              "errors": [
+                "Error: HTTP http://127.0.0.1:44325/api/webhooks/payment\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m200\u001b[39m\nReceived: \u001b[31m401\u001b[39m\n\n   at review-followup/helpers.mjs:5\n\n  3 |\n  4 | export async function json(response, status) {\n> 5 |   expect(response.status(), `${response.request?.()?.method?.() ?? 'HTTP'} ${response.url()}`).toBe(status);\n    |                                                                                                ^\n  6 |   expect(response.headers()['content-type']).toContain('application/json');\n  7 |   return response.json();\n  8 | }\n    at json (/workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/helpers.mjs:5:96)\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/shop-review.spec.mjs:83:16"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    },
+    {
+      "id": "todo-removal-persistence",
+      "suite": ".",
+      "count": 9,
+      "env": {
+        "QA_TODO_FAULT": "delete-persistence-lost"
+      },
+      "title": "single delete persists immediately",
+      "baselineTitle": "whitespace Enter and empty blur",
+      "command": [
+        "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 21462,
+      "stats": {
+        "startTime": "2026-10-21T00:54:36.237Z",
+        "duration": 20894.437,
+        "expected": 21,
+        "skipped": 0,
+        "unexpected": 4,
+        "flaky": 0
+      },
+      "executed": 25,
+      "failed": [
+        {
+          "title": "whitespace Enter and empty blur edits remove only their targeted records",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4695,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[31m+   \"Check mailbox\",\u001b[39m\n\u001b[31m+   \"Check mailbox\",\u001b[39m\n\u001b[2m    \"Keep stamped letter\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 3 elements\u001b[22m\n\n\n  166 |   await expect(ui.count).toHaveText('0 items left');\n  167 |   await page.reload();\n> 168 |   await expect(ui.titles).toHaveText(['Keep stamped letter']);\n      |                           ^\n  169 | });\n  170 |\n  171 | // Scenario: SC-008; Requirements: REQ-6, REQ-8.\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/baseline-todo/todomvc.spec.mjs:168:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "single delete persists immediately with survivor order and completion intact",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4540,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Keep first\",\u001b[22m\n\u001b[31m+   \"Delete second\",\u001b[39m\n\u001b[2m    \"Keep third\",\u001b[22m\n\u001b[2m    \"Keep completed\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n\n\n  15 |   await page.reload();\n  16 |\n> 17 |   await expect(ui.titles).toHaveText(['Keep first', 'Keep third', 'Keep completed']);\n     |                           ^\n  18 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  19 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n  20 |   await expect(ui.rows.nth(2).getByRole('checkbox')).toBeChecked();\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs:17:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "clear completed persists immediately and preserves active titles and order",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4754,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 0\u001b[39m\n\u001b[31m+ Received  + 2\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Active first\",\u001b[22m\n\u001b[31m+   \"Completed second\",\u001b[39m\n\u001b[2m    \"Active third\",\u001b[22m\n\u001b[31m+   \"Completed fourth\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n\n\n  36 |   await page.reload();\n  37 |\n> 38 |   await expect(ui.titles).toHaveText(['Active first', 'Active third']);\n     |                           ^\n  39 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  40 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n  41 |   await expect(ui.count).toHaveText('2 items left');\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs:38:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "clearing the final completed item persists the empty state immediately",
+          "outcome": "unexpected",
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4473,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveCount\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  locator('.todo-list').getByRole('listitem')\nExpected: \u001b[32m0\u001b[39m\nReceived: \u001b[31m1\u001b[39m\nTimeout:  4000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveCount\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem')\u001b[22m\n\u001b[2m    12 × locator resolved to 1 element\u001b[22m\n\u001b[2m       - unexpected value \"1\"\u001b[22m\n\n\n  59 |   await page.reload();\n  60 |\n> 61 |   await expect(ui.rows).toHaveCount(0);\n     |                         ^\n  62 |   await expect(ui.main).toBeHidden();\n  63 |   await expect(ui.footer).toBeHidden();\n  64 |   await expect(ui.input).toBeVisible();\n    at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/generated/review-followup/todo-review.spec.mjs:61:25"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_candidate",
+      "review": "pending evidence review"
+    }
+  ],
+  "finishedAt": "2026-10-21T00:54:57.201Z"
+}

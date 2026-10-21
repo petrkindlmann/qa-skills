@@ -1,0 +1,13 @@
+✔ healthy HTTP control authenticates through the actual browser and runner (1438.074156ms)
+✔ documented starter discovers its setup and loads the resulting session (2388.537662ms)
+✔ documented worker fixture authenticates the builtin page without explicit fixture use (2053.970538ms)
+✔ documented worker login supports a configured relative URL and writes usable state (2060.618659ms)
+✔ documented role fixtures authenticate both roles and isolate their cookies (2107.226057ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 10084.84737

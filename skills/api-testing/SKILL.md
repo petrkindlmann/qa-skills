@@ -10,7 +10,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: automation
 ---
 
@@ -32,7 +32,7 @@ Check `.agents/qa-project-context.md` first — if it exists, use it and skip an
 
 1. **Test contracts, not implementations.** Assert on response shape, status codes, and headers — not on internal logic or database state.
 2. **Schema validation catches drift before it breaks consumers.** A failing schema test means you caught a breaking change before your frontend did.
-3. **Auth flows are tests too — don't just hardcode tokens.** Test login, refresh, expiration, and permission boundaries.
+3. **Auth flows are tests too.** Test the application's login, logout, expiry and permission contracts. Exercise refresh only when supported. A cleared client cookie does not prove the server revoked the session.
 4. **Response time is a testable assertion.** Performance regressions caught in CI are cheaper than production incidents.
 
 ---
@@ -81,7 +81,7 @@ See `references/schema-validation.md` for the Zod 4, AJV, schema-as-contract, an
 Cover each endpoint with a happy-path test plus at least one error-path test. The common patterns:
 
 - **CRUD lifecycle** — a `describe.serial` block that creates, reads, updates, deletes, then verifies the 404. Carries the resource id across steps.
-- **Auth flows** — login success, invalid credentials (401), expired token (401), token refresh, and permission boundary (403). Treat auth as its own describe block.
+- **Auth flows** — login success, invalid credentials, expiry, logout/revocation and permission boundaries. Assert the documented status and body: a resource may deliberately return indistinguishable 404s for foreign and unknown IDs. Test token refresh when the application implements it.
 - **Error responses** — 400 (malformed body), 422 (validation with field details), 429 (rate limit + `retry-after`). Don't ship happy-path-only suites.
 - **Response headers** — assert `content-type`, `cache-control`, and rate-limit headers directly (not behind a conditional that may never fire). See the pattern below.
 - **Pagination** — first-page metadata, out-of-bounds empty page, and rejection of invalid page size.
@@ -116,6 +116,32 @@ Response time and payload size are testable assertions — assert that a hot end
 
 ---
 
+## Workflow Evidence
+
+An HTTP success or a final happy state can miss an incorrect intermediate transition.
+Choose observations that distinguish the promised effect from a plausible broken one:
+
+- **Revocation:** capture a valid session before logout, log out through the normal client,
+  then replay the old credential from an independent context. Assert the protected request
+  is denied. Keep captured credentials out of reports and source control.
+- **Persistence:** read or restart immediately after the operation being tested, before a
+  later write can save its state on its behalf. Check rollback before retry, and successful
+  recovery afterward. Use real application/database state with explicit test support when needed.
+- **Calculated values:** use independently known unit values and more than one composition.
+  One correct aggregate can hide two compensating mistakes. Test accepted boundary values
+  as well as values outside the allowed range.
+- **Raw-body signatures:** sign the exact bytes sent. Include a valid noncanonical JSON
+  representation, such as extra whitespace, plus a byte-tampered rejection case. Parsing and
+  reserializing before verification must not silently redefine the signed message.
+- **Idempotency:** assert one durable business effect after concurrent duplicates and after
+  restart. Check a changed payload with the same key. Idempotent state does not require the
+  same status on every request; repeated DELETE may return 204 then 404 if that is the contract.
+
+Keep a healthy control and a deliberately broken control for each critical assertion when
+evaluating test quality. Report a missed control as a coverage gap, not a product failure.
+
+---
+
 ## Anti-Patterns
 
 ### 1. Hardcoded auth tokens
@@ -125,7 +151,7 @@ Tokens expire, rotate, and differ across environments. Use a login fixture that 
 API tests create, modify, and delete data. Run against a dedicated test environment or local instance.
 
 ### 3. Not validating error responses
-Happy-path-only suites miss the most common production issues. Test 400, 401, 403, 404, and 500 responses for every endpoint.
+Happy-path-only suites miss rejection behavior. Exercise each endpoint's documented error paths and assert no forbidden side effect; do not require every HTTP status from every endpoint.
 
 ### 4. Asserting headers only conditionally
 Headers carry cache directives, rate limit info, content type, and CORS policy. Assert them directly on every relevant response — a check buried inside `if (rateLimited)` may never run and proves nothing.
@@ -137,14 +163,14 @@ Tests that create resources without deleting them pollute the database. Use `aft
 Don't mock the database — API tests verify the contract from the consumer's perspective. Mock only genuine third parties you don't own (payment gateways, external SaaS).
 
 ### 7. Ignoring idempotency
-PUT and DELETE should be idempotent. Test that calling them twice produces the same result.
+PUT and DELETE should preserve the intended state when repeated. Check state and side effects, using the endpoint's documented response contract for each attempt.
 
 ---
 
 ## Done When
 
 - Every target endpoint has at least a happy-path test and at least one error-path test (4xx or 5xx response validated).
-- Auth flow tested as its own describe block: successful login, invalid credentials, expired token, and permission boundary (403).
+- Supported auth flows exercised: successful login, invalid credentials, expiry, logout/revocation and the documented permission boundary; include refresh when implemented.
 - Schema validation assertions on response shape using Zod 4 or AJV — not just `toHaveProperty` spot-checks.
 - Header assertions exist for at least `content-type` and any cache/rate-limit headers the API sets, asserted unconditionally.
 - Contract tests in place for any endpoint consumed by a different team or service (shared schema file; for consumer-driven verification use `contract-testing`).

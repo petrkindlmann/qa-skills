@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shop Workflow Lab</title>
+<style>
+  :root { font: 16px/1.45 system-ui,sans-serif; color: #202020; background: #f5f5f3; }
+  body { max-width: 850px; margin: 24px auto; padding: 0 18px; }
+  section { margin: 18px 0; padding: 18px; border: 1px solid #bbb; background: white; }
+  h1,h2,h3 { line-height: 1.2; } h2 { margin-top: 0; }
+  label { display: block; margin: 10px 0; } input { display: block; width: min(100%,340px); box-sizing: border-box; padding: 8px; font: inherit; }
+  button { padding: 9px 14px; font: inherit; cursor: pointer; } button:disabled { cursor: wait; }
+  .product { display: grid; grid-template-columns: 1fr 100px; gap: 12px; align-items: center; border-bottom: 1px solid #ddd; padding: 8px 0; }
+  .product input { width: 80px; } .product label { margin: 0; font-size: 13px; }
+  #orders { padding-left: 20px; } #orders li { padding-bottom: 12px; }
+  [role=status] { min-height: 1.5em; white-space: pre-wrap; } [hidden] { display: none !important; }
+</style>
+<main>
+  <h1>Shop Workflow Lab</h1>
+  <p>A local checkout and account application for QA workflows.</p>
+  <p id="notice" role="status" aria-live="polite"></p>
+  <div id="shop">
+    <section id="login-section">
+      <h2>Sign in</h2>
+      <form id="login-form">
+        <label>Email <input name="email" type="email" autocomplete="username" required></label>
+        <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
+        <button>Sign in</button>
+      </form>
+    </section>
+    <section id="account-section" hidden>
+      <h2>Account</h2><p id="identity"></p><button id="logout">Sign out</button>
+    </section>
+    <section>
+      <h2>Catalogue</h2>
+      <form id="checkout-form">
+        <div id="products"></div>
+        <p id="cart-total"></p>
+        <button id="checkout-button" disabled>Place order</button>
+      </form>
+    </section>
+    <section id="orders-section" hidden>
+      <h2>Your orders</h2><button id="refresh">Refresh orders</button><ul id="orders"></ul>
+    </section>
+    <section>
+      <h2>Forgot your password?</h2>
+      <form id="request-reset-form">
+        <label>Account email <input name="email" type="email" required></label>
+        <button>Send reset link</button>
+      </form>
+    </section>
+  </div>
+  <section id="reset-section" hidden>
+    <h2>Reset your password</h2>
+    <form id="reset-form">
+      <label>New password <input name="password" type="password" autocomplete="new-password" minlength="12" required></label>
+      <button>Reset password</button>
+    </form>
+    <p><a href="/">Back to sign in</a></p>
+  </section>
+</main>
+<script>
+  const $ = selector => document.querySelector(selector);
+  const money = amount => 'EUR ' + (amount / 100).toFixed(2);
+  let products = [], signedIn = false, pendingKey;
+  async function api(path, options = {}) {
+    const response = await fetch(path, { ...options, headers: {'Content-Type': 'application/json', ...(options.headers || {})} });
+    const data = response.status === 204 ? null : await response.json();
+    if (!response.ok) throw new Error(data.error || 'request_failed');
+    return data;
+  }
+  function say(message) { $('#notice').textContent = message; }
+  function account(user) {
+    signedIn = Boolean(user);
+    $('#login-section').hidden = signedIn;
+    $('#account-section').hidden = !signedIn;
+    $('#orders-section').hidden = !signedIn;
+    $('#checkout-button').disabled = !signedIn;
+    $('#identity').textContent = user ? 'Signed in as ' + user.email : '';
+    if (!signedIn) $('#orders').replaceChildren();
+  }
+  function cartItems() { return products.map(product => ({sku: product.sku, quantity: Number($('#quantity-' + product.sku).value)})).filter(item => item.quantity > 0); }
+  function total() {
+    $('#cart-total').textContent = 'Cart total: ' + money(cartItems().reduce((sum, item) => sum + products.find(p => p.sku === item.sku).unit_amount * item.quantity, 0));
+  }
+  async function refreshOrders() {
+    const {orders} = await api('/api/orders');
+    $('#orders').replaceChildren();
+    for (const order of orders) {
+      const li = document.createElement('li'); li.dataset.orderId = order.id;
+      const heading = document.createElement('h3'); heading.textContent = 'Order ' + order.id;
+      const detail = document.createElement('p'); detail.textContent = money(order.amount) + ' · Status: ' + order.status + ' · Fulfillments: ' + order.fulfillment_count;
+      li.append(heading, detail); $('#orders').append(li);
+    }
+    if (!orders.length) { const li = document.createElement('li'); li.textContent = 'No orders yet.'; $('#orders').append(li); }
+  }
+  $('#login-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    try { const {user} = await api('/api/login', {method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(event.target)))}); account(user); await refreshOrders(); say('Signed in.'); }
+    catch(error) { say(error.message); }
+  });
+  $('#logout').addEventListener('click', async () => {
+    try { await api('/api/logout', {method:'POST'}); account(null); pendingKey = undefined; say('Signed out.'); } catch(error) { say(error.message); }
+  });
+  $('#checkout-form').addEventListener('submit', async event => {
+    event.preventDefault(); if (!signedIn || $('#checkout-button').disabled) return;
+    $('#checkout-button').disabled = true;
+    try {
+      pendingKey ||= crypto.randomUUID();
+      const result = await api('/api/orders', {method:'POST',headers:{'Idempotency-Key':pendingKey},body:JSON.stringify({currency:'EUR',items:cartItems()})});
+      pendingKey = undefined; await refreshOrders(); say('Order created: ' + result.order.id + '. Amount: ' + money(result.order.amount));
+    } catch(error) { say(error.message); } finally { $('#checkout-button').disabled = !signedIn; }
+  });
+  $('#refresh').addEventListener('click', () => refreshOrders().catch(error => say(error.message)));
+  $('#request-reset-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    try { const result = await api('/api/password-reset/request', {method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(event.target)))}); say(result.message); } catch(error) { say(error.message); }
+  });
+  $('#reset-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    try { await api('/api/password-reset/confirm', {method:'POST',body:JSON.stringify({token:new URLSearchParams(location.search).get('token'),password:new FormData(event.target).get('password')})}); say('Your password has been reset. Sign in with your new password.'); } catch(error) { say(error.message); }
+  });
+  async function start() {
+    if (location.pathname === '/reset-password') { $('#shop').hidden = true; $('#reset-section').hidden = false; return; }
+    products = (await api('/api/catalog')).products;
+    for (const product of products) {
+      const row = document.createElement('div'); row.className = 'product';
+      const text = document.createElement('p'); text.textContent = product.name + ' · ' + money(product.unit_amount);
+      const label = document.createElement('label'); label.textContent = product.name + ' quantity';
+      const input = document.createElement('input'); input.id = 'quantity-' + product.sku; input.type = 'number'; input.min = '0'; input.max = '10'; input.value = product.sku === 'TEA-50' ? '1' : '0'; input.addEventListener('input', () => { pendingKey = undefined; total(); });
+      label.append(input); row.append(text,label); $('#products').append(row);
+    }
+    total();
+    try { const {user} = await api('/api/me'); account(user); await refreshOrders(); } catch(error) { if (error.message !== 'unauthenticated') throw error; account(null); }
+  }
+  start().catch(error => say(error.message)).finally(() => { document.documentElement.dataset.ready = 'true'; });
+</script>
+</html>

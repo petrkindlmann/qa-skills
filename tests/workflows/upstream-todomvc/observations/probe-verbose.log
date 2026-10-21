@@ -1,0 +1,10 @@
+{"name":"ordinary user journey","fault":"none","observed":{"remaining":0},"expected":{"remaining":0},"matched":true,"requests":12,"externalRequests":[],"pageErrors":[]}
+{"name":"persistence-lost control","fault":"none","observed":["Persist this task"],"expected":["Persist this task"],"matched":true,"requests":24,"externalRequests":[],"pageErrors":[]}
+{"name":"persistence-lost counterexample","fault":"persistence-lost","observed":[],"expected":[],"matched":true,"requests":24,"externalRequests":[],"pageErrors":[]}
+{"name":"delete-wrong-duplicate control","fault":"none","observed":{"title":"Same title","completed":true},"expected":{"title":"Same title","completed":true},"matched":true,"requests":24,"externalRequests":[],"pageErrors":[]}
+{"name":"delete-wrong-duplicate counterexample","fault":"delete-wrong-duplicate","observed":{"title":"Same title","completed":false},"expected":{"title":"Same title","completed":false},"matched":true,"requests":24,"externalRequests":[],"pageErrors":[]}
+{"name":"filter-state-error control","fault":"none","observed":["Still active"],"expected":["Still active"],"matched":true,"requests":12,"externalRequests":[],"pageErrors":[]}
+{"name":"filter-state-error counterexample","fault":"filter-state-error","observed":["Already complete"],"expected":["Already complete"],"matched":true,"requests":12,"externalRequests":[],"pageErrors":[]}
+{"name":"escape-commits-edit control","fault":"none","observed":["Saved title"],"expected":["Saved title"],"matched":true,"requests":24,"externalRequests":[],"pageErrors":[]}
+{"name":"escape-commits-edit counterexample","fault":"escape-commits-edit","observed":["Canceled title"],"expected":["Canceled title"],"matched":true,"requests":24,"externalRequests":[],"pageErrors":[]}
+{"name":"current upstream ES5 reload observation","commit":"ff43b02e59dfa604386bb382034b2cd07c2bcd8a","before":1,"after":0,"classification":"Observed in-memory behavior; not an upstream defect claim"}

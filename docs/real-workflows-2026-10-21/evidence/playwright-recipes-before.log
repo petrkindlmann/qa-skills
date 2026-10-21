@@ -1,0 +1,151 @@
+✔ healthy HTTP control authenticates through the actual browser and runner (1374.702281ms)
+✖ documented starter discovers its setup and loads the resulting session (1111.432048ms)
+✖ documented worker fixture authenticates the builtin page without explicit fixture use (1280.016305ms)
+✖ documented worker login supports a configured relative URL and writes usable state (1589.158185ms)
+✔ documented role fixtures authenticate both roles and isolate their cookies (1920.65801ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 2
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7311.134016
+
+✖ failing tests:
+
+test at tests/browser/playwright-runner.test.mjs:107:1
+✖ documented starter discovers its setup and loads the resulting session (1111.432048ms)
+  AssertionError [ERR_ASSERTION]: starter failed (signal null); 
+  Running 1 test using 1 worker
+  
+  (node:19102) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+  (Use `node --trace-warnings ...` to show where the warning was created)
+  
+  
+  [1/1] [chromium] › e2e/tests/auth.spec.ts:2:1 › saved session opens an authenticated page
+    1) [chromium] › e2e/tests/auth.spec.ts:2:1 › saved session opens an authenticated page ───────────
+  
+      Error: Error reading storage state from .auth/user.json:
+      ENOENT: no such file or directory, open '.auth/user.json'
+  
+      Error Context: ../../../../../../test-results/auth-saved-session-opens-an-authenticated-page-chromium/error-context.md
+  
+      attachment #2: trace (application/zip) ─────────────────────────────────────────────────────────
+      ../../../../../../test-results/auth-saved-session-opens-an-authenticated-page-chromium/trace.zip
+      Usage:
+  
+          npx playwright show-trace ../../../../../../test-results/auth-saved-session-opens-an-authenticated-page-chromium/trace.zip
+  
+      ────────────────────────────────────────────────────────────────────────────────────────────────
+  
+  
+    1 failed
+      [chromium] › e2e/tests/auth.spec.ts:2:1 › saved session opens an authenticated page ────────────
+  
+  
+  1 !== 0
+  
+      at runRecipe (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/browser/playwright-runner.test.mjs:73:10)
+      at async TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/browser/playwright-runner.test.mjs:109:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser/playwright-runner.test.mjs:118:1
+✖ documented worker fixture authenticates the builtin page without explicit fixture use (1280.016305ms)
+  AssertionError [ERR_ASSERTION]: worker failed (signal null); 
+  Running 1 test using 1 worker
+  
+  (node:19218) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+  (Use `node --trace-warnings ...` to show where the warning was created)
+  
+  
+  [1/1] e2e/auth.spec.ts:3:1 › saved session opens an authenticated page
+    1) e2e/auth.spec.ts:3:1 › saved session opens an authenticated page ──────────────────────────────
+  
+      Error: expect(received).toBe(expected) // Object.is equality
+  
+      Expected: 200
+      Received: 401
+  
+        3 | test('saved session opens an authenticated page', async ({ page }) => {
+        4 |   const response = await page.goto('/dashboard');
+      > 5 |   expect(response?.status()).toBe(200);
+          |                              ^
+        6 |   await expect(page.getByRole('heading', { name: 'User workspace' })).toBeVisible();
+        7 | });
+          at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/recipes/run-82XJI1/worker/e2e/auth.spec.ts:5:30
+  
+      Error Context: ../../../../../../test-results/auth-saved-session-opens-an-authenticated-page/error-context.md
+  
+  
+    1 failed
+      e2e/auth.spec.ts:3:1 › saved session opens an authenticated page ───────────────────────────────
+  
+  
+  1 !== 0
+  
+      at runRecipe (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/browser/playwright-runner.test.mjs:73:10)
+      at async TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/browser/playwright-runner.test.mjs:119:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/browser/playwright-runner.test.mjs:125:1
+✖ documented worker login supports a configured relative URL and writes usable state (1589.158185ms)
+  AssertionError [ERR_ASSERTION]: worker-explicit failed (signal null); 
+  Running 1 test using 1 worker
+  
+  (node:19378) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+  (Use `node --trace-warnings ...` to show where the warning was created)
+  
+  
+  [1/1] e2e/auth.spec.ts:3:1 › saved session opens an authenticated page
+    1) e2e/auth.spec.ts:3:1 › saved session opens an authenticated page ──────────────────────────────
+  
+      Error: expect(received).toBe(expected) // Object.is equality
+  
+      Expected: 200
+      Received: 401
+  
+        3 | test('saved session opens an authenticated page', async ({ page, authState }) => {
+        4 |   const response = await page.goto('/dashboard');
+      > 5 |   expect(response?.status()).toBe(200);
+          |                              ^
+        6 |   await expect(page.getByRole('heading', { name: 'User workspace' })).toBeVisible();
+        7 | });
+          at /workspace/scratch/db79cfa7c2bc/qa-skills/tests/workflows/artifacts/recipes/run-82XJI1/worker-explicit/e2e/auth.spec.ts:5:30
+  
+      Error Context: ../../../../../../test-results/auth-saved-session-opens-an-authenticated-page/error-context.md
+  
+  
+    1 failed
+      e2e/auth.spec.ts:3:1 › saved session opens an authenticated page ───────────────────────────────
+  
+  
+  1 !== 0
+  
+      at runRecipe (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/browser/playwright-runner.test.mjs:73:10)
+      at async TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/browser/playwright-runner.test.mjs:126:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

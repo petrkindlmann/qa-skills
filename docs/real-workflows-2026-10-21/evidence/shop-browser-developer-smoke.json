@@ -1,0 +1,15 @@
+{
+  "purpose": "Fixture developer browser smoke, not skill-quality evaluation",
+  "steps": [
+    "Sign in through real form",
+    "Set quantities",
+    "Create order over actual HTTP",
+    "Show server amount and status",
+    "Reload preserves session/order",
+    "390px has no horizontal overflow",
+    "Sign out hides account orders"
+  ],
+  "browser": "156.0.8078.47",
+  "request_interception": false,
+  "application_page_errors": []
+}

@@ -1,0 +1,167 @@
+{
+  "classification": "Controlled fixture probes, not generated-suite evaluation",
+  "command": "QA_BROWSER_EXECUTABLE=/tmp/qa-skills-chrome/opt/google/chrome/chrome node tests/workflows/upstream-todomvc/faults/probe-delete-persistence.mjs",
+  "createdAt": "2026-10-21T00:47:33.402Z",
+  "upstreamCommit": "25a9e31eb32db752d959df18e4d214295a2875e8",
+  "runtime": {
+    "browser": "156.0.8078.47",
+    "node": "v24.19.0",
+    "playwright": "1.62.1"
+  },
+  "sourceHashes": {
+    "server.mjs": "347634c22f0e581f1dad069df7bab76ec57f8bbc9f776d3146f6a6e8af6a4778",
+    "faults/mutations.mjs": "62d01e8196fe6e0d4e47a516fabe1cede166d0d1b65f55d3cef0a76462438696",
+    "faults/delete-persistence-lost.mjs": "ba59d1a4180f7dcd5bf6288b6db030c1275f8e95de9279515caab952eb11838e",
+    "faults/probe-delete-persistence.mjs": "a9e7a85b39de44621b68b86b9062d99770106515fc4b5575bf46000d9da19847"
+  },
+  "results": [
+    {
+      "action": "single-delete",
+      "fault": "none",
+      "interveningWrite": false,
+      "beforeRemoval": [
+        "Keep active",
+        "Remove first"
+      ],
+      "afterRemovalBeforeAnyWrite": [
+        "Keep active"
+      ],
+      "beforeReload": [
+        "Keep active"
+      ],
+      "afterReload": [
+        "Keep active"
+      ],
+      "deletionPersisted": true,
+      "matchedControlledExpectation": true,
+      "requests": 24,
+      "externalRequests": [],
+      "pageErrors": []
+    },
+    {
+      "action": "single-delete",
+      "fault": "delete-persistence-lost",
+      "interveningWrite": false,
+      "beforeRemoval": [
+        "Keep active",
+        "Remove first"
+      ],
+      "afterRemovalBeforeAnyWrite": [
+        "Keep active"
+      ],
+      "beforeReload": [
+        "Keep active"
+      ],
+      "afterReload": [
+        "Keep active",
+        "Remove first"
+      ],
+      "deletionPersisted": false,
+      "matchedControlledExpectation": true,
+      "requests": 24,
+      "externalRequests": [],
+      "pageErrors": []
+    },
+    {
+      "action": "single-delete",
+      "fault": "delete-persistence-lost",
+      "interveningWrite": true,
+      "beforeRemoval": [
+        "Keep active",
+        "Remove first"
+      ],
+      "afterRemovalBeforeAnyWrite": [
+        "Keep active"
+      ],
+      "beforeReload": [
+        "Keep active",
+        "Unrelated later write"
+      ],
+      "afterReload": [
+        "Keep active",
+        "Unrelated later write"
+      ],
+      "deletionPersisted": true,
+      "matchedControlledExpectation": true,
+      "requests": 24,
+      "externalRequests": [],
+      "pageErrors": []
+    },
+    {
+      "action": "clear-completed",
+      "fault": "none",
+      "interveningWrite": false,
+      "beforeRemoval": [
+        "Keep active",
+        "Remove first",
+        "Remove second"
+      ],
+      "afterRemovalBeforeAnyWrite": [
+        "Keep active"
+      ],
+      "beforeReload": [
+        "Keep active"
+      ],
+      "afterReload": [
+        "Keep active"
+      ],
+      "deletionPersisted": true,
+      "matchedControlledExpectation": true,
+      "requests": 24,
+      "externalRequests": [],
+      "pageErrors": []
+    },
+    {
+      "action": "clear-completed",
+      "fault": "delete-persistence-lost",
+      "interveningWrite": false,
+      "beforeRemoval": [
+        "Keep active",
+        "Remove first",
+        "Remove second"
+      ],
+      "afterRemovalBeforeAnyWrite": [
+        "Keep active"
+      ],
+      "beforeReload": [
+        "Keep active"
+      ],
+      "afterReload": [
+        "Keep active",
+        "Remove first",
+        "Remove second"
+      ],
+      "deletionPersisted": false,
+      "matchedControlledExpectation": true,
+      "requests": 24,
+      "externalRequests": [],
+      "pageErrors": []
+    },
+    {
+      "action": "clear-completed",
+      "fault": "delete-persistence-lost",
+      "interveningWrite": true,
+      "beforeRemoval": [
+        "Keep active",
+        "Remove first",
+        "Remove second"
+      ],
+      "afterRemovalBeforeAnyWrite": [
+        "Keep active"
+      ],
+      "beforeReload": [
+        "Keep active",
+        "Unrelated later write"
+      ],
+      "afterReload": [
+        "Keep active",
+        "Unrelated later write"
+      ],
+      "deletionPersisted": true,
+      "matchedControlledExpectation": true,
+      "requests": 24,
+      "externalRequests": [],
+      "pageErrors": []
+    }
+  ]
+}

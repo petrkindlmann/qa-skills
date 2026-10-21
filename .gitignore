@@ -15,6 +15,12 @@ Thumbs.db
 node_modules/
 .npm
 
+# Local workflow run output (selected evidence is retained under docs/)
+tests/workflows/artifacts/
+tests/workflows/mailpit/artifacts/
+test-results/
+playwright-report/
+
 # Python
 __pycache__/
 *.pyc

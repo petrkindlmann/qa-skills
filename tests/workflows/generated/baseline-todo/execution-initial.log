@@ -1,0 +1,17 @@
+WORKFLOW RUN: 9 scheduled cases
+FAILED:  /  / todomvc.spec.mjs / individual completion and restoration keep the active count global under filters (attempt 1)
+TimeoutError: locator.uncheck: Timeout 8000ms exceeded.
+Call log:
+[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('checkbox')[22m
+[2m    - locator resolved to <input checked class="toggle" type="checkbox"/>[22m
+[2m  - attempting click action[22m
+[2m    - waiting for element to be visible, enabled and stable[22m
+[2m    - element is visible, enabled and stable[22m
+[2m    - scrolling into view if needed[22m
+[2m    - done scrolling[22m
+[2m    - performing click action[22m
+[2m    - click action done[22m
+[2m    - waiting for scheduled navigations to finish[22m
+[2m    - navigations have finished[22m
+
+WORKFLOW RESULT: failed; attempts=9; {"passed":8,"failed":1}

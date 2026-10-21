@@ -1,0 +1,33 @@
+{
+  "scope": "Local Shop build assessment before advancing to a shared QA environment; no production release is being performed.",
+  "application_contract": "tests/workflows/fixture-app-contract.md",
+  "candidate_source_commit": "e876dcfd6194066d1d697aea9ca6d7e08d2ce123 plus uncommitted fixture/suite additions",
+  "source_snapshot_sha256": "8f0083d080e94bb1a118da260d5a629fd0d77c0abe4f8600bc01aedf19833737",
+  "configuration_note": "Baseline and candidate used the same source snapshot but different application runtime configurations. Baseline green does not represent the candidate configuration.",
+  "environment": {
+    "playwright": "1.62.1",
+    "browser": "Google Chrome156.0.8078.47",
+    "database": "SQLite",
+    "email": "local real Mailpit1.31.6",
+    "payment": "synthetic local HMAC protocol"
+  },
+  "candidate_command": "node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers=2 --retries=0 --global-timeout=90000; QA_WORKFLOW_SUITE=tests/workflows/generated/baseline-shop; candidate configuration selected",
+  "prior_environment_attempt": {
+    "outcome": "blocked before browser page creation in default executor sandbox",
+    "stderr": "crashpad util/linux/socket.cc setsockopt: Operation not permitted; Chrome SIGTRAP",
+    "followup": "Same command with approved elevated execution launched successfully; included result files are from actual browser runs."
+  },
+  "release_information": {
+    "owner": null,
+    "rollback_plan": null,
+    "shared_environment_checks": "not run",
+    "external_provider_checks": "not run",
+    "human_approval": "not requested"
+  },
+  "evidence_files": [
+    "baseline-results.json",
+    "baseline-console.txt",
+    "candidate-results.json",
+    "candidate-console.txt"
+  ]
+}

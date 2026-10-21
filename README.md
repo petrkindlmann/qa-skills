@@ -216,6 +216,12 @@ of the evidence. The tests include healthy controls as well as malformed input,
 missing evidence, duplicate events, retries, delayed tracking, ambiguous selectors,
 and deceptive prompt-injection text.
 
+The [2026-10-21 workflow report](docs/REAL-WORKFLOWS-2026-10-21.md) adds real application
+workflows: pinned official TodoMVC, a local HTTP/SQLite Shop, and actual Mailpit SMTP.
+It retains fresh-agent test authoring, independent review, reproduced coverage gaps,
+review-driven follow-up, and healthy/deliberately broken application runs. The report
+separates bounded evidence from claims about future projects or external providers.
+
 Run the local gates with Python 3.12 and Node 24:
 
 ```bash
@@ -228,6 +234,10 @@ npm ci
 npm test
 npx playwright install --with-deps chromium
 npm run test:browser
+npm run workflow:setup
+npm run test:workflows
+npm run test:mailpit
+npm run test:workflow-controls
 ```
 
 The example tests load functions from the actual Markdown code blocks, so changes to
