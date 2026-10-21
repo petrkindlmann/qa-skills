@@ -1,0 +1,25 @@
+campaign3 matrix (test-suite-curation: curated corpus, 81 collected, 9 declared quarantines) started 2026-10-21T19:41:09.133Z node v26.0.0 playwright 1.62.1
+cur-healthy: healthy_pass; 81 tests; 0 failed; 85511ms; code 0
+cur-shop-ownership: assertion_detection_verified; 81 tests; 1 failed; 119955ms; code 1 oracle={"id":"shop-ownership","matcher":"toBe"} verified=true
+  failing: order ownership is private and idempotency keys belong to users
+cur-shop-key-conflict: assertion_detection_verified; 81 tests; 3 failed; 152491ms; code 1 oracle={"id":"shop-key-conflict","matcher":"toBe"} verified=true
+  failing: concurrent equivalent checkout replays once and persists across restart
+  failing: a changed SKU set or currency under a used key also conflicts
+  failing: every recorded request still draws a response of the recorded shape from the live Shop
+cur-todo-filter: assertion_detection_verified; 81 tests; 5 failed; 165536ms; code 1 oracle={"id":"todo-filter","matcher":"toHaveText"} verified=true
+  failing: individual completion and restoration keep the active count global under filters
+  failing: bulk toggle affects hidden records and works from an empty filtered view
+  failing: filters visibly select the correct subset without losing or duplicating records
+  failing: delete and clear completed preserve active rows and empty controls recover
+  failing: filter view: active
+cur-analytics-currency: assertion_detection_verified; 81 tests; 4 failed; 140188ms; code 1 oracle={"id":"c3-analytics-currency","matcher":"toEqual"} verified=true
+  failing: purchase carries the created order: transaction_id, major-unit value, currency and items match the API
+  failing: two orders push two purchase inputs, one per created order, with distinct transaction ids
+  failing: a double-click on Place order creates one order and pushes purchase once
+  failing: a rejected order pushes no purchase; the next accepted order pushes exactly one
+cur-synth-slow-health: assertion_detection_verified; 81 tests; 1 failed; 113069ms; code 1 oracle={"id":"c3-synth-slow-health","matcher":"toBeLessThanOrEqual"} verified=true
+  failing: GET /health answers ok for the released build within 500 ms
+cur-virt-catalog-drift: assertion_detection_verified; 81 tests; 2 failed; 74385ms; code 1 oracle={"id":"c3-virt-catalog-drift","matcher":"toEqual"} verified=true
+  failing: catalog controls money and malformed orders never create state
+  failing: every recorded request still draws a response of the recorded shape from the live Shop
+finished 2026-10-21T19:55:20.893Z

@@ -49,6 +49,24 @@ test('skipped and interrupted cases cannot satisfy the healthy count', () => {
     assert.equal(assessRun(healthy, processPass, value).acceptable, false, status);
   }
 });
+test('declared quarantines are the only skips a complete run may carry', () => {
+  const quarantined = () => {
+    const value = report();
+    value.suites[0].specs.push({ title: 'quarantined contract', tests: [{ status: 'skipped', expectedStatus: 'skipped',
+      annotations: [{ type: 'curation', description: 'R-01 superseded' }],
+      results: [{ status: 'skipped', retry: 0, duration: 0, errors: [] }] }] });
+    return value;
+  };
+  assert.equal(assessRun({ ...healthy, count: 2, skipped: 1 }, processPass, quarantined()).outcome, 'healthy_pass');
+  assert.equal(assessRun({ ...healthy, count: 2 }, processPass, quarantined()).acceptable, false, 'undeclared skip');
+  assert.equal(assessRun({ ...healthy, count: 2, skipped: 2 }, processPass, quarantined()).acceptable, false, 'fewer skips than declared');
+  assert.equal(assessRun({ ...healthy, count: 1, skipped: 1 }, processPass, report()).acceptable, false, 'declared skip that never happened');
+  const ran = quarantined(); ran.suites[0].specs[1].tests[0].results[0].status = 'passed';
+  assert.equal(assessRun({ ...healthy, count: 2, skipped: 1 }, processPass, ran).acceptable, false, 'a quarantined test that ran');
+  const detected = negativeReport();
+  detected.suites[0].specs.push(quarantined().suites[0].specs[1]);
+  assert.equal(assessRun({ ...negative, count: 2, skipped: 1 }, processFail, detected).outcome, 'assertion_detection_verified');
+});
 test('missing and empty reports fail closed', () => {
   for (const value of [undefined, { errors: [], suites: [] }]) {
     assert.equal(assessRun(healthy, processPass, value).acceptable, false);

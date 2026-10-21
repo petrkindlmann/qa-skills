@@ -71,6 +71,20 @@ const campaign3Cases = [
   { id: 'c3-mig-filter', suite: 'campaign3/test-migration', count: 7, env: { QA_TODO_FAULT: 'filter-state-error' }, title: 'filters visibly select' },
   { id: 'c3-mig-cancel', suite: 'campaign3/test-migration', count: 7, env: { QA_TODO_FAULT: 'escape-commits-edit' }, title: 'Escape preserves' },
   { id: 'c3-mig-duplicates', suite: 'campaign3/test-migration', count: 7, env: { QA_TODO_FAULT: 'delete-wrong-duplicate' }, title: 'duplicate titles remain independent' },
+  // The curated corpus from test-suite-curation: 81 collected, 9 quarantined with test.skip, the
+  // visual detector check enabled so nothing else skips. Each fault case re-designates an oracle
+  // that lives in a kept copy; cur-shop-key-conflict guards the behaviour whose bug-reproduction
+  // tests were quarantined as subsets.
+  ...[
+    { id: 'cur-healthy', healthy: true },
+    { id: 'cur-shop-ownership', oracleId: 'shop-ownership', env: { QA_SHOP_FAULT: 'cross_user_order_read' }, title: 'order ownership is private' },
+    { id: 'cur-shop-key-conflict', oracleId: 'shop-key-conflict', env: { QA_SHOP_FAULT: 'idempotency_payload_conflict' }, title: 'concurrent equivalent checkout' },
+    { id: 'cur-todo-filter', oracleId: 'todo-filter', env: { QA_TODO_FAULT: 'filter-state-error' }, title: 'filters visibly select' },
+    { id: 'cur-analytics-currency', oracleId: 'c3-analytics-currency', env: { QA_SHOP_FAULT: 'wrong_currency_event' }, title: 'purchase carries the created order' },
+    { id: 'cur-synth-slow-health', oracleId: 'c3-synth-slow-health', env: { QA_SHOP_FAULT: 'slow_health' }, title: 'GET /health answers ok' },
+    { id: 'cur-virt-catalog-drift', oracleId: 'c3-virt-catalog-drift', env: { QA_SHOP_FAULT: 'catalog_currency_missing' }, title: 'every recorded request still draws' },
+  ].map(scenario => ({ ...scenario, suite: 'campaign3/test-suite-curation/curated', count: 81, skipped: 9,
+    env: { VISUAL_DETECTOR_CHECK: '1', ...scenario.env } })),
 ];
 const oracleMatchers = {
   'c3-visual-style': 'toHaveScreenshot', 'c3-bugrepro-logout': 'toBe', 'c3-bugrepro-idempotency': 'toBe',
@@ -96,7 +110,9 @@ let cases = phase === 'campaign3' ? campaign3Cases : phase === 'initial' ? origi
     ...[...originalCases.filter(scenario => !scenario.healthy), ...reviewCases].map(scenario => ({ ...scenario, suite: '.', count: 36 })),
     ...addonCases];
 cases = cases.map(scenario => ({ ...scenario, runId: randomUUID(),
-  oracle: oracleMatchers[scenario.id] ? { id: scenario.id, matcher: oracleMatchers[scenario.id] } : undefined,
+  // A case may designate an oracle id that differs from its own id, so the same authored
+  // assertion can be checked inside a copied suite (the curated corpus).
+  oracle: oracleMatchers[scenario.oracleId ?? scenario.id] ? { id: scenario.oracleId ?? scenario.id, matcher: oracleMatchers[scenario.oracleId ?? scenario.id] } : undefined,
   count: scenario.count ?? (scenario.suite === 'baseline-shop' ? 10 : 9) }));
 if (process.argv[3]) {
   const selected = process.argv[3].split(',');

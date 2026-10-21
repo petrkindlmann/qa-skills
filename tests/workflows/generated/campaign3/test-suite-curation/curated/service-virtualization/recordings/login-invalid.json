@@ -1,0 +1,26 @@
+{
+  "name": "login-invalid",
+  "recordedAt": "2026-10-21T18:43:51.788Z",
+  "build": "shop-lab-v1",
+  "source": "live Shop (fixture-app) started by record.mjs",
+  "request": {
+    "method": "POST",
+    "path": "/api/login",
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": {
+      "email": "alice+5aba34b1837a48e190fc5563eb180bab@example.test",
+      "password": "not-the-password"
+    }
+  },
+  "response": {
+    "status": 401,
+    "headers": {
+      "content-type": "application/json; charset=utf-8"
+    },
+    "body": {
+      "error": "invalid_credentials"
+    }
+  }
+}

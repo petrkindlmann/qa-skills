@@ -64,12 +64,20 @@ export function assessRun(scenario, processResult, report) {
     tests.some(test => test.results.some(result => result.errors.some(error =>
       /browserType\.launch|before readiness|did not become ready|ECONNREFUSED|net::ERR_CONNECTION_(?:REFUSED|RESET|CLOSED)|ERR_MODULE_NOT_FOUND|Cannot find (?:module|package)|no such table:|No tests found/i.test(infrastructureMessage(error)))));
   const shape = report && Array.isArray(report.suites) && Array.isArray(report.errors);
+  // A scenario may declare an exact number of quarantined tests (test.skip with an audit
+  // annotation, as a curated suite carries). Any other skip, or a different number, keeps the
+  // run incomplete so a skip can never stand in for a pass.
+  const expectedSkips = Number.isInteger(scenario.skipped) && scenario.skipped > 0 ? scenario.skipped : 0;
+  const quarantined = tests.filter(test => test.expectedStatus === 'skipped');
+  const live = tests.filter(test => test.expectedStatus !== 'skipped');
   const complete = shape && Number.isInteger(scenario.count) && scenario.count > 0 && tests.length === scenario.count &&
-    tests.every(test => test.expectedStatus === 'passed' && test.results.length === 1 &&
+    quarantined.length === expectedSkips &&
+    quarantined.every(test => test.results.length === 1 && test.results[0].status === 'skipped') &&
+    live.every(test => test.expectedStatus === 'passed' && test.results.length === 1 &&
       test.results[0].retry === 0 && ['passed', 'failed'].includes(test.results[0].status));
   const cleanProcess = !processResult.signal && !timedOut && !infrastructureError;
   const healthy = complete && cleanProcess && report.errors.length === 0 && processResult.code === 0 &&
-    tests.every(test => test.outcome === 'expected' && test.results[0].status === 'passed' && test.results[0].errors.length === 0);
+    live.every(test => test.outcome === 'expected' && test.results[0].status === 'passed' && test.results[0].errors.length === 0);
   const target = failed.filter(test => test.title.includes(scenario.title ?? '\u0000') &&
     test.results[0]?.status === 'failed' && test.results[0].errors.length > 0);
   const candidate = complete && cleanProcess && report.errors.length === 0 && processResult.code === 1 && target.length > 0;

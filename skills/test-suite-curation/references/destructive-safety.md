@@ -25,6 +25,14 @@ def test_removed_feature(): ...
 test.skip('legacy discount rounding [curation-2026-Q2, audit R-0142]', () => { /* ... */ })
 ```
 
+A suffix in the title changes the test id in every report and history query. Where the
+runner carries metadata, keep the title and attach the audit row to it instead:
+
+```ts
+// Playwright: title unchanged, audit row travels as an annotation
+test.skip('legacy discount rounding', { annotation: { type: 'curation', description: 'R-0142: superseded by discount.spec.ts:12' } }, async () => { /* ... */ });
+```
+
 Or relocate without deleting:
 
 ```bash

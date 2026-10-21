@@ -1,0 +1,32 @@
+{
+  "name": "orders-create-invalid",
+  "recordedAt": "2026-10-21T18:43:51.788Z",
+  "build": "shop-lab-v1",
+  "source": "live Shop (fixture-app) started by record.mjs",
+  "request": {
+    "method": "POST",
+    "path": "/api/orders",
+    "headers": {
+      "content-type": "application/json",
+      "Idempotency-Key": "rec-key-2"
+    },
+    "body": {
+      "currency": "EUR",
+      "items": [
+        {
+          "sku": "NO-SUCH-SKU",
+          "quantity": 1
+        }
+      ]
+    }
+  },
+  "response": {
+    "status": 400,
+    "headers": {
+      "content-type": "application/json; charset=utf-8"
+    },
+    "body": {
+      "error": "invalid_order"
+    }
+  }
+}

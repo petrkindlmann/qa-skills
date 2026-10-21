@@ -1,0 +1,542 @@
+[
+ {
+  "file": "addons/accessibility.spec.mjs",
+  "line": 6,
+  "title": "Shop sign-in, account and reset pages have no WCAG 2.2 AA violations",
+  "id": "ed6a7a6fbd04191ac210-367522e884a81cdce256"
+ },
+ {
+  "file": "addons/accessibility.spec.mjs",
+  "line": 42,
+  "title": "Shop sign-in completes through the keyboard alone in document order",
+  "id": "ed6a7a6fbd04191ac210-6f2bbd18b48cf7adc928"
+ },
+ {
+  "file": "addons/accessibility.spec.mjs",
+  "line": 77,
+  "title": "TodoMVC empty state is clean and populated rows expose only the documented upstream gaps",
+  "id": "ed6a7a6fbd04191ac210-dfa7515fd0da6849e745"
+ },
+ {
+  "file": "addons/database.spec.mjs",
+  "line": 12,
+  "title": "session credentials are stored hashed at rest and removed on logout",
+  "id": "85d670ff693c75592b03-cec2cd6a06b5f28955bb"
+ },
+ {
+  "file": "addons/database.spec.mjs",
+  "line": 37,
+  "title": "schema enforces idempotency uniqueness, foreign keys and durable journaling",
+  "id": "85d670ff693c75592b03-ab5cc322418dee50205c"
+ },
+ {
+  "file": "addons/database.spec.mjs",
+  "line": 66,
+  "title": "orders, receipts and sessions stay referentially consistent after payment and logout",
+  "id": "85d670ff693c75592b03-10cb30cc3faba22f3899"
+ },
+ {
+  "file": "addons/performance.spec.mjs",
+  "line": 28,
+  "title": "TodoMVC paints its largest content within the lab budget",
+  "id": "f98106e733372f68772a-adadd02750accfbed982"
+ },
+ {
+  "file": "addons/performance.spec.mjs",
+  "line": 38,
+  "title": "TodoMVC layout stays stable after load and while listing items",
+  "id": "f98106e733372f68772a-825e820e12a0f0c7ec54"
+ },
+ {
+  "file": "addons/security.spec.mjs",
+  "line": 13,
+  "title": "repeated sign-in failures are throttled per account and recover after the window",
+  "id": "09b4ad604286fac800b3-c6e4c6a9c3f40219f245"
+ },
+ {
+  "file": "addons/security.spec.mjs",
+  "line": 39,
+  "title": "test-support routes stay locked without the admin key",
+  "id": "09b4ad604286fac800b3-2716bfdec5c5356d63d5"
+ },
+ {
+  "file": "addons/security.spec.mjs",
+  "line": 51,
+  "title": "password reset stays uniform and accepted when the mail service is down",
+  "id": "09b4ad604286fac800b3-32306796dc977f5b3e4f"
+ },
+ {
+  "file": "baseline-shop/shop.spec.mjs",
+  "line": 4,
+  "title": "API auth, cookie contract and logout revoke access",
+  "id": "372a51bc163cfabe39c3-fccc2fe1ce1e95605f51"
+ },
+ {
+  "file": "baseline-shop/shop.spec.mjs",
+  "line": 20,
+  "title": "catalog controls money and malformed orders never create state",
+  "id": "372a51bc163cfabe39c3-597f5b5aa88e50f33016"
+ },
+ {
+  "file": "baseline-shop/shop.spec.mjs",
+  "line": 28,
+  "title": "order ownership is private and idempotency keys belong to users",
+  "id": "372a51bc163cfabe39c3-2f40f64fad0de2100a0f"
+ },
+ {
+  "file": "baseline-shop/shop.spec.mjs",
+  "line": 34,
+  "title": "concurrent equivalent checkout replays once and persists across restart",
+  "id": "372a51bc163cfabe39c3-ede3c21fe47febb3d87f"
+ },
+ {
+  "file": "baseline-shop/shop.spec.mjs",
+  "line": 42,
+  "title": "payment signatures, exact raw bytes and mismatched values reject without side effects",
+  "id": "372a51bc163cfabe39c3-5264ad29be88211b2cd3"
+ },
+ {
+  "file": "baseline-shop/shop.spec.mjs",
+  "line": 53,
+  "title": "concurrent payment redelivery, conflict and distinct event IDs fulfill once durably",
+  "id": "372a51bc163cfabe39c3-5dd16f2a2463efeb2996"
+ },
+ {
+  "file": "baseline-shop/shop.spec.mjs",
+  "line": 63,
+  "title": "transient fulfillment rolls back receipt then same event succeeds after restart",
+  "id": "372a51bc163cfabe39c3-285efb258e66febef865"
+ },
+ {
+  "file": "baseline-shop/shop.spec.mjs",
+  "line": 71,
+  "title": "browser checkout restores order on reload and reflects server payment",
+  "id": "372a51bc163cfabe39c3-de18684bb90e574cd443"
+ },
+ {
+  "file": "baseline-shop/shop.spec.mjs",
+  "line": 82,
+  "title": "actual reset email completes browser flow and revokes all sessions",
+  "id": "372a51bc163cfabe39c3-f6058573a05a9da92262"
+ },
+ {
+  "file": "baseline-shop/shop.spec.mjs",
+  "line": 93,
+  "title": "reset requests resist account enumeration and tokens expire on the server clock",
+  "id": "372a51bc163cfabe39c3-147d5679bb74e555f3b9"
+ },
+ {
+  "file": "baseline-todo/todomvc.spec.mjs",
+  "line": 6,
+  "title": "creates trimmed nonblank titles in order and clears the entry field",
+  "id": "e990aea2aa9e40ced1fb-db50da15589a020e9107"
+ },
+ {
+  "file": "baseline-todo/todomvc.spec.mjs",
+  "line": 29,
+  "title": "duplicate titles remain independent through complete edit and delete",
+  "id": "e990aea2aa9e40ced1fb-97f8fb0191b9811a634f"
+ },
+ {
+  "file": "baseline-todo/todomvc.spec.mjs",
+  "line": 50,
+  "title": "individual completion and restoration keep the active count global under filters",
+  "id": "e990aea2aa9e40ced1fb-2bf09d0cada3d4b5a0fc"
+ },
+ {
+  "file": "baseline-todo/todomvc.spec.mjs",
+  "line": 78,
+  "title": "bulk toggle affects hidden records and works from an empty filtered view",
+  "id": "e990aea2aa9e40ced1fb-2ab4651ce012376bc6ed"
+ },
+ {
+  "file": "baseline-todo/todomvc.spec.mjs",
+  "line": 107,
+  "title": "filters visibly select the correct subset without losing or duplicating records",
+  "id": "e990aea2aa9e40ced1fb-abbcb87535ba4b0fa276"
+ },
+ {
+  "file": "baseline-todo/todomvc.spec.mjs",
+  "line": 134,
+  "title": "Enter and blur save edits while Escape preserves the saved title on reload",
+  "id": "e990aea2aa9e40ced1fb-5d594b15db0544d7e508"
+ },
+ {
+  "file": "baseline-todo/todomvc.spec.mjs",
+  "line": 155,
+  "title": "whitespace Enter and empty blur edits remove only their targeted records",
+  "id": "e990aea2aa9e40ced1fb-2b2f1851316890819a76"
+ },
+ {
+  "file": "baseline-todo/todomvc.spec.mjs",
+  "line": 173,
+  "title": "delete and clear completed preserve active rows and empty controls recover",
+  "id": "e990aea2aa9e40ced1fb-fe36a819319fec6bc40b"
+ },
+ {
+  "file": "baseline-todo/todomvc.spec.mjs",
+  "line": 205,
+  "title": "saved edits completion order and removals persist through reload and further keyboard input",
+  "id": "e990aea2aa9e40ced1fb-181c1a188123d984563e"
+ },
+ {
+  "file": "campaign3/analytics-tracking-testing/login-events.spec.mjs",
+  "line": 11,
+  "title": "login is pushed exactly once after a successful sign-in, and not on load or reload",
+  "id": "2458df3678768abedd72-8a89f2d0103de151807b"
+ },
+ {
+  "file": "campaign3/analytics-tracking-testing/login-events.spec.mjs",
+  "line": 41,
+  "title": "a rejected sign-in pushes nothing; the following successful one pushes login once",
+  "id": "2458df3678768abedd72-5ccffc6c5b78d3f537ec"
+ },
+ {
+  "file": "campaign3/analytics-tracking-testing/login-events.spec.mjs",
+  "line": 62,
+  "title": "sign-out and a password-reset request push nothing after the login event",
+  "id": "2458df3678768abedd72-c62e1d5e7f42aed16dda"
+ },
+ {
+  "file": "campaign3/analytics-tracking-testing/purchase-events.spec.mjs",
+  "line": 13,
+  "title": "purchase carries the created order: transaction_id, major-unit value, currency and items match the API",
+  "id": "37ce34d6816e6db1d77d-2c3e10b749a3ead30f55"
+ },
+ {
+  "file": "campaign3/analytics-tracking-testing/purchase-events.spec.mjs",
+  "line": 62,
+  "title": "two orders push two purchase inputs, one per created order, with distinct transaction ids",
+  "id": "37ce34d6816e6db1d77d-7fb490f12954c488816a"
+ },
+ {
+  "file": "campaign3/analytics-tracking-testing/purchase-events.spec.mjs",
+  "line": 98,
+  "title": "a double-click on Place order creates one order and pushes purchase once",
+  "id": "37ce34d6816e6db1d77d-10a5b6080d034311eacb"
+ },
+ {
+  "file": "campaign3/analytics-tracking-testing/purchase-events.spec.mjs",
+  "line": 120,
+  "title": "a rejected order pushes no purchase; the next accepted order pushes exactly one",
+  "id": "37ce34d6816e6db1d77d-c295cb0c1bc3c2c721d0"
+ },
+ {
+  "file": "campaign3/analytics-tracking-testing/purchase-events.spec.mjs",
+  "line": 152,
+  "title": "ordering: login after the account UI shows and before orders load; purchase after the order response and before the list refreshes",
+  "id": "37ce34d6816e6db1d77d-264276f088a0cc22f976"
+ },
+ {
+  "file": "campaign3/bug-reproduction/report-1-session-revocation.spec.mjs",
+  "line": 9,
+  "title": "browser Sign out revokes a session cookie copied by someone else",
+  "id": "7d376c0c255898e2c16c-4ef56cbe9ecd641ffb23"
+ },
+ {
+  "file": "campaign3/bug-reproduction/report-1-session-revocation.spec.mjs",
+  "line": 60,
+  "title": "POST /api/logout invalidates the session for every holder of the cookie",
+  "id": "7d376c0c255898e2c16c-650c4061d890a7095ad1"
+ },
+ {
+  "file": "campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs",
+  "line": 15,
+  "title": "reusing an Idempotency-Key with a different quantity returns 409 and creates no order",
+  "id": "f669a415e6ccb7b11e82-4242fbb1bac5cec304d2"
+ },
+ {
+  "file": "campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs",
+  "line": 41,
+  "title": "a changed SKU set or currency under a used key also conflicts",
+  "id": "f669a415e6ccb7b11e82-fb851595f31ee071ab92"
+ },
+ {
+  "file": "campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs",
+  "line": 58,
+  "title": "keys are scoped to the signed-in user, so a conflict is not a global lock on the key",
+  "id": "f669a415e6ccb7b11e82-6dc7bfed680517dd076f"
+ },
+ {
+  "file": "campaign3/selector-drift-recovery/todomvc.spec.mjs",
+  "line": 6,
+  "title": "creates trimmed nonblank titles in order and clears the entry field",
+  "id": "ae15e6f097c66d0fbd3f-5980764291b731559bf4"
+ },
+ {
+  "file": "campaign3/selector-drift-recovery/todomvc.spec.mjs",
+  "line": 29,
+  "title": "duplicate titles remain independent through complete edit and delete",
+  "id": "ae15e6f097c66d0fbd3f-9f0d57b74618c640225b"
+ },
+ {
+  "file": "campaign3/selector-drift-recovery/todomvc.spec.mjs",
+  "line": 50,
+  "title": "individual completion and restoration keep the active count global under filters",
+  "id": "ae15e6f097c66d0fbd3f-4790deba14fe93fa9c7c"
+ },
+ {
+  "file": "campaign3/selector-drift-recovery/todomvc.spec.mjs",
+  "line": 78,
+  "title": "bulk toggle affects hidden records and works from an empty filtered view",
+  "id": "ae15e6f097c66d0fbd3f-15e646b260accb2a3336"
+ },
+ {
+  "file": "campaign3/selector-drift-recovery/todomvc.spec.mjs",
+  "line": 107,
+  "title": "filters visibly select the correct subset without losing or duplicating records",
+  "id": "ae15e6f097c66d0fbd3f-1402c9abc621eab7e195"
+ },
+ {
+  "file": "campaign3/selector-drift-recovery/todomvc.spec.mjs",
+  "line": 134,
+  "title": "Enter and blur save edits while Escape preserves the saved title on reload",
+  "id": "ae15e6f097c66d0fbd3f-3b37f3142a52589d31f3"
+ },
+ {
+  "file": "campaign3/selector-drift-recovery/todomvc.spec.mjs",
+  "line": 155,
+  "title": "whitespace Enter and empty blur edits remove only their targeted records",
+  "id": "ae15e6f097c66d0fbd3f-ac7dc5f2df448766ebb2"
+ },
+ {
+  "file": "campaign3/selector-drift-recovery/todomvc.spec.mjs",
+  "line": 173,
+  "title": "delete and clear completed preserve active rows and empty controls recover",
+  "id": "ae15e6f097c66d0fbd3f-04c1f913f615a68b6723"
+ },
+ {
+  "file": "campaign3/selector-drift-recovery/todomvc.spec.mjs",
+  "line": 205,
+  "title": "saved edits completion order and removals persist through reload and further keyboard input",
+  "id": "ae15e6f097c66d0fbd3f-044a9c522c82b5c42538"
+ },
+ {
+  "file": "campaign3/service-virtualization/stub-fidelity.spec.mjs",
+  "line": 11,
+  "title": "every recorded request still draws a response of the recorded shape from the live Shop",
+  "id": "3e5847e971c878ccd80e-6a5668095b9da7e0c847"
+ },
+ {
+  "file": "campaign3/service-virtualization/stub-fidelity.spec.mjs",
+  "line": 34,
+  "title": "the comparator flags a dropped field, a changed type, a changed status, an emptied array and a non-JSON body",
+  "id": "3e5847e971c878ccd80e-eef976f8190f48344865"
+ },
+ {
+  "file": "campaign3/service-virtualization/stub-fidelity.spec.mjs",
+  "line": 59,
+  "title": "the freshness gate accepts every current recording and rejects a 31-day-old stamp",
+  "id": "3e5847e971c878ccd80e-ef64b089b174c48149fc"
+ },
+ {
+  "file": "campaign3/service-virtualization/virtualized-ui.spec.mjs",
+  "line": 35,
+  "title": "500 on order creation: error shown, no purchase event, retry reuses the key and creates exactly one order",
+  "id": "52550ae466216c011e49-d114f33616d2a070bb94"
+ },
+ {
+  "file": "campaign3/service-virtualization/virtualized-ui.spec.mjs",
+  "line": 69,
+  "title": "429 on login: too_many_attempts shown, sign-in form kept, no login event; the real sign-in works once the stub steps aside",
+  "id": "52550ae466216c011e49-e058fa590a5bea88a32c"
+ },
+ {
+  "file": "campaign3/service-virtualization/virtualized-ui.spec.mjs",
+  "line": 92,
+  "title": "slow /api/orders: sign-in does not claim completion before the list arrives; overlapping refreshes never duplicate rows",
+  "id": "52550ae466216c011e49-823acd5154f5092a2280"
+ },
+ {
+  "file": "campaign3/service-virtualization/virtualized-ui.spec.mjs",
+  "line": 124,
+  "title": "malformed JSON on a 200 login response is reported as an error, never as a sign-in",
+  "id": "52550ae466216c011e49-edf38602721795964069"
+ },
+ {
+  "file": "campaign3/service-virtualization/virtualized-ui.spec.mjs",
+  "line": 142,
+  "title": "empty catalogue: no products, zero total, and an order attempt is a visible error, never a silent success",
+  "id": "52550ae466216c011e49-5561c8cb67068c7f2342"
+ },
+ {
+  "file": "campaign3/service-virtualization/virtualized-ui.spec.mjs",
+  "line": 172,
+  "title": "500 on the orders list right after sign-in is shown; Refresh orders recovers",
+  "id": "52550ae466216c011e49-8521b1a338428598cd4e"
+ },
+ {
+  "file": "campaign3/service-virtualization/virtualized-ui.spec.mjs",
+  "line": 190,
+  "title": "fully virtualized load from recordings; an unstubbed call is rejected and logged, not sent to the Shop",
+  "id": "52550ae466216c011e49-da0c07d957092d0cd247"
+ },
+ {
+  "file": "campaign3/synthetic-monitoring/health.probe.spec.mjs",
+  "line": 9,
+  "title": "GET /health answers ok for the released build within 500 ms",
+  "id": "ba197841521b813bb630-361bd59eea7c724e414e"
+ },
+ {
+  "file": "campaign3/synthetic-monitoring/order-journey.probe.spec.mjs",
+  "line": 10,
+  "title": "synthetic account signs in, places a 1 x TEA-50 order and sees it listed as pending",
+  "id": "7129d29753fe1b50591b-f4df349531bb299b6170"
+ },
+ {
+  "file": "campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs",
+  "line": 11,
+  "title": "reset request delivers one correctly addressed email with a reset link within 10 s",
+  "id": "bb024dc7502928863aa3-98583119f6b6f2ab0e32"
+ },
+ {
+  "file": "campaign3/synthetic-monitoring/sign-in.probe.spec.mjs",
+  "line": 10,
+  "title": "synthetic account signs in through the page, sees its account view, signs out",
+  "id": "f9766504cfc789c16df5-11953eeb5ca7f8374cb8"
+ },
+ {
+  "file": "campaign3/synthetic-monitoring/storefront.probe.spec.mjs",
+  "line": 9,
+  "title": "GET / renders the catalogue at contract prices with sign-in and reset controls",
+  "id": "ca830163475b463d4d4e-78330232073cfbb7ca79"
+ },
+ {
+  "file": "campaign3/test-migration/todomvc.spec.mjs",
+  "line": 16,
+  "title": "creates trimmed non-blank titles in order and clears the entry field",
+  "id": "9273ea9b0da1aaa66eaf-0e3b2a3a55d946276499"
+ },
+ {
+  "file": "campaign3/test-migration/todomvc.spec.mjs",
+  "line": 25,
+  "title": "duplicate titles remain independent through complete, edit and delete",
+  "id": "9273ea9b0da1aaa66eaf-9e5d29df4e885166d6ae"
+ },
+ {
+  "file": "campaign3/test-migration/todomvc.spec.mjs",
+  "line": 37,
+  "title": "filters visibly select the correct subset",
+  "id": "9273ea9b0da1aaa66eaf-b7ac43c119ccbe1d1e9c"
+ },
+ {
+  "file": "campaign3/test-migration/todomvc.spec.mjs",
+  "line": 50,
+  "title": "Enter saves an edit and Escape preserves the saved title",
+  "id": "9273ea9b0da1aaa66eaf-26f3b66ac279931ef9e0"
+ },
+ {
+  "file": "campaign3/test-migration/todomvc.spec.mjs",
+  "line": 60,
+  "title": "items and their completion persist through reload",
+  "id": "9273ea9b0da1aaa66eaf-a028ff5e4e37cd708ded"
+ },
+ {
+  "file": "campaign3/test-migration/todomvc.spec.mjs",
+  "line": 70,
+  "title": "a deleted item stays deleted after reload",
+  "id": "9273ea9b0da1aaa66eaf-16741077717000d5ace6"
+ },
+ {
+  "file": "campaign3/test-migration/todomvc.spec.mjs",
+  "line": 78,
+  "title": "mark-all completes and restores every item",
+  "id": "9273ea9b0da1aaa66eaf-c0b20f9fbfa4a1dc78eb"
+ },
+ {
+  "file": "campaign3/visual-testing/todomvc-visual.spec.mjs",
+  "line": 26,
+  "title": "empty state shows only the header and the info footer",
+  "id": "789a6ec7da361e513845-31eec68f05ee2a7a21ea"
+ },
+ {
+  "file": "campaign3/visual-testing/todomvc-visual.spec.mjs",
+  "line": 34,
+  "title": "several active items",
+  "id": "789a6ec7da361e513845-f94f94636317d5097cfb"
+ },
+ {
+  "file": "campaign3/visual-testing/todomvc-visual.spec.mjs",
+  "line": 51,
+  "title": "filter view: all",
+  "id": "789a6ec7da361e513845-0f2dc8da8e4402648b7d"
+ },
+ {
+  "file": "campaign3/visual-testing/todomvc-visual.spec.mjs",
+  "line": 51,
+  "title": "filter view: active",
+  "id": "789a6ec7da361e513845-8f9c0ce91a23531e6c44"
+ },
+ {
+  "file": "campaign3/visual-testing/todomvc-visual.spec.mjs",
+  "line": 51,
+  "title": "filter view: completed",
+  "id": "789a6ec7da361e513845-5e46d98db66c3511c007"
+ },
+ {
+  "file": "campaign3/visual-testing/todomvc-visual.spec.mjs",
+  "line": 62,
+  "title": "all items completed through mark-all",
+  "id": "789a6ec7da361e513845-ebf80fdd6493f2b470a5"
+ },
+ {
+  "file": "campaign3/visual-testing/todomvc-visual.spec.mjs",
+  "line": 74,
+  "title": "editing in progress",
+  "id": "789a6ec7da361e513845-3a3427e2a276ec7fa02e"
+ },
+ {
+  "file": "campaign3/visual-testing/todomvc-visual.spec.mjs",
+  "line": 87,
+  "title": "hovering a row reveals its delete control",
+  "id": "789a6ec7da361e513845-db56f8b3f8f6b7e1b026"
+ },
+ {
+  "file": "campaign3/visual-testing/todomvc-visual.spec.mjs",
+  "line": 100,
+  "title": "mixed list at phone width",
+  "id": "789a6ec7da361e513845-0a552280f33a6aab905c"
+ },
+ {
+  "file": "campaign3/visual-testing/todomvc-visual.spec.mjs",
+  "line": 112,
+  "title": "a different state is rejected against an existing baseline",
+  "id": "789a6ec7da361e513845-1c28a07077ecec44327a"
+ },
+ {
+  "file": "review-followup/shop-review.spec.mjs",
+  "line": 6,
+  "title": "logout revokes a previously valid copied session on the server",
+  "id": "409d9812859d4ff11302-852e2130e6a00f555b93"
+ },
+ {
+  "file": "review-followup/shop-review.spec.mjs",
+  "line": 33,
+  "title": "each SKU has its contracted unit price and quantity ten is accepted",
+  "id": "409d9812859d4ff11302-01a691c177c133547e7f"
+ },
+ {
+  "file": "review-followup/shop-review.spec.mjs",
+  "line": 63,
+  "title": "correctly signed noncanonical JSON is accepted and identical bytes replay once",
+  "id": "409d9812859d4ff11302-3123ef5909e1d7d570de"
+ },
+ {
+  "file": "review-followup/todo-review.spec.mjs",
+  "line": 6,
+  "title": "single delete persists immediately with survivor order and completion intact",
+  "id": "173aaa1d204cf0681f96-b71609289715fbdf6373"
+ },
+ {
+  "file": "review-followup/todo-review.spec.mjs",
+  "line": 25,
+  "title": "clear completed persists immediately and preserves active titles and order",
+  "id": "173aaa1d204cf0681f96-205b05e9a627d6ffdfd5"
+ },
+ {
+  "file": "review-followup/todo-review.spec.mjs",
+  "line": 48,
+  "title": "clearing the final completed item persists the empty state immediately",
+  "id": "173aaa1d204cf0681f96-3c554781c6e5de5fca87"
+ }
+]

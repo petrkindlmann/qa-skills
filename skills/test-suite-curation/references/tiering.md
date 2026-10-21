@@ -48,7 +48,9 @@ pytest -m extended         # nightly
 
 JS/Vitest equivalent: tag with `test.concurrent`/custom tags or filename suffixes
 (`*.smoke.test.ts`) and select with `vitest --project smoke` or a `testNamePattern`.
-JUnit: use `@Tag("smoke")` and `-Dgroups=smoke`.
+Playwright: `test('checkout completes', { tag: '@smoke' }, async ({ page }) => { ... })`
+and `npx playwright test --grep @smoke` (`--grep-invert` for the rest); tags are part of the
+title in reports. JUnit: use `@Tag("smoke")` and `-Dgroups=smoke`.
 
 ## Assigning tiers from evidence
 

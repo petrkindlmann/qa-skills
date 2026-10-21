@@ -1,0 +1,34 @@
+# Helper modules: exported names never imported
+
+- addons/helpers.mjs (imported by anyone: true) exported 14, unused: closedPort, signature
+- baseline-shop/helpers.mjs (imported by anyone: true) exported 11, unused: none
+- baseline-shop/probe.mjs (imported by anyone: false) exported 0, unused: none
+- baseline-todo/todo-ui.mjs (imported by anyone: true) exported 1, unused: none
+- campaign3/analytics-tracking-testing/helpers/datalayer.mjs (imported by anyone: true) exported 2, unused: none
+- campaign3/analytics-tracking-testing/helpers/plan.mjs (imported by anyone: true) exported 1, unused: none
+- campaign3/analytics-tracking-testing/helpers/shop.mjs (imported by anyone: true) exported 13, unused: uiProbes
+- campaign3/analytics-tracking-testing/helpers/validate.mjs (imported by anyone: true) exported 1, unused: none
+- campaign3/analytics-tracking-testing/selfcheck-validator.mjs (imported by anyone: false) exported 0, unused: none
+- campaign3/bug-reproduction/helpers.mjs (imported by anyone: true) exported 15, unused: sessionCookieFrom
+- campaign3/bug-reproduction/oracle-sensitivity.mjs (imported by anyone: false) exported 0, unused: none
+- campaign3/selector-drift-recovery/.drift-recovery/scripts/apply-candidates.mjs (imported by anyone: false) exported 0, unused: none
+- campaign3/selector-drift-recovery/.drift-recovery/scripts/build-pr-body.mjs (imported by anyone: false) exported 0, unused: none
+- campaign3/selector-drift-recovery/.drift-recovery/scripts/failure-inventory.mjs (imported by anyone: true) exported 2, unused: none
+- campaign3/selector-drift-recovery/.drift-recovery/scripts/generate-candidates.mjs (imported by anyone: false) exported 0, unused: none
+- campaign3/selector-drift-recovery/.drift-recovery/scripts/identify-drift.mjs (imported by anyone: false) exported 0, unused: none
+- campaign3/selector-drift-recovery/.drift-recovery/scripts/recovery-candidates.mjs (imported by anyone: true) exported 3, unused: none
+- campaign3/selector-drift-recovery/.drift-recovery/scripts/recovery-summary.mjs (imported by anyone: true) exported 1, unused: none
+- campaign3/selector-drift-recovery/.drift-recovery/scripts/snapshot-dom.mjs (imported by anyone: false) exported 0, unused: none
+- campaign3/selector-drift-recovery/.drift-recovery/scripts/triage.mjs (imported by anyone: false) exported 0, unused: none
+- campaign3/selector-drift-recovery/.drift-recovery/scripts/verify-locators.mjs (imported by anyone: false) exported 0, unused: none
+- campaign3/selector-drift-recovery/todo-ui.mjs (imported by anyone: true) exported 1, unused: none
+- campaign3/service-virtualization/cassette.mjs (imported by anyone: true) exported 7, unused: recordingsDir
+- campaign3/service-virtualization/record.mjs (imported by anyone: false) exported 0, unused: none
+- campaign3/service-virtualization/scenario.mjs (imported by anyone: true) exported 5, unused: ORDER_BODY, normalizeResponse
+- campaign3/service-virtualization/virtual-api.mjs (imported by anyone: true) exported 3, unused: fulfillFrom
+- campaign3/synthetic-monitoring/probe-support.mjs (imported by anyone: true) exported 4, unused: none
+- campaign3/synthetic-monitoring/probes.mjs (imported by anyone: true) exported 5, unused: none
+- campaign3/test-migration/legacy/todomvc.cy.js (imported by anyone: false) exported 0, unused: none
+- campaign3/test-migration/todo-page.mjs (imported by anyone: true) exported 1, unused: none
+- campaign3/visual-testing/visual-helpers.mjs (imported by anyone: true) exported 6, unused: none
+- review-followup/helpers.mjs (imported by anyone: true) exported 5, unused: none

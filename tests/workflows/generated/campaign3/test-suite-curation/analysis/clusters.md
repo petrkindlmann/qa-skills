@@ -1,0 +1,2269 @@
+# Clusters (90 tests)
+
+
+## ast085: 9 clusters
+
+- 7 members:
+  - baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 0.872  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:50
+    - 0.872  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.919  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.919  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.868  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 0.872  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:50
+    - 0.872  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.919  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.919  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.868  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.949  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.949  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.949  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 0.949  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.949  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.949  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.897  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+    - 0.897  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+- 9 members:
+  - baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+  - baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.977  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.977  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.977  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.977  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.977  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.935  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.935  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.977  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.977  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.977  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.977  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.977  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.935  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.935  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.957  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.957  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:6
+    - 0.957  baseline-todo/todomvc.spec.mjs:205 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.957  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.957  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.957  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:6
+    - 0.957  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.957  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.957  review-followup/todo-review.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.957  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+- 2 members:
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:69 429 on login: too_many_attempts shown, sign-in form kept, no login event; the real sign-in works once the stub steps aside
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:172 500 on the orders list right after sign-in is shown; Refresh orders recovers
+    - 0.882  campaign3/service-virtualization/virtualized-ui.spec.mjs:69 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:172
+- 5 members:
+  - campaign3/synthetic-monitoring/health.probe.spec.mjs:9 GET /health answers ok for the released build within 500 ms
+  - campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 GET / renders the catalogue at contract prices with sign-in and reset controls
+  - campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 synthetic account signs in, places a 1 x TEA-50 order and sees it listed as pending
+  - campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11 reset request delivers one correctly addressed email with a reset link within 10 s
+  - campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10 synthetic account signs in through the page, sees its account view, signs out
+    - 1  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9
+    - 0.95  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10
+    - 0.974  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11
+    - 0.974  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+    - 0.95  campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10
+    - 0.974  campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11
+    - 0.974  campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+    - 0.975  campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 ~ campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11
+    - 0.975  campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+    - 1  campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+- 2 members:
+  - campaign3/test-migration/todomvc.spec.mjs:25 duplicate titles remain independent through complete, edit and delete
+  - campaign3/test-migration/todomvc.spec.mjs:37 filters visibly select the correct subset
+    - 0.868  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:37
+- 3 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: all
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: active
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: completed
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+- 2 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:74 editing in progress
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:87 hovering a row reveals its delete control
+    - 0.923  campaign3/visual-testing/todomvc-visual.spec.mjs:74 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+
+## ast070: 13 clusters
+
+- 2 members:
+  - addons/performance.spec.mjs:28 TodoMVC paints its largest content within the lab budget
+  - addons/performance.spec.mjs:38 TodoMVC layout stays stable after load and while listing items
+    - 0.701  addons/performance.spec.mjs:28 ~ addons/performance.spec.mjs:38
+- 17 members:
+  - baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+  - baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+  - baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - review-followup/todo-review.spec.mjs:48 clearing the final completed item persists the empty state immediately
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 0.872  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:50
+    - 0.872  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.919  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.919  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.868  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 0.75  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.75  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.733  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.733  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.733  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.733  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.733  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:6
+    - 0.739  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.739  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.737  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:48
+    - 0.872  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:50
+    - 0.872  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.919  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.919  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.868  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 0.75  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.75  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.733  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.733  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.733  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.733  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.733  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:6
+    - 0.739  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.739  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.737  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.949  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.949  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.949  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 0.822  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.822  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.804  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.804  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.804  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.804  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.804  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:6
+    - 0.848  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.848  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.821  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:48
+    - 0.949  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.949  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.949  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 0.822  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.822  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.804  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.804  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.804  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.804  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.804  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:6
+    - 0.848  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.848  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.821  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.897  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+    - 0.778  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.778  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.761  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.761  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.761  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.761  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.761  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:6
+    - 0.804  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.804  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.769  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:48
+    - 0.897  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+    - 0.778  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.778  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.761  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.761  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.761  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.761  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.761  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:6
+    - 0.804  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.804  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.769  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:48
+    - 0.86  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.86  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.841  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.841  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.841  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.841  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.841  review-followup/todo-review.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:6
+    - 0.804  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.804  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.816  review-followup/todo-review.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.977  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.977  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.977  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.977  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.977  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.935  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.935  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.705  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:48
+    - 0.977  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.977  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.977  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.977  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.977  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.935  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.935  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.705  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.957  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.957  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.689  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:6
+    - 0.957  baseline-todo/todomvc.spec.mjs:205 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.957  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.689  baseline-todo/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.957  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.957  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.689  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:6
+    - 0.957  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.957  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.689  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:48
+    - 0.957  review-followup/todo-review.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.957  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.689  review-followup/todo-review.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.696  baseline-todo/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:48
+    - 0.696  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:48
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+- 2 members:
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98 a double-click on Place order creates one order and pushes purchase once
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:120 a rejected order pushes no purchase; the next accepted order pushes exactly one
+    - 0.727  campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98 ~ campaign3/analytics-tracking-testing/purchase-events.spec.mjs:120
+- 2 members:
+  - campaign3/bug-reproduction/report-1-session-revocation.spec.mjs:60 POST /api/logout invalidates the session for every holder of the cookie
+  - campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:58 keys are scoped to the signed-in user, so a conflict is not a global lock on the key
+    - 0.702  campaign3/bug-reproduction/report-1-session-revocation.spec.mjs:60 ~ campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:58
+- 3 members:
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:69 429 on login: too_many_attempts shown, sign-in form kept, no login event; the real sign-in works once the stub steps aside
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:172 500 on the orders list right after sign-in is shown; Refresh orders recovers
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:124 malformed JSON on a 200 login response is reported as an error, never as a sign-in
+    - 0.882  campaign3/service-virtualization/virtualized-ui.spec.mjs:69 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:172
+    - 0.738  campaign3/service-virtualization/virtualized-ui.spec.mjs:69 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:124
+    - 0.725  campaign3/service-virtualization/virtualized-ui.spec.mjs:172 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:124
+- 5 members:
+  - campaign3/synthetic-monitoring/health.probe.spec.mjs:9 GET /health answers ok for the released build within 500 ms
+  - campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 GET / renders the catalogue at contract prices with sign-in and reset controls
+  - campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 synthetic account signs in, places a 1 x TEA-50 order and sees it listed as pending
+  - campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11 reset request delivers one correctly addressed email with a reset link within 10 s
+  - campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10 synthetic account signs in through the page, sees its account view, signs out
+    - 1  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9
+    - 0.95  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10
+    - 0.974  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11
+    - 0.974  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+    - 0.95  campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10
+    - 0.974  campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11
+    - 0.974  campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+    - 0.975  campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 ~ campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11
+    - 0.975  campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+    - 1  campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+- 2 members:
+  - campaign3/test-migration/todomvc.spec.mjs:16 creates trimmed non-blank titles in order and clears the entry field
+  - campaign3/test-migration/todomvc.spec.mjs:70 a deleted item stays deleted after reload
+    - 0.821  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/test-migration/todomvc.spec.mjs:70
+- 4 members:
+  - campaign3/test-migration/todomvc.spec.mjs:25 duplicate titles remain independent through complete, edit and delete
+  - campaign3/test-migration/todomvc.spec.mjs:37 filters visibly select the correct subset
+  - campaign3/test-migration/todomvc.spec.mjs:50 Enter saves an edit and Escape preserves the saved title
+  - campaign3/test-migration/todomvc.spec.mjs:60 items and their completion persist through reload
+    - 0.868  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.833  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.73  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.816  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.718  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.722  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:60
+- 2 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:26 empty state shows only the header and the info footer
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:100 mixed list at phone width
+    - 0.767  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+- 3 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: all
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: active
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: completed
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+- 2 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:74 editing in progress
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:87 hovering a row reveals its delete control
+    - 0.923  campaign3/visual-testing/todomvc-visual.spec.mjs:74 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+
+## combined085: 7 clusters
+
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+    - 0.9  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+- 9 members:
+  - baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+  - baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+    - 0.933  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.933  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.908  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.924  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.9  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.845  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.82  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.842  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.947  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.946  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.938  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.845  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.9  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.853  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.856  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.946  review-followup/todo-review.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.938  review-followup/todo-review.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.845  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.859  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.853  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.856  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.911  baseline-todo/todomvc.spec.mjs:155 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.82  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.853  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.9  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.829  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.842  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.856  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.829  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.909  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.933  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.908  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.924  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.946  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.938  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.911  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+- 4 members:
+  - baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+    - 0.918  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.901  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.832  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.832  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.899  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.922  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+    - 0.92  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+    - 0.922  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+- 3 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: all
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: active
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: completed
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+- 2 members:
+  - review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+  - review-followup/todo-review.spec.mjs:48 clearing the final completed item persists the empty state immediately
+    - 0.851  review-followup/todo-review.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:48
+
+## combined070: 10 clusters
+
+- 17 members:
+  - baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+  - review-followup/todo-review.spec.mjs:48 clearing the final completed item persists the empty state immediately
+  - baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+  - baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+    - 0.9  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 0.817  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:50
+    - 0.75  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.891  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.818  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.857  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 0.79  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:48
+    - 0.729  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.719  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.719  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:6
+    - 0.722  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.734  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.655  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.645  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.649  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.661  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.761  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:50
+    - 0.826  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.829  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.901  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.772  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 0.705  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:48
+    - 0.655  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.645  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.645  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:6
+    - 0.649  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.661  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.729  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.719  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.722  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.734  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.918  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.901  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.832  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.875  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 0.789  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:48
+    - 0.787  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.777  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.777  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:6
+    - 0.803  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.753  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.731  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.72  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.747  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.703  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.832  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.899  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.807  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 0.724  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:48
+    - 0.72  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.71  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.71  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:6
+    - 0.736  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.693  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.796  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.786  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.812  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.76  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.922  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.847  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+    - 0.782  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:48
+    - 0.744  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.716  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.734  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:6
+    - 0.742  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.748  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.692  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.667  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.693  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.697  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.781  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+    - 0.714  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:48
+    - 0.682  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.657  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.672  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:6
+    - 0.683  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.687  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.752  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.723  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.749  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.757  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.851  review-followup/todo-review.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:48
+    - 0.829  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.84  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.84  review-followup/todo-review.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:6
+    - 0.818  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.832  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.75  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.756  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.734  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.753  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.705  review-followup/todo-review.spec.mjs:48 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.716  review-followup/todo-review.spec.mjs:48 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.716  review-followup/todo-review.spec.mjs:48 ~ review-followup/todo-review.spec.mjs:6
+    - 0.72  review-followup/todo-review.spec.mjs:48 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.731  review-followup/todo-review.spec.mjs:48 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.633  review-followup/todo-review.spec.mjs:48 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.64  review-followup/todo-review.spec.mjs:48 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.644  review-followup/todo-review.spec.mjs:48 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.655  review-followup/todo-review.spec.mjs:48 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.933  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.933  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.908  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.924  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.9  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.845  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.82  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.842  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.947  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.946  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.938  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.845  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.9  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.853  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.856  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.946  review-followup/todo-review.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.938  review-followup/todo-review.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.845  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.859  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.853  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.856  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.911  baseline-todo/todomvc.spec.mjs:155 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.82  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.853  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.9  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.829  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.842  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.856  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.829  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.909  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.933  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.908  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.924  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.946  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.938  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.911  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+    - 0.92  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+    - 0.922  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+- 2 members:
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98 a double-click on Place order creates one order and pushes purchase once
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:120 a rejected order pushes no purchase; the next accepted order pushes exactly one
+    - 0.752  campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98 ~ campaign3/analytics-tracking-testing/purchase-events.spec.mjs:120
+- 2 members:
+  - campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:41 a changed SKU set or currency under a used key also conflicts
+  - campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:58 keys are scoped to the signed-in user, so a conflict is not a global lock on the key
+    - 0.72  campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:41 ~ campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:58
+- 3 members:
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:69 429 on login: too_many_attempts shown, sign-in form kept, no login event; the real sign-in works once the stub steps aside
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:172 500 on the orders list right after sign-in is shown; Refresh orders recovers
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:124 malformed JSON on a 200 login response is reported as an error, never as a sign-in
+    - 0.772  campaign3/service-virtualization/virtualized-ui.spec.mjs:69 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:172
+    - 0.758  campaign3/service-virtualization/virtualized-ui.spec.mjs:69 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:124
+    - 0.675  campaign3/service-virtualization/virtualized-ui.spec.mjs:172 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:124
+- 3 members:
+  - campaign3/synthetic-monitoring/health.probe.spec.mjs:9 GET /health answers ok for the released build within 500 ms
+  - campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11 reset request delivers one correctly addressed email with a reset link within 10 s
+  - campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 GET / renders the catalogue at contract prices with sign-in and reset controls
+    - 0.748  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11
+    - 0.747  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9
+    - 0.678  campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs:11 ~ campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9
+- 2 members:
+  - campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 synthetic account signs in, places a 1 x TEA-50 order and sees it listed as pending
+  - campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10 synthetic account signs in through the page, sees its account view, signs out
+    - 0.799  campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+- 3 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: all
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: active
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: completed
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+- 2 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:74 editing in progress
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:87 hovering a row reveals its delete control
+    - 0.845  campaign3/visual-testing/todomvc-visual.spec.mjs:74 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+
+## combinedMembers085: 9 clusters
+
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+    - 0.9  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+    - 0.9  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+    - 0.918  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+    - 0.92  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+    - 0.922  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+- 5 members:
+  - baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+    - 0.936  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.902  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.9  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.843  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.896  baseline-todo/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:6
+    - 0.843  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.9  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.814  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.802  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.936  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+    - 0.922  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+    - 0.909  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+- 3 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: all
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: active
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: completed
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+
+## combinedMembers070: 10 clusters
+
+- 4 members:
+  - baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+    - 0.9  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 0.78  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.707  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.719  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.791  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.922  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+- 9 members:
+  - baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+    - 0.9  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.895  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.863  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.895  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.807  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.775  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.84  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.758  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.807  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.775  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.807  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.895  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.863  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.758  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.936  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.902  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.9  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.843  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.846  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.764  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.896  baseline-todo/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:6
+    - 0.843  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.9  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.82  baseline-todo/todomvc.spec.mjs:155 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.738  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.814  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.802  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.846  review-followup/todo-review.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.764  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.936  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.764  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.846  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.738  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.82  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.909  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+- 4 members:
+  - baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - baseline-todo/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+    - 0.918  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.773  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.698  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.698  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.772  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.92  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+    - 0.922  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+- 2 members:
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98 a double-click on Place order creates one order and pushes purchase once
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:120 a rejected order pushes no purchase; the next accepted order pushes exactly one
+    - 0.709  campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98 ~ campaign3/analytics-tracking-testing/purchase-events.spec.mjs:120
+- 2 members:
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:69 429 on login: too_many_attempts shown, sign-in form kept, no login event; the real sign-in works once the stub steps aside
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:172 500 on the orders list right after sign-in is shown; Refresh orders recovers
+    - 0.725  campaign3/service-virtualization/virtualized-ui.spec.mjs:69 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:172
+- 2 members:
+  - campaign3/synthetic-monitoring/health.probe.spec.mjs:9 GET /health answers ok for the released build within 500 ms
+  - campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 GET / renders the catalogue at contract prices with sign-in and reset controls
+    - 0.747  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 ~ campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9
+- 2 members:
+  - campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 synthetic account signs in, places a 1 x TEA-50 order and sees it listed as pending
+  - campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10 synthetic account signs in through the page, sees its account view, signs out
+    - 0.728  campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+- 3 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: all
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: active
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: completed
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+- 2 members:
+  - review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+  - review-followup/todo-review.spec.mjs:48 clearing the final completed item persists the empty state immediately
+    - 0.808  review-followup/todo-review.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:48
+
+## combinedDynamic085: 9 clusters
+
+- 16 members:
+  - baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+  - baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+  - baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 0.923  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:50
+    - 0.923  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.951  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.951  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.921  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 0.85  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.85  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.84  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.84  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.84  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.84  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.84  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:6
+    - 0.843  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.843  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.923  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:50
+    - 0.923  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.951  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.951  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.921  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 0.85  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.85  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:6
+    - 0.843  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.843  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.969  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.969  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.969  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 0.893  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.893  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.883  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.883  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.883  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.883  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.883  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:6
+    - 0.909  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.909  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.969  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.969  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.969  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 0.893  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.893  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:6
+    - 0.909  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.909  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.938  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+    - 0.867  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.867  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.857  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.857  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.857  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.857  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.857  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:6
+    - 0.883  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.883  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.938  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+    - 0.867  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.867  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:6
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.916  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.916  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.905  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.905  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.905  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.905  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.905  review-followup/todo-review.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:6
+    - 0.883  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.883  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.986  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.986  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.986  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.986  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.986  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.961  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.961  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.986  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.986  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.986  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.986  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.986  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.961  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.961  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.974  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.974  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:6
+    - 0.974  baseline-todo/todomvc.spec.mjs:205 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.974  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.974  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.974  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:6
+    - 0.974  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.974  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.974  review-followup/todo-review.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.974  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+- 2 members:
+  - campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 synthetic account signs in, places a 1 x TEA-50 order and sees it listed as pending
+  - campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10 synthetic account signs in through the page, sees its account view, signs out
+    - 0.852  campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+- 2 members:
+  - campaign3/test-migration/todomvc.spec.mjs:16 creates trimmed non-blank titles in order and clears the entry field
+  - campaign3/test-migration/todomvc.spec.mjs:70 a deleted item stays deleted after reload
+    - 0.893  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/test-migration/todomvc.spec.mjs:70
+- 3 members:
+  - campaign3/test-migration/todomvc.spec.mjs:25 duplicate titles remain independent through complete, edit and delete
+  - campaign3/test-migration/todomvc.spec.mjs:37 filters visibly select the correct subset
+  - campaign3/test-migration/todomvc.spec.mjs:50 Enter saves an edit and Escape preserves the saved title
+    - 0.921  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.9  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.889  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/test-migration/todomvc.spec.mjs:50
+- 2 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:26 empty state shows only the header and the info footer
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:100 mixed list at phone width
+    - 0.86  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+- 3 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: all
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: active
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: completed
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+- 2 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:74 editing in progress
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:87 hovering a row reveals its delete control
+    - 0.954  campaign3/visual-testing/todomvc-visual.spec.mjs:74 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+
+## combinedDynamic070: 10 clusters
+
+- 2 members:
+  - addons/performance.spec.mjs:28 TodoMVC paints its largest content within the lab budget
+  - addons/performance.spec.mjs:38 TodoMVC layout stays stable after load and while listing items
+    - 0.821  addons/performance.spec.mjs:28 ~ addons/performance.spec.mjs:38
+- 25 members:
+  - baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+  - baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+  - baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - review-followup/todo-review.spec.mjs:48 clearing the final completed item persists the empty state immediately
+  - campaign3/test-migration/todomvc.spec.mjs:25 duplicate titles remain independent through complete, edit and delete
+  - campaign3/test-migration/todomvc.spec.mjs:37 filters visibly select the correct subset
+  - campaign3/test-migration/todomvc.spec.mjs:50 Enter saves an edit and Escape preserves the saved title
+  - campaign3/test-migration/todomvc.spec.mjs:60 items and their completion persist through reload
+  - campaign3/test-migration/todomvc.spec.mjs:16 creates trimmed non-blank titles in order and clears the entry field
+  - campaign3/test-migration/todomvc.spec.mjs:70 a deleted item stays deleted after reload
+  - baseline-todo/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 0.923  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:50
+    - 0.923  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.951  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.951  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.921  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 0.85  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.85  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.84  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.84  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.84  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.84  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.84  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:6
+    - 0.843  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.843  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.842  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:48
+    - 0.707  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.768  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.743  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.673  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.817  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.824  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.767  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.767  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.923  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:50
+    - 0.923  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.951  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.951  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.921  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 0.85  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.85  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:6
+    - 0.843  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.843  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.842  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:48
+    - 0.707  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.768  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.743  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.673  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.817  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.824  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.767  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.767  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 0.969  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.969  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.969  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 0.893  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.893  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.883  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.883  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.883  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.883  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.883  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:6
+    - 0.909  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.909  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.892  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:48
+    - 0.752  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.791  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.747  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.72  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.815  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.769  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.804  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.804  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.969  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 0.969  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.969  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 0.893  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.893  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:6
+    - 0.909  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.909  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.892  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:48
+    - 0.752  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.791  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.747  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.72  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.815  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.769  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.804  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.804  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 0.938  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+    - 0.867  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.867  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.857  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.857  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.857  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.857  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.857  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:6
+    - 0.883  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.883  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.862  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:48
+    - 0.726  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.765  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.72  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.693  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.785  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.789  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.782  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.782  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.938  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+    - 0.867  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.867  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:6
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.883  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.862  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:48
+    - 0.726  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.765  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.72  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.693  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.785  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.789  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.782  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.782  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.916  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:29
+    - 0.916  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.905  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.905  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.905  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.905  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.905  review-followup/todo-review.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:6
+    - 0.883  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.883  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.889  review-followup/todo-review.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:48
+    - 0.768  review-followup/todo-review.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.787  review-followup/todo-review.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.763  review-followup/todo-review.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.735  review-followup/todo-review.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.838  review-followup/todo-review.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.763  review-followup/todo-review.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.819  review-followup/todo-review.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.819  review-followup/todo-review.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 0.986  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.986  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.986  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.986  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.986  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.961  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.961  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.823  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:48
+    - 0.827  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.843  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.847  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.819  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.777  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.714  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.776  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.776  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.986  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 0.986  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 0.986  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 0.986  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 0.986  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 0.961  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.961  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.823  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:48
+    - 0.827  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.843  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.847  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.819  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.777  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.714  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.776  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.776  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.974  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.974  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.813  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:48
+    - 0.84  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.857  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.836  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.809  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.768  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.707  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.77  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.77  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:6
+    - 0.974  baseline-todo/todomvc.spec.mjs:205 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.974  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.813  baseline-todo/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:48
+    - 0.84  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.857  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.836  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.809  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.768  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.707  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.77  baseline-todo/todomvc.spec.mjs:205 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.77  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 0.974  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.974  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.813  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:48
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.836  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.809  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.768  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.707  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.77  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.77  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:6
+    - 0.974  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.974  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.813  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:48
+    - 0.84  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.857  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.836  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.809  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.768  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.707  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.77  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.77  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.974  review-followup/todo-review.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 0.974  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.813  review-followup/todo-review.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:48
+    - 0.84  review-followup/todo-review.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.857  review-followup/todo-review.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.836  review-followup/todo-review.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.809  review-followup/todo-review.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.768  review-followup/todo-review.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.707  review-followup/todo-review.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.77  review-followup/todo-review.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.77  review-followup/todo-review.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 0.817  baseline-todo/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:48
+    - 0.821  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.86  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.817  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.791  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.752  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.713  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.758  baseline-todo/todomvc.spec.mjs:155 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.758  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.817  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:48
+    - 0.821  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.86  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.817  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.791  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.752  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.713  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.758  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.758  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.68  review-followup/todo-review.spec.mjs:48 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 0.72  review-followup/todo-review.spec.mjs:48 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.673  review-followup/todo-review.spec.mjs:48 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.686  review-followup/todo-review.spec.mjs:48 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.757  review-followup/todo-review.spec.mjs:48 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.76  review-followup/todo-review.spec.mjs:48 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.744  review-followup/todo-review.spec.mjs:48 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.744  review-followup/todo-review.spec.mjs:48 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.921  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 0.9  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.838  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.789  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.716  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.67  campaign3/test-migration/todomvc.spec.mjs:25 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.67  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.889  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 0.831  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.838  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.789  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.685  campaign3/test-migration/todomvc.spec.mjs:37 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.685  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.833  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 0.841  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.76  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.664  campaign3/test-migration/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.664  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.75  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 0.726  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.644  campaign3/test-migration/todomvc.spec.mjs:60 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.644  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.893  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 0.706  campaign3/test-migration/todomvc.spec.mjs:16 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.706  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 0.656  campaign3/test-migration/todomvc.spec.mjs:70 ~ baseline-todo/todomvc.spec.mjs:78
+    - 0.656  campaign3/test-migration/todomvc.spec.mjs:70 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+- 2 members:
+  - baseline-todo/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+- 3 members:
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98 a double-click on Place order creates one order and pushes purchase once
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:120 a rejected order pushes no purchase; the next accepted order pushes exactly one
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:152 ordering: login after the account UI shows and before orders load; purchase after the order response and before the list refreshes
+    - 0.786  campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98 ~ campaign3/analytics-tracking-testing/purchase-events.spec.mjs:120
+    - 0.738  campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98 ~ campaign3/analytics-tracking-testing/purchase-events.spec.mjs:152
+    - 0.73  campaign3/analytics-tracking-testing/purchase-events.spec.mjs:120 ~ campaign3/analytics-tracking-testing/purchase-events.spec.mjs:152
+- 2 members:
+  - campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:15 reusing an Idempotency-Key with a different quantity returns 409 and creates no order
+  - campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:58 keys are scoped to the signed-in user, so a conflict is not a global lock on the key
+    - 0.745  campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:15 ~ campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:58
+- 3 members:
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:69 429 on login: too_many_attempts shown, sign-in form kept, no login event; the real sign-in works once the stub steps aside
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:172 500 on the orders list right after sign-in is shown; Refresh orders recovers
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:124 malformed JSON on a 200 login response is reported as an error, never as a sign-in
+    - 0.779  campaign3/service-virtualization/virtualized-ui.spec.mjs:69 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:172
+    - 0.776  campaign3/service-virtualization/virtualized-ui.spec.mjs:69 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:124
+    - 0.721  campaign3/service-virtualization/virtualized-ui.spec.mjs:172 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:124
+- 3 members:
+  - campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 synthetic account signs in, places a 1 x TEA-50 order and sees it listed as pending
+  - campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10 synthetic account signs in through the page, sees its account view, signs out
+  - campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 GET / renders the catalogue at contract prices with sign-in and reset controls
+    - 0.852  campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+    - 0.72  campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 ~ campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9
+    - 0.756  campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10 ~ campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9
+- 2 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:26 empty state shows only the header and the info footer
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:100 mixed list at phone width
+    - 0.86  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+- 4 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:34 several active items
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:62 all items completed through mark-all
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:74 editing in progress
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:87 hovering a row reveals its delete control
+    - 0.8  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 0.693  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 0.73  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 0.694  campaign3/visual-testing/todomvc-visual.spec.mjs:62 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 0.725  campaign3/visual-testing/todomvc-visual.spec.mjs:62 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 0.954  campaign3/visual-testing/todomvc-visual.spec.mjs:74 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+- 3 members:
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: all
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: active
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: completed
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+
+## dynamicOnly090: 6 clusters
+
+- 2 members:
+  - addons/accessibility.spec.mjs:42 Shop sign-in completes through the keyboard alone in document order
+  - campaign3/service-virtualization/virtualized-ui.spec.mjs:124 malformed JSON on a 200 login response is reported as an error, never as a sign-in
+    - 1  addons/accessibility.spec.mjs:42 ~ campaign3/service-virtualization/virtualized-ui.spec.mjs:124
+- 40 members:
+  - addons/accessibility.spec.mjs:77 TodoMVC empty state is clean and populated rows expose only the documented upstream gaps
+  - addons/performance.spec.mjs:28 TodoMVC paints its largest content within the lab budget
+  - addons/performance.spec.mjs:38 TodoMVC layout stays stable after load and while listing items
+  - baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - baseline-todo/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+  - baseline-todo/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+  - baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+  - campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+  - campaign3/test-migration/todomvc.spec.mjs:16 creates trimmed non-blank titles in order and clears the entry field
+  - campaign3/test-migration/todomvc.spec.mjs:25 duplicate titles remain independent through complete, edit and delete
+  - campaign3/test-migration/todomvc.spec.mjs:37 filters visibly select the correct subset
+  - campaign3/test-migration/todomvc.spec.mjs:50 Enter saves an edit and Escape preserves the saved title
+  - campaign3/test-migration/todomvc.spec.mjs:60 items and their completion persist through reload
+  - campaign3/test-migration/todomvc.spec.mjs:70 a deleted item stays deleted after reload
+  - campaign3/test-migration/todomvc.spec.mjs:78 mark-all completes and restores every item
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:26 empty state shows only the header and the info footer
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:34 several active items
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: all
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: active
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: completed
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:62 all items completed through mark-all
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:74 editing in progress
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:87 hovering a row reveals its delete control
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:100 mixed list at phone width
+  - review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+  - review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+  - review-followup/todo-review.spec.mjs:48 clearing the final completed item persists the empty state immediately
+    - 1  addons/accessibility.spec.mjs:77 ~ addons/performance.spec.mjs:28
+    - 1  addons/accessibility.spec.mjs:77 ~ addons/performance.spec.mjs:38
+    - 1  addons/accessibility.spec.mjs:77 ~ baseline-todo/todomvc.spec.mjs:6
+    - 1  addons/accessibility.spec.mjs:77 ~ baseline-todo/todomvc.spec.mjs:29
+    - 1  addons/accessibility.spec.mjs:77 ~ baseline-todo/todomvc.spec.mjs:50
+    - 1  addons/accessibility.spec.mjs:77 ~ baseline-todo/todomvc.spec.mjs:78
+    - 1  addons/accessibility.spec.mjs:77 ~ baseline-todo/todomvc.spec.mjs:107
+    - 1  addons/accessibility.spec.mjs:77 ~ baseline-todo/todomvc.spec.mjs:134
+    - 1  addons/accessibility.spec.mjs:77 ~ baseline-todo/todomvc.spec.mjs:155
+    - 1  addons/accessibility.spec.mjs:77 ~ baseline-todo/todomvc.spec.mjs:173
+    - 1  addons/accessibility.spec.mjs:77 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  addons/accessibility.spec.mjs:77 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  addons/accessibility.spec.mjs:77 ~ review-followup/todo-review.spec.mjs:6
+    - 1  addons/accessibility.spec.mjs:77 ~ review-followup/todo-review.spec.mjs:25
+    - 1  addons/accessibility.spec.mjs:77 ~ review-followup/todo-review.spec.mjs:48
+    - 1  addons/performance.spec.mjs:28 ~ addons/performance.spec.mjs:38
+    - 1  addons/performance.spec.mjs:28 ~ baseline-todo/todomvc.spec.mjs:6
+    - 1  addons/performance.spec.mjs:28 ~ baseline-todo/todomvc.spec.mjs:29
+    - 1  addons/performance.spec.mjs:28 ~ baseline-todo/todomvc.spec.mjs:50
+    - 1  addons/performance.spec.mjs:28 ~ baseline-todo/todomvc.spec.mjs:78
+    - 1  addons/performance.spec.mjs:28 ~ baseline-todo/todomvc.spec.mjs:107
+    - 1  addons/performance.spec.mjs:28 ~ baseline-todo/todomvc.spec.mjs:134
+    - 1  addons/performance.spec.mjs:28 ~ baseline-todo/todomvc.spec.mjs:155
+    - 1  addons/performance.spec.mjs:28 ~ baseline-todo/todomvc.spec.mjs:173
+    - 1  addons/performance.spec.mjs:28 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  addons/performance.spec.mjs:28 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  addons/performance.spec.mjs:28 ~ review-followup/todo-review.spec.mjs:6
+    - 1  addons/performance.spec.mjs:28 ~ review-followup/todo-review.spec.mjs:25
+    - 1  addons/performance.spec.mjs:28 ~ review-followup/todo-review.spec.mjs:48
+    - 1  addons/performance.spec.mjs:38 ~ baseline-todo/todomvc.spec.mjs:6
+    - 1  addons/performance.spec.mjs:38 ~ baseline-todo/todomvc.spec.mjs:29
+    - 1  addons/performance.spec.mjs:38 ~ baseline-todo/todomvc.spec.mjs:50
+    - 1  addons/performance.spec.mjs:38 ~ baseline-todo/todomvc.spec.mjs:78
+    - 1  addons/performance.spec.mjs:38 ~ baseline-todo/todomvc.spec.mjs:107
+    - 1  addons/performance.spec.mjs:38 ~ baseline-todo/todomvc.spec.mjs:134
+    - 1  addons/performance.spec.mjs:38 ~ baseline-todo/todomvc.spec.mjs:155
+    - 1  addons/performance.spec.mjs:38 ~ baseline-todo/todomvc.spec.mjs:173
+    - 1  addons/performance.spec.mjs:38 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  addons/performance.spec.mjs:38 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  addons/performance.spec.mjs:38 ~ review-followup/todo-review.spec.mjs:6
+    - 1  addons/performance.spec.mjs:38 ~ review-followup/todo-review.spec.mjs:25
+    - 1  addons/performance.spec.mjs:38 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:29
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ baseline-todo/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ baseline-todo/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ baseline-todo/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ baseline-todo/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ review-followup/todo-review.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ review-followup/todo-review.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:78 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ baseline-todo/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ baseline-todo/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ baseline-todo/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ review-followup/todo-review.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ review-followup/todo-review.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:107 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ baseline-todo/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ baseline-todo/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:48
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:6
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:25
+    - 1  baseline-todo/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:29
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:50
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:107
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:134
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:155
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:173
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/selector-drift-recovery/todomvc.spec.mjs:205
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:16
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/test-migration/todomvc.spec.mjs:25
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/test-migration/todomvc.spec.mjs:16 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:37
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/test-migration/todomvc.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/test-migration/todomvc.spec.mjs:50
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/test-migration/todomvc.spec.mjs:37 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:60
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/test-migration/todomvc.spec.mjs:50 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/test-migration/todomvc.spec.mjs:70
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/test-migration/todomvc.spec.mjs:60 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ campaign3/test-migration/todomvc.spec.mjs:78
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/test-migration/todomvc.spec.mjs:70 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:26
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/test-migration/todomvc.spec.mjs:78 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:34
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:26 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:34 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:51
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:62
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:51 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:62 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:74
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:62 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:62 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:62 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:62 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:62 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:74 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:87
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:74 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:74 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:74 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:74 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:87 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:100
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:87 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:87 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:87 ~ review-followup/todo-review.spec.mjs:48
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:100 ~ review-followup/todo-review.spec.mjs:6
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:100 ~ review-followup/todo-review.spec.mjs:25
+    - 1  campaign3/visual-testing/todomvc-visual.spec.mjs:100 ~ review-followup/todo-review.spec.mjs:48
+    - 1  review-followup/todo-review.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:25
+    - 1  review-followup/todo-review.spec.mjs:6 ~ review-followup/todo-review.spec.mjs:48
+    - 1  review-followup/todo-review.spec.mjs:25 ~ review-followup/todo-review.spec.mjs:48
+- 2 members:
+  - campaign3/analytics-tracking-testing/login-events.spec.mjs:11 login is pushed exactly once after a successful sign-in, and not on load or reload
+  - campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10 synthetic account signs in through the page, sees its account view, signs out
+    - 1  campaign3/analytics-tracking-testing/login-events.spec.mjs:11 ~ campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10
+- 2 members:
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:13 purchase carries the created order: transaction_id, major-unit value, currency and items match the API
+  - campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 synthetic account signs in, places a 1 x TEA-50 order and sees it listed as pending
+    - 1  campaign3/analytics-tracking-testing/purchase-events.spec.mjs:13 ~ campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10
+- 3 members:
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:62 two orders push two purchase inputs, one per created order, with distinct transaction ids
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98 a double-click on Place order creates one order and pushes purchase once
+  - campaign3/analytics-tracking-testing/purchase-events.spec.mjs:152 ordering: login after the account UI shows and before orders load; purchase after the order response and before the list refreshes
+    - 1  campaign3/analytics-tracking-testing/purchase-events.spec.mjs:62 ~ campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98
+    - 1  campaign3/analytics-tracking-testing/purchase-events.spec.mjs:62 ~ campaign3/analytics-tracking-testing/purchase-events.spec.mjs:152
+    - 1  campaign3/analytics-tracking-testing/purchase-events.spec.mjs:98 ~ campaign3/analytics-tracking-testing/purchase-events.spec.mjs:152
+- 3 members:
+  - campaign3/service-virtualization/stub-fidelity.spec.mjs:34 the comparator flags a dropped field, a changed type, a changed status, an emptied array and a non-JSON body
+  - campaign3/service-virtualization/stub-fidelity.spec.mjs:59 the freshness gate accepts every current recording and rejects a 31-day-old stamp
+  - campaign3/visual-testing/todomvc-visual.spec.mjs:112 a different state is rejected against an existing baseline
+    - 1  campaign3/service-virtualization/stub-fidelity.spec.mjs:34 ~ campaign3/service-virtualization/stub-fidelity.spec.mjs:59
+    - 1  campaign3/service-virtualization/stub-fidelity.spec.mjs:34 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:112
+    - 1  campaign3/service-virtualization/stub-fidelity.spec.mjs:59 ~ campaign3/visual-testing/todomvc-visual.spec.mjs:112
+
+## Top 60 pairs by combined (member-preserving) score
+
+- 1 (ast 1 / astM 1 / profile 1 / dynamic 1)  campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: all  ~  campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: active
+- 1 (ast 1 / astM 1 / profile 1 / dynamic 1)  campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: all  ~  campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: completed
+- 1 (ast 1 / astM 1 / profile 1 / dynamic 1)  campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: active  ~  campaign3/visual-testing/todomvc-visual.spec.mjs:51 filter view: completed
+- 0.936 (ast 0.957 / astM 0.94 / profile 0.931 / dynamic 1)  baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload  ~  baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+- 0.936 (ast 0.957 / astM 0.94 / profile 0.931 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+- 0.922 (ast 1 / astM 1 / profile 0.806 / dynamic 1)  baseline-todo/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:107 filters visibly select the correct subset without losing or duplicating records
+- 0.922 (ast 1 / astM 1 / profile 0.806 / dynamic 1)  baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+- 0.92 (ast 1 / astM 1 / profile 0.8 / dynamic 1)  baseline-todo/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+- 0.918 (ast 1 / astM 1 / profile 0.794 / dynamic 1)  baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters
+- 0.909 (ast 1 / astM 1 / profile 0.771 / dynamic 1)  baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+- 0.902 (ast 1 / astM 0.926 / profile 0.867 / dynamic 1)  baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload  ~  review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+- 0.9 (ast 1 / astM 1 / profile 0.75 / dynamic 1)  baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field
+- 0.9 (ast 1 / astM 1 / profile 0.75 / dynamic 1)  baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+- 0.9 (ast 1 / astM 1 / profile 0.75 / dynamic 1)  baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+- 0.9 (ast 1 / astM 1 / profile 0.75 / dynamic 1)  baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+- 0.896 (ast 0.957 / astM 0.872 / profile 0.931 / dynamic 1)  baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records  ~  review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+- 0.895 (ast 0.977 / astM 0.914 / profile 0.867 / dynamic 1)  baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+- 0.895 (ast 0.977 / astM 0.914 / profile 0.867 / dynamic 1)  baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+- 0.895 (ast 0.977 / astM 0.914 / profile 0.867 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+- 0.863 (ast 0.935 / astM 0.86 / profile 0.867 / dynamic 1)  baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+- 0.863 (ast 0.935 / astM 0.86 / profile 0.867 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+- 0.846 (ast 1 / astM 0.848 / profile 0.844 / dynamic 1)  baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload  ~  baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+- 0.846 (ast 1 / astM 0.848 / profile 0.844 / dynamic 1)  baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input  ~  review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+- 0.846 (ast 1 / astM 0.848 / profile 0.844 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+- 0.843 (ast 0.957 / astM 0.94 / profile 0.697 / dynamic 1)  baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+- 0.843 (ast 0.957 / astM 0.94 / profile 0.697 / dynamic 1)  baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+- 0.84 (ast 0.977 / astM 0.837 / profile 0.844 / dynamic 1)  baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+- 0.84 (ast 0.977 / astM 0.837 / profile 0.844 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+- 0.82 (ast 0.957 / astM 0.804 / profile 0.844 / dynamic 1)  baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records  ~  baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+- 0.82 (ast 0.957 / astM 0.804 / profile 0.844 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+- 0.814 (ast 1 / astM 0.926 / profile 0.647 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload  ~  review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+- 0.808 (ast 0.816 / astM 0.745 / profile 0.903 / dynamic 1)  review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order  ~  review-followup/todo-review.spec.mjs:48 clearing the final completed item persists the empty state immediately
+- 0.807 (ast 0.977 / astM 0.914 / profile 0.647 / dynamic 1)  baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+- 0.807 (ast 0.977 / astM 0.914 / profile 0.647 / dynamic 1)  baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+- 0.807 (ast 0.977 / astM 0.914 / profile 0.647 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+- 0.802 (ast 0.957 / astM 0.872 / profile 0.697 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records  ~  review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+- 0.791 (ast 0.919 / astM 0.735 / profile 0.875 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+- 0.78 (ast 0.919 / astM 0.735 / profile 0.848 / dynamic 1)  baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field  ~  baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+- 0.775 (ast 0.935 / astM 0.86 / profile 0.647 / dynamic 1)  baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+- 0.775 (ast 0.935 / astM 0.86 / profile 0.647 / dynamic 1)  baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+- 0.773 (ast 0.673 / astM 0.682 / profile 0.909 / dynamic 1)  baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters  ~  baseline-todo/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+- 0.773 (ast 0.949 / astM 0.736 / profile 0.829 / dynamic 1)  baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters  ~  baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+- 0.772 (ast 0.673 / astM 0.682 / profile 0.906 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:78 bulk toggle affects hidden records and works from an empty filtered view
+- 0.771 (ast 0.949 / astM 0.736 / profile 0.824 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover
+- 0.764 (ast 1 / astM 0.848 / profile 0.639 / dynamic 1)  baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+- 0.764 (ast 1 / astM 0.848 / profile 0.639 / dynamic 1)  baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload
+- 0.764 (ast 1 / astM 0.848 / profile 0.639 / dynamic 1)  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input  ~  review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact
+- 0.758 (ast 0.977 / astM 0.837 / profile 0.639 / dynamic 1)  baseline-todo/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+- 0.758 (ast 0.977 / astM 0.837 / profile 0.639 / dynamic 1)  baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:29 duplicate titles remain independent through complete edit and delete
+- 0.756 (ast 0.769 / astM 0.726 / profile 0.8 / dynamic 1)  baseline-todo/todomvc.spec.mjs:173 delete and clear completed preserve active rows and empty controls recover  ~  review-followup/todo-review.spec.mjs:48 clearing the final completed item persists the empty state immediately
+- 0.75 (ast 0.841 / astM 0.691 / profile 0.839 / dynamic 1)  baseline-todo/todomvc.spec.mjs:134 Enter and blur save edits while Escape preserves the saved title on reload  ~  review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+- 0.75 (ast 0.841 / astM 0.691 / profile 0.839 / dynamic 1)  review-followup/todo-review.spec.mjs:6 single delete persists immediately with survivor order and completion intact  ~  review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+- 0.747 (ast 1 / astM 1 / profile 0.368 / dynamic 0)  campaign3/synthetic-monitoring/health.probe.spec.mjs:9 GET /health answers ok for the released build within 500 ms  ~  campaign3/synthetic-monitoring/storefront.probe.spec.mjs:9 GET / renders the catalogue at contract prices with sign-in and reset controls
+- 0.74 (ast 0.737 / astM 0.653 / profile 0.871 / dynamic 1)  baseline-todo/todomvc.spec.mjs:6 creates trimmed nonblank titles in order and clears the entry field  ~  review-followup/todo-review.spec.mjs:48 clearing the final completed item persists the empty state immediately
+- 0.738 (ast 0.949 / astM 0.72 / profile 0.765 / dynamic 1)  baseline-todo/todomvc.spec.mjs:50 individual completion and restoration keep the active count global under filters  ~  review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+- 0.738 (ast 0.957 / astM 0.804 / profile 0.639 / dynamic 1)  baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input
+- 0.738 (ast 0.957 / astM 0.804 / profile 0.639 / dynamic 1)  baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input  ~  campaign3/selector-drift-recovery/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records
+- 0.735 (ast 0.841 / astM 0.679 / profile 0.818 / dynamic 1)  baseline-todo/todomvc.spec.mjs:205 saved edits completion order and removals persist through reload and further keyboard input  ~  review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+- 0.73 (ast 0.804 / astM 0.657 / profile 0.839 / dynamic 1)  baseline-todo/todomvc.spec.mjs:155 whitespace Enter and empty blur edits remove only their targeted records  ~  review-followup/todo-review.spec.mjs:25 clear completed persists immediately and preserves active titles and order
+- 0.728 (ast 0.975 / astM 0.857 / profile 0.535 / dynamic 0.667)  campaign3/synthetic-monitoring/order-journey.probe.spec.mjs:10 synthetic account signs in, places a 1 x TEA-50 order and sees it listed as pending  ~  campaign3/synthetic-monitoring/sign-in.probe.spec.mjs:10 synthetic account signs in through the page, sees its account view, signs out

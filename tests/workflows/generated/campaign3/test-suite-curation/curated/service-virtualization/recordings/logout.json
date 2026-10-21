@@ -1,0 +1,20 @@
+{
+  "name": "logout",
+  "recordedAt": "2026-10-21T18:43:51.788Z",
+  "build": "shop-lab-v1",
+  "source": "live Shop (fixture-app) started by record.mjs",
+  "request": {
+    "method": "POST",
+    "path": "/api/logout",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 204,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "set-cookie": "shop_session=<redacted>; HttpOnly; SameSite=Lax; Path=/; Max-Age=0"
+    },
+    "body": null
+  }
+}

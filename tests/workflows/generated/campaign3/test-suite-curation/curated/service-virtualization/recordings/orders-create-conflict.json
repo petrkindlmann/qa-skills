@@ -1,0 +1,32 @@
+{
+  "name": "orders-create-conflict",
+  "recordedAt": "2026-10-21T18:43:51.788Z",
+  "build": "shop-lab-v1",
+  "source": "live Shop (fixture-app) started by record.mjs",
+  "request": {
+    "method": "POST",
+    "path": "/api/orders",
+    "headers": {
+      "content-type": "application/json",
+      "Idempotency-Key": "rec-key-1"
+    },
+    "body": {
+      "currency": "EUR",
+      "items": [
+        {
+          "sku": "TEA-50",
+          "quantity": 3
+        }
+      ]
+    }
+  },
+  "response": {
+    "status": 409,
+    "headers": {
+      "content-type": "application/json; charset=utf-8"
+    },
+    "body": {
+      "error": "idempotency_conflict"
+    }
+  }
+}

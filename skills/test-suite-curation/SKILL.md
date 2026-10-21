@@ -39,7 +39,7 @@ Test A and Test B cover the exact same lines, so a tired engineer deletes B — 
 
 ## Discovery Questions
 
-First, check `.agents/qa-project-context.md` in the project root and skip anything it already answers. Then clarify:
+First, check `.agents/qa-project-context.md` in the project root and skip anything it already answers; an unfilled template answers nothing, so treat it as absent. Then clarify:
 
 - **Which language/runner?** pytest+coverage.py, Jest/Vitest+Istanbul, Go, JUnit — the per-test context mechanism differs per stack (and so does the mutation tool).
 - **Is there CI test-result history, and how far back?** No JUnit/Datadog/Trunk history means you cannot mine never-failing or flaky signals — you only have coverage and clustering.
@@ -67,6 +67,8 @@ First, check `.agents/qa-project-context.md` in the project root and skip anythi
 ## 1. Coverage Fingerprinting (per-test)
 
 The wrong answer is a single combined `--cov` report that tells you per-*file* percentages. That cannot tell you which *test* covered which line, so it cannot tell you which tests overlap. You need **per-test (dynamic) contexts**.
+
+**Black-box end-to-end corpus.** When the code under test cannot be instrumented (a browser suite against a deployed or pinned application, a server the team does not own), there is no line fingerprint. Build two substitutes and say which one each finding rests on: a per-test request set read from a traced run (`--trace on`, then the HTTP method and path of every request the test made), and a static behaviour fingerprint of the test body with its helpers inlined (which actions, which matchers, against which element). The request set is blind for a client-only application that makes one request per test; the static fingerprint then carries the whole weight, and "subsumed" means a reading of the assertions, not a measurement.
 
 **pytest / coverage.py** — record which test hit each line with dynamic contexts, and turn on branch coverage:
 
@@ -103,13 +105,13 @@ To find out whether B is *actually* redundant — whether A truly subsumes B's f
 - **mutmut** (3.6.0+) or **cosmic-ray** for Python, **StrykerJS** (9.x) for JS/TS, **PIT** for Java/JVM, **cargo-mutants** for Rust.
 - Mutation testing injects faults (mutants) into the covered code. A test "kills" a mutant if it fails on the mutated code. If A kills every mutant that B kills, A genuinely subsumes B's fault detection and B is a defensible delete candidate. If B kills a mutant A misses, B catches a defect class A does not — **keep B**, even though coverage was identical.
 
-**Decision:** identical coverage → flag as a *candidate* → confirm with mutation testing → only then propose deletion. When assertions differ and mutation results differ, **retain both, do not delete**. See `references/mutation-confirmation.md` for the mutmut/Stryker config that scopes mutation runs to the suspect lines and the kill-set comparison.
+**Decision:** identical coverage → flag as a *candidate* → confirm with mutation testing → only then propose deletion. When assertions differ and mutation results differ, **retain both, do not delete**. See `references/mutation-confirmation.md` for the mutmut/Stryker config that scopes mutation runs to the suspect lines and the kill-set comparison. When the application cannot be mutated (a black-box or pinned build), the kill-set comes from fault injection instead: run the candidate and its survivor against every deliberate defect the project can switch on (a fault matrix, feature-flagged bugs, a broken fixture build) and compare which tests fail. Without either, every candidate stays a quarantine with `mutation_check: not run`, and the report says so instead of claiming a deletion.
 
 ---
 
 ## 3. Near-Duplicate Clustering
 
-Goal: surface copy-pasted tests without flagging every test in the same file. **Grouping tests by filename is not clustering** — it tells you nothing about similarity. Two defensible signals, combined:
+Goal: surface copy-pasted tests without flagging every test in the same file. **Grouping tests by filename is not clustering** — it tells you nothing about similarity. Before any of it, hash every spec file and `diff` the pairs that share a name: whole-file copies with only an import path changed are the commonest duplicate in a multi-author corpus, and one command finds them. Two defensible signals for the rest, combined:
 
 1. **AST (abstract syntax tree) similarity.** Parse each test into an AST, normalize away identifier names and literals, then compare structure. Use a token/tree **similarity** metric (Jaccard over normalized token shingles, cosine over AST n-grams, or tree edit distance). AST-based comparison ignores formatting and variable-name noise that defeats exact string matching or raw `diff`. Never use raw line numbers as a similarity signal.
 
@@ -125,7 +127,7 @@ See `references/clustering.md` for the AST normalization, the shingle/Jaccard an
 
 ## 4. Mining CI History
 
-Parse your **test-result history** — JUnit XML archives, or a platform that already stores it: **Datadog Test Optimization**, **Trunk Flaky Tests**, **BuildPulse**, **CircleCI test insights**. For each test compute pass rate / fail rate and the **flip rate** (how often consecutive runs transition pass↔fail). Two findings, two very different meanings:
+Parse your **test-result history** — JUnit XML archives, or a platform that already stores it: **Datadog Test Optimization**, **Trunk Flaky Tests**, **BuildPulse**, **CircleCI test insights**. For each test compute pass rate / fail rate and the **flip rate** (how often consecutive runs transition pass↔fail). A corpus with no archived history (a young suite, a lab) yields nothing here: say so, use the authoring logs and any designated-oracle markers as the only visible record of defect catching, and do not infer "never failed" from a handful of green runs. Two findings, two very different meanings:
 
 **Never-failing tests** (zero failures / 100% pass over the window). The naive move is to delete any test that has never once failed. Wrong — **never-failing does not mean delete or useless**. A test most often never fails because it guards **low-churn, low-risk, stable code** — exactly the code nobody touches, so the test never trips. That is low *defect-detection* signal in *this* window, not zero value. Disposition: **investigate, do not delete** — check churn and risk of the code under test. If it covers a critical path that simply has not regressed, it stays.
 
@@ -163,7 +165,7 @@ Restructuring a flat suite into tiers is not sorting by speed. **Smoke is not th
 | **Core** | per-PR / merge gate | all critical + high-risk coverage, broader than smoke |
 | **Extended** | full / nightly / slow / pre-release | everything else — exhaustive, long-running, edge cases |
 
-**Execution time as a tiering input is allowed — but only as a secondary tiebreaker, not the primary axis.** Runtime and duration break ties; they never set the tier. Among equally-risky tests, prefer the faster ones for smoke. Encode tiers as **markers/tags** — `@pytest.mark.smoke` / `@pytest.mark.extended`, Jest/Vitest tag, or a JUnit category — so `pytest -m smoke` selects a tier without moving files. See `references/tiering.md` for the marker scheme and the defect-detection-history query.
+**Execution time as a tiering input is allowed — but only as a secondary tiebreaker, not the primary axis.** Runtime and duration break ties; they never set the tier. Among equally-risky tests, prefer the faster ones for smoke. Encode tiers as **markers/tags** — `@pytest.mark.smoke` / `@pytest.mark.extended`, a Playwright `{ tag: '@smoke' }` selected with `--grep @smoke`, a Vitest tag, or a JUnit category — so `pytest -m smoke` selects a tier without moving files. When the curated copies must stay diffable against their originals, deliver the tiers as a table first and tag in the originals' PR. See `references/tiering.md` for the marker scheme and the defect-detection-history query.
 
 ---
 
@@ -238,7 +240,7 @@ Prove the audit actually holds before anyone deletes anything, smallest check fi
   IDs with collected tests and investigate missing cases; tests with no measured application
   code may have no context. Raw context count is not test count because phases are separate.
 - **No deletion rests on coverage equality alone.** For every `redundant` row, the audit log's `mutation_check` column is filled (`yes` + run id). `grep -c 'redundant' docs/test-curation-log.md` equals the number of rows whose `mutation_check` is non-blank.
-- **Quarantine, not removal, hit the repo first.** `git log --diff-filter=D --name-only -- tests/ | grep test_` shows no test files deleted in the quarantine PR; the flagged tests are skipped/xfail or moved under `tests/quarantine/`, still collectible (`pytest --collect-only -m skip` or equivalent lists them).
+- **Quarantine, not removal, hit the repo first.** `git log --diff-filter=D --name-only -- tests/ | grep test_` shows no test files deleted in the quarantine PR; the flagged tests are skipped/xfail or moved under `tests/quarantine/`, still collectible (`pytest --collect-only -m skip`, `playwright test --list` showing the quarantined titles, or the runner's equivalent lists them).
 - **Tiers select correctly.** `pytest -m smoke --collect-only` returns only the risk/defect-catcher cohort and runs under the smoke budget; `pytest -m "smoke or core or extended" --collect-only` accounts for every test (no test is untagged).
 - **The audit record is complete.** No `redundant` row has a blank `superseded_by`, `coverage_delta`, or `mutation_check`; `coverage_delta` is `0 lines / 0 branches` for every removal claiming zero net loss.
 
@@ -247,7 +249,7 @@ Prove the audit actually holds before anyone deletes anything, smallest check fi
 ## Done When
 
 - A per-test coverage fingerprint exists for the suite (built with `--cov-context=test`/`--cov-branch` or the Istanbul per-test equivalent), and uniquely-covered lines per test are computed.
-- Every "redundant" candidate has a mutation-testing result attached proving the survivor kills the same mutants — no deletion proposed on coverage equality alone.
+- Every "redundant" candidate has a mutation-testing result attached proving the survivor kills the same mutants — no deletion proposed on coverage equality alone. Where neither mutation testing nor fault injection is possible, the deliverable is a quarantine set with an open audit row per test and a behaviour map showing nothing guarded was lost; the report names that as the reduced outcome rather than claiming the deletions.
 - Near-duplicate clusters were produced from AST + coverage-profile similarity at a stated threshold and routed to human review; no cluster was auto-deleted.
 - CI history was mined for never-failing (disposition: investigate) and same-SHA flaky tests (disposition: quarantine/fix) — neither category deleted on those signals.
 - Each flagged test has exactly one of {redundant, obsolete, low-value, keep} with the matching disposition applied.

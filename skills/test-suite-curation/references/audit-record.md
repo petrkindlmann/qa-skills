@@ -50,4 +50,8 @@ docs/test-curation-log.md     # committed; reviewed via CODEOWNERS
 
 A row you cannot fully fill is a deletion you cannot defend — if `superseded_by`,
 `coverage_delta`, or `mutation_check` is blank for a `redundant` removal, the test does
-not get deleted yet.
+not get deleted yet. `approver`, `approval_sha` and `window_closed` are filled by the
+reviewer, not the author: with no CODEOWNERS file, name the approver in the quarantine PR
+and leave the columns open until they sign. Where line coverage does not exist,
+`coverage_delta` states the behaviour-map delta (clauses guarded before and after) and
+says so.

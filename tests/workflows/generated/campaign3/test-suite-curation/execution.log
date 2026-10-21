@@ -1,0 +1,158 @@
+# execution.log — test-suite-curation run, 2026-10-21
+# Workspace /Users/petr/projects/qa-skills, branch main. Node and Playwright versions recorded below.
+# Every command is shown as run; output trimmed to the lines that matter.
+
+## env
+$ node --version; node node_modules/playwright/cli.js --version; git rev-parse --short HEAD; git status --short | wc -l
+v26.0.0
+Version 1.62.1
+958fcc0
+       2
+
+## inventory: collect every test in the corpus (own folder excluded by positional regex)
+$ QA_WORKFLOW_SUITE=$PWD/tests/workflows/generated QA_WORKFLOW_OUTPUT=$S/campaign3-test-suite-curation node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --list --reporter=json "generated/(addons|baseline-shop|baseline-todo|review-followup|campaign3/(analytics-tracking-testing|bug-reproduction|selector-drift-recovery|service-virtualization|synthetic-monitoring|test-migration|visual-testing))/" > $S/curation-work/list-original.json
+tests: 90 files: 22
+  3 addons/accessibility.spec.mjs
+  3 addons/database.spec.mjs
+  2 addons/performance.spec.mjs
+  3 addons/security.spec.mjs
+ 10 baseline-shop/shop.spec.mjs
+  9 baseline-todo/todomvc.spec.mjs
+  3 campaign3/analytics-tracking-testing/login-events.spec.mjs
+  5 campaign3/analytics-tracking-testing/purchase-events.spec.mjs
+  2 campaign3/bug-reproduction/report-1-session-revocation.spec.mjs
+  3 campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs
+  9 campaign3/selector-drift-recovery/todomvc.spec.mjs
+  3 campaign3/service-virtualization/stub-fidelity.spec.mjs
+  7 campaign3/service-virtualization/virtualized-ui.spec.mjs
+  1 campaign3/synthetic-monitoring/health.probe.spec.mjs
+  1 campaign3/synthetic-monitoring/order-journey.probe.spec.mjs
+  1 campaign3/synthetic-monitoring/password-reset-email.probe.spec.mjs
+  1 campaign3/synthetic-monitoring/sign-in.probe.spec.mjs
+  1 campaign3/synthetic-monitoring/storefront.probe.spec.mjs
+  7 campaign3/test-migration/todomvc.spec.mjs
+ 10 campaign3/visual-testing/todomvc-visual.spec.mjs
+  3 review-followup/shop-review.spec.mjs
+  3 review-followup/todo-review.spec.mjs
+
+## before: one full run of the original corpus (90 tests, 22 files), healthy apps, 2 workers
+$ QA_WORKFLOW_SUITE=$PWD/tests/workflows/generated QA_WORKFLOW_OUTPUT=$S/campaign3-test-suite-curation/original-run1 node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2 "generated/(addons|baseline-shop|baseline-todo|review-followup|campaign3/(analytics-tracking-testing|bug-reproduction|selector-drift-recovery|service-virtualization|synthetic-monitoring|test-migration|visual-testing))/"
+exit 0 wall 34s
+WORKFLOW RUN: 90 scheduled cases
+SKIPPED:  /  / campaign3/visual-testing/todomvc-visual.spec.mjs / comparator detector check / a different state is rejected against an existing baseline (attempt 1)
+WORKFLOW RESULT: passed; attempts=90; {"passed":89,"skipped":1}
+reporter stats: {"startTime":"2026-10-21T19:16:49.175Z","duration":32800.929,"expected":89,"skipped":1,"unexpected":0,"flaky":0}
+
+## static analysis: test bodies, helper inlining, AST-style clustering, assertion metrics, orphan exports
+$ node tests/workflows/generated/campaign3/test-suite-curation/tools/analyze.mjs $S/curation-work
+tests 90, files 22, suites 11
+ast085: 9 clusters, 34 tests
+ast070: 13 clusters, 48 tests
+combined085: 8 clusters, 29 tests
+combined070: 9 clusters, 38 tests
+combinedMembers085: 10 clusters, 27 tests
+combinedMembers070: 8 clusters, 31 tests
+helper files 32 never imported: baseline-shop/probe.mjs, campaign3/analytics-tracking-testing/selfcheck-validator.mjs, campaign3/bug-reproduction/oracle-sensitivity.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/apply-candidates.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/build-pr-body.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/generate-candidates.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/identify-drift.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/snapshot-dom.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/triage.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/verify-locators.mjs, campaign3/service-virtualization/record.mjs, campaign3/test-migration/legacy/todomvc.cy.js
+
+## dynamic fingerprint run: same corpus with --trace on, to read each test's HTTP request set out of its trace (the E2E stand-in for per-test coverage contexts)
+$ QA_WORKFLOW_SUITE=$PWD/tests/workflows/generated QA_WORKFLOW_OUTPUT=$S/campaign3-test-suite-curation/original-trace node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2 --trace on "generated/(addons|baseline-shop|baseline-todo|review-followup|campaign3/(analytics-tracking-testing|bug-reproduction|selector-drift-recovery|service-virtualization|synthetic-monitoring|test-migration|visual-testing))/"
+exit 0 wall 79s
+WORKFLOW RUN: 90 scheduled cases
+SKIPPED:  /  / campaign3/visual-testing/todomvc-visual.spec.mjs / comparator detector check / a different state is rejected against an existing baseline (attempt 1)
+WORKFLOW RESULT: passed; attempts=90; {"passed":89,"skipped":1}
+
+## dynamic fingerprints: HTTP request set per test from the traces; then the static analysis again with the dynamic profile folded in
+$ node tests/workflows/generated/campaign3/test-suite-curation/tools/traces.mjs $S/campaign3-test-suite-curation/original-trace $S/curation-work
+tests 90; with requests 87; distinct request keys 42; subsumption candidate pairs 1070; candidates 62
+$ node tests/workflows/generated/campaign3/test-suite-curation/tools/analyze.mjs $S/curation-work
+tests 90, files 22, suites 11
+ast085: 9 clusters, 34 tests
+ast070: 13 clusters, 48 tests
+combined085: 7 clusters, 24 tests
+combined070: 10 clusters, 38 tests
+combinedMembers085: 9 clusters, 22 tests
+combinedMembers070: 10 clusters, 32 tests
+combinedDynamic085: 9 clusters, 34 tests
+combinedDynamic070: 10 clusters, 49 tests
+dynamicOnly090: 6 clusters, 52 tests
+helper files 32 never imported: baseline-shop/probe.mjs, campaign3/analytics-tracking-testing/selfcheck-validator.mjs, campaign3/bug-reproduction/oracle-sensitivity.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/apply-candidates.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/build-pr-body.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/generate-candidates.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/identify-drift.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/snapshot-dom.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/triage.mjs, campaign3/selector-drift-recovery/.drift-recovery/scripts/verify-locators.mjs, campaign3/service-virtualization/record.mjs, campaign3/test-migration/legacy/todomvc.cy.js
+
+## decisions: one row per test, hard constraint check (every guarded clause still guarded by a kept test), then build curated/ and collect it
+$ node tests/workflows/generated/campaign3/test-suite-curation/tools/check-decisions.mjs $S/curation-work && node tests/workflows/generated/campaign3/test-suite-curation/tools/build-curated.mjs $S/curation-work
+original: 90 tests in 22 files; kept: 72 tests in 21 files; dispositions {"keep":62,"merge":9,"quarantine-redundant":18,"rewrite":1}; tiers {"smoke":9,"core":32,"-":18,"extended":26,"monitoring":5}; clauses guarded before 58, lost after 0; clauses never guarded by any test: none
+copied 66 files into /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/test-suite-curation/curated; 31 with changes; 9 test.skip insertions
+$ for f in $(find curated -name "*.mjs"); do node --check $f; done
+syntax check done
+$ QA_WORKFLOW_SUITE=.../curated ... --list --reporter=json > list-curated.json
+list exit 0
+curated collected: 81 tests in 21 files
+
+## after: curated suite, run 1 of 2 (healthy apps, 2 workers, no retries)
+$ QA_WORKFLOW_SUITE=$C QA_WORKFLOW_OUTPUT=$S/campaign3-test-suite-curation/curated-run1 node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+exit 0 wall 40s
+WORKFLOW RUN: 81 scheduled cases
+SKIPPED:  /  / bug-reproduction/report-2-idempotency-conflict.spec.mjs / reusing an Idempotency-Key with a different quantity returns 409 and creates no order (attempt 1)
+SKIPPED:  /  / bug-reproduction/report-2-idempotency-conflict.spec.mjs / keys are scoped to the signed-in user, so a conflict is not a global lock on the key (attempt 1)
+SKIPPED:  /  / review-followup/shop-review.spec.mjs / logout revokes a previously valid copied session on the server (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / duplicate titles remain independent through complete, edit and delete (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / filters visibly select the correct subset (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / Enter saves an edit and Escape preserves the saved title (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / items and their completion persist through reload (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / a deleted item stays deleted after reload (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / mark-all completes and restores every item (attempt 1)
+SKIPPED:  /  / visual-testing/todomvc-visual.spec.mjs / comparator detector check / a different state is rejected against an existing baseline (attempt 1)
+WORKFLOW RESULT: passed; attempts=81; {"passed":71,"skipped":10}
+reporter stats: {"startTime":"2026-10-21T19:28:56.897Z","duration":38496.329,"expected":71,"skipped":10,"unexpected":0,"flaky":0}
+
+## after: curated suite, run 2 of 2 (healthy apps, 2 workers, no retries)
+$ QA_WORKFLOW_SUITE=$C QA_WORKFLOW_OUTPUT=$S/campaign3-test-suite-curation/curated-run2 node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+exit 0 wall 42s
+WORKFLOW RUN: 81 scheduled cases
+SKIPPED:  /  / bug-reproduction/report-2-idempotency-conflict.spec.mjs / reusing an Idempotency-Key with a different quantity returns 409 and creates no order (attempt 1)
+SKIPPED:  /  / bug-reproduction/report-2-idempotency-conflict.spec.mjs / keys are scoped to the signed-in user, so a conflict is not a global lock on the key (attempt 1)
+SKIPPED:  /  / review-followup/shop-review.spec.mjs / logout revokes a previously valid copied session on the server (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / duplicate titles remain independent through complete, edit and delete (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / filters visibly select the correct subset (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / Enter saves an edit and Escape preserves the saved title (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / items and their completion persist through reload (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / a deleted item stays deleted after reload (attempt 1)
+SKIPPED:  /  / test-migration/todomvc.spec.mjs / TodoMVC (migrated from the legacy Cypress suite) / mark-all completes and restores every item (attempt 1)
+SKIPPED:  /  / visual-testing/todomvc-visual.spec.mjs / comparator detector check / a different state is rejected against an existing baseline (attempt 1)
+WORKFLOW RESULT: passed; attempts=81; {"passed":71,"skipped":10}
+reporter stats: {"startTime":"2026-10-21T19:29:36.793Z","duration":40089.291999999994,"expected":71,"skipped":10,"unexpected":0,"flaky":0}
+
+## before, second sample: the original corpus once more, to bound run-to-run variance of the wall clock
+$ QA_WORKFLOW_SUITE=$PWD/tests/workflows/generated QA_WORKFLOW_OUTPUT=$S/campaign3-test-suite-curation/original-run2 node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2 "generated/(addons|baseline-shop|baseline-todo|review-followup|campaign3/(analytics-tracking-testing|bug-reproduction|selector-drift-recovery|service-virtualization|synthetic-monitoring|test-migration|visual-testing))/"
+exit 0 wall 58s
+WORKFLOW RESULT: passed; attempts=90; {"passed":89,"skipped":1}
+reporter stats: {"startTime":"2026-10-21T19:30:47.455Z","duration":55394.753000000004,"expected":89,"skipped":1,"unexpected":0,"flaky":0}
+## summed test durations per run and per suite (verbose.json)
+original-run1: 90 collected, 89 executed, summed 58083 ms, reporter wall 32801 ms | addons 11/11 9238ms; analytics-tracking-testing 8/8 6486ms; baseline-shop 10/10 6703ms; baseline-todo 9/9 5916ms; bug-reproduction 5/5 2471ms; review-followup 6/6 3151ms; selector-drift-recovery 9/9 6014ms; service-virtualization 10/10 5931ms; synthetic-monitoring 5/5 3000ms; test-migration 7/7 3845ms; visual-testing 9/10 5328ms
+original-run2: 90 collected, 89 executed, summed 98714 ms, reporter wall 55395 ms | addons 11/11 14680ms; analytics-tracking-testing 8/8 11365ms; baseline-shop 10/10 9882ms; baseline-todo 9/9 10365ms; bug-reproduction 5/5 7892ms; review-followup 6/6 4401ms; selector-drift-recovery 9/9 10328ms; service-virtualization 10/10 8597ms; synthetic-monitoring 5/5 6787ms; test-migration 7/7 5448ms; visual-testing 9/10 8969ms
+curated-run1: 81 collected, 71 executed, summed 63577 ms, reporter wall 38496 ms | addons 11/11 13323ms; analytics-tracking-testing 8/8 7800ms; baseline-shop 10/10 10012ms; baseline-todo 9/9 7196ms; bug-reproduction 3/5 1918ms; review-followup 5/6 2950ms; service-virtualization 10/10 7479ms; synthetic-monitoring 5/5 3530ms; test-migration 1/7 374ms; visual-testing 9/10 8995ms
+curated-run2: 81 collected, 71 executed, summed 68505 ms, reporter wall 40089 ms | addons 11/11 12017ms; analytics-tracking-testing 8/8 8440ms; baseline-shop 10/10 9044ms; baseline-todo 9/9 7787ms; bug-reproduction 3/5 2045ms; review-followup 5/6 2857ms; service-virtualization 10/10 9962ms; synthetic-monitoring 5/5 5469ms; test-migration 1/7 551ms; visual-testing 9/10 10333ms
+
+## deliverables written
+$ ls -R tests/workflows/generated/campaign3/test-suite-curation | head; git status --short | grep -v test-suite-curation
+./analysis/clusters.md
+./analysis/fingerprints.md
+./analysis/inventory-rows.json
+./analysis/orphans.md
+./analysis/tables.json
+./analysis/weak.md
+./curation.md
+./execution.log
+./task-prompt.txt
+./tools/analyze.mjs
+./tools/build-curated.mjs
+./tools/check-decisions.mjs
+./tools/decisions.mjs
+./tools/traces.mjs
+curated files:       67
+ M tests/workflows/generated/experiment/with-1/task-prompt.txt
+(only pre-existing modification outside the owned folder is shown above, if any)
+
+## audit-row wording fix: regenerate tables.json and splice the decisions and audit tables back into curation.md (curated/ untouched)
+$ node tests/workflows/generated/campaign3/test-suite-curation/tools/check-decisions.mjs $S/curation-work && cp $S/curation-work/tables.json tests/workflows/generated/campaign3/test-suite-curation/analysis/
+original: 90 tests in 22 files; kept: 72 tests in 21 files; dispositions {"keep":62,"merge":9,"quarantine-redundant":18,"rewrite":1}; tiers {"smoke":9,"core":32,"-":18,"extended":26,"monitoring":5}; clauses guarded before 58, lost after 0; clauses never guarded by any test: none
+spliced; lines 441
