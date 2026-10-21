@@ -40,7 +40,7 @@ passes separately; lexical matches are not a measurement of skill reliability.
 
 ## Scope and review notes
 
-See [the complete report](STRESS-TEST-2026-10-20.md) for counterexamples and exact
+See [the complete report](https://github.com/petrkindlmann/qa-skills/blob/codex/skills-stress-test-2026-10-20/docs/STRESS-TEST-2026-10-20.md) for counterexamples and exact
 commands. Controlled fixtures do not establish live vendor ingestion, real payment
 transactions, Docker/database integration, SDK integrations or every browser/model.
 Thirty of the 50 representative responses inherited task context; twenty used fresh
