@@ -1,0 +1,53 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "baseline_revision": "b3bb61bd268b147476252c6ed5a0440c87b97441",
+  "baseline_cwd": "/tmp/qa-skills-detector-evidence/before/tests",
+  "baseline_command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-m",
+    "unittest",
+    "test_detect_injection.DetectorTests",
+    "test_detect_injection.DetectorCliTests",
+    "-v"
+  ],
+  "baseline_exit": 1,
+  "after_cwd": "/workspace/scratch/db79cfa7c2bc/qa-skills",
+  "after_command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-p",
+    "test_detect_injection.py",
+    "-v"
+  ],
+  "after_exit": 0,
+  "selftest_command": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+    "/workspace/scratch/db79cfa7c2bc/qa-skills/skills/ai-system-testing/scripts/detect_injection.py",
+    "--selftest"
+  ],
+  "selftest_exit": 0,
+  "performance_after": [
+    {
+      "case": "5000 incomplete propagation clauses",
+      "bytes": 90000,
+      "exit": 0,
+      "elapsed_seconds": 0.1353
+    },
+    {
+      "case": "10000 incomplete propagation clauses",
+      "bytes": 180000,
+      "exit": 0,
+      "elapsed_seconds": 0.2366
+    },
+    {
+      "case": "30000 whitespace characters after run",
+      "bytes": 30016,
+      "exit": 0,
+      "elapsed_seconds": 0.0758
+    }
+  ]
+}

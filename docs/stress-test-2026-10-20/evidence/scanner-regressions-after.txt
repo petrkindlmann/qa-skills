@@ -1,0 +1,34 @@
+test_file_contract (test_detect_injection.DetectorCliTests.test_file_contract) ... ok
+test_invalid_utf8_is_scan_error (test_detect_injection.DetectorCliTests.test_invalid_utf8_is_scan_error) ... ok
+test_large_findings_report_is_bounded (test_detect_injection.DetectorCliTests.test_large_findings_report_is_bounded) ... ok
+test_long_whitespace_after_run_finishes (test_detect_injection.DetectorCliTests.test_long_whitespace_after_run_finishes) ... ok
+test_missing_file_is_scan_error_without_traceback (test_detect_injection.DetectorCliTests.test_missing_file_is_scan_error_without_traceback) ... ok
+test_oversized_input_is_scan_error (test_detect_injection.DetectorCliTests.test_oversized_input_is_scan_error) ... ok
+test_rejects_extra_arguments (test_detect_injection.DetectorCliTests.test_rejects_extra_arguments) ... ok
+test_repeated_incomplete_payload_finishes (test_detect_injection.DetectorCliTests.test_repeated_incomplete_payload_finishes) ... ok
+test_stdin_contract (test_detect_injection.DetectorCliTests.test_stdin_contract) ... ok
+test_articles_and_possessives_in_overrides (test_detect_injection.DetectorTests.test_articles_and_possessives_in_overrides) ... ok
+test_each_original_rule_has_an_independent_positive (test_detect_injection.DetectorTests.test_each_original_rule_has_an_independent_positive) ... ok
+test_excerpt_shows_marker_on_long_line (test_detect_injection.DetectorTests.test_excerpt_shows_marker_on_long_line) ... ok
+test_formatting_obfuscations (test_detect_injection.DetectorTests.test_formatting_obfuscations) ... ok
+test_greater_than_character_in_hidden_comment (test_detect_injection.DetectorTests.test_greater_than_character_in_hidden_comment) ... ok
+test_multiline_propagation (test_detect_injection.DetectorTests.test_multiline_propagation) ... ok
+test_negated_or_quoted_payloads_still_require_review (test_detect_injection.DetectorTests.test_negated_or_quoted_payloads_still_require_review) ... ok
+test_no_marker_output_does_not_claim_content_is_clean (test_detect_injection.DetectorTests.test_no_marker_output_does_not_claim_content_is_clean) ... ok
+test_ordinary_reports_do_not_trigger (test_detect_injection.DetectorTests.test_ordinary_reports_do_not_trigger) ... ok
+test_original_selftest (test_detect_injection.DetectorTests.test_original_selftest) ... ok
+test_reports_escape_terminal_and_directional_controls (test_detect_injection.DetectorTests.test_reports_escape_terminal_and_directional_controls) ... ok
+test_restricted_persona_overrides_remain_detectable (test_detect_injection.DetectorTests.test_restricted_persona_overrides_remain_detectable) ... ok
+test_secret_requests_with_articles_and_prompt_extraction (test_detect_injection.DetectorTests.test_secret_requests_with_articles_and_prompt_extraction) ... ok
+test_source_line_numbers_and_excerpts_use_all_line_separators (test_detect_injection.DetectorTests.test_source_line_numbers_and_excerpts_use_all_line_separators) ... ok
+test_source_lines_survive_json_escaped_newline (test_detect_injection.DetectorTests.test_source_lines_survive_json_escaped_newline) ... ok
+test_source_lines_survive_normalization (test_detect_injection.DetectorTests.test_source_lines_survive_normalization) ... ok
+test_visible_text_between_comments_is_not_hidden (test_detect_injection.DetectorTests.test_visible_text_between_comments_is_not_hidden) ... ok
+test_finding_or_scan_error_fails_the_gate (test_detect_injection.DocumentedGateTests.test_finding_or_scan_error_fails_the_gate) ... ok
+test_missing_or_empty_fixture_directory_is_an_error (test_detect_injection.DocumentedGateTests.test_missing_or_empty_fixture_directory_is_an_error) ... ok
+test_shell_metacharacters_in_filename_remain_data (test_detect_injection.DocumentedGateTests.test_shell_metacharacters_in_filename_remain_data) ... ok
+
+----------------------------------------------------------------------
+Ran 29 tests in 1.344s
+
+OK

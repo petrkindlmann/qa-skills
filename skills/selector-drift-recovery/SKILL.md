@@ -16,12 +16,12 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: automation
 ---
 
 <objective>
-A redesign shipped and 23 tests now fail with `TimeoutError: locator.* exceeded` — the DOM moved, not the product. This skill closes that maintenance loop: it diffs the old DOM against the new one, regenerates the broken selectors role-first against the new build, validates the whole suite, and ships the diff as one reviewable PR with a confidence score and screenshot per change. The trigger is an event (a refactor merged), not a flake. The output is a PR a human signs off on — not a silent runtime auto-heal.
+A redesign shipped and 23 tests now fail with `TimeoutError: locator.* exceeded`. Establish whether the cause is locator drift or an application regression before changing tests. This skill closes that maintenance loop: it diffs the old DOM against the new one, regenerates the broken selectors role-first against the new build, validates the whole suite, and ships the diff as one reviewable PR with a confidence score and screenshot per change. The trigger is an event (a refactor merged), not a flake. The output is a PR a human signs off on — not a silent runtime auto-heal.
 
 This is the bulk, offline, batch counterpart to `test-reliability`. They share the multi-attribute locator + confidence scoring primitives but run in opposite directions: `test-reliability` heals one selector at runtime behind a guarded threshold; `selector-drift-recovery` regenerates N selectors offline against the new DOM and bundles them into a PR. If you are doing the second workflow inside `test-reliability`, switch here.
 </objective>
@@ -89,30 +89,37 @@ Output: `.drift-recovery/old/<page-or-component>.aria.yml` (and `.html` if you a
 
 ### Phase 2 — Snapshot the new DOM
 
-Run the same surfaces in the post-refactor build — a Vercel/Netlify preview deploy is ideal, or a local dev server / the PR branch in CI. Wait for hydration (`await page.waitForLoadState('networkidle')`) before snapshotting, or SSR pages give you the pre-hydration tree and you miss client-rendered elements.
+Run the same surfaces in the post-refactor build — a Vercel/Netlify preview deploy is ideal, or a local dev server / the PR branch in CI. Wait for the actual application hydration/readiness contract before snapshotting. Network idle does not establish that client rendering is complete.
 
 Output: `.drift-recovery/new/<page-or-component>.aria.yml` matching the old set.
 
-**Gate:** Every old snapshot has a matching new one. If a route 404s in the new build, that flow was deleted — mark its tests for the deletion pile in Phase 6.
+**Gate:** Every old snapshot has a matching new one. A 404 is a finding to investigate, not evidence of an intentional deletion. Confirm the product change before proposing to remove coverage.
 
-### Phase 3 — Identify broken selectors and infer intent
+### Phase 3 — Inventory failed attempts, then verify source and intent
 
-For each test file, run against the new build with the JSON reporter, then parse it. Capture, per failure: **file, line, old locator string, error type (timeout vs assertion), and inferred intent**. Group the results by test file.
+Run against the new build with the JSON reporter and preserve the test process exit
+status. Keep every **failed/timedOut attempt**, project and retry, even when a later
+retry passes. Retain interrupted attempts and run-level errors for separate triage.
+A complete failure inventory is not yet a list of broken selectors.
 
-- **Error classification:** a drift failure is `TimeoutError: locator.* exceeded`. Distinguish it from an assertion failure (`expect(...).toBe`) so you don't try to re-select a locator that resolved fine but failed a value check.
-- **Inferred intent is mandatory and not in the reporter.** Read the surrounding test code — what action is taken on the locator, what assertion follows — and store a short intent string ("submit the order", "read the order total"). The candidate generator keys off intent, so this step is load-bearing, not commentary.
-- **Page route is also not in the reporter.** Map each locator to the snapshot it should resolve against (which `.drift-recovery/new/*.aria.yml`) so Phase 4 can load the right new DOM.
+- **Classify from evidence.** A locator timeout can be an application, authentication,
+  network or readiness failure. An assertion can time out because its locator is
+  missing. Neither `TimeoutError` nor `expect` proves or rules out drift.
+- **Keep unknown fields explicit.** The reporter supplies test/result evidence, not a
+  verified edit position, locator intent or page route. Preserve those fields as
+  `null` until inspecting the trace, actual test/POM source, and old/new app state.
+  A nearby test title or default `/` route cannot supply the missing context.
+- **Separate attempts from edits.** Retain all retry evidence, then select one reviewed
+  recovery target per source occurrence. Keep unresolved and other-cause attempts
+  visible in the inventory and recovery PR.
 
-The result is a per-file table:
+See `references/recovery-scripts.md` for the pure collector and `identify-drift.ts`
+driver, which write `.drift-recovery/failure-inventory.json` without guessing context.
 
-| Test file | Line | Old locator | Error type | Page route | Inferred intent |
-|---|---|---|---|---|---|
-| `tests/checkout.spec.ts` | 42 | `getByTestId('submit-btn')` | timeout | `/checkout` | Submit the order |
-| `tests/checkout.spec.ts` | 87 | `locator('.summary > h2')` | timeout | `/checkout` | Read the order total |
-
-See `references/recovery-scripts.md` for `identify-drift.ts`, which produces exactly these rows (with the intent/route fields populated, not stubbed).
-
-**Gate:** Every broken locator has an inferred intent and a page route. If you cannot infer intent, ask the test author or read the original PR — do not guess.
+**Gate:** Only a target recorded as `confirmed-selector-drift`, with verified
+file/line, exact old locator, intent, page route and triage evidence, enters Phase 4.
+Call `requireVerifiedDrift(target)` first; filling fields alone does not prove that
+an edit preserves the test's meaning.
 
 ### Phase 4 — Generate replacement candidates
 
@@ -137,13 +144,15 @@ For each row, generate candidates against the **new** DOM snapshot and score eac
 
 A candidate is **score 3 only if scoping already resolved it to a single element**. A still-ambiguous multi-match (`count > 1`, "needs scoping") is not a 3 — it is unfinished, and must not be auto-applied.
 
-Output: `.drift-recovery/candidates.json` with `{ file, line, oldLocator, selector, score, rationale, screenshotPath }` per change. See `references/recovery-scripts.md` for `generate-candidates.ts`.
+Keep the live Locator object for uniqueness checks and screenshots; the proposed source expression is not a CSS selector and must never be evaluated. Quote names and escape regex text, including punctuation and quotes from DOM attributes. Missing screenshot evidence leaves the candidate unresolved.
+
+Output: `.drift-recovery/candidates.json` with `{ file, line, oldLocator, selector, score, rationale, screenshotPath, applied }` per proposal. Retain a score-zero unresolved row if generation or evidence capture fails, or no unique candidate reaches the floor. See `references/recovery-scripts.md` for the candidate helpers.
 
 **Gate:** Every row has a candidate scored ≥ 3 (and confirmed unique), or is flagged for human review. Score-0/1/2 are never auto-applied.
 
 ### Phase 5 — Apply, validate, iterate
 
-1. Apply the score-≥3 replacements to a feature branch. Replace by `(file, line)`, not a content-wide string replace — the reporter's locator string is a *rendered* form (`locator('.summary > h2')`) that rarely matches the source expression verbatim, and a naive `String.replace` hits only the first occurrence and collides on identical locators. Edit the specific line; set `applied: true` on each candidate you actually wrote.
+1. Apply the score-≥3 replacements to a feature branch. Replace by `(file, line)`, not a content-wide string replace — the reporter's locator string is a *rendered* form (`locator('.summary > h2')`) that rarely matches the source expression verbatim, and a naive `String.replace` hits only the first occurrence and collides on identical locators. Use a TypeScript AST edit or an inspected narrow change, verifying the exact old source is still present. Preserve the receiver, chains, and other locators on the same line. A line number alone and a regex ending at the first closing parenthesis are not safe source anchors. Set `applied: true` only on the candidate actually written.
 2. Run the **full affected suite**, not just the previously-failing tests — a new selector can match an unintended element and break a previously-passing test.
 3. Per test: **passed** → keep the replacement. **failed** → revert that one line, mark the test for human review.
 4. Emit a summary: N recovered automatically, M flagged.
@@ -166,7 +175,7 @@ The PR is the deliverable. **Title:** `chore(tests): selector recovery after <re
 <For each file: a table of line, old, new, score, screenshot URL>
 
 ## Flagged for review
-<Tests where no candidate scored >= 3, with the inferred intent>
+<Every unresolved source location, including candidates awaiting review, with verified intent or explicit missing context>
 
 ## How to review
 - Check each screenshot: does `new` point at the element `old` pointed at?
@@ -174,7 +183,7 @@ The PR is the deliverable. **Title:** `chore(tests): selector recovery after <re
 - For flagged tests, decide: rewrite, delete, or accept a manual selector update.
 ```
 
-Attach screenshots inline via your team's CI artifact URL pattern. See `references/recovery-scripts.md` for `apply-recovery.ts` (line-anchored) and `build-pr-body.ts`.
+Attach screenshots inline via your team's CI artifact URL pattern. See `references/recovery-scripts.md` for the source-editing checks and `build-pr-body.ts`.
 
 **Gate:** PR is reviewable in one sitting. Too large → split by area (one PR per page / component / test directory).
 
@@ -186,7 +195,7 @@ Attach screenshots inline via your team's CI artifact URL pattern. See `referenc
 
 2. **Calling an ambiguous multi-match "score 3."** If `getByRole(...)` returns >1 element it is not a 3 until region scoping narrows it to exactly one. Scoring it 3 and auto-applying ships a locator that resolves to the wrong element.
 
-3. **Skipping the screenshots.** A score-4 candidate can still point at the wrong element when the page has two regions with the same role + name. The per-change screenshot is the only check that catches semantic drift; confidence scores alone do not.
+3. **Skipping the screenshots.** A score-4 candidate can still point at the wrong element when the page has two regions with the same role + name. Compare the screenshot and the original business assertion with the old behavior; a screenshot or confidence score alone cannot establish semantic equivalence.
 
 4. **Content-wide string replace instead of line-anchored edits.** `content.replace(oldLocator, …)` hits the first occurrence only, collides on duplicate locators, and silently no-ops when the reporter's rendered string differs from the source expression. Edit the specific `(file, line)`.
 
@@ -207,7 +216,7 @@ Attach screenshots inline via your team's CI artifact URL pattern. See `referenc
 | `identify-drift.ts` finds 0 failures despite red CI | Suite errored before producing the JSON report, or you parsed the wrong file | `jq '.stats' .drift-recovery/results.json`; confirm `--reporter=json` redirected to the file |
 | Extracted line points at a POM file, not the test | Locator is wrapped in a Page Object | Read the locator from the trace action, or grep the POM source for the rendered string |
 | `generate-candidates.ts` reads `undefined` for intent/route | Phase 3 output missing the inferred-intent / page-route fields | Populate them in Phase 3 — they are not in the reporter; the generator cannot infer them |
-| New-DOM snapshot is missing client-rendered elements | Snapshotted before hydration | Add `await page.waitForLoadState('networkidle')` before `ariaSnapshot()` |
+| New-DOM snapshot is missing client-rendered elements | Snapshotted before hydration | Wait for the app-owned readiness contract before `ariaSnapshot()` |
 | Average stability score dropped after recovery | Score-2/CSS candidates auto-applied | Revert candidates with score < 3 in `candidates.json`; only role/label/testid should land (see scorer below) |
 
 ---
@@ -217,33 +226,43 @@ Attach screenshots inline via your team's CI artifact URL pattern. See `referenc
 Run these on the recovery branch before opening the PR, smallest first:
 
 ```bash
-# 1. No applied candidate is below the stability floor (machine-checkable proxy for "ratcheted up")
+set -euo pipefail
+# 1. Check the recorded applied scores and candidate schema.
 node references/score-candidates.mjs .drift-recovery/candidates.json
-# prints average score + count of applied rows with score < 3 — that count MUST be 0
+# Exit 0: all recorded applied scores >= 3. Exit 1: a lower score.
+# Exit 2: invalid input or no applied edits to score.
 
-# 2. The recovered suite is green against the new build
-PLAYWRIGHT_TEST_BASE_URL=$PREVIEW_URL npx playwright test --reporter=json \
-  | jq '.stats.unexpected'        # must be 0 (flagged tests excluded via grep/skip)
+# 2. Preserve the test process exit status and the complete affected-suite report.
+PLAYWRIGHT_TEST_BASE_URL=$PREVIEW_URL npx --no-install playwright test --reporter=json \
+  > .drift-recovery/post-recovery.json
+jq -e '.stats.expected > 0 and .stats.unexpected == 0 and .stats.flaky == 0' \
+  .drift-recovery/post-recovery.json
+# Account for skipped, blocked and unselected tests separately; do not hide them to get green.
 
 # 3. The PR exists with the evidence body
 gh pr view --json title,body -q '.title'   # contains "selector recovery"
 ```
 
-`references/score-candidates.mjs` reads `candidates.json`, prints the average applied score and the count of `applied && score < 3` rows; a non-zero count means a low-confidence selector leaked in. Step 1 passing + step 2 returning `0` is the proof the recovery worked.
+The scorer checks the recorded score floor and schema. It does not verify locator
+meaning, screenshot contents, or test execution. A successful process exit and a
+nonempty affected-suite result provide execution evidence for the recorded build;
+review the old/new intent and exclusions before concluding the recovery worked.
+If no edits were applied, report the scorer's unscorable result and the unresolved
+work instead of claiming a successful recovery.
 
 ---
 
 ## Done When
 
-- Every in-scope test passes on the new build, is flagged for human review with a clear reason, or is deleted because its feature is gone.
-- `references/score-candidates.mjs candidates.json` reports **0** applied candidates with score < 3.
+- Every in-scope failure is accounted for as recovered with evidence or unresolved with a reason. Delete a test only after confirming the intended product removal.
+- If edits were applied, `references/score-candidates.mjs candidates.json` exits **0**. Missing input and no applied edits are reported explicitly.
 - The PR is open (`gh pr view` succeeds) with per-change evidence: confidence score and screenshot per change, grouped by file.
-- `npx playwright test --reporter=json | jq '.stats.unexpected'` returns `0` on the recovery branch.
+- Record the full affected-suite process exit, build, counts, retries, skips and unresolved failures. Claim the suite passes only when the run supports that conclusion.
 - A short note is added to `.agents/qa-project-context.md` describing the refactor and any new test patterns introduced.
 
 ## Reference Files (in `references/`)
 
-- **recovery-scripts.md** — the full playbook with corrected, runnable scripts: aria-snapshot capture, `identify-drift.ts` (populates intent + route), `generate-candidates.ts` (region-scoping ladder, true score-3), line-anchored `apply-recovery.ts`, and `build-pr-body.ts`. Includes the Cypress-adaptation note.
+- **recovery-scripts.md** — aria-snapshot capture, failure triage, executable candidate and evidence helpers, instructions for inspected source edits, and PR summaries that retain unresolved locations. Includes the Cypress adaptation limits.
 - **score-candidates.mjs** — tiny stability scorer; prints the average applied score and the count of applied rows below score 3. Used by Verification and Done When.
 
 ## Related Skills

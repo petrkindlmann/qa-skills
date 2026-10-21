@@ -59,7 +59,9 @@ Download individual skill folders from `skills/` and place them in your project'
 
 ## Usage
 
-Ask your AI agent in natural language. The right skill activates automatically.
+Ask your AI agent in natural language. Skill selection depends on the host agent;
+name a skill explicitly when a request could fit several. The examples below show
+the intended routing.
 
 | You say | Skill activated |
 |---------|----------------|
@@ -203,6 +205,41 @@ Works with any tool that supports the [Agent Skills Standard](https://agentskill
 Skills reference specific QA tools for implementation. The [Tools Registry](tools/REGISTRY.md) lists all supported tools with capabilities, MCP server availability, and integration guides.
 
 Covered: test frameworks, reporting, visual testing, CI/CD, project management, security scanning, observability.
+
+---
+
+## Reliability checks
+
+The [2026-10-20 stress-test report](docs/STRESS-TEST-2026-10-20.md) records representative
+requests for all 50 skills, reproduced defects, executable regressions, and the limits
+of the evidence. The tests include healthy controls as well as malformed input,
+missing evidence, duplicate events, retries, delayed tracking, ambiguous selectors,
+and deceptive prompt-injection text.
+
+Run the local gates with Python 3.12 and Node 24:
+
+```bash
+python -m pip install -r requirements-dev.txt
+python -m unittest discover -s tests -p 'test_*.py' -v
+python scripts/validate_skills.py
+python scripts/build_index.py --check
+python scripts/run_evals.py --static --all --min-pass-rate 90
+npm ci
+npm test
+npx playwright install --with-deps chromium
+npm run test:browser
+```
+
+The example tests load functions from the actual Markdown code blocks, so changes to
+the instructions are tested. Browser cases use controlled local fixtures. CI runs
+these separately from static evaluation, which checks lexical content coverage and
+defers semantic criteria. A static score is not an agent success rate.
+
+Skills still require the application's real contracts, data, environment and evidence.
+A passing local fixture does not establish production correctness, legal compliance,
+downstream ingestion or compatibility with every future tool and model version. Keep
+successful, failed, retried, skipped, blocked and unknown results distinct, and add a
+reproducing case when a new defect is found.
 
 ---
 

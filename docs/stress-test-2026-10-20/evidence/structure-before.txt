@@ -1,0 +1,18 @@
+valid control: ACCEPTED
+unclosed YAML flow sequence: ACCEPTED
+duplicate YAML field: ACCEPTED
+empty description: ACCEPTED
+missing license/author/version: ACCEPTED
+unclosed objective: ACCEPTED
+empty objective: ACCEPTED
+required headings in fenced code only: ACCEPTED
+unknown bold Related Skill: ACCEPTED
+missing nested reference: ACCEPTED
+missing script reference: ACCEPTED
+nested orphan: ACCEPTED
+evals string: ACCEPTED
+8 empty eval cases: ACCEPTED
+evals root array: CRASH AttributeError: 'list' object has no attribute 'get'
+missing index: ACCEPTED
+index wrong path --check: exit=0, skills_index.json in sync (1 skills)
+duplicate index skill validate_repo: ACCEPTED

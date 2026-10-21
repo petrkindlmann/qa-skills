@@ -1,0 +1,20 @@
+✔ documented payment handlers support create, retrieve, confirm, and missing IDs (68.791485ms)
+(node:5) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ rate-limit scenario wins over the matching payment success handler (108.387874ms)
+✔ documented lifecycle clears payment state between tests (9.032945ms)
+✔ payments created at the same clock tick receive distinct fixture IDs (4.59561ms)
+✔ the documented CI setup rejects an unhandled request before network fallback (5.341213ms)
+✔ documented scenario: should handle payment API timeout (54.930465ms)
+✔ documented scenario: should retry on 503 (312.108794ms)
+✔ sample client exposes rate limiting without retrying it as a 503 (104.882472ms)
+✔ sample client caps persistent 503 retries and keeps the request identity (8.105343ms)
+✔ documented reset removes a runtime failure override (5.045615ms)
+ℹ tests 10
+ℹ suites 0
+ℹ pass 10
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 852.123242

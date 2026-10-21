@@ -1,0 +1,2 @@
+# Safe YAML parsing for skill validation and generated index metadata.
+PyYAML==6.0.3

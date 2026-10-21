@@ -1,0 +1,33 @@
+test_baseline_can_run_before_skill_is_authored (test_run_evals.CLITests.test_baseline_can_run_before_skill_is_authored) ... ok
+test_invalid_thresholds_and_workers_are_usage_errors (test_run_evals.CLITests.test_invalid_thresholds_and_workers_are_usage_errors) ... ok
+test_json_write_error_is_concise (test_run_evals.CLITests.test_json_write_error_is_concise) ... ok
+test_live_and_baseline_preserve_raw_outputs (test_run_evals.CLITests.test_live_and_baseline_preserve_raw_outputs) ... ok
+test_live_error_is_preserved_and_cannot_be_thresholded_away (test_run_evals.CLITests.test_live_error_is_preserved_and_cannot_be_thresholded_away) ... ok
+test_missing_model_cli_is_a_concise_execution_error (test_run_evals.CLITests.test_missing_model_cli_is_a_concise_execution_error) ... ok
+test_model_runs_do_not_inherit_repository_context (test_run_evals.CLITests.test_model_runs_do_not_inherit_repository_context) ... ok
+test_normal_static_run_records_scope (test_run_evals.CLITests.test_normal_static_run_records_scope) ... ok
+test_threshold_cannot_pass_semantic_only_case (test_run_evals.CLITests.test_threshold_cannot_pass_semantic_only_case) ... ok
+test_threshold_is_computed_from_actual_failures (test_run_evals.CLITests.test_threshold_is_computed_from_actual_failures) ... ok
+test_unsupported_isolation_flag_fails_with_upgrade_guidance (test_run_evals.CLITests.test_unsupported_isolation_flag_fails_with_upgrade_guidance) ... ok
+test_all_mode_detects_skill_without_eval (test_run_evals.InputValidationTests.test_all_mode_detects_skill_without_eval) ... ok
+test_empty_skill_is_an_error (test_run_evals.InputValidationTests.test_empty_skill_is_an_error) ... ok
+test_empty_suite_is_an_error (test_run_evals.InputValidationTests.test_empty_suite_is_an_error) ... ok
+test_invalid_case_fields_are_errors (test_run_evals.InputValidationTests.test_invalid_case_fields_are_errors) ... ok
+test_invalid_json_is_a_concise_input_error (test_run_evals.InputValidationTests.test_invalid_json_is_a_concise_input_error) ... ok
+test_malformed_eval_shapes_are_errors (test_run_evals.InputValidationTests.test_malformed_eval_shapes_are_errors) ... ok
+test_missing_skill_is_an_error_even_with_reference_text (test_run_evals.InputValidationTests.test_missing_skill_is_an_error_even_with_reference_text) ... ok
+test_validation_precedes_model_calls (test_run_evals.InputValidationTests.test_validation_precedes_model_calls) ... ok
+test_nonzero_exit_is_not_scored_as_output (test_run_evals.ModelProcessTests.test_nonzero_exit_is_not_scored_as_output) ... ok
+test_stderr_and_empty_stdout_are_not_model_answers (test_run_evals.ModelProcessTests.test_stderr_and_empty_stdout_are_not_model_answers) ... ok
+test_success_scores_only_stdout (test_run_evals.ModelProcessTests.test_success_scores_only_stdout) ... ok
+test_timeout_is_an_execution_error (test_run_evals.ModelProcessTests.test_timeout_is_an_execution_error) ... ok
+test_absent_semantic_antipattern_is_still_deferred (test_run_evals.PatternTests.test_absent_semantic_antipattern_is_still_deferred) ... ok
+test_alternatives_may_contain_unclosed_function_calls (test_run_evals.PatternTests.test_alternatives_may_contain_unclosed_function_calls) ... ok
+test_group_alternation_and_function_arguments (test_run_evals.PatternTests.test_group_alternation_and_function_arguments) ... ok
+test_literal_metacharacters_and_multiline_wildcard (test_run_evals.PatternTests.test_literal_metacharacters_and_multiline_wildcard) ... ok
+test_semantic_only_case_cannot_pass_empty_output (test_run_evals.PatternTests.test_semantic_only_case_cannot_pass_empty_output) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 2.775s
+
+OK

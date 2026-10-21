@@ -1,20 +1,22 @@
 {
   "skill": "compliance-testing",
-  "version": "2.1",
+  "version": "2.2",
   "evals": [
     {
       "id": "ct-001",
       "prompt": "Write a Playwright test to verify that a consent banner appears on first visit and does not appear after the user accepts consent",
       "expected_patterns": [
-        "storageState: undefined OR test.use({ storageState: undefined })",
+        "storageState: { cookies: [], origins: [] } OR browser.newContext",
         "getByRole('dialog'",
         "getByRole('button', { name: /(accept|agree|allow)/i",
         "toBeVisible",
-        "toBeHidden"
+        "toBeHidden",
+        "waits for actual consent initialization before asserting persistent banner absence"
       ],
       "anti_patterns": [
         "waitForTimeout without specific reason",
-        "hardcoded DOM selectors OR xpath"
+        "hardcoded DOM selectors OR xpath",
+        "using inherited storage state for a first visit test"
       ],
       "tags": [
         "consent-banner",
@@ -44,18 +46,20 @@
     },
     {
       "id": "ct-003",
-      "prompt": "Verify that a site honors Global Privacy Control (Sec-GPC: 1) header: the browser exposes navigator.globalPrivacyControl and no marketing cookies are present",
+      "prompt": "Verify the application's approved GPC policy using the Sec-GPC: 1 request header and check that disallowed marketing cookies are absent. Explain how to separately test navigator.globalPrivacyControl when the browser does not natively expose it.",
       "expected_patterns": [
         "extraHTTPHeaders: { 'Sec-GPC': '1' }",
         "context.cookies()",
         "filter",
         "_fbp OR _fbc OR _gcl OR marketing cookie names",
-        "navigator.globalPrivacyControl"
+        "navigator.globalPrivacyControl",
+        "distinguishes an HTTP header from the browser DOM property and labels any DOM emulation explicitly"
       ],
       "anti_patterns": [
         "ignoring Sec-GPC header",
         "no marketing cookie detection",
-        "__cmp?.gpcStatus OR __cmp.gpcStatus"
+        "__cmp?.gpcStatus OR __cmp.gpcStatus",
+        "claiming that setting an HTTP header automatically creates a browser DOM property"
       ],
       "tags": [
         "privacy-control",
@@ -65,20 +69,24 @@
     },
     {
       "id": "ct-004",
-      "prompt": "Write a test to verify Google Consent Mode v2 compliance: check that default consent state is 'denied' for ad_storage, analytics_storage, ad_user_data, and ad_personalization",
+      "prompt": "Write a test for a region whose approved Google Consent Mode policy requires denied defaults for ad_storage, analytics_storage, ad_user_data, and ad_personalization. Observe the application's actual default command and fail if it never appears.",
       "expected_patterns": [
         "addInitScript",
         "dataLayer OR gtag",
         "consent",
         "default",
-        "ad_storage).toBe('denied')",
-        "analytics_storage).toBe('denied')",
-        "ad_user_data).toBe('denied')",
-        "ad_personalization).toBe('denied')"
+        "ad_storage",
+        "analytics_storage",
+        "ad_user_data",
+        "ad_personalization",
+        "denied",
+        "assertDefaultConsent OR toEqual OR toBe",
+        "requires an actual application default and all four expected states"
       ],
       "anti_patterns": [
-        "no dataLayer setup",
-        "defaulting to granted instead of denied"
+        "inserting the consent default that the test is supposed to observe",
+        "allowing a missing default command to pass",
+        "treating one regional policy as a universal legal requirement"
       ],
       "tags": [
         "google-consent-mode",
@@ -88,17 +96,19 @@
     },
     {
       "id": "ct-005",
-      "prompt": "Create a test that checks for tracking scripts (Google Analytics, Facebook Pixel, TikTok Analytics) loading before consent. Use page.on('request') to monitor network requests.",
+      "prompt": "For an approved basic-consent policy that blocks all configured tracker requests until consent, test Google Analytics, Facebook Pixel, and TikTok Analytics request blocking. Use page.on('request'), an application completion signal, and a bounded observation window; distinguish advanced-mode cookieless pings.",
       "expected_patterns": [
         "page.on('request'",
-        "trackingDomains OR similar array",
+        "trackingDomains OR blockedHosts OR domains: string[]",
         "google-analytics.com OR googletagmanager.com OR facebook.net OR analytics.tiktok.com",
         "violations",
-        "expect(violations.*toHaveLength(0)"
+        "toHaveLength(0) OR toEqual([])"
       ],
       "anti_patterns": [
         "no network request monitoring",
-        "checking only one tracking domain"
+        "checking only one tracking domain",
+        "using network idle as proof that no delayed tracking will occur",
+        "treating advanced mode cookieless pings as automatically illegal"
       ],
       "tags": [
         "script-blocking",

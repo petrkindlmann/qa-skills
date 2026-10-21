@@ -1,0 +1,264 @@
+{
+  "source": "/workspace/scratch/db79cfa7c2bc/qa-skills-baseline",
+  "kind": "deterministic runner probes; model responses are fake fixtures",
+  "probes": [
+    {
+      "name": "semantic-only empty output",
+      "output": "",
+      "result": {
+        "case_id": "semantic-only",
+        "expected_hit": [],
+        "expected_miss": [],
+        "anti_hit": [],
+        "semantic": [
+          "explains every important design tradeoff clearly"
+        ]
+      },
+      "passed": true
+    },
+    {
+      "name": "nonzero stdout and stderr",
+      "fixture": {
+        "returncode": 1,
+        "stdout": "toHaveURL",
+        "stderr": "Authentication failed: toHaveURL"
+      },
+      "accepted_as_output": "toHaveURL"
+    },
+    {
+      "name": "empty stdout",
+      "fixture": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "accepted_as_output": ""
+    },
+    {
+      "name": "normal pattern",
+      "pattern": ".match( OR .exec( OR matchAll",
+      "output": "const token = url.match(/token/);",
+      "matched": false
+    },
+    {
+      "name": "normal pattern",
+      "pattern": "for (const OR forEach",
+      "output": "items.forEach(check);",
+      "matched": false
+    },
+    {
+      "name": "normal pattern",
+      "pattern": "getByRole('listbox' OR 'menu')",
+      "output": "getByRole('menu')",
+      "matched": false
+    },
+    {
+      "name": "normal static",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--static",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 0,
+      "stdout": "Running 1 skill(s) in static mode\n\n  OK   sample: 1/1 pass\n\nSkills: 1  Cases: 1  Pass: 1  Fail: 0  Semantic\u2192judge: 0\nWrote /tmp/qa-probe-n3a5go9h/results.json\n",
+      "stderr": "",
+      "json_report": [
+        {
+          "skill": "sample",
+          "mode": "static",
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "semantic_deferred": 0,
+          "cases": [
+            {
+              "id": "sample-001",
+              "passed": true,
+              "missing": [],
+              "anti_hit": [],
+              "semantic": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "negative threshold",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--min-pass-rate",
+        "-1",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 0,
+      "stdout": "Running 1 skill(s) in static mode\n\n  OK   sample: 1/1 pass\n\nSkills: 1  Cases: 1  Pass: 1  Fail: 0  Semantic\u2192judge: 0\nWrote /tmp/qa-probe-n3a5go9h/results.json\nPass rate: 100.0% (threshold -1%) -> PASS\n",
+      "stderr": "",
+      "json_report": [
+        {
+          "skill": "sample",
+          "mode": "static",
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "semantic_deferred": 0,
+          "cases": [
+            {
+              "id": "sample-001",
+              "passed": true,
+              "missing": [],
+              "anti_hit": [],
+              "semantic": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "semantic-only threshold zero",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--min-pass-rate",
+        "0",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 0,
+      "stdout": "Running 1 skill(s) in static mode\n\n  OK   sample: 1/1 pass, 1 semantic\u2192judge\n\nSkills: 1  Cases: 1  Pass: 1  Fail: 0  Semantic\u2192judge: 1\nWrote /tmp/qa-probe-n3a5go9h/results.json\nPass rate: 100.0% (threshold 0%) -> PASS\n",
+      "stderr": "",
+      "json_report": [
+        {
+          "skill": "sample",
+          "mode": "static",
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "semantic_deferred": 1,
+          "cases": [
+            {
+              "id": "semantic-only",
+              "passed": true,
+              "missing": [],
+              "anti_hit": [],
+              "semantic": [
+                "explains every important design tradeoff clearly"
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "empty cases",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--static",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 0,
+      "stdout": "Running 1 skill(s) in static mode\n\n  OK   sample: 0/0 pass\n\nSkills: 1  Cases: 0  Pass: 0  Fail: 0  Semantic\u2192judge: 0\nWrote /tmp/qa-probe-n3a5go9h/results.json\n",
+      "stderr": "",
+      "json_report": [
+        {
+          "skill": "sample",
+          "mode": "static",
+          "total": 0,
+          "passed": 0,
+          "failed": 0,
+          "semantic_deferred": 0,
+          "cases": []
+        }
+      ]
+    },
+    {
+      "name": "empty suite",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--static",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 0,
+      "stdout": "Running 0 skill(s) in static mode\n\n\nSkills: 0  Cases: 0  Pass: 0  Fail: 0  Semantic\u2192judge: 0\nWrote /tmp/qa-probe-n3a5go9h/results.json\n",
+      "stderr": "",
+      "json_report": []
+    },
+    {
+      "name": "nonzero model response via real subprocess",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--live",
+        "--min-pass-rate",
+        "0",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 0,
+      "stdout": "Running 1 skill(s) in live mode\n\n  OK   sample: 1/1 pass\n\nSkills: 1  Cases: 1  Pass: 1  Fail: 0  Semantic\u2192judge: 0\nWrote /tmp/qa-probe-n3a5go9h/results.json\nPass rate: 100.0% (threshold 0%) -> PASS\n",
+      "stderr": "",
+      "json_report": [
+        {
+          "skill": "sample",
+          "mode": "live",
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "semantic_deferred": 0,
+          "cases": [
+            {
+              "id": "sample-001",
+              "passed": true,
+              "missing": [],
+              "anti_hit": [],
+              "semantic": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "baseline cwd context fixture",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--baseline",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 1,
+      "stdout": "Running 1 skill(s) in baseline mode\n\n  FAIL sample: 0/1 pass\n        sample-001 missing: ['toHaveURL']\n        sample-001 ANTI-PATTERN present: ['waitForTimeout']\n\nSkills: 1  Cases: 1  Pass: 0  Fail: 1  Semantic\u2192judge: 0\nWrote /tmp/qa-probe-n3a5go9h/results.json\n",
+      "stderr": "",
+      "json_report": [
+        {
+          "skill": "sample",
+          "mode": "baseline",
+          "total": 1,
+          "passed": 0,
+          "failed": 1,
+          "semantic_deferred": 0,
+          "cases": [
+            {
+              "id": "sample-001",
+              "passed": false,
+              "missing": [
+                "toHaveURL"
+              ],
+              "anti_hit": [
+                "waitForTimeout"
+              ],
+              "semantic": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

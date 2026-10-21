@@ -1,5 +1,36 @@
 # Versions
 
+## v3.1.0 (2026-10-20)
+
+### Stress tests and evidence-aware skill recipes
+
+The collection remains at 50 skills. This release adds regression tests that execute
+documented helpers, controlled browser fixtures, and retained evidence from the
+[stress-test review](docs/STRESS-TEST-2026-10-20.md).
+
+- Reject invalid YAML, duplicate keys, missing sections, broken references, malformed
+  evals, stale index contents and blank index versions with useful diagnostics.
+- Prevent absent specs, uncheckable criteria, blank model output and CLI failures from
+  becoming passing evaluations. Correct alternation parsing and retain deferred
+  semantic criteria. Static checks are explicitly content coverage.
+- Bound injection scanning work, preserve original source locations across supported
+  Unicode/escape normalization, and handle hostile filenames without shell expansion.
+- Repair consent observation, GA4 query/body parsing and typed tracking contracts;
+  preserve missing defaults, late requests, event duplicates and observation errors.
+- Repair email polling and extraction, transactional webhook handling, MSW handler
+  ordering/state reset, selector candidate evidence and unresolved-failure reporting.
+- Correct Allure reporter configuration, trace process ownership/status handling,
+  PostgreSQL 18 environment recipes and pytest coverage-context guidance.
+- Make report rewriting preserve source facts and uncertainty. Tie release readiness
+  to the actual candidate and record unknown project context without inventing facts.
+- Add pinned regression dependencies and CI gates for Python, documented JavaScript
+  helpers and Chromium fixtures. Keep the existing static-content floor separate.
+
+Eval rubric changes are recorded in the report: the humanizer now requires factual
+fidelity, consent/Allure criteria match the corrected contracts, one SQL alternation
+uses the supported grammar, and one held-out-style writing case brings the total to
+513. These are not a claim of 513 successful agent executions.
+
 ## v3.0.0 (2026-06-10)
 
 ### 50 skills, TDD-validated, with an executable eval runner

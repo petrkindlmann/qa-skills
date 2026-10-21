@@ -1,0 +1,18 @@
+valid control: ACCEPTED
+unclosed YAML flow sequence: example: invalid YAML frontmatter: while parsing a flow sequence
+duplicate YAML field: example: invalid YAML frontmatter: while constructing a mapping
+empty description: example: description must be a nonempty string
+missing license/author/version: example: license must be MIT; example: metadata.author must be a nonempty string; example: metadata.version must be a nonempty string
+unclosed objective: example: expected one closed, nonempty <objective> block
+empty objective: example: expected one closed, nonempty <objective> block
+required headings in fenced code only: example: expected one closed, nonempty <objective> block; example: missing required section '## Discovery Questions'; example: missing required section '## Core Principles'; example: missing required section '## Anti-Patterns'; example: missing required section '## Done When'; example: missing required section '## Related Skills'
+unknown bold Related Skill: example: Related Skills references unknown skill 'does-not-exist'
+missing nested reference: example: cites references/nested/missing.md but file is missing
+missing script reference: example: cites references/missing.mjs but file is missing
+nested orphan: ['example: orphan reference file references/nested/orphan.md (never cited)']
+evals string: ["example: invalid eval spec (eval spec skill None does not match 'example')"]
+8 empty eval cases: ["example: invalid eval spec (eval spec skill None does not match 'example')"]
+evals root array: ['example: invalid eval spec (eval spec must be an object)']
+missing index: ['skills_index.json is missing — run scripts/build_index.py']
+index wrong path --check: exit=1, skills_index.json is STALE — run scripts/build_index.py
+duplicate index skill validate_repo: ["skills_index.json: duplicate skill 'example'"]

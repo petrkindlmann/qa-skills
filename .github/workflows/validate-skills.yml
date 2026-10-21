@@ -6,6 +6,10 @@ on:
       - 'skills/**'
       - 'evals/**'
       - 'scripts/**'
+      - 'tests/**'
+      - 'requirements-dev.txt'
+      - 'package.json'
+      - 'package-lock.json'
       - 'skills_index.json'
       - 'README.md'
       - '.github/workflows/validate-skills.yml'
@@ -14,10 +18,17 @@ on:
       - 'skills/**'
       - 'evals/**'
       - 'scripts/**'
+      - 'tests/**'
+      - 'requirements-dev.txt'
+      - 'package.json'
+      - 'package-lock.json'
       - 'skills_index.json'
       - 'README.md'
       - '.github/workflows/validate-skills.yml'
   workflow_dispatch: {}
+
+permissions:
+  contents: read
 
 jobs:
   validate:
@@ -29,16 +40,22 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install validation dependencies
+        run: python3 -m pip install -r requirements-dev.txt
+
+      - name: Regression tests for validators, evaluator, and scanner
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+
       # Structural validation: required sections, category whitelist, name/dir match,
       # references exist + no orphans, Related-Skills resolution, eval-spec presence,
       # README/index count sync, line caps.
       - name: Validate skills
         run: python3 scripts/validate_skills.py
 
-      # Static eval proxy: each skill's content must teach every checkable
-      # expected_pattern and recommend no anti_pattern. Free; no model calls.
-      - name: Static evals
-        run: python3 scripts/run_evals.py --static --all --min-pass-rate 90
+      # Lexical content coverage only. This does not execute prompts or judge meaning.
+      # The retained 90% floor is separate from the executable regression gates.
+      - name: Static content coverage
+        run: python3 scripts/run_evals.py --static --all --min-pass-rate 90 --json static-evals.json
 
       # The index is a generated artifact — fail if it drifted from skills/.
       - name: Index in sync
@@ -47,3 +64,32 @@ jobs:
       # The bundled injection detector must keep passing its own selftest.
       - name: Injection detector selftest
         run: python3 skills/ai-system-testing/scripts/detect_injection.py --selftest
+
+      - name: Retain content coverage and deferred criteria
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: static-content-coverage
+          path: static-evals.json
+          if-no-files-found: warn
+
+  executable-recipes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+          cache: npm
+
+      - run: npm ci
+
+      - name: Execute documented helpers against controlled cases
+        run: npm test
+
+      - name: Install Chromium for browser regression cases
+        run: npx playwright install --with-deps chromium
+
+      - name: Execute browser recipes against good and broken fixtures
+        run: npm run test:browser

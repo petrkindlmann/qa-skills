@@ -1,0 +1,277 @@
+{
+  "source": "/workspace/scratch/db79cfa7c2bc/qa-skills",
+  "kind": "deterministic runner probes; model responses are fake fixtures",
+  "probes": [
+    {
+      "name": "semantic-only empty output",
+      "output": "",
+      "result": {
+        "case_id": "semantic-only",
+        "expected_hit": [],
+        "expected_miss": [],
+        "anti_hit": [],
+        "semantic": [
+          "explains every important design tradeoff clearly"
+        ],
+        "semantic_anti": [
+          "recommends deleting all failing tests immediately"
+        ],
+        "checkable": 0
+      },
+      "passed": false
+    },
+    {
+      "name": "nonzero stdout and stderr",
+      "fixture": {
+        "returncode": 1,
+        "stdout": "toHaveURL",
+        "stderr": "Authentication failed: toHaveURL"
+      },
+      "error_type": "ModelRunError",
+      "error": "`claude` exited with status 1",
+      "output": "toHaveURL",
+      "stderr": "Authentication failed: toHaveURL"
+    },
+    {
+      "name": "empty stdout",
+      "fixture": {
+        "returncode": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "error_type": "ModelRunError",
+      "error": "`claude` returned empty stdout",
+      "output": "",
+      "stderr": ""
+    },
+    {
+      "name": "normal pattern",
+      "pattern": ".match( OR .exec( OR matchAll",
+      "output": "const token = url.match(/token/);",
+      "matched": true
+    },
+    {
+      "name": "normal pattern",
+      "pattern": "for (const OR forEach",
+      "output": "items.forEach(check);",
+      "matched": true
+    },
+    {
+      "name": "normal pattern",
+      "pattern": "getByRole('listbox' OR 'menu')",
+      "output": "getByRole('menu')",
+      "matched": true
+    },
+    {
+      "name": "normal static",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--static",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 0,
+      "stdout": "Running 1 skill(s) in static mode\n\nScope: skill content coverage only; prompts are not executed.\nSemantic criteria require a judge and are excluded from pattern scores.\n\n  OK   sample: 1/1 checkable cases pass\n\nSkills: 1  Cases: 1  Pass: 1  Fail: 0  Errors: 0  Uncheckable: 0  Semantic\u2192judge: 0\nWrote /tmp/qa-probe-a058rwqd/results.json\n",
+      "stderr": "",
+      "json_report": [
+        {
+          "skill": "sample",
+          "mode": "static",
+          "scope": "skill_content",
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "errors": 0,
+          "uncheckable": 0,
+          "checkable_cases": 1,
+          "semantic_deferred": 0,
+          "cases": [
+            {
+              "id": "sample-001",
+              "passed": true,
+              "status": "pass",
+              "missing": [],
+              "anti_hit": [],
+              "semantic": [],
+              "semantic_expected": [],
+              "semantic_anti": [],
+              "checkable_patterns": 2
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "negative threshold",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--min-pass-rate",
+        "-1",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "usage: run_evals.py [-h] [--static | --live | --baseline]\n                    [--skill SKILL | --all] [--json JSON] [--workers WORKERS]\n                    [--min-pass-rate PCT]\nrun_evals.py: error: argument --min-pass-rate: pass rate must be a finite number from 0 to 100\n"
+    },
+    {
+      "name": "semantic-only threshold zero",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--min-pass-rate",
+        "0",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 2,
+      "stdout": "Running 1 skill(s) in static mode\n\nScope: skill content coverage only; prompts are not executed.\nSemantic criteria require a judge and are excluded from pattern scores.\n\n  ERROR sample: 0/0 checkable cases pass, 2 semantic\u2192judge\n        semantic-only UNCHECKABLE: all criteria require a judge\n\nSkills: 1  Cases: 1  Pass: 0  Fail: 0  Errors: 0  Uncheckable: 1  Semantic\u2192judge: 2\nWrote /tmp/qa-probe-a058rwqd/results.json\n",
+      "stderr": "ERROR: incomplete evaluation; execution errors or uncheckable cases cannot be accepted by a pass-rate threshold.\n",
+      "json_report": [
+        {
+          "skill": "sample",
+          "mode": "static",
+          "scope": "skill_content",
+          "total": 1,
+          "passed": 0,
+          "failed": 0,
+          "errors": 0,
+          "uncheckable": 1,
+          "checkable_cases": 0,
+          "semantic_deferred": 2,
+          "cases": [
+            {
+              "id": "semantic-only",
+              "passed": false,
+              "status": "uncheckable",
+              "missing": [],
+              "anti_hit": [],
+              "semantic": [
+                "explains every important design tradeoff clearly",
+                "recommends deleting all failing tests immediately"
+              ],
+              "semantic_expected": [
+                "explains every important design tradeoff clearly"
+              ],
+              "semantic_anti": [
+                "recommends deleting all failing tests immediately"
+              ],
+              "checkable_patterns": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "empty cases",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--static",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "ERROR: /tmp/qa-probe-a058rwqd/evals/sample-evals.json: evals must be a nonempty list of cases\n"
+    },
+    {
+      "name": "empty suite",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--static",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 2,
+      "stdout": "",
+      "stderr": "ERROR: no eval specs found in /tmp/qa-probe-a058rwqd/evals\n"
+    },
+    {
+      "name": "nonzero model response via real subprocess",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--live",
+        "--min-pass-rate",
+        "0",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 2,
+      "stdout": "Running 1 skill(s) in live mode\n\nScope: response-only pattern checks on model output; generated code is not executed.\nSemantic criteria require a judge and are excluded from pattern scores.\n\n  ERROR sample: 0/0 checkable cases pass\n        sample-001 ERROR: `claude` exited with status 3\n\nSkills: 1  Cases: 1  Pass: 0  Fail: 0  Errors: 1  Uncheckable: 0  Semantic\u2192judge: 0\nWrote /tmp/qa-probe-a058rwqd/results.json\n",
+      "stderr": "ERROR: incomplete evaluation; execution errors or uncheckable cases cannot be accepted by a pass-rate threshold.\n",
+      "json_report": [
+        {
+          "skill": "sample",
+          "mode": "live",
+          "scope": "model_output",
+          "total": 1,
+          "passed": 0,
+          "failed": 0,
+          "errors": 1,
+          "uncheckable": 0,
+          "checkable_cases": 0,
+          "semantic_deferred": 0,
+          "cases": [
+            {
+              "id": "sample-001",
+              "passed": false,
+              "status": "error",
+              "missing": [],
+              "anti_hit": [],
+              "semantic": [],
+              "error": "`claude` exited with status 3",
+              "output": "toHaveURL\n",
+              "stderr": "authentication failed\n"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "baseline cwd context fixture",
+      "command": [
+        "python3",
+        "scripts/run_evals.py",
+        "--baseline",
+        "--json",
+        "results.json"
+      ],
+      "returncode": 0,
+      "stdout": "Running 1 skill(s) in baseline mode\n\nScope: response-only pattern checks on model output; generated code is not executed.\nSemantic criteria require a judge and are excluded from pattern scores.\n\n  OK   sample: 1/1 checkable cases pass\n\nSkills: 1  Cases: 1  Pass: 1  Fail: 0  Errors: 0  Uncheckable: 0  Semantic\u2192judge: 0\nWrote /tmp/qa-probe-a058rwqd/results.json\n",
+      "stderr": "",
+      "json_report": [
+        {
+          "skill": "sample",
+          "mode": "baseline",
+          "scope": "model_output",
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "errors": 0,
+          "uncheckable": 0,
+          "checkable_cases": 1,
+          "semantic_deferred": 0,
+          "cases": [
+            {
+              "id": "sample-001",
+              "passed": true,
+              "status": "pass",
+              "missing": [],
+              "anti_hit": [],
+              "semantic": [],
+              "semantic_expected": [],
+              "semantic_anti": [],
+              "checkable_patterns": 2,
+              "output": "toHaveURL\n"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

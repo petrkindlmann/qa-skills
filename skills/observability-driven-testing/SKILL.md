@@ -14,7 +14,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: production
 ---
 
@@ -95,7 +95,11 @@ The complete cycle: error detected → analyzed → test written → deployed �
 
 Three patterns, all in `references/trace-assertions.md`:
 
-- **OpenTelemetry integration in test infrastructure** — instrument the test runner (`test-setup/tracing.ts`) so test execution correlates with application traces via `service.name`, `test.suite`, and `test.run_id` resource attributes. Flush from the runner's **global teardown** with an awaited `sdk.shutdown()` — not `process.on('beforeExit')`, which drops trailing spans.
+- **OpenTelemetry integration in test infrastructure** — create actual test spans and
+  correlate them with application traces via `service.name`, `test.suite`, and `test.run_id`.
+  Initialize and await `sdk.shutdown()` in the same worker process. A coordinator's global
+  teardown cannot flush a worker SDK. Use a worker fixture or test-process teardown hook,
+  then verify the final expected span reached the collector; shutdown alone is not delivery proof.
 - **Trace-based assertions** — assert on trace structure, span attributes, and timing (which services were called, no ERROR spans, root-span latency, DB operations) instead of only the HTTP status. For unit-level span checks, use an in-process **`InMemorySpanExporter` + `SimpleSpanProcessor`** and read `getFinishedSpans()` synchronously — no network, no `waitForTrace`, no timeout flake. Reserve the real collector + `waitForTrace` path for cross-process traces.
 - **Distributed trace validation across services** — an `assertTraceStructure` helper that verifies a request flowed through the expected services in order, with per-span attribute and `maxDuration` checks.
 
@@ -294,8 +298,8 @@ Head/probabilistic sampling randomly drops the trace the test is asserting on, p
 
 | Symptom | Likely cause | Fix or check |
 |---------|--------------|--------------|
-| `waitForTrace` times out, span never arrives | Sampling dropped it, or exporter didn't flush before assert | Set `OTEL_TRACES_SAMPLER=always_on` for the test run; flush via awaited `sdk.shutdown()` in global teardown |
-| Trailing spans from the last test missing | Flushed from `process.on('beforeExit')` (doesn't fire on exit/signal) | Move shutdown to the runner's global teardown hook; `await sdk.shutdown()` |
+| `waitForTrace` times out, span never arrives | Sampling, export, collector retention, or no actual span emission | Emit the span; retain test traffic; verify exporter/collector receipt and the run ID |
+| Trailing spans from the last test missing | Cleanup was unawaited or ran in another process | Await `sdk.shutdown()` in the worker that owns it; assert final collector receipt |
 | App spans not part of the test's trace | `traceparent` header not propagated by the app | Confirm the app reads/forwards W3C `traceparent`; check the OTel propagator is configured |
 | Assertion on `db.system`/`graphql.document`/GenAI attrs suddenly fails | sem-conv version bump renamed/moved the attribute | Pin `@opentelemetry/semantic-conventions` exact; diff the release notes; update assertions deliberately |
 | No spans reach the collector in CI | `OTEL_EXPORTER_ENDPOINT` unreachable from the CI network | Point at the in-CI collector address; smoke-test with the Verification step below |

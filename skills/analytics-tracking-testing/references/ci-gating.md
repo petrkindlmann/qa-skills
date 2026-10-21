@@ -12,25 +12,28 @@ The baseline is the set of events the tracking plan says each journey must produ
 import { test, expect } from '../fixtures/analytics';
 import { validateEvent } from '../tracking-plan/validate';
 import plan from '../tracking-plan/tracking-plan.json';
+import { decodeEcommerceWebEvent } from '../helpers/deployed-tag-decoder';
 
 const EXPECTED_ON_CHECKOUT = ['view_item', 'add_to_cart', 'begin_checkout', 'purchase'];
 
 test('checkout journey emits every planned event with required params', async ({ page, beacons }) => {
   await runCheckoutJourney(page);
-  await page.waitForLoadState('networkidle');
+  // Replace with the application's real signal that this journey's tracking work completed.
+  await expect(page.getByTestId('tracking-status')).toHaveAttribute('data-phase', 'checkout-complete');
 
   for (const name of EXPECTED_ON_CHECKOUT) {
-    const beacon = beacons.find(b => b.destination === 'ga4' && b.eventName === name);
-    expect(beacon, `event "${name}" dropped — not captured during checkout`).toBeTruthy();
-
-    const sp = new URLSearchParams(beacon!.params as Record<string, string>);
-    const violations = validateEvent(plan, name, sp);
+    const observed = beacons.filter(b => b.destination === 'ga4' && b.eventName === name);
+    expect(observed, `expected one ${name} event for this single-item fixture`).toHaveLength(1);
+    const payload = decodeEcommerceWebEvent(observed[0].params);
+    const violations = validateEvent(plan, name, payload);
     expect(violations, `required params missing for "${name}": ${JSON.stringify(violations)}`).toEqual([]);
   }
 });
 ```
 
-A dropped event → `toBeTruthy()` fails. A missing required param → `violations` non-empty fails. Either way Playwright exits non-zero and the job goes red.
+A dropped or duplicate event fails the count assertion. A missing required param → `violations` non-empty fails. Either way Playwright exits non-zero and the job goes red.
+
+The journey, completion signal, tracking plan and capture-tested ecommerce decoder are project adapters. Implement and verify them against the actual application before claiming this gate ran. Network idle cannot establish that delayed tracking finished; counts describe the recorded completion boundary.
 
 ## GitHub Actions workflow
 

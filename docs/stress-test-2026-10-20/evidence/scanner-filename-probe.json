@@ -1,0 +1,7 @@
+{
+  "legacy_command": "python3 \"/tmp/qa-skills-detector-evidence/before/skills/ai-system-testing/scripts/detect_injection.py\" \"/tmp/tmpfb53ets2/report\"; printf DOC_FILENAME_EXECUTED; #.txt\" || exit 255",
+  "legacy_exit": 0,
+  "legacy_filename_executed": true,
+  "direct_argument_exit": 0,
+  "direct_argument_filename_executed": false
+}

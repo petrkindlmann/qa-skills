@@ -15,6 +15,7 @@ do NOT use `messages.list(` + a poll loop. Filter by `sentTo` for parallel deter
 ```ts
 // helpers/mailosaur.ts
 import MailosaurClient from 'mailosaur';
+import { randomUUID } from 'node:crypto';
 
 const mailosaur = new MailosaurClient(process.env.MAILOSAUR_API_KEY!);
 const serverId = process.env.MAILOSAUR_SERVER_ID!;
@@ -22,7 +23,7 @@ const serverDomain = `${serverId}.mailosaur.net`;
 
 /** A unique, real, deliverable address for this test. */
 export function testAddress(tag = ''): string {
-  return `${tag || 'user'}.${Date.now()}.${Math.random().toString(36).slice(2, 8)}@${serverDomain}`;
+  return `${tag || 'user'}.${randomUUID()}@${serverDomain}`;
 }
 
 export async function getEmail(sentTo: string, timeout = 30_000) {
@@ -50,7 +51,12 @@ test('staging welcome email — subject, from, link domain', async ({ page }) =>
 
   const links = message.html?.links ?? [];
   expect(links.length).toBeGreaterThan(0);
-  expect(links.every((l) => new URL(l.href!).hostname.endsWith('staging.example.com'))).toBe(true);
+  for (const link of links) {
+    const url = new URL(link.href!);
+    expect(url.origin).toBe('https://staging.example.com');
+    expect(url.username).toBe('');
+    expect(url.password).toBe('');
+  }
 
   // OTP / codes are exposed in the structured `codes` array too:
   // const otp = message.html?.codes?.[0]?.value;
@@ -83,6 +89,7 @@ export const mailslurp = new MailSlurp({ apiKey: process.env.MAILSLURP_API_KEY! 
 // tests/otp.mailslurp.spec.ts
 import { test, expect } from '@playwright/test';
 import { mailslurp } from '../helpers/mailslurp';
+import { extractOtp } from '../helpers/mailpit'; // template-specific helper from mailpit-playwright.md
 
 test('login OTP via per-test inbox', async ({ page }) => {
   const inbox = await mailslurp.createInbox(); // unique throwaway inbox
@@ -94,10 +101,9 @@ test('login OTP via per-test inbox', async ({ page }) => {
   // Blocks until an email lands in THIS inbox; 60s timeout, no sleep.
   const email = await mailslurp.waitForLatestEmail(inbox.id, 60_000);
 
-  const otp = email.body?.match(/\b(\d{6})\b/)?.[1];
-  expect(otp, 'no OTP in email').toBeTruthy();
+  const otp = extractOtp(email.body ?? ''); // rejects missing or distinct competing codes
 
-  await page.getByLabel('Verification code').fill(otp!);
+  await page.getByLabel('Verification code').fill(otp);
   await page.getByRole('button', { name: 'Verify' }).click();
   await expect(page).toHaveURL(/\/app/);
 });

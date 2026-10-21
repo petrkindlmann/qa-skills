@@ -1,0 +1,145 @@
+✔ recorded applied scores pass only when every score meets the floor (36.565309ms)
+✔ a low score fails even when other high scores raise the average (36.442207ms)
+✖ empty or non-array inputs cannot report a passing gate (34.642948ms)
+✔ malformed JSON and invalid UTF-8 are input errors (78.592692ms)
+✖ missing applied boolean or nonnumeric scores are input errors (33.569927ms)
+✖ invalid candidate rows and missing source coordinates cannot pass (39.601325ms)
+✖ no applied edits is reported as unscorable rather than passing (35.266569ms)
+✖ two applied candidates for the same source location are rejected (37.384402ms)
+✖ unexpected CLI arguments cannot be silently ignored (33.906387ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 3
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 393.922021
+
+✖ failing tests:
+
+test at tests/examples/selector-score.test.mjs:37:1
+✖ empty or non-array inputs cannot report a passing gate (34.642948ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/selector-score.test.mjs:38:54)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/examples/selector-score.test.mjs:43:1
+✖ missing applied boolean or nonnumeric scores are input errors (33.569927ms)
+  AssertionError [ERR_ASSERTION]: {"applied":"false"}
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/selector-score.test.mjs:45:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/examples/selector-score.test.mjs:48:1
+✖ invalid candidate rows and missing source coordinates cannot pass (39.601325ms)
+  AssertionError [ERR_ASSERTION]: "bad"
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/selector-score.test.mjs:50:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/examples/selector-score.test.mjs:53:1
+✖ no applied edits is reported as unscorable rather than passing (35.266569ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/selector-score.test.mjs:54:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/examples/selector-score.test.mjs:56:1
+✖ two applied candidates for the same source location are rejected (37.384402ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/selector-score.test.mjs:57:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/examples/selector-score.test.mjs:59:1
+✖ unexpected CLI arguments cannot be silently ignored (33.906387ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 2
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/selector-score.test.mjs:60:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

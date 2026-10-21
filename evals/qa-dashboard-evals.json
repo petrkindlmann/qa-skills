@@ -1,6 +1,6 @@
 {
   "skill": "qa-dashboard",
-  "version": "2.0",
+  "version": "2.2",
   "evals": [
     {
       "id": "qad-001",
@@ -8,13 +8,13 @@
       "expected_patterns": [
         "allure-playwright",
         "reporter: [\"allure-playwright\"",
-        "outputFolder",
+        "resultsDir",
         "environmentInfo",
         "process.env"
       ],
       "anti_patterns": [
         "hardcoded URLs",
-        "allure reporter without outputFolder"
+        "allure reporter without resultsDir"
       ],
       "tags": [
         "allure",

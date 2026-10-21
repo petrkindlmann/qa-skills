@@ -114,7 +114,7 @@
       "prompt": "Write a test to detect SQL injection vulnerabilities with payloads like ' OR '1'='1 and verify error handling doesn't leak internals",
       "expected_patterns": [
         "sqlPayloads OR injectionPayloads",
-        "DROP TABLE OR UNION SELECT OR OR '1'='1",
+        "(DROP TABLE|UNION SELECT|OR '1'='1)",
         "status()).not.toBe(500)",
         "expect(body).not.toContain('SQL')",
         "expect(body).not.toContain('syntax error')"

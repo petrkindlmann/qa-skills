@@ -29,7 +29,7 @@ gh run download <RUN_ID> -n playwright-traces
 npx playwright show-trace traces/checkout.zip
 ```
 
-Programmatic dump (an aria-snapshot is the signal role-first recovery needs; raw HTML optional):
+Programmatic dump (replace the sample routes and `app-ready` signal with the actual application contract; network idle does not establish hydration):
 
 ```typescript
 // scripts/snapshot-dom.ts  — run against any reachable build (old or new)
@@ -45,7 +45,7 @@ const routes = ['/checkout', '/cart', '/account'];
   fs.mkdirSync(outDir, { recursive: true });
   for (const route of routes) {
     await page.goto(baseUrl + route);
-    await page.waitForLoadState('networkidle');       // snapshot AFTER hydration
+    await page.getByTestId('app-ready').waitFor({ state: 'visible' }); // replace with the app-owned readiness contract
     const aria = await page.locator('body').ariaSnapshot();
     const name = route.replace(/\//g, '_') || 'root';
     fs.writeFileSync(`${outDir}/${name}.aria.yml`, aria);
@@ -86,88 +86,160 @@ PREVIEW_URL=$(gh pr view <REFACTOR_PR> --json deployments -q '.deployments[0].ur
 npx tsx scripts/snapshot-dom.ts "$PREVIEW_URL" .drift-recovery/new
 ```
 
-For every old snapshot there should be a matching new one. A route that 404s in the new build is a deleted flow — mark its tests for deletion in Phase 6.
+For every old snapshot there should be a matching new one. A 404 is a finding to investigate. Confirm an intentional product removal before proposing test deletion; routing, authentication, deployment, and application regressions can also cause 404s.
 
 ---
 
-## 3. Identify broken selectors (and capture intent + route)
+## 3. Inventory failed attempts, then verify the cause and source
+
+Use the project's real baseURL configuration; the environment variable below works
+only if `playwright.config.ts` reads it. Keep the test process status beside its JSON
+report. A reporter/parser completing successfully is not a passing test run.
 
 ```bash
-PLAYWRIGHT_TEST_BASE_URL=$PREVIEW_URL \
-  npx playwright test --reporter=json > .drift-recovery/results.json
+mkdir -p .drift-recovery
+qa_selector_status=0
+PLAYWRIGHT_TEST_BASE_URL="$PREVIEW_URL" \
+  npx --no-install playwright test --reporter=json > .drift-recovery/results.json \
+  || qa_selector_status=$?
+printf '%s\n' "$qa_selector_status" > .drift-recovery/test-exit-code.txt
 ```
 
-The parser captures file / line / old-locator / **errorType** and — the two fields the reporter does NOT give you — the **inferred intent** and **page route**, read from the test source. Both are required by Phase 4; without them the generator runs on `undefined`.
+This adapter targets Playwright's JSON reporter shape: nested `suites[].specs[]`,
+`spec.tests[]` for projects, and `test.results[]` for attempts. Check a retained report
+from the installed Playwright version before adapting it to another reporter. Keep
+**every failed or timedOut attempt**, including earlier failures before a green retry
+and expected failures. Interrupted or missing-status attempts remain visible too.
+Run-level `report.errors` are separate evidence; they are not broken selectors.
+
+The collector never reads test source or extracts a locator from an error regex.
+It preserves the reporter result, including `error`, `errors`, `errorLocation`,
+steps and attachments, plus test/project/retry identity. Reporter locations are
+leads for inspection, not verified edit positions. Source, locator, route, intent,
+and triage evidence start as `null`; no fallback `/` or nearby test title is invented.
+Each `attemptId` identifies a position within this report; retain the original
+report and run identity when combining evidence from different runs or shards.
+
+```typescript
+// scripts/failure-inventory.ts
+const record = (value: any, field: string): Record<string, any> => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error(`${field} must be an object`);
+  }
+  return value;
+};
+const list = (value: any, field: string): any[] => {
+  if (!Array.isArray(value)) throw new Error(`${field} must be an array`);
+  return value;
+};
+
+export function collectFailureInventory(input: unknown) {
+  const report = record(input, 'report');
+  const runErrors = list(report.errors, 'report.errors')
+    .map((error, index) => record(error, `report.errors[${index}]`));
+  const attempts: any[] = [];
+  let observedResults = 0;
+  const statuses = new Set(['passed', 'failed', 'timedOut', 'skipped', 'interrupted']);
+  const visit = (rawSuite: any, suitePath: string, parents: any[]) => {
+    const suite = record(rawSuite, suitePath);
+    const suiteTitles = [...parents, suite.title ?? null];
+    list(suite.specs, `${suitePath}.specs`).forEach((rawSpec, specIndex) => {
+      const specPath = `${suitePath}.specs[${specIndex}]`;
+      const spec = record(rawSpec, specPath);
+      list(spec.tests, `${specPath}.tests`).forEach((rawTest, testIndex) => {
+        const testPath = `${specPath}.tests[${testIndex}]`;
+        const test = record(rawTest, testPath);
+        list(test.results, `${testPath}.results`).forEach((rawResult, resultIndex) => {
+          const attemptId = `${testPath}.results[${resultIndex}]`;
+          const result = record(rawResult, attemptId);
+          const status = result.status ?? null;
+          if (status !== null && !statuses.has(status)) throw new Error(`${attemptId}: unknown status`);
+          observedResults++;
+          if (status === 'passed' || status === 'skipped') return;
+          const retry = result.retry ?? null;
+          if (retry !== null && (!Number.isInteger(retry) || retry < 0)) {
+            throw new Error(`${attemptId}: retry must be a nonnegative integer when supplied`);
+          }
+          attempts.push({
+            attemptId, testId: spec.id ?? null, testTitle: spec.title ?? null,
+            suiteTitles, projectName: test.projectName ?? null, projectId: test.projectId ?? null,
+            expectedStatus: test.expectedStatus ?? null, testOutcome: test.status ?? null,
+            status, retry,
+            reportedTestLocation: { file: spec.file ?? null, line: spec.line ?? null, column: spec.column ?? null },
+            reporterResult: result,
+            triage: 'unreviewed', triageEvidence: null,
+            file: null, line: null, column: null, oldLocator: null, intent: null, pageRoute: null,
+          });
+        });
+      });
+    });
+    list(suite.suites === undefined ? [] : suite.suites, `${suitePath}.suites`)
+      .forEach((child, index) => visit(child, `${suitePath}.suites[${index}]`, suiteTitles));
+  };
+  list(report.suites, 'report.suites').forEach((suite, index) => visit(suite, `suites[${index}]`, []));
+  if (!observedResults && !runErrors.length) throw new Error('Report contains no test attempts or run-level errors');
+  return { observedResults, runErrors, attempts };
+}
+
+// This checks the completeness of an inspected record, not the truth of its claims.
+// Call it immediately before passing a reviewed target to Phase 4.
+export function requireVerifiedDrift(input: unknown) {
+  const row = record(input, 'reviewed failure');
+  if (row.triage !== 'confirmed-selector-drift') throw new Error('Manual drift triage is required');
+  for (const field of ['attemptId', 'file', 'oldLocator', 'intent', 'pageRoute', 'triageEvidence']) {
+    if (typeof row[field] !== 'string' || !row[field].trim()) throw new Error(`Verified ${field} is required`);
+  }
+  if (!Number.isInteger(row.line) || row.line < 1) throw new Error('Verified source line is required');
+  if (row.column !== null && row.column !== undefined && (!Number.isInteger(row.column) || row.column < 1)) {
+    throw new Error('Source column must be a positive integer when supplied');
+  }
+  return row;
+}
+```
+
+Copy the I/O driver separately. It writes the complete inventory, including attempts
+with no error message or source location; malformed JSON/report structure fails.
+An all-green report can have an empty failure inventory only after actual results
+were observed. A report with run-level errors and no attempts retains those errors.
 
 ```typescript
 // scripts/identify-drift.ts
 import fs from 'fs';
-import path from 'path';
+import { collectFailureInventory } from './failure-inventory';
 
-interface Failure {
-  file: string;
-  line: number;
-  oldLocator: string;
-  errorType: 'timeout' | 'assertion' | 'other';
-  intent: string;     // inferred from source — NOT in the reporter
-  pageRoute: string;  // which new/*.aria.yml to load — NOT in the reporter
-}
-
-const results = JSON.parse(fs.readFileSync('.drift-recovery/results.json', 'utf8'));
-
-// Map a source line to a short intent + the route under test, by reading the spec.
-function inferContext(file: string, line: number): { intent: string; pageRoute: string } {
-  const src = fs.readFileSync(file, 'utf8').split('\n');
-  // intent: nearest comment, test title, or the action/assertion on this line
-  const around = src.slice(Math.max(0, line - 4), line + 2).join(' ');
-  const titleMatch = around.match(/test\(['"`](.+?)['"`]/);
-  const intent = (titleMatch?.[1] || around.replace(/\s+/g, ' ').trim()).slice(0, 60);
-  // route: nearest page.goto('...') above this line
-  let pageRoute = '/';
-  for (let i = line; i >= 0; i--) {
-    const m = src[i]?.match(/goto\(['"`]([^'"`]+)['"`]/);
-    if (m) { pageRoute = new URL(m[1], 'http://x').pathname; break; }
-  }
-  return { intent, pageRoute };
-}
-
-const failures: Failure[] = [];
-for (const suite of results.suites || []) {
-  for (const spec of collectSpecs(suite)) {
-    for (const test of spec.tests || []) {
-      for (const r of test.results || []) {
-        if (r.status !== 'failed') continue;
-        const msg = r.error?.message || '';
-        // A DRIFT failure is a locator timeout; an assertion failure is a value mismatch.
-        const isTimeout = /TimeoutError/.test(msg) && /locator\./.test(msg);
-        const locatorMatch = msg.match(/(locator\([^\n]*?\)|getBy\w+\([^\n]*?\))/);
-        const file = r.error?.location?.file;
-        const line = r.error?.location?.line;
-        if (!file || !line || !locatorMatch) continue;
-        failures.push({
-          file, line,
-          oldLocator: locatorMatch[1],
-          errorType: isTimeout ? 'timeout' : /expect/.test(msg) ? 'assertion' : 'other',
-          ...inferContext(file, line),
-        });
-      }
-    }
-  }
-}
-
-// Group by file for the PR; persist a flat list keyed for Phase 4.
-fs.writeFileSync('.drift-recovery/failures.json', JSON.stringify(failures, null, 2));
-console.log(`Identified ${failures.length} broken locators across ` +
-  `${new Set(failures.map(f => f.file)).size} files`);
-
-function collectSpecs(suite: any): any[] {        // suites nest; flatten
-  return [...(suite.specs || []), ...(suite.suites || []).flatMap(collectSpecs)];
-}
+const raw = new TextDecoder('utf-8', { fatal: true }).decode(fs.readFileSync('.drift-recovery/results.json'));
+const inventory = collectFailureInventory(JSON.parse(raw));
+fs.writeFileSync('.drift-recovery/failure-inventory.json', JSON.stringify(inventory, null, 2));
+console.log(`Observed ${inventory.observedResults} results; retained ${inventory.attempts.length} failed/incomplete attempts ` +
+  `and ${inventory.runErrors.length} run-level errors. Manual triage is still required.`);
 ```
 
-> **POM caveat:** `r.error.location` points at the *failing line*. For inline locators that is the locator. For a locator wrapped in a Page Object, it is the POM helper, not the test — `file`/`line` will be the helper file. Re-read the locator from the trace action, or grep the POM source, before applying. The script above silently assumes inline locators.
+Inspect each retained attempt's trace, error details, test and Page Object source,
+and the correct old/new application state. A locator timeout can come from missing
+hydration, authentication, a network failure, or a product regression. An `expect`
+failure can be an assertion timeout caused by a missing locator. Neither spelling
+establishes or rules out selector drift.
 
-Assertion-type rows (`errorType: 'assertion'`) are not drift — drop them from the candidate run; the locator resolved fine and failed a value check.
+Keep `triage: 'unreviewed'` until that inspection is complete. For confirmed selector
+drift, set `triage: 'confirmed-selector-drift'`, the verified source `file`/`line`
+(and `column` when known), exact `oldLocator`, `intent`, `pageRoute`, and a
+`triageEvidence` reference explaining the decision. For other causes, record that
+classification and its evidence without generating replacement locators. Retain
+unresolved and other-cause attempts in the inventory and carry open items into the
+recovery PR separately from the source-level candidate table.
+
+Retries may refer to the same source occurrence: keep all attempt IDs as evidence,
+then choose one reviewed recovery target per source occurrence. Before Phase 4,
+call `requireVerifiedDrift(target)`; it rejects untriaged or incomplete records:
+
+```typescript
+// After reviewing the retained attempt and recording its verified context:
+import { requireVerifiedDrift } from './failure-inventory';
+const failure = requireVerifiedDrift(reviewedTarget); // pass this target to Phase 4
+```
+
+The check validates recorded fields, while the trace/source comparison establishes
+whether the proposed edit preserves the original intent.
 
 ---
 
@@ -175,82 +247,97 @@ Assertion-type rows (`errorType: 'assertion'`) are not drift — drop them from 
 
 Loads the new-DOM HTML for each failure's `pageRoute`, generates candidates by the role-first ladder, and only awards **score 3 after region scoping makes the match unique**.
 
+Copy the helper block to `scripts/recovery-candidates.ts`. Keep live Locator objects
+for inspection; the `selector` string is a proposed source expression for review,
+not a CSS selector and never input to `eval` or `new Function`. Names are quoted as
+JavaScript string literals and intent is escaped as literal regex text.
+
 ```typescript
-// scripts/generate-candidates.ts
-import { chromium, Page } from '@playwright/test';
-import fs from 'fs';
+import { Page, Locator } from '@playwright/test';
 
-interface Candidate { selector: string; score: number; rationale: string; }
+type Candidate = { selector: string; score: number; rationale: string; locator: Locator };
+const quote = (value: string) => JSON.stringify(value);
+const escapeRegex = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
-async function generate(page: Page, intent: string): Promise<Candidate[]> {
+export async function generate(page: Page, intent: string): Promise<Candidate[]> {
+  if (typeof intent !== 'string' || !intent.trim()) throw new Error('A verified intent is required');
+  const pattern = escapeRegex(intent.trim());
+  const rx = new RegExp(pattern, 'i');
+  const expression = `new RegExp(${quote(pattern)}, 'i')`;
   const out: Candidate[] = [];
-  const rx = new RegExp(intent.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+  const add = async (locator: Locator, selector: string, score: number, rationale: string) => {
+    if (await locator.count() === 1) out.push({ locator, selector, score, rationale });
+  };
 
-  // 5 — data-testid added by the refactor
   for (const el of await page.locator('[data-testid]').all()) {
     const id = await el.getAttribute('data-testid');
-    const text = (await el.textContent())?.trim().slice(0, 50) || '';
-    if (id && rx.test(text)) out.push({ selector: `getByTestId('${id}')`, score: 5, rationale: `testid matches "${intent}"` });
+    const text = (await el.textContent())?.trim() ?? '';
+    if (id && rx.test(text)) {
+      await add(page.getByTestId(id), `getByTestId(${quote(id)})`, 5, 'unique test ID with matching text');
+    }
   }
-
-  // 4 — getByLabel for form fields, then getByRole + name (unique)
-  const label = page.getByLabel(rx);
-  if (await label.count() === 1) out.push({ selector: `getByLabel(/${intent}/i)`, score: 4, rationale: 'unique labelled field' });
-
+  await add(page.getByLabel(rx), `getByLabel(${expression})`, 4, 'unique labelled field');
   for (const role of ['button', 'link', 'heading', 'textbox', 'checkbox'] as const) {
     const loc = page.getByRole(role, { name: rx });
-    const n = await loc.count();
-    if (n === 1) {
-      out.push({ selector: `getByRole('${role}', { name: /${intent}/i })`, score: 4, rationale: 'unique role+name' });
-    } else if (n > 1) {
-      // 3 — ONLY if region scoping resolves it to exactly one. An un-scoped multi-match is NOT a 3.
+    const selector = `getByRole(${quote(role)}, { name: ${expression} })`;
+    const count = await loc.count();
+    if (count === 1) await add(loc, selector, 4, 'unique role and name');
+    else if (count > 1) {
       for (const region of await page.getByRole('region').all()) {
-        const regionName = await region.getAttribute('aria-label') || (await region.getByRole('heading').first().textContent())?.trim();
+        // Other accessible-name sources need their own inspected adapter.
+        const regionName = await region.getAttribute('aria-label');
         if (!regionName) continue;
-        const scoped = region.getByRole(role, { name: rx });
-        if (await scoped.count() === 1) {
-          out.push({
-            selector: `getByRole('region', { name: /${escapeName(regionName)}/i }).getByRole('${role}', { name: /${intent}/i })`,
-            score: 3, rationale: `region-scoped to one match in "${regionName}"`,
-          });
-          break;
-        }
+        const scope = page.getByRole('region', { name: regionName, exact: true });
+        if (await scope.count() !== 1) continue;
+        await add(scope.getByRole(role, { name: rx }),
+          `getByRole('region', { name: ${quote(regionName)}, exact: true }).${selector}`,
+          3, `unique within named region ${regionName}`);
       }
     }
   }
-
-  // 2 — text only
-  if (await page.getByText(rx).count() === 1) out.push({ selector: `getByText(/${intent}/i)`, score: 2, rationale: 'text-only, fragile' });
-
+  await add(page.getByText(rx), `getByText(${expression})`, 2, 'text-only candidate for review');
   return out.sort((a, b) => b.score - a.score);
 }
 
-const escapeName = (s: string) => s.slice(0, 40).replace(/[/\\]/g, '');
+export async function captureCandidate(candidate: Candidate, screenshotPath: string) {
+  if (typeof screenshotPath !== 'string' || !screenshotPath) throw new Error('Screenshot path is required');
+  if (await candidate.locator.count() !== 1) throw new Error('Candidate is no longer unique');
+  await candidate.locator.screenshot({ path: screenshotPath });
+  const { locator, ...record } = candidate;
+  return { ...record, screenshotPath, applied: false };
+}
 
-(async () => {
-  const failures = JSON.parse(fs.readFileSync('.drift-recovery/failures.json', 'utf8'))
-    .filter((f: any) => f.errorType === 'timeout');     // drift only
-  const browser = await chromium.launch();
-  const page = await browser.newPage();
-  fs.mkdirSync('.drift-recovery/screenshots', { recursive: true });
-
-  const result: any[] = [];
-  for (const f of failures) {
-    const route = f.pageRoute.replace(/\//g, '_') || 'root';
-    const html = fs.readFileSync(`.drift-recovery/new/${route}.html`, 'utf8');
-    await page.setContent(html);
-    const best = (await generate(page, f.intent))[0];
-    if (best && best.score >= 3) {
-      const shot = `.drift-recovery/screenshots/${route}-${f.line}.png`;
-      try { await page.locator(best.selector).first().screenshot({ path: shot }); } catch {}
-      result.push({ ...f, ...best, screenshotPath: shot, applied: false });
-    } else {
-      result.push({ ...f, selector: null, score: 0, rationale: 'no safe candidate', applied: false });
-    }
+// The caller supplies a verified source location and creates screenshotDir first.
+export async function proposeRecovery(page: Page, failure: any, screenshotDir: string, failureIndex: number) {
+  const unresolved = (rationale: string, selector: string | null = null) => ({
+    ...failure, selector, score: 0, rationale, screenshotPath: null, applied: false,
+  });
+  let candidates: Candidate[];
+  try { candidates = await generate(page, failure.intent); }
+  catch (error) { return [unresolved(`Candidate generation failed: ${String(error)}`)]; }
+  const usable = candidates.filter(candidate => candidate.score >= 3);
+  if (!usable.length) return [unresolved('No unique candidate meets the score-three floor')];
+  const proposed = [];
+  for (const [index, candidate] of usable.entries()) {
+    const shot = `${screenshotDir}/candidate-${failureIndex}-${index}.png`;
+    try { proposed.push({ ...failure, ...await captureCandidate(candidate, shot) }); }
+    catch (error) { proposed.push(unresolved(`Evidence capture failed: ${String(error)}`, candidate.selector)); }
   }
-  await browser.close();
-  fs.writeFileSync('.drift-recovery/candidates.json', JSON.stringify(result, null, 2));
-})();
+  return proposed;
+}
+```
+
+Drive these helpers against the correct application state. An inert HTML snapshot
+can suggest candidates, but does not reproduce hydration, frames, styles, hidden
+states, or shadow roots. Verify the chosen locator on the live test build before applying.
+
+```typescript
+// Within the existing recovery runner, after loading the appropriate page state:
+import { proposeRecovery } from './recovery-candidates';
+
+const proposed = await proposeRecovery(page, failure, '.drift-recovery/screenshots', failureIndex);
+// Persist proposed rows for old/new intent review. Multiple candidates are not an
+// instruction to pick the first. Create the screenshots directory before calling.
 ```
 
 A `count > 1` selector that no region scoped to one match falls through with **no score-3 candidate** — exactly right. It surfaces as score 0 (flag for human), not as a false 3.
@@ -261,32 +348,19 @@ A `count > 1` selector that no region scoped to one match falls through with **n
 
 Replace the specific `(file, line)` — never a content-wide `String.replace`. The reporter's `oldLocator` is a *rendered* string (`locator('.summary > h2')`) that usually does not match the source expression verbatim, `String.replace` hits only the first occurrence, and identical locators on different lines collide.
 
-```typescript
-// scripts/apply-recovery.ts
-import fs from 'fs';
+Apply the reviewed candidate at the identified source node using the TypeScript AST
+or a narrow inspected edit. Before writing, require that the current file and exact
+old expression still match the reviewed source. Preserve the existing receiver
+(`page`, `this.page`, or a page-object variable), chained calls, comments, and unrelated
+locators on the same line. Reject stale or ambiguous source positions and paths outside
+the intended test files. A regex ending at the first `)` cannot safely edit nested
+calls, regex literals, quoted parentheses, or multiple locators on one line.
 
-const candidates = JSON.parse(fs.readFileSync('.drift-recovery/candidates.json', 'utf8'));
-const byFile: Record<string, any[]> = {};
-for (const c of candidates) {
-  if (c.score < 3 || !c.selector) continue;     // never auto-apply below 3
-  (byFile[c.file] ||= []).push(c);
-}
-
-for (const [file, changes] of Object.entries(byFile)) {
-  const lines = fs.readFileSync(file, 'utf8').split('\n');
-  // bottom-up so edits above don't shift the lines below
-  for (const c of changes.sort((a, b) => b.line - a.line)) {
-    const i = c.line - 1;
-    const before = lines[i];
-    // swap the call expression on that line; .first() etc. preserved by anchoring on the call head
-    lines[i] = lines[i].replace(/(?:page\.|this\.page\.)?(?:locator|getBy\w+)\([^)]*\)/, `page.${c.selector}`);
-    c.applied = lines[i] !== before;             // record only what actually changed
-    if (!c.applied) console.warn(`No change at ${file}:${c.line} — locator wrapped or moved; review manually`);
-  }
-  fs.writeFileSync(file, lines.join('\n'));
-}
-fs.writeFileSync('.drift-recovery/candidates.json', JSON.stringify(candidates, null, 2));  // persist applied flags
-```
+A candidate's displayed expression is data, not a command. Never evaluate source text
+from a DOM attribute, log, or candidate file to construct a Locator. Use the live object
+from generation for evidence, and inspect the resulting code diff before rerunning.
+Set `applied: true` only for the exact candidate actually written; retain unresolved
+rows and any evidence failures. Record the old/new source and candidate commit.
 
 Then validate the **full affected suite** (not just the previously-failing tests):
 
@@ -307,17 +381,47 @@ git add tests/ .drift-recovery/candidates.json
 git commit -m "chore(tests): bulk selector recovery after <refactor>"
 git push -u origin HEAD
 gh pr create --title "chore(tests): selector recovery after <refactor>" \
-  --body "$(cat .drift-recovery/pr-body.md)"
+  --body-file .drift-recovery/pr-body.md
 ```
 
-Body generated from `candidates.json`, filtering on `applied` (set by `apply-recovery.ts`):
+Summarize by verified source location, so alternative proposals for one edit do not
+inflate the unresolved count. Every location without an applied candidate remains
+flagged, including high-scoring candidates awaiting review. This compact example
+requires one identified locator occurrence per line; split multiple occurrences into
+separately identified source nodes before applying or reporting them.
+
+```typescript
+// scripts/recovery-summary.ts
+import path from 'path';
+
+export function summarizeRecovery(rows: any[]) {
+  const groups = new Map<string, any[]>();
+  for (const row of rows) {
+    const key = JSON.stringify([path.normalize(row.file), row.line]);
+    const group = groups.get(key) ?? [];
+    group.push(row);
+    groups.set(key, group);
+  }
+  const recovered: any[] = [], flagged: any[] = [];
+  for (const group of groups.values()) {
+    const applied = group.filter(row => row.applied === true);
+    if (applied.length > 1) throw new Error('Multiple applied candidates for one source location');
+    if (applied.length === 1) recovered.push(applied[0]);
+    else flagged.push({ ...group[0], rationale: group.map(row => row.rationale).join('; ') });
+  }
+  return { recovered, flagged };
+}
+```
+
+Generate the body from the recorded edits and unresolved locations. Run the scorer
+first to check candidate row types and source coordinates.
 
 ```typescript
 // scripts/build-pr-body.ts
 import fs from 'fs';
+import { summarizeRecovery } from './recovery-summary';
 const c = JSON.parse(fs.readFileSync('.drift-recovery/candidates.json', 'utf8'));
-const recovered = c.filter((x: any) => x.applied);                 // applied === true
-const flagged   = c.filter((x: any) => !x.applied && x.score < 3);
+const { recovered, flagged } = summarizeRecovery(c);
 
 const perFile = Object.entries(
   recovered.reduce((m: any, r: any) => ((m[r.file] ||= []).push(r), m), {})
@@ -351,10 +455,11 @@ ${flagged.map((f: any) => `- ${f.file}:${f.line} — ${f.oldLocator} (${f.ration
 
 ## Cleanup
 
-```bash
-rm -rf .drift-recovery/
-grep -qxF '.drift-recovery/' .gitignore || echo '.drift-recovery/' >> .gitignore
-```
+Retain the old/new snapshots, result JSON, candidate records, and screenshots until
+review is complete and the evidence is accessible from the PR. Publish artifact
+links in the body; a local screenshot path will not render on GitHub. Remove only
+the temporary files created for this run after their retention period. Do not delete
+the evidence directory immediately after opening the PR.
 
 ---
 
@@ -362,7 +467,7 @@ grep -qxF '.drift-recovery/' .gitignore || echo '.drift-recovery/' >> .gitignore
 
 - **Semantics changed, not just structure.** A "Submit" button that became a multi-step confirmation flow cannot be rescued by a selector swap — the scenario itself must change. Send those to a human.
 - **Deeply encapsulated Page Objects.** If the locator lives three levels into a `CheckoutPage` POM, the line in the reporter is the helper, not the test. Walk the POM source (or read the trace action) to find and apply the real locator.
-- **SSR with hydration mismatch.** Snapshot AFTER hydration (`await page.waitForLoadState('networkidle')`) or the new-DOM snapshot is the pre-hydration tree and candidates miss client-rendered elements.
+- **SSR with hydration mismatch.** Wait for the application's own readiness signal before taking the snapshot. Network idle does not establish hydration, and a static HTML replay cannot establish live application behavior.
 
 ## Cypress adaptation
 

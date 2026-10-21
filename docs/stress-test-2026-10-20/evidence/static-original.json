@@ -1,0 +1,4372 @@
+[
+  {
+    "skill": "accessibility-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 9,
+    "failed": 1,
+    "semantic_deferred": 2,
+    "cases": [
+      {
+        "id": "a11y-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "a11y-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "a11y-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "npx playwright install --with-deps chromium"
+        ]
+      },
+      {
+        "id": "a11y-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "a11y-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "a11y-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "a11y-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "a11y-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "a11y-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "a11y-010",
+        "passed": false,
+        "missing": [
+          "getByRole('listbox' OR 'menu')"
+        ],
+        "anti_hit": [],
+        "semantic": [
+          "click to trigger state change"
+        ]
+      }
+    ]
+  },
+  {
+    "skill": "agentic-browser-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 8,
+    "failed": 2,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "abt-001",
+        "passed": false,
+        "missing": [],
+        "anti_hit": [
+          "page.goto",
+          "await expect(page",
+          "data-testid"
+        ],
+        "semantic": []
+      },
+      {
+        "id": "abt-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-004",
+        "passed": false,
+        "missing": [],
+        "anti_hit": [
+          "pixel coordinates OR x,y coordinate OR mouse_click_xy (as default)"
+        ],
+        "semantic": []
+      },
+      {
+        "id": "abt-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "ai-bug-triage",
+    "mode": "static",
+    "total": 10,
+    "passed": 9,
+    "failed": 1,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "abt-001",
+        "passed": false,
+        "missing": [
+          ":\\d{4,5}(?= OR port regex"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "abt-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "ai-qa-review",
+    "mode": "static",
+    "total": 10,
+    "passed": 9,
+    "failed": 1,
+    "semantic_deferred": 8,
+    "cases": [
+      {
+        "id": "aqr-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "aqr-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "line number or code citation for the smell",
+          "explain why it matters before providing fix"
+        ]
+      },
+      {
+        "id": "aqr-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "each test creates its own preconditions recommended",
+          "example showing before and after"
+        ]
+      },
+      {
+        "id": "aqr-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "aqr-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "one behavior per test recommended"
+        ]
+      },
+      {
+        "id": "aqr-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "aqr-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "run test against real page to verify locator suggested"
+        ]
+      },
+      {
+        "id": "aqr-008",
+        "passed": false,
+        "missing": [
+          "it.each([ OR test.each"
+        ],
+        "anti_hit": [],
+        "semantic": [
+          "explain that conditional logic in tests is itself untested"
+        ]
+      },
+      {
+        "id": "aqr-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "failure message that explains the problem without reading test source shown"
+        ]
+      },
+      {
+        "id": "aqr-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "ai-system-testing",
+    "mode": "static",
+    "total": 12,
+    "passed": 12,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "ast-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ast-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ast-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ast-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ast-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ast-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ast-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ast-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ast-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ast-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ast-011",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ast-012",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "ai-test-generation",
+    "mode": "static",
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "aitg-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "aitg-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "aitg-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "aitg-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "aitg-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "aitg-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "aitg-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "aitg-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "analytics-tracking-testing",
+    "mode": "static",
+    "total": 9,
+    "passed": 5,
+    "failed": 4,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "ana-001",
+        "passed": false,
+        "missing": [],
+        "anti_hit": [
+          "toBeVisible"
+        ],
+        "semantic": []
+      },
+      {
+        "id": "ana-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ana-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ana-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ana-005",
+        "passed": false,
+        "missing": [
+          "find( OR filter( OR some("
+        ],
+        "anti_hit": [
+          "toBeVisible OR getByRole"
+        ],
+        "semantic": []
+      },
+      {
+        "id": "ana-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ana-007",
+        "passed": false,
+        "missing": [
+          "push( OR collected OR beacons"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ana-008",
+        "passed": false,
+        "missing": [
+          "expect( OR assert"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ana-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "api-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "api-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "api-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "api-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "api-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "api-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "api-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "api-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "api-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "api-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "api-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "bug-reproduction",
+    "mode": "static",
+    "total": 10,
+    "passed": 9,
+    "failed": 1,
+    "semantic_deferred": 2,
+    "cases": [
+      {
+        "id": "rep-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rep-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rep-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rep-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rep-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rep-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rep-007",
+        "passed": false,
+        "missing": [],
+        "anti_hit": [
+          "skip.* OR test.skip OR it.skip the failing test"
+        ],
+        "semantic": []
+      },
+      {
+        "id": "rep-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "passes.*because of the fix OR not passing for another reason"
+        ]
+      },
+      {
+        "id": "rep-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "flaky.*same code.*same env OR passes and fails.*same commit"
+        ]
+      },
+      {
+        "id": "rep-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "chaos-engineering",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 1,
+    "cases": [
+      {
+        "id": "ce-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ce-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ce-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ce-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ce-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "Action items WITH owner AND due date"
+        ]
+      },
+      {
+        "id": "ce-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ce-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ce-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ce-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ce-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "ci-cd-integration",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "cicd-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cicd-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cicd-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cicd-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cicd-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cicd-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cicd-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cicd-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cicd-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cicd-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "compliance-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "ct-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "contract-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "ct-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ct-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "coverage-analysis",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 3,
+    "cases": [
+      {
+        "id": "cov-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cov-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cov-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cov-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cov-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "line coverage does not guarantee branch coverage",
+          "execute does not equal tested"
+        ]
+      },
+      {
+        "id": "cov-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cov-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cov-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cov-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cov-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "error handling for impossible states"
+        ]
+      }
+    ]
+  },
+  {
+    "skill": "cross-browser-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 1,
+    "cases": [
+      {
+        "id": "cbt-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cbt-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cbt-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cbt-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cbt-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cbt-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cbt-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cbt-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "test verifies functional outcome not CSS"
+        ]
+      },
+      {
+        "id": "cbt-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cbt-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "cypress-automation",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 1,
+    "cases": [
+      {
+        "id": "cy-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cy-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cy-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cy-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cy-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cy-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cy-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cy-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cy-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "cy-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "chains Cypress commands directly without storing the return value in a variable"
+        ]
+      }
+    ]
+  },
+  {
+    "skill": "database-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "dbt-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "dbt-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "dbt-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "dbt-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "dbt-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "dbt-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "dbt-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "dbt-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "dbt-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "dbt-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "email-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 7,
+    "failed": 3,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "eml-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "eml-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "eml-003",
+        "passed": false,
+        "missing": [
+          ".match( OR .exec( OR matchAll"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "eml-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "eml-005",
+        "passed": false,
+        "missing": [
+          "page.goto(.*resetUrl OR page.goto(.*link OR goto(reset"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "eml-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "eml-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "eml-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "eml-009",
+        "passed": false,
+        "missing": [],
+        "anti_hit": [
+          "Mailosaur",
+          "MailSlurp"
+        ],
+        "semantic": []
+      },
+      {
+        "id": "eml-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "exploratory-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 9,
+    "failed": 1,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "etst-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "etst-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "etst-003",
+        "passed": false,
+        "missing": [
+          "at least 4 of: H, I, C, C, U, P, S"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "etst-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "etst-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "etst-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "etst-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "etst-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "etst-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "etst-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "mobile-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "mt-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "mt-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "mt-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "mt-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "mt-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "mt-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "mt-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "mt-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "mt-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "mt-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "observability-driven-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 9,
+    "failed": 1,
+    "semantic_deferred": 1,
+    "cases": [
+      {
+        "id": "odt-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "odt-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "odt-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "odt-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "odt-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "odt-006",
+        "passed": false,
+        "missing": [
+          "for (const OR forEach"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "odt-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "odt-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "odt-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "trace assertions written against attribute names"
+        ]
+      },
+      {
+        "id": "odt-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "payment-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 8,
+    "failed": 2,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "pay-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pay-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pay-003",
+        "passed": false,
+        "missing": [],
+        "anti_hit": [
+          "fake timers OR sinon OR jest.useFakeTimers"
+        ],
+        "semantic": []
+      },
+      {
+        "id": "pay-004",
+        "passed": false,
+        "missing": [],
+        "anti_hit": [
+          "ngrok required OR expose.*public",
+          "poll the api OR polling for status"
+        ],
+        "semantic": []
+      },
+      {
+        "id": "pay-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pay-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pay-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pay-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pay-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pay-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "performance-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 8,
+    "failed": 2,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "perf-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "perf-002",
+        "passed": false,
+        "missing": [
+          "p\\(95\\)"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "perf-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "perf-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "perf-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "perf-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "perf-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "perf-008",
+        "passed": false,
+        "missing": [
+          "per-endpoint Trend metrics"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "perf-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "perf-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "playwright-automation",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "pw-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pw-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pw-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pw-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pw-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pw-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pw-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pw-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pw-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "pw-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "qa-dashboard",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "qad-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qad-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qad-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qad-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qad-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qad-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qad-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qad-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qad-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qad-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "qa-do",
+    "mode": "static",
+    "total": 16,
+    "passed": 16,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "qado-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-011",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-012",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-013",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-014",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-015",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qado-016",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "qa-metrics",
+    "mode": "static",
+    "total": 11,
+    "passed": 11,
+    "failed": 0,
+    "semantic_deferred": 11,
+    "cases": [
+      {
+        "id": "qam-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qam-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "Manual cost.*manual time per cycle \u00d7 cycles per year.*hourly rate",
+          "Automation cost.*write time + annual maintenance",
+          "Year 1 vs Year 2"
+        ]
+      },
+      {
+        "id": "qam-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "pair coverage with defect escape rate"
+        ]
+      },
+      {
+        "id": "qam-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "investigate the top 3 weekly",
+          "tests flaky for 30+ days should be deleted"
+        ]
+      },
+      {
+        "id": "qam-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "classify.*by layer.*unit.*integration.*E2E.*review",
+          "identify if escapes cluster in specific areas"
+        ]
+      },
+      {
+        "id": "qam-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qam-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qam-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qam-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qam-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "skipped tests are invisible coverage gaps",
+          "add CI step that fails if skipped count exceeds 5%",
+          "Disabled and Skipped Test Count metric"
+        ]
+      },
+      {
+        "id": "qam-011",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "qa-project-bootstrap",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 3,
+    "cases": [
+      {
+        "id": "qapb-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qapb-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qapb-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "where to find help section"
+        ]
+      },
+      {
+        "id": "qapb-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qapb-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qapb-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "supportive review, not just LGTM"
+        ]
+      },
+      {
+        "id": "qapb-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "forces documentation of what was learned"
+        ]
+      },
+      {
+        "id": "qapb-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qapb-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qapb-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "qa-project-context",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 8,
+    "cases": [
+      {
+        "id": "qac-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "Product section with name and URLs",
+          "Risk Areas table with at least 3 entries"
+        ]
+      },
+      {
+        "id": "qac-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "Test Stack section populated with Playwright and Jest"
+        ]
+      },
+      {
+        "id": "qac-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "ask only about the unfilled sections"
+        ]
+      },
+      {
+        "id": "qac-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "Which parts cause the most production incidents"
+        ]
+      },
+      {
+        "id": "qac-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qac-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qac-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qac-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "80% line coverage measured by Istanbul"
+        ]
+      },
+      {
+        "id": "qac-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qac-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "Risk Areas table has at least 3 entries",
+          "at least 5 specific, testable key user flows"
+        ]
+      }
+    ]
+  },
+  {
+    "skill": "qa-report-humanizer",
+    "mode": "static",
+    "total": 12,
+    "passed": 4,
+    "failed": 8,
+    "semantic_deferred": 13,
+    "cases": [
+      {
+        "id": "qah-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "names where the failures are (checkout OR test suite OR which suite)",
+          "distinguishes new failures from (known OR flaky OR seen before) ones",
+          "pass rate is contextualized or demoted (vanity OR unless asked OR went from)"
+        ]
+      },
+      {
+        "id": "qah-002",
+        "passed": false,
+        "missing": [
+          "states who is affected OR the impact scope (of users OR users have OR affected)",
+          "states the next action (fix before release OR needs a fix OR deprioritize)"
+        ],
+        "anti_hit": [],
+        "semantic": [
+          "names the specific broken behavior (login breaks OR plus-sign OR plus sign)"
+        ]
+      },
+      {
+        "id": "qah-003",
+        "passed": false,
+        "missing": [
+          "release readiness statement (yes OR no OR conditional)",
+          "metrics with context (4 bugs open OR P2 or lower OR all P2)"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qah-004",
+        "passed": false,
+        "missing": [
+          "names the missing scenario (happy path OR only checks OR what happens when)"
+        ],
+        "anti_hit": [],
+        "semantic": [
+          "names the untested edge case (429 OR returns a 429 OR API returns)",
+          "concrete example of what to test or change"
+        ]
+      },
+      {
+        "id": "qah-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "list of what passed once (login OR registration OR password reset OR SSO)",
+          "one clear statement instead of four rewording"
+        ]
+      },
+      {
+        "id": "qah-006",
+        "passed": false,
+        "missing": [
+          "names tests not completed (didn't get to OR mobile browser OR skipped)",
+          "gives the reason (ran out of time OR after the checkout OR because)",
+          "carry-forward plan (next sprint OR Carrying OR next phase)"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qah-007",
+        "passed": false,
+        "missing": [
+          "names what changed (fixing the OR flaky Playwright OR flaky tests)"
+        ],
+        "anti_hit": [],
+        "semantic": [
+          "specifics of which tests improved",
+          "names the real bugs found (Real bugs found OR new export OR bugs found)",
+          "context that explains the improvement"
+        ]
+      },
+      {
+        "id": "qah-008",
+        "passed": false,
+        "missing": [
+          "names a specific area (payment flow OR checkout OR admin panel)",
+          "names the actual risk (no E2E coverage OR 3D Secure OR no coverage)",
+          "historical context OR incident count (production incidents OR 6 months OR two production)",
+          "prioritization advice (prioritize this over OR before OR after)"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qah-009",
+        "passed": false,
+        "missing": [
+          "names the broken behavior (doesn't revoke OR API tokens OR after deletion)",
+          "states what still works (can still call OR still call the API OR can still)",
+          "scope of who's affected OR impact scope (impact scope OR who's affected OR users)",
+          "gives actual evidence (200 OK OR 401 OR Returns OR Repro)"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qah-010",
+        "passed": false,
+        "missing": [
+          "names a specific improvement (checkout flakiness OR fixed the checkout OR flakiness)",
+          "names actual work done (added E2E coverage OR new export OR E2E coverage)"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qah-011",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "names the specific broken behavior in checkout",
+          "states the impact is unmeasured instead of guessing a figure"
+        ]
+      },
+      {
+        "id": "qah-012",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "qa-start",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 2,
+    "cases": [
+      {
+        "id": "qa-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qa-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qa-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qa-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qa-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qa-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qa-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "features mapped to test cases"
+        ]
+      },
+      {
+        "id": "qa-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "skip Steps 1 and 2"
+        ]
+      },
+      {
+        "id": "qa-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qa-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "quality-postmortem",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "qp-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qp-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qp-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qp-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qp-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qp-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qp-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qp-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qp-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "qp-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "release-readiness",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "rr-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rr-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rr-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rr-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rr-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rr-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rr-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rr-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rr-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rr-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "risk-based-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "rbt-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rbt-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rbt-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rbt-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rbt-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rbt-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rbt-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rbt-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rbt-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "rbt-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "security-testing",
+    "mode": "static",
+    "total": 13,
+    "passed": 11,
+    "failed": 2,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "sec-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-003",
+        "passed": false,
+        "missing": [
+          "SameSite=(Strict OR SameSite"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-007",
+        "passed": false,
+        "missing": [
+          "for (const OR forEach"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-011",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-012",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sec-013",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "selector-drift-recovery",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 5,
+    "cases": [
+      {
+        "id": "sdr-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sdr-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sdr-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sdr-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sdr-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "clear marking of flagged tests"
+        ]
+      },
+      {
+        "id": "sdr-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sdr-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "not ratcheting up stability after recovery",
+          "recovered tests should have higher score",
+          "update or revert low-scoring candidates"
+        ]
+      },
+      {
+        "id": "sdr-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "not regenerating selectors for missing elements"
+        ]
+      },
+      {
+        "id": "sdr-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sdr-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "service-virtualization",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 3,
+    "cases": [
+      {
+        "id": "sv-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sv-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sv-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sv-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sv-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sv-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "do not own the API"
+        ]
+      },
+      {
+        "id": "sv-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sv-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "sv-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "decouples the test from the SDK version",
+          "works with any HTTP client"
+        ]
+      },
+      {
+        "id": "sv-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "shift-left-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 12,
+    "cases": [
+      {
+        "id": "slt-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "slt-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "slt-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "edge cases AND error states"
+        ]
+      },
+      {
+        "id": "slt-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "test that reproduces the bug"
+        ]
+      },
+      {
+        "id": "slt-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "TDD for bug fix with known reproduction",
+          "TDD for API endpoints with clear contract"
+        ]
+      },
+      {
+        "id": "slt-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "unit tests AND integration tests AND e2e tests",
+          "happy path AND edge cases",
+          "agreed test targets for developer"
+        ]
+      },
+      {
+        "id": "slt-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "next step is upstream involvement",
+          "test-after mentioned as current state",
+          "QA as checkpoint not collaborator"
+        ]
+      },
+      {
+        "id": "slt-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "slt-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "all tests pass after refactor"
+        ]
+      },
+      {
+        "id": "slt-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "shift-left prevention AND shift-right containment"
+        ]
+      }
+    ]
+  },
+  {
+    "skill": "synthetic-monitoring",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 1,
+    "cases": [
+      {
+        "id": "synth-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "synth-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "synth-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "synth-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "synth-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "synth-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "synth-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "synth-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "synth-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "staging threshold different from production"
+        ]
+      },
+      {
+        "id": "synth-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "test-case-management",
+    "mode": "static",
+    "total": 10,
+    "passed": 6,
+    "failed": 4,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "tcm-001",
+        "passed": false,
+        "missing": [],
+        "anti_hit": [
+          "verify it works"
+        ],
+        "semantic": []
+      },
+      {
+        "id": "tcm-002",
+        "passed": false,
+        "missing": [
+          "already.used OR already redeemed"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tcm-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tcm-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tcm-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tcm-006",
+        "passed": false,
+        "missing": [
+          "Token (Qase auth header)",
+          "cases (array)"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tcm-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tcm-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tcm-009",
+        "passed": false,
+        "missing": [],
+        "anti_hit": [
+          "automate everything"
+        ],
+        "semantic": []
+      },
+      {
+        "id": "tcm-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "test-data-management",
+    "mode": "static",
+    "total": 10,
+    "passed": 9,
+    "failed": 1,
+    "semantic_deferred": 2,
+    "cases": [
+      {
+        "id": "tdm-001",
+        "passed": false,
+        "missing": [],
+        "anti_hit": [
+          "Date.now()"
+        ],
+        "semantic": []
+      },
+      {
+        "id": "tdm-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tdm-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tdm-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tdm-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tdm-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tdm-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tdm-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tdm-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "Each Test Owns Its Data OR create exactly the data it needs",
+          "Test A modifies shared data"
+        ]
+      },
+      {
+        "id": "tdm-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "test-environments",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "te-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "te-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "te-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "te-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "te-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "te-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "te-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "te-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "te-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "te-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "test-migration",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "tm-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tm-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tm-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tm-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tm-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tm-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tm-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tm-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tm-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tm-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "test-planning",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 2,
+    "cases": [
+      {
+        "id": "tp-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tp-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tp-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tp-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tp-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tp-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "exploratory goes to best feature knowledge"
+        ]
+      },
+      {
+        "id": "tp-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tp-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tp-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tp-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "actual vs estimated by test type"
+        ]
+      }
+    ]
+  },
+  {
+    "skill": "test-reliability",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 16,
+    "cases": [
+      {
+        "id": "tr-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tr-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "tries combinations from most specific to least",
+          "tolerance for one signal missing OR resilience without fallback chain complexity"
+        ]
+      },
+      {
+        "id": "tr-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tr-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "verify \u2192 heal \u2192 use \u2192 cleanup pattern",
+          "fixture cleanup guaranteed even on failure"
+        ]
+      },
+      {
+        "id": "tr-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tr-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "projects with separate stable and quarantine"
+        ]
+      },
+      {
+        "id": "tr-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "DETECT \u2192 TAG \u2192 ISOLATE \u2192 DIAGNOSE \u2192 FIX \u2192 VERIFY \u2192 RELEASE",
+          "every quarantine entry has a ticket link"
+        ]
+      },
+      {
+        "id": "tr-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "2xx backend healthy \u2192 real UI failure",
+          "5xx or timeout \u2192 backend unhealthy",
+          "structured diagnosis with success boolean"
+        ]
+      },
+      {
+        "id": "tr-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "same tag and role \u2192 intent preserved",
+          "different tag or role \u2192 intent NOT preserved",
+          "button \u2192 link is a rollback case"
+        ]
+      },
+      {
+        "id": "tr-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "test file and test name",
+          "original locator and candidate replacements",
+          "confidence score and approval path"
+        ]
+      }
+    ]
+  },
+  {
+    "skill": "test-strategy",
+    "mode": "static",
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "semantic_deferred": 15,
+    "cases": [
+      {
+        "id": "ts-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "PR gate AND merge gate AND deploy gate are all defined",
+          "phased rollout with Foundation, Coverage Expansion, and Quality Gates phases"
+        ]
+      },
+      {
+        "id": "ts-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "separate genuinely flaky tests from ones exposing real bugs before rebalancing",
+          "concrete target counts for the rebalanced pyramid"
+        ]
+      },
+      {
+        "id": "ts-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ts-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "risk assessment focused on the 3-5 highest-impact features",
+          "Phase 1 under 4 weeks",
+          "realistic baseline metrics for a small team"
+        ]
+      },
+      {
+        "id": "ts-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ts-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "testing action mapped to each risk level",
+          "automation and monitoring recommendations per risk level"
+        ]
+      },
+      {
+        "id": "ts-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "PR gate.*unit tests pass.*integration tests pass.*coverage does not decrease",
+          "Merge gate.*E2E smoke.*no merge conflicts",
+          "Deploy gate.*full E2E.*(performance|SLA).*security scan.*rollback plan"
+        ]
+      },
+      {
+        "id": "ts-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ts-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "coverage targets scaled to the larger team capacity",
+          "integration testing gaps in the monolith architecture",
+          "integration test growth plan for the missing middle layer"
+        ]
+      },
+      {
+        "id": "ts-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "test-suite-curation",
+    "mode": "static",
+    "total": 9,
+    "passed": 6,
+    "failed": 3,
+    "semantic_deferred": 3,
+    "cases": [
+      {
+        "id": "tsc-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tsc-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "coverage equality does not prove (equivalent OR same assertions OR redundant)",
+          "covers same lines but (asserts OR checks) different"
+        ]
+      },
+      {
+        "id": "tsc-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tsc-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tsc-005",
+        "passed": false,
+        "missing": [
+          "low.?value.*(never failed|trivial|getter|no assertion)"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tsc-006",
+        "passed": false,
+        "missing": [
+          "defect.?detection history OR tests that (caught|found) (real )?bugs OR fault-finding"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tsc-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tsc-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tsc-009",
+        "passed": false,
+        "missing": [
+          "never failed (because|may mean) (low (risk|change)|stable code) not (worthless|redundant)"
+        ],
+        "anti_hit": [],
+        "semantic": [
+          "different (assertion|input|edge case|oracle) could still be unique"
+        ]
+      }
+    ]
+  },
+  {
+    "skill": "testing-in-production",
+    "mode": "static",
+    "total": 10,
+    "passed": 8,
+    "failed": 2,
+    "semantic_deferred": 1,
+    "cases": [
+      {
+        "id": "tip-001",
+        "passed": false,
+        "missing": [
+          "test both paths OR dual path testing"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tip-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tip-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tip-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tip-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tip-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tip-007",
+        "passed": false,
+        "missing": [
+          "duplicate requests"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tip-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tip-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "tip-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": [
+          "identify flags that affect same flow"
+        ]
+      }
+    ]
+  },
+  {
+    "skill": "unit-testing",
+    "mode": "static",
+    "total": 12,
+    "passed": 11,
+    "failed": 1,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "ut-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ut-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ut-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ut-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ut-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ut-006",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ut-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ut-011",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ut-008",
+        "passed": false,
+        "missing": [
+          "\"), (\" OR list of tuples OR [\n"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ut-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ut-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "ut-012",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  },
+  {
+    "skill": "visual-testing",
+    "mode": "static",
+    "total": 10,
+    "passed": 9,
+    "failed": 1,
+    "semantic_deferred": 0,
+    "cases": [
+      {
+        "id": "vt-001",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "vt-002",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "vt-003",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "vt-004",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "vt-005",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "vt-006",
+        "passed": false,
+        "missing": [
+          "route.fulfill({ json: OR route.fulfill({ status: 500 })"
+        ],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "vt-007",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "vt-008",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "vt-009",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      },
+      {
+        "id": "vt-010",
+        "passed": true,
+        "missing": [],
+        "anti_hit": [],
+        "semantic": []
+      }
+    ]
+  }
+]

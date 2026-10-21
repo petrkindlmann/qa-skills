@@ -4,7 +4,7 @@ description: >-
   Test for regulatory compliance: GDPR/CMP consent verification, Google Consent
   Mode v2, Global Privacy Control (GPC), CCPA/US state opt-out, EU AI Act Article 50
   transparency, Better Ads Standards, and cookie-inventory auditing. Covers automated
-  consent-flow testing, third-party script blocking before consent, and cookie drift
+  consent-flow testing, policy-based script blocking before consent, and cookie drift
   detection.
   Use when: "GDPR test," "compliance," "CMP test," "cookie consent," "consent mode,"
   "CCPA," "GPC," "AI Act," "Better Ads," "privacy banner."
@@ -15,12 +15,12 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: process
 ---
 
 <objective>
-Compliance is binary: a single analytics cookie that fires before consent, or a "Reject all" rendered as a tiny grey link, is a violation no matter how polished the rest of the flow looks. Manual quarterly audits miss the regression a developer shipped on a Tuesday. This skill automates the technical checks — consent state, script blocking, cookie attributes, GPC, Consent Mode v2, AI Act disclosure — so configuration drift fails CI instead of a regulator's inbox.
+A banner can display a rejected state while tracking continues underneath it. This skill tests consent state, policy-based request blocking, storage, GPC, Consent Mode signals, and disclosure behavior against the product's approved requirements. It delivers reproducible technical evidence; passing those checks does not establish legal compliance or CMP certification.
 </objective>
 
 ## Discovery Questions
@@ -30,16 +30,18 @@ First, check for `.agents/qa-project-context.md` in the project root — it carr
 ### Applicable regulations
 - **Which privacy and platform regulations apply?** This sets the entire test matrix.
   - **EU:** GDPR, ePrivacy Directive (cookies), Digital Services Act (DSA, applied 17 Feb 2024), EU AI Act (prohibitions + AI literacy live since 2 Feb 2025; GPAI obligations + penalties since 2 Aug 2025; Article 50 transparency from 2 Aug 2026 — high-risk obligations postponed, see below).
-  - **US:** CCPA/CPRA plus comprehensive state laws now active in ~20 states (Texas TDPSA, Indiana CDPA eff. 1 Jan 2026, Delaware DPDPA, Nebraska NDPA, Minnesota CDPA, Rhode Island DTPPA, …). Most require honoring Global Privacy Control (`Sec-GPC: 1`).
+  - **US:** CCPA/CPRA and the state laws applicable to the audience. Record the specific opt-out and universal-signal requirements in the regional policy matrix.
   - **UK:** UK GDPR/DPA, PECR (cookies), Online Safety Act 2023, Data Use and Access Act (DUAA).
   - **Other:** LGPD (Brazil), PIPEDA (Canada), POPIA (South Africa).
 - **What is the legal basis for processing?** Consent (opt-in), legitimate interest, or contractual necessity — this decides whether explicit consent must precede processing.
 - **Is there a DPO or legal team?** They define the legal requirements; this skill only validates the technical implementation against them.
 
 ### Consent management
-- **What CMP is in use?** OneTrust, Cookiebot, Didomi, Usercentrics, Iubenda, Sourcepoint, or Axeptio — or custom? The CMP sets the consent storage format, API, and integration. **If you serve ads in the EEA or UK, you must use a Google-certified CMP and Consent Mode v2** — uncertified CMPs block Google ad serving. **As of 28 Feb 2026, new TC strings must be TCF v2.3** or Google demand treats traffic as unconsented and drops to Limited Ads.
+- **What CMP and advertising products are in use?** The CMP sets the storage format, API, and integration. Record the current certification and TCF requirements for the specific products and regions; do not infer them from a CMP API response or a numeric policy-version comparison.
 - **What consent categories exist?** Typically Strictly Necessary (always on), Analytics/Performance, Functional/Preferences, Marketing/Targeting.
 - **How is consent signaled to third-party scripts?** IAB TCF v2 (`__tcfapi`), a custom data layer, or direct CMP API?
+- **Is Google Consent Mode basic or advanced, and what defaults does the regional policy require?** Basic blocks tags until consent; advanced can send permitted measurements without cookies while storage consent is denied. This changes the pre-consent network assertion. See [Google's implementation guide](https://developers.google.com/tag-platform/security/guides/consent).
+- **What proves each consent transition has completed?** Identify an application/CMP completion signal that includes scheduled tag work. A visible banner or `networkidle` cannot establish that no delayed tracking will occur.
 
 ### Advertising and accessibility
 - **What ad networks and formats?** Google Ads, Meta, programmatic; display, video, interstitial. The Coalition for Better Ads defines which formats trigger Chrome ad-filtering.
@@ -47,11 +49,11 @@ First, check for `.agents/qa-project-context.md` in the project root — it carr
 
 ## Core Principles
 
-### 1. Compliance is binary
-There is no "mostly compliant." A cookie that fires before consent is a violation. A banner you cannot dismiss without accepting is a violation. Test for exact compliance, not "good enough."
+### 1. Make the approved policy the test oracle
+Record the expected storage, requests, signals, and UI behavior for each region and consent state. Fail deviations from that matrix. A test proves an observed technical result; legal applicability, permitted processing, and visual dark-pattern judgments require their own review.
 
 ### 2. Automate the technical checks, schedule the legal audits
-Automate: cookies before consent, scripts loading without consent, banner functionality, cookie attributes, consent persistence, GPC, Consent Mode signals. A human still audits privacy-policy *language* and cross-border transfer documentation. Don't pretend a test settles a legal-language question.
+Automate: policy-prohibited cookies and requests, banner functionality, cookie attributes, consent persistence, GPC, and Consent Mode signals. A human still audits privacy-policy language, banner prominence, and cross-border transfer documentation. Don't pretend a minimum button-size assertion settles those questions.
 
 ### 3. Test the unhappy consent states
 The compliance boundary lives in the "no interaction," "rejected," and "withdrawn" states — that is where violations hide. The "all accepted" state is the least interesting one to test.
@@ -66,13 +68,13 @@ Verify at multiple layers — CMP config, network requests, cookie state, client
 
 Consent-flow compliance breaks into distinct, independently failing checks. Full runnable code for each is in `references/gdpr-cmp-tests.md`.
 
-- **Consent banner and dark patterns** — banner appears on first visit; accept and reject have equal prominence (reject is not a tiny link); a privacy-policy link is present.
-- **Cookie state before/after consent** — the critical test: no non-essential cookies before consent; analytics cookies only after accepting; nothing non-essential after rejecting. Maintain `isStrictlyNecessary` / `isAnalyticsCookie` classifiers against your inventory.
-- **Consent persistence and withdrawal** — consent survives navigation; the user can withdraw via privacy settings, which must then clear the relevant cookies.
-- **Third-party script blocking** — tracking scripts (`google-analytics.com`, `googletagmanager.com`, `facebook.net`, `analytics.tiktok.com`, `bat.bing.com`, …) must not load before consent and should load after acceptance. This is the most critical check — monitor with `page.on('request')`.
-- **Global Privacy Control (`Sec-GPC: 1`)** — a required honored signal under CCPA/CPRA and most active US state laws. With the header set, assert `navigator.globalPrivacyControl === true` (the real browser signal) and that marketing cookies are absent. **Do not** assert an invented `window.__cmp.gpcStatus` global — it does not exist; TCF v1's `__cmp` is legacy and TCF v2 uses `__tcfapi`.
-- **TCF v2 consent state** — every TCF-certified CMP exposes `window.__tcfapi('getTCData', 2, cb)`. Read purpose/vendor consent through it directly instead of guessing at CMP-private globals; the same call exposes `tcfPolicyVersion`, which doubles as a TCF-v2.3 freshness guard.
-- **Google Consent Mode v2** — required since March 2024 for Google ads in the EEA/UK. Default state must be `denied` for `ad_storage` / `analytics_storage` / `ad_user_data` / `ad_personalization`; an `update` signal must fire `granted` after acceptance. The interception assumes the gtag `arguments`-array shape — note the object-form fallback in the reference.
+- **Consent banner and controls** — verify first-visit visibility, usable accept/reject controls, and the policy link. Minimum dimensions are a mechanical threshold; assess equal prominence and dark patterns separately.
+- **Cookie state before/after consent** — enforce the approved optional-storage policy at completed initialization, acceptance, and rejection. Maintain exact necessary-cookie names and the full inventory; a prefix must not exempt similarly named tracking cookies.
+- **Consent persistence and withdrawal** — verify the actual persisted state after navigation and the new update after withdrawal, then check storage and network effects. Use fresh contexts with `storageState: { cookies: [], origins: [] }` for first visits.
+- **Third-party request blocking** — attach `page.on('request')` before navigation; match configured hostnames and endpoints rather than URL substrings. Basic mode can require zero tracking requests; advanced mode needs assertions for the permitted denied-state traffic. Include first-party proxies and a real completion milestone.
+- **Global Privacy Control** — verify the HTTP header path and the DOM preference path separately. `extraHTTPHeaders: { 'Sec-GPC': '1' }` does not create `navigator.globalPrivacyControl`. Explicitly label DOM emulation, check the recorded opt-out and policy-prohibited behavior, and use a native GPC-enabled browser for browser-support verification. See the [GPC specification](https://w3c.github.io/gpc/).
+- **TCF v2 consent state** — use `__tcfapi('addEventListener', 2, callback)`, wait for the relevant completed event, bound failures, and remove the listener. `getTCData` is deprecated. Assert configured purpose/vendor consents; a policy number does not prove TC-string validity, TCF v2.3 freshness, or certification. See the [IAB CMP API](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md).
+- **Google Consent Mode v2** — validate all four signals against the regional policy and preserve command ordering. Install the observer in every test and checkpoint before each action. Never seed denied defaults in a test of the app's own defaults. The shared adapter observes gtag argument arrays; object events and GTM consent-template APIs need their documented adapters. See `../analytics-tracking-testing/references/consent-mode.md` for the shared helper and basic/advanced distinction.
 
 ## EU AI Act Compliance
 
@@ -138,7 +140,10 @@ Run compliance tests weekly (not just on PR) to catch configuration drift, and r
 Running compliance tests only in the "all accepted" state. The compliance boundary is the "no interaction" and "rejected" states — that is where violations hide. Test every state: no interaction, accepted, rejected, partially accepted, withdrawn.
 
 ### Asserting an invented CMP global
-Checking `window.__cmp.gpcStatus` or similar fabricated globals to "prove" a GPC opt-out. That global does not exist. Assert `navigator.globalPrivacyControl === true` and verify marketing cookies are absent; read real consent state via `__tcfapi`.
+Checking `window.__cmp.gpcStatus` or similar fabricated globals to "prove" a GPC opt-out. Use the CMP's documented state or settings UI and verify the required network/storage outcome. The GPC HTTP header and DOM property are separate inputs; TCF does not define a GPC-status field.
+
+### Tests that supply the missing consent configuration
+Pushing a denied default from `addInitScript` while testing application defaults can hide the defect. Observe the app's own commands in every test, retain late updates, and fail observation gaps or replaced data layers instead of repairing them. Pair each gate with a known-good fixture and a targeted broken variant.
 
 ### Attribute-only video checks
 Treating `getAttribute('muted') === null` as "has sound." The content attribute is frequently absent on programmatically-muted videos. Read `el.muted` / `el.autoplay` live properties instead.
@@ -163,17 +168,18 @@ Building the suite once and freezing it. Regulations evolve (ePrivacy Regulation
 Smallest check first — confirm the compliance suite runs and gates before trusting it:
 
 ```bash
-npx playwright test --project=chromium --grep @compliance
+npx playwright test tests/compliance --project=chromium
 ```
 
-A correct run shows the unhappy-path tests as the gate: "no non-essential cookies before consent" and "no tracking scripts load before consent" must **pass on a fresh context** (`storageState: undefined`). To prove the suite actually catches violations, temporarily point it at a page that loads GA before consent — the script-blocking test must go red. A suite that stays green against a known-bad page is asserting nothing. Then confirm the GPC test sees `navigator.globalPrivacyControl === true` with the `Sec-GPC: 1` header set, and that the Consent Mode default-state test reports `denied` for all four signals.
+Place the adapted recipes under `tests/compliance` and configure their real readiness signal and policy inventory. First prove they pass on a known-good fixture in an explicitly empty context. Then point them at controlled broken variants: a delayed prohibited request, a missing default, an incorrect or absent post-action update, ignored GPC, and a CMP callback that never completes. Each corresponding test must fail. Verify the HTTP GPC header independently of an explicitly emulated or natively enabled DOM preference. For advanced mode in the all-denied policy, check all four defaults before measurement; for basic mode, validate defaults and updates when tags initialize after acceptance. Retain the scenarios and observation interval with the result.
 
 ## Done When
 
 - Applicable regulations identified for the product and geographic audience (GDPR, ePrivacy, DSA, EU AI Act, the relevant US state-law subset, UK OSA/DUAA) and documented in `.agents/qa-project-context.md`.
 - Consent flow tested for every entry point: first visit, accept, reject, withdrawal, and cross-navigation persistence — each as a distinct passing test.
-- Global Privacy Control honored: with `Sec-GPC: 1`, `navigator.globalPrivacyControl === true` and marketing cookies absent.
-- Google Consent Mode v2 verified: default `denied` for `ad_storage` / `analytics_storage` / `ad_user_data` / `ad_personalization`; `update` fires `granted` after accept (only required for sites serving Google ads in EEA/UK).
+- Global Privacy Control cases pass for the required HTTP and DOM inputs; recorded opt-out and policy-prohibited storage/requests are verified. DOM emulation is identified as emulation.
+- Google Consent Mode's four signals and command ordering match the approved region/mode matrix; fresh action checkpoints prove accept, reject, partial consent, and withdrawal updates. The observer supplies no application consent defaults.
+- Controlled good and broken fixtures prove each technical gate distinguishes the intended behavior; bounded timeouts and completion markers prevent silent empty observations.
 - EU AI Act applicability assessed: prohibited-practice gate, GPAI documentation review (if applicable), and Article 50 transparency disclosure tested for any AI-generated content.
 - Cookie audit complete: all cookies categorized in the typed inventory; drift-detection test passes with zero unknown cookies.
 - No undeclared tracking domains or cookies fire that the privacy policy does not disclose (the automatable half — legal-language review is a separate manual/legal sign-off, not a test).
@@ -189,7 +195,7 @@ A correct run shows the unhappy-path tests as the gate: "no non-essential cookie
 
 ## Reference Files (in `references/`)
 
-- **gdpr-cmp-tests.md** — Playwright code for banners/dark patterns, cookie state before/after consent, persistence and withdrawal, third-party script blocking, Global Privacy Control (`navigator.globalPrivacyControl`), TCF v2 `__tcfapi` consent read + v2.3 version guard, and Google Consent Mode v2.
+- **gdpr-cmp-tests.md** — Playwright code for banner controls, cookie state, persistence/withdrawal, policy-based request blocking, independent GPC inputs, bounded TCF event reads, and Google Consent Mode transitions.
 - **eu-ai-act-tests.md** — Article 50 transparency-disclosure test and the Article 5 prohibited-practice (biometric library) gate, with the Omnibus timeline note.
 - **better-ads-tests.md** — Coalition for Better Ads checks: live-property auto-playing-unmuted-video detection and mobile ad-density measurement.
 - **cookie-compliance.md** — Typed cookie inventory, attribute validation (with SameSite normalization), and inventory drift detection.

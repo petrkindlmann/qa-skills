@@ -15,7 +15,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "1.1"
   category: specialized
 ---
 
@@ -179,33 +179,37 @@ value from `STRIPE_SECRET_KEY` (`sk_test_…`) — do not conflate them.
 rejected with **400**; never hand-roll a `=== signature` string comparison.
 
 ```ts
-app.post('/webhooks', express.raw({ type: 'application/json' }), (req, res) => {
+app.post('/webhooks', express.raw({ type: 'application/json' }), async (req, res, next) => {
   const sig = req.headers['stripe-signature'] as string;
+  let event: Stripe.Event;
   try {
-    const event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
-    return handleEvent(event, res);
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
   } catch (err) {
     return res.status(400).send(`Webhook Error: ${(err as Error).message}`); // SignatureVerificationError
   }
+  try { return await handleEvent(event, res); }
+  catch (err) { return next(err); } // processing failures remain retryable 5xx
 });
 app.use(express.json()); // everything else, after the webhook route
 ```
 
 **Idempotency.** Stripe retries delivery, so the same `event.id` arrives twice. Request-side
 idempotency keys (for outbound API calls) do not dedup inbound webhooks. Store `event.id`
-with a **UNIQUE** constraint and short-circuit on conflict; an in-memory set is lost on
-restart and useless across instances. The handler returns **200** for a duplicate so Stripe
-stops retrying, and fulfillment runs exactly **once**.
+with a **UNIQUE** constraint, in the **same database transaction** as fulfillment.
+Return **200** only after commit. If processing fails after inserting the marker,
+roll back both changes and return a retryable **5xx**. Otherwise the retry sees the
+marker and silently discards an unpaid/unfulfilled order. Use the transaction-bound
+handler in `references/webhooks-and-clocks.md`; an in-memory set cannot survive restart.
 
-```ts
-const inserted = await db.query(
-  `INSERT INTO processed_events (id) VALUES ($1) ON CONFLICT (id) DO NOTHING RETURNING id`, [event.id]);
-if (inserted.rowCount === 0) return res.status(200).send('duplicate ignored');
-```
+For external side effects, commit an outbox job and make its consumer idempotent.
+Also enforce a business-operation key such as order/payment ID: two distinct event
+IDs can describe the same operation. Do not claim exactly-once delivery.
 
 The signature test (valid accepted, forged → 400) and the "deliver the same event twice,
 assert fulfilled once" idempotency test are in `references/webhooks-and-clocks.md`
-(sections 2–3).
+(sections 2–3). Add a failure after dedup insertion, retry after restart, concurrent
+duplicates, distinct event IDs for one payment, and out-of-order delivery. A sequential
+duplicate test alone does not exercise the crash window.
 
 ## Failed Payments: Dunning and Refunds
 

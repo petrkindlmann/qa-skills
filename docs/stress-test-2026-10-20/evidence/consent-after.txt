@@ -1,0 +1,48 @@
+(node:14067) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ consent observer stays passive and preserves a custom push chain (318.041867ms)
+✔ application default gate rejects missing default (159.133778ms)
+✔ application default gate rejects granted default (161.842658ms)
+✔ application default gate rejects two-signal default (151.194028ms)
+✔ application default gate rejects object event masquerading as consent (151.948043ms)
+✔ application default gate rejects measurement before default (147.231214ms)
+✔ application default gate rejects temporary grant before interaction (158.592492ms)
+✔ application default gate rejects overwritten layer descriptor (163.163971ms)
+✔ application default gate rejects overwritten push descriptor (173.183631ms)
+✔ late acceptance works as an independent documented test with its own observer (2084.077219ms)
+✔ a fresh rejection produces a new denied update (357.142897ms)
+✔ partial consent is observed from the actual button interaction (344.357732ms)
+✔ a layer replacement is observed but never repaired or silently approved (455.516225ms)
+✔ an earlier update cannot satisfy a new action with no update (770.817634ms)
+✔ documented withdrawal survives navigation and verifies storage and update (703.9699ms)
+✔ latest denied state after an apparent acceptance is rejected (400.912486ms)
+✔ basic mode accepts clean and substring-decoy traffic but catches deferred tracking (1457.544582ms)
+✔ basic acceptance requires newly emitted configured traffic (648.918073ms)
+✔ basic-mode defaults initialized only on acceptance are valid and remain required (1259.895991ms)
+✔ advanced-mode recipes parse real GET requests before and after acceptance (615.471117ms)
+✔ advanced-mode recipes parse real POST batch requests before and after acceptance (614.799732ms)
+✔ advanced pre-consent gate rejects missing app default (169.674259ms)
+✔ advanced pre-consent gate rejects empty collector (191.427073ms)
+✔ advanced pre-consent gate rejects incorrect storage transport (180.385995ms)
+✔ advanced pre-consent gate rejects missing encoded diagnostic (185.011083ms)
+✔ a pre-consent ping cannot satisfy the post-acceptance beacon expectation (348.361658ms)
+✔ HTTP GPC recipe validates transport and opt-out without assuming a DOM property (538.22114ms)
+✔ explicit DOM GPC simulation exercises the client opt-out path (210.676326ms)
+✔ GPC gate rejects an ignored header even when no marketing cookie happens to exist (885.441628ms)
+✔ GPC gate rejects storage leakage despite a checked opt-out indicator (177.407187ms)
+✔ TCF reader waits through incomplete data, observes the real action, and unregisters (360.174825ms)
+✔ TCF never failure is bounded and does not leave a registered listener (388.199905ms)
+✔ TCF failure failure is bounded and does not leave a registered listener (198.678339ms)
+✔ TCF absent failure is bounded and does not leave a registered listener (359.151445ms)
+✔ TCF policy number cannot substitute for TC string and actual purpose/vendor consent (468.798561ms)
+✔ cookie recipe sees deferred inventory leaks and does not exempt similar names (1023.059551ms)
+✔ cookie acceptance and persisted navigation run against real storage and DOM (558.24179ms)
+✔ banner threshold accepts usable controls and rejects a two-pixel reject button (387.011106ms)
+ℹ tests 38
+ℹ suites 0
+ℹ pass 38
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18440.382616

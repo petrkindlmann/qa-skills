@@ -1,268 +1,397 @@
 # GDPR / CMP Testing with Playwright — Test Code
 
-Runnable Playwright patterns for consent-flow compliance. The decision prose and "what to test" guidance live in `SKILL.md`; this file holds the implementations.
+These recipes test an approved technical consent policy. Configure the region, CMP
+selectors, cookie inventory, prohibited destinations, and **basic versus advanced**
+Consent Mode before using them. A request's hostname alone does not determine its
+legal basis. Google documents [both implementations](https://developers.google.com/tag-platform/security/concepts/consent-mode);
+advanced mode can send measurements without cookies while storage is denied.
 
-## Consent Banner and Dark Pattern Checks
+Set Playwright `baseURL` to the isolated test site. Use explicit empty storage below
+even when the project has a saved authenticated `storageState`. Copy the observation
+and `waitForPrivacyPhase` helpers from
+`../../analytics-tracking-testing/references/consent-mode.md` into `helpers/consent.ts`.
+The example `privacy-state` DOM marker is an **application-owned adapter contract**:
+it changes only after the named consent transition and its scheduled tag work finish.
+Replace it with the real CMP/application completion signal; never set it from the test.
+If only a bounded observation interval is available, record that interval and the
+interactions covered. `networkidle` and a visible banner are not completion signals
+for delayed consent work.
+
+## Cookie classification helpers
+
+Copy these into `helpers/cookies.ts` and replace the sample names with the reviewed
+inventory. Necessary names are exact matches: `consent_status_marketing` must not
+inherit the exception for `consent_status`. Use the full name/domain/path inventory
+and attribute checks from `cookie-compliance.md` for the production suite. Classification
+is a policy input; a vendor prefix cannot establish that a cookie is necessary.
+
+```typescript
+export function isStrictlyNecessary(name: string): boolean {
+  return ['__Host-session', 'csrf_token', 'consent_status'].includes(name);
+}
+
+export function isAnalyticsCookie(name: string): boolean {
+  return /^_ga(?:_|$)|^_gid$|^_gat(?:_|$)|^analytics_/.test(name);
+}
+
+export function isMarketingCookie(name: string): boolean {
+  return /^_(fbp|fbc|ttp)$|^_gcl_|^(IDE|NID)$/.test(name);
+}
+```
+
+## Consent banner and controls
+
+Minimum button dimensions are a mechanical UX threshold, **not proof of equal
+prominence or absence of dark patterns**. Compare visual hierarchy, contrast,
+wording, keyboard behavior, and effort with the approved design and a human review.
 
 ```typescript
 import { test, expect } from '@playwright/test';
+import { waitForPrivacyPhase } from './helpers/consent';
 
-test.describe('GDPR Consent Banner', () => {
-  test.use({ storageState: undefined }); // Fresh context — first visit
+test.describe('Consent banner', () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
 
-  test('consent banner appears on first visit', async ({ page }) => {
+  test('first visit exposes the required controls and policy link', async ({ page }) => {
     await page.goto('/');
+    await waitForPrivacyPhase(page, 'ready');
     const banner = page.getByRole('dialog', { name: /cookie|consent|privacy/i });
-    await expect(banner).toBeVisible({ timeout: 5000 });
-  });
-
-  test('banner provides accept and reject with equal prominence', async ({ page }) => {
-    await page.goto('/');
-    const banner = page.getByRole('dialog', { name: /cookie|consent|privacy/i });
-    const acceptBtn = banner.getByRole('button', { name: /accept|agree|allow/i });
-    const rejectBtn = banner.getByRole('button', { name: /reject|decline|deny/i });
-
-    await expect(acceptBtn).toBeVisible();
-    await expect(rejectBtn).toBeVisible();
-
-    // Dark pattern check: reject button must be reasonably sized, not a tiny link
-    const rejectBox = await rejectBtn.boundingBox();
-    expect(rejectBox).not.toBeNull();
-    expect(rejectBox!.width).toBeGreaterThan(60);
-    expect(rejectBox!.height).toBeGreaterThan(30);
-  });
-
-  test('banner links to privacy policy', async ({ page }) => {
-    await page.goto('/');
-    const banner = page.getByRole('dialog', { name: /cookie|consent|privacy/i });
-    const policyLink = banner.getByRole('link', { name: /privacy policy|learn more/i });
-    await expect(policyLink).toBeVisible();
-    await expect(policyLink).toHaveAttribute('href', /privacy/);
+    await expect(banner).toBeVisible();
+    for (const name of ['Accept all', 'Reject all']) {
+      const button = banner.getByRole('button', { name, exact: true });
+      await expect(button).toBeVisible();
+      await expect(button).toBeEnabled();
+      const box = await button.boundingBox();
+      expect(box).not.toBeNull();
+      expect(box!.width).toBeGreaterThanOrEqual(60);
+      expect(box!.height).toBeGreaterThanOrEqual(30);
+    }
+    const policy = banner.getByRole('link', { name: 'Privacy policy', exact: true });
+    await expect(policy).toBeVisible();
+    expect(new URL(await policy.getAttribute('href'), page.url()).pathname).toBe('/privacy');
   });
 });
 ```
 
-## Cookie State Before and After Consent
+## Cookie state, persistence, and withdrawal
 
-The critical test: no non-essential cookies may be set before the user gives consent.
-
-```typescript
-// Cookie classification helpers — maintain based on your cookie inventory
-function isStrictlyNecessary(name: string): boolean {
-  const necessary = ['__Host-session', 'csrf_token', '__cf_bm', 'consent_status'];
-  return necessary.some((n) => name.startsWith(n));
-}
-
-function isAnalyticsCookie(name: string): boolean {
-  return ['_ga', '_gid', '_gat', '_gtag', 'analytics_'].some((p) => name.startsWith(p));
-}
-
-test.describe('Cookie Consent Compliance', () => {
-  test.use({ storageState: undefined });
-
-  test('no non-essential cookies before consent', async ({ page, context }) => {
-    await page.goto('/');
-    await expect(page.getByRole('dialog', { name: /cookie|consent/i })).toBeVisible();
-
-    const cookies = await context.cookies();
-    const violations = cookies.filter((c) => !isStrictlyNecessary(c.name));
-    expect(violations.map((c) => c.name), 'Non-essential cookies set before consent').toHaveLength(0);
-  });
-
-  test('analytics cookies appear after accepting consent', async ({ page, context }) => {
-    await page.goto('/');
-    const banner = page.getByRole('dialog', { name: /cookie|consent/i });
-    await banner.getByRole('button', { name: /accept|agree/i }).click();
-    await page.waitForTimeout(1000); // Allow async cookie setting
-
-    const cookies = await context.cookies();
-    expect(cookies.filter((c) => isAnalyticsCookie(c.name)).length).toBeGreaterThan(0);
-  });
-
-  test('no non-essential cookies after rejecting consent', async ({ page, context }) => {
-    await page.goto('/');
-    const banner = page.getByRole('dialog', { name: /cookie|consent/i });
-    await banner.getByRole('button', { name: /reject|decline|deny/i }).click();
-    await page.waitForTimeout(1000);
-
-    const cookies = await context.cookies();
-    const violations = cookies.filter((c) => !isStrictlyNecessary(c.name));
-    expect(violations.map((c) => c.name), 'Non-essential cookies after rejection').toHaveLength(0);
-  });
-});
-```
-
-## Consent Persistence and Withdrawal
+These examples assume the approved policy prohibits the listed optional storage
+before consent and after rejection. Their snapshots cover the completed lifecycle
+milestone, not cookies that were set and deleted between snapshots. Retain request,
+response, and storage evidence when auditing transient disclosures.
 
 ```typescript
-test.describe('Consent Persistence', () => {
-  test.use({ storageState: undefined });
+import { test, expect } from '@playwright/test';
+import { waitForPrivacyPhase } from './helpers/consent';
+import { isStrictlyNecessary, isAnalyticsCookie } from './helpers/cookies';
 
-  test('consent persists across navigations', async ({ page }) => {
+test.describe('Cookie consent lifecycle', () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+
+  test('no optional cookies before consent', async ({ page, context }) => {
     await page.goto('/');
-    await page.getByRole('dialog', { name: /consent/i }).getByRole('button', { name: /accept/i }).click();
+    await waitForPrivacyPhase(page, 'ready');
+    const violations = (await context.cookies()).filter(c => !isStrictlyNecessary(c.name));
+    expect(violations.map(c => c.name), 'Optional cookies before consent').toEqual([]);
+  });
+
+  test('configured analytics storage appears after acceptance', async ({ page, context }) => {
+    await page.goto('/');
+    await waitForPrivacyPhase(page, 'ready');
+    await page.getByRole('button', { name: 'Accept all', exact: true }).click();
+    await waitForPrivacyPhase(page, 'accepted');
+    const analytics = (await context.cookies()).filter(c => isAnalyticsCookie(c.name));
+    expect(analytics.length, 'Expected analytics storage after acceptance').toBeGreaterThan(0);
+  });
+
+  test('no optional cookies after rejection', async ({ page, context }) => {
+    await page.goto('/');
+    await waitForPrivacyPhase(page, 'ready');
+    await page.getByRole('button', { name: 'Reject all', exact: true }).click();
+    await waitForPrivacyPhase(page, 'rejected');
+    const violations = (await context.cookies()).filter(c => !isStrictlyNecessary(c.name));
+    expect(violations.map(c => c.name), 'Optional cookies after rejection').toEqual([]);
+  });
+
+  test('accepted state persists across navigation', async ({ page }) => {
+    await page.goto('/');
+    await waitForPrivacyPhase(page, 'ready');
+    await page.getByRole('button', { name: 'Accept all', exact: true }).click();
+    await waitForPrivacyPhase(page, 'accepted');
     await page.goto('/about');
-    await expect(page.getByRole('dialog', { name: /consent/i })).toBeHidden({ timeout: 3000 });
-  });
-
-  test('user can withdraw consent via privacy settings', async ({ page, context }) => {
-    await page.goto('/');
-    await page.getByRole('dialog', { name: /consent/i }).getByRole('button', { name: /accept/i }).click();
-
-    await page.goto('/privacy-settings');
-    const analyticsToggle = page.getByRole('checkbox', { name: /analytics/i });
-    if (await analyticsToggle.isChecked()) await analyticsToggle.uncheck();
-    await page.getByRole('button', { name: /save/i }).click();
-
-    await page.waitForTimeout(1000);
-    const cookies = await context.cookies();
-    expect(cookies.filter((c) => isAnalyticsCookie(c.name))).toHaveLength(0);
+    await waitForPrivacyPhase(page, 'accepted');
+    await expect(page.getByRole('dialog', { name: /consent/i })).toBeHidden();
   });
 });
 ```
 
-## Third-Party Script Blocking Before Consent
+## Basic policy: tracking requests blocked until consent
 
-The most critical compliance check: tracking scripts must not load before consent.
+Use this zero-request gate only where the approved policy blocks these destinations.
+Maintain the full destination inventory, including first-party proxies. Parse hostnames
+instead of searching URL substrings, and attach the observer **before** navigation.
+For advanced mode, validate permitted denied-state traffic and storage with the
+Consent Mode reference; loading `googletagmanager.com` alone is not a universal violation.
 
 ```typescript
-test.describe('Script Blocking', () => {
-  test.use({ storageState: undefined });
+import { expect } from '@playwright/test';
 
-  test('no tracking scripts load before consent', async ({ page }) => {
-    const trackingDomains = [
-      'google-analytics.com', 'googletagmanager.com', 'facebook.net',
-      'connect.facebook.net', 'analytics.tiktok.com', 'bat.bing.com',
-    ];
-    const violations: string[] = [];
+export function attachTrackingRequests(page, domains: string[]) {
+  const requests = [];
+  const listener = request => {
+    const host = new URL(request.url()).hostname;
+    if (domains.some(domain => host === domain || host.endsWith(`.${domain}`))) requests.push(request);
+  };
+  page.on('request', listener);
+  return { requests, stop: () => page.off('request', listener) };
+}
 
-    page.on('request', (req) => {
-      const url = req.url();
-      if (trackingDomains.some((d) => url.includes(d))) violations.push(url);
+export function assertNoTracking(traffic) {
+  expect(traffic.requests.map(request => request.url()), 'Prohibited tracking request').toEqual([]);
+}
+```
+
+```typescript
+import { test, expect } from '@playwright/test';
+import { waitForPrivacyPhase } from './helpers/consent';
+import { attachTrackingRequests, assertNoTracking } from './helpers/tracking';
+
+test.describe('Basic consent policy', () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+  const blockedHosts = ['google-analytics.com', 'googletagmanager.com', 'connect.facebook.net'];
+
+  test('no configured tracking requests before consent', async ({ page }) => {
+    const traffic = attachTrackingRequests(page, blockedHosts);
+    try {
+      await page.goto('/');
+      await waitForPrivacyPhase(page, 'ready');
+      assertNoTracking(traffic);
+    } finally { traffic.stop(); }
+  });
+
+  test('acceptance triggers configured tracking', async ({ page }) => {
+    const traffic = attachTrackingRequests(page, blockedHosts);
+    try {
+      await page.goto('/');
+      await waitForPrivacyPhase(page, 'ready');
+      assertNoTracking(traffic);
+      await page.getByRole('button', { name: 'Accept all', exact: true }).click();
+      await waitForPrivacyPhase(page, 'accepted');
+      expect(traffic.requests.length, 'No tracking request after acceptance').toBeGreaterThan(0);
+    } finally { traffic.stop(); }
+  });
+});
+```
+
+## Global Privacy Control: HTTP and DOM are separate inputs
+
+The [GPC specification](https://w3c.github.io/gpc/) defines both `Sec-GPC: 1` and
+`navigator.globalPrivacyControl`. Setting `extraHTTPHeaders` sends an HTTP header;
+it **does not enable a browser privacy preference or create the DOM property**.
+Test the server's header path and the application's DOM path separately, then test
+both in a genuinely GPC-enabled browser where supported. The explicit DOM shim
+below is an application test, not evidence of native browser GPC support.
+
+Map opt-out to the product's approved jurisdictional policy. GPC does not universally
+mean "disable every analytics operation." Verify the recorded opt-out plus the
+specific prohibited storage and destinations. This example exposes the recorded
+choice in a real settings checkbox; replace that locator with the CMP's documented
+UI/API. There is no standard `window.__cmp.gpcStatus` or TCF GPC-status field.
+
+```typescript
+import { expect } from '@playwright/test';
+import { isMarketingCookie } from './helpers/cookies';
+
+export async function emulateGPCDOM(context, enabled = true) {
+  await context.addInitScript(value => {
+    Object.defineProperty(Navigator.prototype, 'globalPrivacyControl', {
+      configurable: true, get: () => value,
     });
+  }, enabled);
+}
 
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+export async function assertGPCOptOut(page, context) {
+  await expect(page.getByRole('checkbox', { name: 'Do not sell or share my personal information', exact: true }))
+    .toBeChecked();
+  const marketing = (await context.cookies()).filter(c => isMarketingCookie(c.name));
+  expect(marketing.map(c => c.name), 'Policy-prohibited cookies despite GPC').toEqual([]);
+}
+```
 
-    expect(violations, `Tracking scripts before consent:\n${violations.join('\n')}`).toHaveLength(0);
+```typescript
+import { test, expect } from '@playwright/test';
+import { waitForPrivacyPhase } from './helpers/consent';
+import { attachTrackingRequests, assertNoTracking } from './helpers/tracking';
+import { emulateGPCDOM, assertGPCOptOut } from './helpers/gpc';
+
+test.describe('HTTP GPC path', () => {
+  test.use({ storageState: { cookies: [], origins: [] }, extraHTTPHeaders: { 'Sec-GPC': '1' } });
+  test('server honors the request header', async ({ page, context }) => {
+    const traffic = attachTrackingRequests(page, ['connect.facebook.net']); // approved blocked inventory
+    try {
+      const response = await page.goto('/');
+      expect(await response.request().headerValue('sec-gpc')).toBe('1');
+      await waitForPrivacyPhase(page, 'ready');
+      await assertGPCOptOut(page, context);
+      assertNoTracking(traffic);
+    } finally { traffic.stop(); }
   });
+});
 
-  test('tracking scripts load after consent acceptance', async ({ page }) => {
-    const trackerLoaded: string[] = [];
-    page.on('request', (req) => {
-      if (/google-analytics|googletagmanager/.test(req.url())) trackerLoaded.push(req.url());
-    });
-
-    await page.goto('/');
-    await page.getByRole('dialog', { name: /consent/i }).getByRole('button', { name: /accept/i }).click();
-    await page.waitForTimeout(3000);
-
-    expect(trackerLoaded.length, 'Analytics should load after consent').toBeGreaterThan(0);
+test.describe('DOM GPC application simulation', () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+  test.beforeEach(async ({ context }) => { await emulateGPCDOM(context); });
+  test('client honors the explicitly simulated DOM preference', async ({ page, context }) => {
+    const traffic = attachTrackingRequests(page, ['connect.facebook.net']);
+    try {
+      await page.goto('/');
+      expect(await page.evaluate(() => (navigator as any).globalPrivacyControl)).toBe(true);
+      await waitForPrivacyPhase(page, 'ready');
+      await assertGPCOptOut(page, context);
+      assertNoTracking(traffic);
+    } finally { traffic.stop(); }
   });
 });
 ```
 
-## Global Privacy Control (Sec-GPC)
+## TCF v2 consent state: wait for the relevant event and remove the listener
 
-GPC is a browser/extension signal that communicates a universal opt-out. It is a required honored signal under CCPA/CPRA and most active US state laws. Sites that ignore it are non-compliant in those jurisdictions.
-
-Assert two things: the browser exposes `navigator.globalPrivacyControl === true` (the standard client-side signal — this is the real global, not an invented one), and no marketing cookies are present. There is **no** standard `window.__cmp.gpcStatus` global — TCF v1's `__cmp` is legacy and TCF v2 uses `__tcfapi` (see below). The CMP-specific opt-out flag, if you read one, is a placeholder you must replace with your CMP's actual API.
+For a TCF-integrated CMP, use `__tcfapi('addEventListener', 2, callback)`.
+`getTCData` was deprecated in TCF v2.2. The initial callback may contain incomplete
+data; after an acceptance action, wait for `useractioncomplete`, not just the first
+callback. Bound missing/failed callbacks and unregister using the supplied listener
+ID. Source: [IAB CMP API v2](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20CMP%20API%20v2.md).
 
 ```typescript
-test.describe('Global Privacy Control', () => {
-  test.use({
-    storageState: undefined,
-    extraHTTPHeaders: { 'Sec-GPC': '1' },
-  });
+import { expect } from '@playwright/test';
 
-  test('site honors Sec-GPC: signal exposed, no marketing cookies', async ({ page, context }) => {
-    await page.goto('/');
-    await page.waitForLoadState('networkidle');
+export async function readTCFData(page, eventStatus = 'useractioncomplete', timeoutMs = 5000) {
+  await page.waitForFunction(() => typeof (window as any).__tcfapi === 'function', undefined, { timeout: timeoutMs });
+  return page.evaluate(({ eventStatus, timeoutMs }) => new Promise<any>((resolve, reject) => {
+    const api = (window as any).__tcfapi;
+    let listenerId;
+    let settled = false;
+    const remove = () => {
+      if (Number.isInteger(listenerId)) api('removeEventListener', 2, () => {}, listenerId);
+    };
+    const finish = (error, data?) => {
+      if (settled) return;
+      settled = true; clearTimeout(timer);
+      try { remove(); } catch (cleanupError) { reject(error ?? cleanupError); return; }
+      if (error) reject(error); else resolve(data);
+    };
+    const timer = setTimeout(() => finish(new Error(`TCF ${eventStatus} callback timed out`)), timeoutMs);
+    try {
+      api('addEventListener', 2, (data, success) => {
+        if (Number.isInteger(data?.listenerId)) listenerId = data.listenerId;
+        if (settled) { remove(); return; }
+        if (!success) { finish(new Error('TCF listener registration/callback failed')); return; }
+        if (data?.cmpStatus === 'error') { finish(new Error('CMP reported an error')); return; }
+        if (data?.gdprApplies === false || data?.eventStatus === eventStatus) finish(null, data);
+      });
+    } catch (error) { finish(error); }
+  }), { eventStatus, timeoutMs });
+}
 
-    // The standard, browser-exposed GPC signal — closes the loop on the Sec-GPC header.
-    const gpc = await page.evaluate(() => (navigator as any).globalPrivacyControl);
-    expect(gpc, 'navigator.globalPrivacyControl not set despite Sec-GPC: 1').toBe(true);
-
-    const cookies = await context.cookies();
-    const marketing = cookies.filter((c) =>
-      ['_fbp', '_fbc', '_gcl', '_ttp', 'IDE', 'NID'].some((n) => c.name.startsWith(n))
-    );
-    expect(marketing.map((c) => c.name), 'Marketing cookies present despite Sec-GPC: 1').toHaveLength(0);
-
-    // Optional: your CMP's recorded opt-out. This flag name is a PLACEHOLDER —
-    // replace `window.__myCmp.optedOut` with your CMP's documented API. Do NOT
-    // assume a `__cmp.gpcStatus` global exists; it does not.
-    // const optedOut = await page.evaluate(() => (window as any).__myCmp?.optedOut === true);
-    // expect(optedOut, 'CMP did not register the opt-out').toBe(true);
-  });
-});
+export function assertTCFConsent(data, { purposeIds, vendorIds, policyVersion }) {
+  expect(data?.gdprApplies, 'Unexpected TCF jurisdiction').toBe(true);
+  expect(data.cmpStatus).toBe('loaded');
+  expect(data.eventStatus).toBe('useractioncomplete');
+  expect(data.tcString, 'Missing TC string').toEqual(expect.any(String));
+  expect(data.tcString.trim(), 'Empty TC string').not.toBe('');
+  expect(data.isServiceSpecific).toBe(true);
+  expect(Number.isInteger(policyVersion), 'Configure the approved TCF policy version').toBe(true);
+  expect(data.tcfPolicyVersion).toBe(policyVersion);
+  for (const id of purposeIds) expect(data.purpose?.consents?.[id], `Purpose ${id} not consented`).toBe(true);
+  for (const id of vendorIds) expect(data.vendor?.consents?.[id], `Vendor ${id} not consented`).toBe(true);
+}
 ```
 
-## TCF v2 Consent State (vendor/purpose)
-
-Every IAB TCF-certified CMP (the kind you must use to serve EU/UK ads) exposes `window.__tcfapi`. Read consent state directly through it instead of guessing at CMP-private globals. This is the certified-CMP-agnostic way to assert that a given purpose or vendor is consented.
-
 ```typescript
-test('TCF: analytics purpose consented only after accept', async ({ page }) => {
+import { test } from '@playwright/test';
+import { waitForPrivacyPhase } from './helpers/consent';
+import { readTCFData, assertTCFConsent } from './helpers/tcf';
+
+test.use({ storageState: { cookies: [], origins: [] } });
+test('TCF: configured purposes and vendors are consented after acceptance', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('dialog', { name: /consent/i }).getByRole('button', { name: /accept/i }).click();
-  await page.waitForTimeout(1000);
-
-  const tcData = await page.evaluate(() => new Promise<any>((resolve) => {
-    (window as any).__tcfapi('getTCData', 2, (data: any, success: boolean) =>
-      resolve(success ? data : null));
-  }));
-  expect(tcData, '__tcfapi getTCData failed — CMP not TCF v2 certified?').not.toBeNull();
-  // Purpose 1 = "Store and/or access information on a device" in the TCF purpose list.
-  expect(tcData.purpose.consents['1'], 'Purpose 1 consent not granted after accept').toBe(true);
-
-  // TCF v2.3 string-version guard: as of 28 Feb 2026 a v2.2-format TC string is
-  // treated as unconsented by Google demand. tcfPolicyVersion >= 4 == TCF v2.2+/2.3.
-  expect(tcData.tcfPolicyVersion, 'Stale TCF policy version — TC string may be pre-v2.3').toBeGreaterThanOrEqual(4);
+  await waitForPrivacyPhase(page, 'ready');
+  await page.getByRole('button', { name: 'Accept all', exact: true }).click();
+  const data = await readTCFData(page);
+  assertTCFConsent(data, {
+    purposeIds: ['1'], vendorIds: ['42'], // example IDs: replace from the approved vendor/purpose matrix
+    policyVersion: Number(process.env.TCF_POLICY_VERSION),
+  });
 });
 ```
 
-## Google Consent Mode v2
+Purpose 1 concerns device storage/access; it is not a general "analytics allowed"
+flag. Assert the actual purpose, vendor, and legal-basis matrix. A numeric
+`tcfPolicyVersion` comparison is a compatibility check, **not a TCF v2.3 freshness or
+certification test**. Validate the decoded TC string and required segments with the
+approved CMP/TCF decoder and current vendor/policy requirements. The API-state check
+above neither decodes the string nor establishes CMP certification.
 
-Required since March 2024 for sites serving Google ads in the EEA/UK. Verify default state is "denied" and that update signals fire correctly after consent choices.
+## Google Consent Mode: independent tests and action checkpoints
 
-> **Note:** the interception below assumes the site calls `gtag('consent', 'default', {...})`, whose pushes arrive as a gtag `arguments` array (`args[0]` is `['consent','default',{...}]`). If the site instead does `dataLayer.push({ event: 'consent_default', ... })` in object form, read `args[0].event` / `args[0]` properties instead — the array-index access (`e[1]`, `e[2]`) will not match.
+This suite targets the **advanced** gtag integration and the approved all-denied
+default policy. Its `beforeEach` installs observation for every isolated page.
+The observer must not push a denied default itself: doing that can repair the app
+under test and hide the missing-default defect. In basic mode, use
+`assertBasicConsentAcceptance` from the shared reference to check the default prefix
+and new acceptance update separately; keep the zero-request gate above.
 
 ```typescript
-test.describe('Google Consent Mode v2', () => {
-  test.use({ storageState: undefined });
+import { test, expect } from '@playwright/test';
+import { isStrictlyNecessary } from './helpers/cookies';
+import { installConsentObserver, readConsentTrace, assertDefaultConsent, assertConsentUpdate } from './helpers/consent';
+import { waitForConsentUpdate, waitForPrivacyPhase, deniedConsent, grantedConsent } from './helpers/consent';
 
-  test('default consent is denied for ad/analytics signals', async ({ page }) => {
-    const consentEvents: any[] = [];
-    await page.addInitScript(() => {
-      (window as any).dataLayer = (window as any).dataLayer || [];
-      const originalPush = (window as any).dataLayer.push.bind((window as any).dataLayer);
-      (window as any).dataLayer.push = (...args: any[]) => {
-        if (args[0]?.[0] === 'consent') (window as any).__consentEvents = [...((window as any).__consentEvents ?? []), args[0]];
-        return originalPush(...args);
-      };
-    });
+test.describe('Advanced gtag consent transitions', () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
+  test.beforeEach(async ({ page }) => { await installConsentObserver(page); });
 
+  test('default state comes from the application', async ({ page }) => {
     await page.goto('/');
-    const events = await page.evaluate(() => (window as any).__consentEvents ?? []);
-    const defaultEvent = events.find((e: any[]) => e[1] === 'default');
-    expect(defaultEvent, 'No gtag consent default fired').toBeDefined();
-    expect(defaultEvent[2].ad_storage).toBe('denied');
-    expect(defaultEvent[2].analytics_storage).toBe('denied');
-    expect(defaultEvent[2].ad_user_data).toBe('denied');
-    expect(defaultEvent[2].ad_personalization).toBe('denied');
+    await waitForPrivacyPhase(page, 'ready');
+    assertDefaultConsent(await readConsentTrace(page), deniedConsent);
   });
 
-  test('update signal fires "granted" after accepting consent', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('dialog', { name: /consent/i }).getByRole('button', { name: /accept/i }).click();
-    await page.waitForTimeout(1000);
+  for (const [button, phase, expected] of [
+    ['Accept all', 'accepted', grantedConsent], ['Reject all', 'rejected', deniedConsent],
+  ] as const) {
+    test(`${phase}: a new update reflects the choice`, async ({ page }) => {
+      await page.goto('/');
+      await waitForPrivacyPhase(page, 'ready');
+      assertDefaultConsent(await readConsentTrace(page), deniedConsent);
+      const checkpoint = (await readConsentTrace(page)).commands.length;
+      await page.getByRole('button', { name: button, exact: true }).click();
+      await waitForConsentUpdate(page, checkpoint, expected);
+      await waitForPrivacyPhase(page, phase);
+      assertConsentUpdate(await readConsentTrace(page), checkpoint, expected);
+    });
+  }
 
-    const events = await page.evaluate(() => (window as any).__consentEvents ?? []);
-    const updateEvent = events.find((e: any[]) => e[1] === 'update');
-    expect(updateEvent, 'No gtag consent update fired after accept').toBeDefined();
-    expect(updateEvent[2].ad_storage).toBe('granted');
-    expect(updateEvent[2].analytics_storage).toBe('granted');
+  test('withdrawal removes optional storage and sends a new denied update', async ({ page, context }) => {
+    await page.goto('/');
+    await waitForPrivacyPhase(page, 'ready');
+    await page.getByRole('button', { name: 'Accept all', exact: true }).click();
+    await waitForPrivacyPhase(page, 'accepted');
+    await page.goto('/privacy-settings');
+    await waitForPrivacyPhase(page, 'accepted');
+    const checkpoint = (await readConsentTrace(page)).commands.length;
+    for (const name of ['Analytics', 'Marketing']) {
+      await page.getByRole('checkbox', { name, exact: true }).setChecked(false);
+    }
+    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    await waitForConsentUpdate(page, checkpoint, deniedConsent);
+    await waitForPrivacyPhase(page, 'withdrawn');
+    assertConsentUpdate(await readConsentTrace(page), checkpoint, deniedConsent);
+    const optional = (await context.cookies()).filter(c => !isStrictlyNecessary(c.name));
+    expect(optional.map(c => c.name), 'Optional cookies after withdrawal').toEqual([]);
   });
 });
 ```
+
+Add independent partial-consent and region cases from the same policy matrix; verify network outcomes
+as well as the emitted consent updates in each lifecycle.

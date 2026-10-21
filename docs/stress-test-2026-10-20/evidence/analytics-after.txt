@@ -1,0 +1,28 @@
+✔ GET event preserves its exact event name and value (2.899451ms)
+✔ POST batch inherits common query parameters for every event (1.102656ms)
+✔ POST fields override shared parameters without a phantom query-only event (0.187157ms)
+✔ URL query supplies a default event name but each POST row is one event (0.236401ms)
+✔ blank POST rows do not create extra events (0.210032ms)
+✔ consent-only request with no event name produces no business event (0.138997ms)
+✔ missing and empty event names are ignored (0.111746ms)
+✔ lookalike hosts and paths containing collect in query are ignored (0.183002ms)
+✔ configured first-party collector is accepted explicitly (0.306645ms)
+✔ duplicate events remain duplicated for the caller to detect (0.427604ms)
+✔ collector captures early events and can release its listener (0.330019ms)
+✔ a typed ecommerce event accepts real zero values and nested products (0.471679ms)
+✔ blank, null, boolean and nonfinite numbers cannot become a passing zero (0.462586ms)
+✔ strings retain their type and nonempty requirement (0.555033ms)
+✔ all missing and mismatched product fields have explicit locations (0.151655ms)
+✔ empty, malformed and sparse item arrays cannot satisfy ecommerce coverage (0.121069ms)
+✔ unknown events, inherited fields and wrong payload shapes cannot pass (0.267878ms)
+✔ invalid or unsupported plans are configuration errors (2.391176ms)
+(node:5) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ℹ tests 18
+ℹ suites 0
+ℹ pass 18
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 98.95908

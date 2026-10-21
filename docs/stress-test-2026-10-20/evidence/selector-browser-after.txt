@@ -1,0 +1,21 @@
+(node:19469) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ a generated role locator produces real screenshot evidence (517.24114ms)
+✔ duplicate test IDs cannot receive a unique score-five candidate (158.595766ms)
+✔ ambiguous names become distinct region-scoped proposals without choosing first (193.333298ms)
+✔ duplicate region names do not disguise an ambiguous scoped selector (169.492167ms)
+✔ regex metacharacters in intent are literal accessible-name data (142.516419ms)
+✔ quotes and code-like text in a test ID are safely quoted, never executed (182.583178ms)
+✔ empty or missing intent is an input failure (112.114863ms)
+✔ a candidate that became ambiguous cannot create screenshot evidence (157.219077ms)
+✔ screenshot failures propagate instead of recording a nonexistent artifact (471.248922ms)
+✔ missing, ambiguous and text-only candidates retain an unresolved failure row (176.916552ms)
+✔ generation and screenshot errors remain visible in the recovery record (230.852034ms)
+ℹ tests 11
+ℹ suites 0
+ℹ pass 11
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2904.257452

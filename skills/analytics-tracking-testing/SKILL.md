@@ -15,7 +15,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "1.1"
   category: specialized
 ---
 
@@ -58,7 +58,11 @@ First: check `.agents/qa-project-context.md` in the project root and skip anythi
 
 3. **De-duplication is the real correctness property for purchases.** Checking that `fbevents.js` loaded or counting that `fbq('track','Purchase')` ran misses double-counting entirely. The property that matters: the browser Pixel and the server CAPI send the *same* `event_id`/`eventID` so Meta collapses them into one conversion.
 
-4. **Consent state is an input dimension, not a footnote.** The same page produces different beacons before vs after consent. Test both: before consent → no beacon (or only a cookieless consent ping); after accept → full beacon. And the default must be `denied` for all four Consent Mode v2 signals — a `granted` default is a compliance bug AND makes the gating test meaningless.
+4. **Consent state is an input dimension.** Test the approved regional policy in basic
+   or advanced mode. Observe the application's actual four-signal default and updates;
+   do not supply a default from the test. Basic mode blocks tags before consent, while
+   advanced mode may emit permitted measurements without cookies. Assert the planned
+   post-accept events and relevant storage independently.
 
 5. **Drive real user actions and wait on requests, never the clock.** Scroll depth fires from actual scrolling (`mouse.wheel`, `scrollIntoView`, `evaluate(scrollTo)`), and you wait for the beacon with `waitForRequest`, not `waitForTimeout`. A fixed sleep is flaky and hides the very timing bug you should catch.
 
@@ -68,38 +72,47 @@ First: check `.agents/qa-project-context.md` in the project root and skip anythi
 
 ## Intercepting GA4 Beacons
 
-GA4 (gtag.js / GTM) sends every event as an HTTP request to `https://www.google-analytics.com/g/collect` (region variants like `region1.google-analytics.com/g/collect` also occur). The event identity lives in the URL query string — you do not need the response.
+GA4 web tags use `/g/collect` requests, sometimes with several events in a POST body and common fields in the query. The following parser handles an observed web-tag format, not the public JSON Measurement Protocol. Retain captures from the deployed tag version; first-party proxy and server-side collection need explicit adapters. A request proves browser emission, not successful downstream ingestion.
 
 GA4 `/g/collect` URL grammar you assert on:
 
 | Param | Meaning | Example |
 |-------|---------|---------|
-| `v=2` | Measurement Protocol version (always 2 for GA4) | `v=2` |
+| `v=2` | Version field in the observed web-tag transport | `v=2` |
 | `tid=G-XXXXXXX` | Measurement ID | `tid=G-ABC123` |
 | `en=` | **Event name** | `en=add_to_cart` |
-| `ep.<name>=` | Event parameter, **string** type | `ep.currency=USD` |
+| `ep.<name>=` | Custom event parameter, **string** type | `ep.campaign_label=spring` |
 | `epn.<name>=` | Event parameter, **number** type | `epn.value=49.99` |
 | `gcs=` / `gcd=` | Consent state (see Consent Mode v2 section) | `gcs=G111` |
 
-The string/number split is load-bearing: GA4 types params automatically, so `price` arrives as `epn.value` (number) and `currency` as `ep.currency` (string). Asserting `ep.value` when it is really `epn.value` silently fails.
+Preserve wire type information. Custom parameters can use `ep.` or `epn.`, but reserved ecommerce fields and items have their own web-tag encodings. Do not assume standard currency is `ep.currency` or an item ID is a flat `ep.item_id`. Google's logical ecommerce contract uses event-level `currency` and nested `items[]`; decode the observed transport through a capture-tested adapter before checking that contract.
 
-Intercept with `page.waitForRequest` (single expected event), `page.on('request', ...)` (collect many), or `page.route` (inspect then continue — never `abort`). Parse params from `new URL(request.url()).searchParams`. Then `expect(...).toBe(...)` / `toEqual` / `toContain` on the parsed values.
+Intercept with `page.waitForRequest` (single expected event) or `page.on('request', ...)`
+(collect many). Attach before the action. Match the exact `/g/collect` path and an
+approved hostname. Merge each POST event's parameters over the URL query with
+`parseGA4` from `references/ga4-interception.md`; URL-only matching misses batched events.
+Use a test property or a local collector so tests do not pollute production analytics.
 
-Minimal pattern (full version with helper in `references/ga4-interception.md`):
+Pattern using the parser below plus your application's verified ecommerce decoder and logical tracking plan. `decodeEcommerceWebEvent` is a required project adapter, not a package supplied by this skill; unsupported or missing wire fields must fail. See `references/ga4-interception.md` and `references/tracking-plan.md`.
 
 ```ts
 test('add_to_cart fires with correct params', async ({ page }) => {
   await page.goto('/product/42');
   const [request] = await Promise.all([
-    page.waitForRequest(r => r.url().includes('/g/collect') && r.url().includes('en=add_to_cart')),
+    page.waitForRequest(r => parseGA4(r).some(event => event.name === 'add_to_cart')),
     page.getByRole('button', { name: 'Add to cart' }).click(),
   ]);
-  const params = new URL(request.url()).searchParams;
-  expect(params.get('v')).toBe('2');
-  expect(params.get('tid')).toContain('G-');
-  expect(params.get('en')).toBe('add_to_cart');
-  expect(params.get('ep.currency')).toBe('USD');
-  expect(Number(params.get('epn.value'))).toBe(49.99);
+  const events = parseGA4(request).filter(event => event.name === 'add_to_cart');
+  expect(events).toHaveLength(1);
+  const params = events[0].params;
+  expect(params.tid).toBe('G-TEST'); // use the test property's exact measurement ID
+  // Application adapter, checked against redacted captures from the deployed tag.
+  const payload = decodeEcommerceWebEvent(params);
+  expect(validateEvent(plan, 'add_to_cart', payload)).toEqual([]);
+  expect(payload).toMatchObject({
+    currency: 'USD', value: 49.99,
+    items: [{ item_id: 'SKU-42', price: 49.99, quantity: 1 }],
+  });
 });
 ```
 
@@ -109,27 +122,26 @@ Never substitute `page.evaluate(() => window.dataLayer)` as the only assertion, 
 
 ## The Tracking Plan Is the Contract
 
-A tracking plan is the source of truth: for every event, its name, required params, and each param's type. Keep it as a versioned file (`tracking-plan.json` / `.yaml`, or a TS `interface`/`Zod` schema) that both the app team and the tests import. Tests read the captured event and validate it against the plan — they do not hardcode expected values inline.
+A tracking plan is the source of truth: for every event, its name, required params, and each param's type. Keep it as a versioned file (`tracking-plan.json` / `.yaml`, or a TS `interface`/`Zod` schema) that both the app team and the tests import. Tests read the captured event and validate it against the plan — they check the schema and the known scenario values.
 
-Validation produces a structured result, not a pass/fail boolean: list every `missing` required param and every type `mismatch`/`violation`. Example plan entry and validator:
+Validate the normalized logical payload and return every missing field and type
+violation. The helper in `references/tracking-plan.md` checks finite numbers, nonempty
+strings and nested nonempty item arrays. It rejects unsupported or empty schemas.
+Zero is a valid number; an absent field, empty string, `null`, `Infinity` or a numeric
+string is not a typed zero. Add scenario-specific expected values after schema checks.
 
 ```ts
-// tracking-plan.json
-{ "add_to_cart": { "required": { "currency": "string", "value": "number", "item_id": "string" } } }
-
-function validateEvent(plan, eventName, params) {
-  const spec = plan[eventName];
-  const violations = [];
-  for (const [name, type] of Object.entries(spec.required)) {
-    const raw = params.get(`ep.${name}`) ?? params.get(`epn.${name}`);
-    if (raw == null) { violations.push({ param: name, problem: 'missing' }); continue; }
-    if (type === 'number' && Number.isNaN(Number(raw))) violations.push({ param: name, problem: 'type', expected: 'number' });
-  }
-  return violations; // empty array = event satisfies the contract
-}
+const payload = decodeEcommerceWebEvent(capturedGA4Event.params); // capture-tested project adapter
+expect(validateEvent(plan, 'add_to_cart', payload)).toEqual([]);
+expect(payload.currency).toBe('USD');
+expect(payload.value).toBe(49.99);
+expect(payload.items).toEqual([{ item_id: 'SKU-42', price: 49.99, quantity: 1 }]);
 ```
 
-Then `expect(validateEvent(plan, 'add_to_cart', params)).toEqual([])`. Asserting only the event name and ignoring params, or hardcoding expected values with no plan file, is the bare-agent shortcut this skill exists to replace. See `references/tracking-plan.md` for the YAML form, a Zod-typed plan, and a reusable `assertAgainstPlan` matcher.
+A matching schema cannot prove that a price is correct. Compare the payload with the
+known test cart, then assert event counts at the application's tracking completion
+boundary. Keep raw input events and raw emitted records so a decoder cannot hide a
+missing field, a tag transformation or a duplicate purchase.
 
 ---
 
@@ -137,24 +149,21 @@ Then `expect(validateEvent(plan, 'add_to_cart', params)).toEqual([])`. Asserting
 
 When the question is specifically the GTM **input** — "is the right object pushed to `dataLayer` when the page loads?" — assert the push, not the GA4 beacon. This is the inverse of beacon interception: here the dataLayer push IS the target.
 
-Capture pushes by wrapping `window.dataLayer.push` in `addInitScript` *before navigation* so you record every push from page load, then read the recorded array via `page.evaluate`. Do **not** `page.route` to mock the dataLayer (you would replace the thing under test), and do not read the GA4 network beacon instead (that is the output, a different contract).
+Install the passive observer from `references/datalayer-capture.md` before navigation.
+Leave an absent data layer absent, observe the application's first assignment, preserve
+push behavior and flag later replacement or lost observation. Do not initialize or
+repair the application queue in a test intended to measure the application's setup.
+Use a completion signal from the application before inspecting the captured objects.
 
-For ecommerce, assert the nested shape, not just the event name — the `ecommerce.items` array and each item's `item_id`, `price`, `currency`:
+For GTM ecommerce object events, assert `ecommerce.currency`, `ecommerce.value`, and
+`ecommerce.items[]` with each item's expected ID, price and quantity. Currency is at
+event level in Google's ecommerce contract. Check counts as well as shape; selecting
+the first matching event conceals duplicates. Direct gtag command arrays need the
+corresponding command adapter rather than an object-event parser.
 
-```ts
-await page.addInitScript(() => {
-  window.dataLayer = window.dataLayer || [];
-  const orig = window.dataLayer.push.bind(window.dataLayer);
-  window.__pushes = [];
-  window.dataLayer.push = (...args) => { window.__pushes.push(...args); return orig(...args); };
-});
-await page.goto('/product/42');
-const pushes = await page.evaluate(() => window.__pushes);
-const viewItem = pushes.find(p => p.event === 'view_item');
-expect(viewItem.ecommerce.items[0]).toMatchObject({ item_id: 'SKU-42', price: 49.99, currency: 'USD' });
-```
-
-Use `find`/`filter`/`some` to locate the event in the recorded pushes. Full helper in `references/datalayer-capture.md`.
+The reference contains the observer and full example. Use both observed input and
+network output when the question concerns the whole tracking path, while recording
+what each observation establishes.
 
 ---
 
@@ -187,9 +196,11 @@ See `references/pixels-and-dedup.md` for parsing TikTok/LinkedIn payloads and ca
 
 ## Consent Mode v2 Gating
 
-Consent Mode v2 is the standard (mandatory four-signal model). As of the **June 15 2026** change, Google acts only on the CMP-sent consent signal, so any two-signal answer is outdated. Test two states.
+Choose the approved regional defaults and basic or advanced implementation before
+writing a gate. The examples in the reference use an all-denied default policy.
+See [Google's consent-mode overview](https://developers.google.com/tag-platform/security/concepts/consent-mode).
 
-The four signals — all must default to `denied`:
+Observe all four signals against that policy:
 
 | Signal | Governs |
 |--------|---------|
@@ -198,18 +209,24 @@ The four signals — all must default to `denied`:
 | `ad_user_data` | Sending user data to Google for ads |
 | `ad_personalization` | Personalized ads / remarketing |
 
-A `granted` default is a bug; omitting `ad_user_data` and `ad_personalization` (the v2 additions) is the outdated two-signal model and is wrong.
+Install the passive observer before navigation in every test. It must not create
+`gtag`, send a consent command, or repair a replaced data layer. A missing default,
+an early measurement command, or an incorrect intermediate state must fail.
 
-**Before consent:** no full beacon should fire — or only a *cookieless consent ping*. Use `addInitScript` to seed the `gtag('consent', 'default', {...})` denied state before page scripts run, and assert no `/g/collect` request fires (or that the one that does carries a denied consent state).
+**Before consent:** basic mode blocks the configured tag requests. Advanced mode can
+send the event plan's denied-state pings. Observe a real application completion signal
+and any declared observation interval; an empty collector or `networkidle` is not proof
+that delayed tracking is correct. Basic defaults can be initialized after acceptance.
 
-**After accept:** click the CMP accept button; the full beacon now fires.
+**After accept:** checkpoint existing commands and events, click the CMP button, and
+require a new matching update plus the newly expected beacon. Repeat independently
+for rejection, partial consent, withdrawal, and persistence.
 
-The consent state rides on the beacon URL:
-
-- `gcs=` — encodes `ad_storage` + `analytics_storage` only. `G100` = both denied, `G111` = both granted, `G110`/`G101` = partial. Before consent you expect `gcs=G100`.
-- `gcd=` — encodes all four signals (string starting `11...`); present on every hit to Google services.
-
-Assert the denied default and the `gcs=`/`gcd=` value on the pre-consent beacon, then the granted state post-accept. Full test with `addInitScript` consent seeding and CMP click in `references/consent-mode.md`.
+In the captured web-tag transport, `gcs=G100` and `gcs=G111` distinguish the two storage
+signals. `gcd` presence is a diagnostic, not proof that all four signals or payload
+identifiers are correct. Keep versioned transport captures and use the four observed
+states plus the approved payload/storage inventory. Do not rely on an undocumented
+`gcd` prefix. See `references/consent-mode.md` for the executable helpers and recipes.
 
 > Whether the law *permits* a beacon under a given consent state is `compliance-testing`. This skill asserts that *when* a beacon fires, its data and consent params are correct.
 
@@ -293,8 +310,9 @@ There is no source of truth, so nothing catches a renamed param across the suite
 ### 5. Load/count checks for pixels (`fbevents.js` loaded, `fbq` ran)
 Neither proves the conversion is correct or de-duplicated. For Purchase, assert the client and server `event_id` match.
 
-### 6. Two-signal Consent Mode, or a `granted` default
-Omitting `ad_user_data` and `ad_personalization` is the pre-2026 model. Default all four to `denied` and assert `gcs=`/`gcd=`.
+### 6. Testing a default supplied by the test
+Seeding denied consent can hide an application that omits its own default. Observe
+all four real signals against the selected policy, and distinguish basic from advanced.
 
 ### 7. `page.route(...).abort()` inside a capture helper
 Aborting blocks the beacons you meant to observe. Use `page.on('request')` (or `route.continue()`).
@@ -310,7 +328,10 @@ Smallest check first — prove the suite actually catches a regression, don't ju
 
 - **One event, one beacon:** `npx playwright test -g add_to_cart` passes, and its trace (`--trace on`) shows the captured `/g/collect` request with `en=add_to_cart`. A green test with no matching request in the trace means you asserted on the wrong thing.
 - **The gate can fail:** rename a required param in a branch (e.g. `value` → `amount` in the app) and re-run the CI project — the build must exit non-zero with a `missing`/violation message. If it still passes, the gate is theater.
-- **Consent default is denied:** with the denied seed and no accept click, `gcs=G100` (or no full beacon) on every captured hit; after accept, `gcs=G111`. A pre-consent `G111` means the default is wrongly `granted`.
+- **Consent gate detects the wrong app state:** the real default matches the selected
+  policy; missing or granted defaults fail an all-denied-policy fixture. A new action
+  requires a new update and planned event. Both healthy and deliberately broken basic
+  and advanced fixtures produce the expected result.
 - **Dedup holds:** the client `eid` from `facebook.com/tr?ev=Purchase` equals the server CAPI `event_id` for the same order. Different values mean Meta will double-count.
 
 ## Done When
@@ -318,7 +339,9 @@ Smallest check first — prove the suite actually catches a regression, don't ju
 - Each tracked event has a test that intercepts the real collect-endpoint beacon (`/g/collect`, `facebook.com/tr`, etc.) and parses `en=`/`ev=` plus params from `searchParams`/`postData` — no DOM-only or dataLayer-only assertions.
 - A versioned tracking plan file exists (JSON/YAML/TS) with required params and types; tests validate captured events against it and report `missing`/type violations, not just the event name.
 - Purchase (or any client+server event) has a deduplication assertion: client beacon `event_id` equals the server CAPI `event_id`.
-- A Consent Mode v2 test asserts all four signals default to `denied`, no full beacon fires before consent (or only a cookieless ping), the full beacon fires after accept, and `gcs=`/`gcd=` carry the expected consent state.
+- Consent tests observe all four actual signals, require the configured events, and
+  check storage against the approved regional/basic/advanced policy. They never seed
+  the consent state they are meant to verify. Transport diagnostics have stated limits.
 - A reusable capture fixture (`test.extend`) collects GA4 + Meta + TikTok + LinkedIn beacons; no test re-implements capture and no capture helper calls `route.abort()`.
 - News-media surfaces (if present) cover article_view, scroll-depth at 25/50/75/100 driven by real scroll actions, and a paywall/meter event — all using `waitForRequest`, no `waitForTimeout`.
 - A CI job runs the suite, diffs captured events against the tracking-plan baseline, and exits non-zero on a dropped event or missing required param — verified by a deliberately-broken tag turning the build red.
@@ -336,7 +359,8 @@ Smallest check first — prove the suite actually catches a regression, don't ju
 - **tracking-plan.md** — JSON and YAML plan forms, a Zod-typed contract, and the reusable `assertAgainstPlan` matcher.
 - **datalayer-capture.md** — `addInitScript` dataLayer.push wrapper and ecommerce `items[]` shape assertions.
 - **pixels-and-dedup.md** — Meta/TikTok/LinkedIn payload parsing and client-vs-server CAPI `event_id` dedup capture.
-- **consent-mode.md** — Consent Mode v2 default-denied seeding, CMP accept-click flow, and `gcs=`/`gcd=` assertions.
+- **consent-mode.md** — Passive four-signal observation, basic/advanced recipes, action
+  checkpoints, completion signals, and bounded `gcs=`/`gcd=` diagnostics.
 - **news-media.md** — article_view, de-duplicated 25/50/75/100 scroll buckets, and paywall-meter event tests.
 - **capture-fixture.md** — The reusable multi-pixel `test.extend` capture fixture.
 - **ci-gating.md** — GitHub Actions workflow, baseline-diff script, and surfacing missing-param failures.

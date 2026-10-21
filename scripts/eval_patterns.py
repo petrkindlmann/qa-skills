@@ -9,7 +9,8 @@ results comparable.
 Grammar (intentionally small and deterministic):
 - "A OR B OR C"  -> alternation; matches if ANY alternative matches.
 - ".*"            -> wildcard inside a literal; compiled as a regex span.
-- everything else -> case-insensitive substring / loose regex match.
+- `(a|b)` / `(a OR b)` -> a group of literal alternatives.
+- everything else -> case-insensitive literal substring match.
 
 A pattern is classified as SEMANTIC (needs an LLM judge, cannot be checked by
 substring) when it reads like prose rather than a token: it has no code-ish
@@ -47,24 +48,23 @@ def is_semantic(pattern: str) -> bool:
 
 
 def split_alternation(pattern: str) -> list[str]:
-    """Split top-level ' OR ' alternatives, but NOT ' OR ' inside (a OR b) groups."""
-    parts, depth, buf = [], 0, []
-    tokens = re.split(r"(\(|\)|\sOR\s)", pattern)
-    for tok in tokens:
-        if tok == "(":
-            depth += 1
-            buf.append(tok)
-        elif tok == ")":
-            depth = max(0, depth - 1)
-            buf.append(tok)
-        elif tok.strip() == "OR" and depth == 0:
-            parts.append("".join(buf).strip())
-            buf = []
-        else:
-            buf.append(tok)
-    if buf:
-        parts.append("".join(buf).strip())
-    return [p for p in parts if p]
+    """Split OR outside supported groups, preserving literal call fragments.
+
+    An unmatched '(' in `.match( OR .exec(` is code, not an open regex group.
+    Only the complete alternation groups understood by the compiler shield OR.
+    Empty alternatives are retained so spec validation can reject them.
+    """
+    groups = list(_GROUP.finditer(pattern))
+    parts, start = [], 0
+    # Match only OR so adjacent separators can share their whitespace. Consuming
+    # both surrounding spaces would miss the empty member in `foo OR OR bar`.
+    for separator in re.finditer(r"(?<=\s)OR(?=\s)", pattern):
+        if any(group.start() <= separator.start() < group.end() for group in groups):
+            continue
+        parts.append(pattern[start:separator.start()].strip())
+        start = separator.end()
+    parts.append(pattern[start:].strip())
+    return parts
 
 
 # (a|b|c) or (a OR b OR c) regex-style alternation group.
@@ -90,9 +90,19 @@ def _compile_literal(literal: str) -> re.Pattern:
             continue
         m = _GROUP.match(literal, i)
         if m:
-            alts = [re.escape(a.strip())
-                    for a in re.split(r"\||\sOR\s", m.group(1)) if a.strip()]
-            out.append("(?:" + "|".join(alts) + ")")
+            members = [a.strip() for a in re.split(r"\||(?<=\s)OR(?=\s)", m.group(1))]
+            if any(not member for member in members):
+                raise ValueError(f"empty group alternative in {m.group(0)!r}")
+            alts = [re.escape(member) for member in members]
+            group = "(?:" + "|".join(alts) + ")"
+            # A quoted argument alternative in a call retains the call's
+            # parentheses: getByRole('listbox' OR 'menu'). Prose/regex groups
+            # such as `assert (red|blue)` do not add literal parentheses.
+            if i and re.match(r"[\w.$]", literal[i - 1]) and all(
+                member.startswith(("'", '"')) for member in members
+            ):
+                group = r"\(" + group + r"\)"
+            out.append(group)
             i = m.end()
             continue
         # consume one literal char (escaped)
@@ -104,9 +114,61 @@ def _compile_literal(literal: str) -> re.Pattern:
 def matches(pattern: str, text: str) -> bool:
     """Does `text` satisfy `pattern` under the grammar above?"""
     for alt in split_alternation(pattern):
-        if _compile_literal(alt).search(text):
+        if alt and _compile_literal(alt).search(text):
             return True
     return False
+
+
+def validate_case(case: object) -> None:
+    """Reject malformed criteria before a model call or a reported score."""
+    if not isinstance(case, dict):
+        raise ValueError("each eval case must be an object")
+    for field in ("id", "prompt"):
+        if not isinstance(case.get(field), str) or not case[field].strip():
+            raise ValueError(f"case {case.get('id', '?')!r}: {field} must be a nonblank string")
+    for field in ("expected_patterns", "anti_patterns"):
+        patterns = case.get(field)
+        if not isinstance(patterns, list) or (field == "expected_patterns" and not patterns):
+            raise ValueError(f"case {case['id']!r}: {field} must be a list"
+                             + (" with at least one pattern" if field == "expected_patterns" else ""))
+        for pattern in patterns:
+            if not isinstance(pattern, str) or not pattern.strip():
+                raise ValueError(f"case {case['id']!r}: {field} items must be nonblank strings")
+            alternatives = split_alternation(pattern)
+            if any(not alt for alt in alternatives):
+                raise ValueError(f"case {case['id']!r}: empty OR alternative in {pattern!r}")
+            try:
+                compiled = [_compile_literal(alt) for alt in alternatives]
+            except ValueError as exc:
+                raise ValueError(f"case {case['id']!r}: {exc} in {field}") from exc
+            if any(pattern.search("") for pattern in compiled):
+                raise ValueError(f"case {case['id']!r}: pattern matches empty output: {pattern!r}")
+
+
+def validate_eval_spec(spec: object, expected_skill: str) -> list[dict]:
+    """Return valid cases or raise ValueError with a field-specific diagnostic.
+
+    The repository validator separately enforces its minimum case count. The
+    runner permits a smaller, nonempty suite for the first RED authoring step.
+    """
+    if not isinstance(spec, dict):
+        raise ValueError("eval spec must be an object")
+    if spec.get("skill") != expected_skill:
+        raise ValueError(f"eval spec skill {spec.get('skill')!r} does not match {expected_skill!r}")
+    if "version" in spec and (
+        not isinstance(spec["version"], str) or not spec["version"].strip()
+    ):
+        raise ValueError("eval spec version must be a nonblank string")
+    cases = spec.get("evals")
+    if not isinstance(cases, list) or not cases:
+        raise ValueError("evals must be a nonempty list of cases")
+    seen = set()
+    for case in cases:
+        validate_case(case)
+        if case["id"] in seen:
+            raise ValueError(f"duplicate eval case id {case['id']!r}")
+        seen.add(case["id"])
+    return cases
 
 
 @dataclass
@@ -116,18 +178,21 @@ class CaseResult:
     expected_miss: list[str]
     anti_hit: list[str]
     semantic: list[str]
+    semantic_anti: list[str]
+    checkable: int
 
     @property
     def passed(self) -> bool:
         # An eval passes when every non-semantic expected pattern is present and
         # no anti-pattern is present. Semantic patterns are deferred to a judge.
-        return not self.expected_miss and not self.anti_hit
+        return self.checkable > 0 and not self.expected_miss and not self.anti_hit
 
 
 def check_case(case: dict, text: str) -> CaseResult:
     """Check one eval case's expected/anti patterns against `text`."""
-    expected = case.get("expected_patterns", [])
-    anti = case.get("anti_patterns", [])
+    validate_case(case)
+    expected = case["expected_patterns"]
+    anti = case["anti_patterns"]
 
     expected_hit, expected_miss, semantic = [], [], []
     for pat in expected:
@@ -136,7 +201,9 @@ def check_case(case: dict, text: str) -> CaseResult:
             continue
         (expected_hit if matches(pat, text) else expected_miss).append(pat)
 
-    anti_hit = [pat for pat in anti if not is_semantic(pat) and matches(pat, text)]
+    semantic_anti = [pat for pat in anti if is_semantic(pat)]
+    checkable_anti = [pat for pat in anti if not is_semantic(pat)]
+    anti_hit = [pat for pat in checkable_anti if matches(pat, text)]
 
     return CaseResult(
         case_id=case.get("id", "?"),
@@ -144,4 +211,6 @@ def check_case(case: dict, text: str) -> CaseResult:
         expected_miss=expected_miss,
         anti_hit=anti_hit,
         semantic=semantic,
+        semantic_anti=semantic_anti,
+        checkable=len(expected_hit) + len(expected_miss) + len(checkable_anti),
     )

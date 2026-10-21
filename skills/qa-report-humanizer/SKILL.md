@@ -14,7 +14,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: process
 ---
 
@@ -22,8 +22,8 @@ metadata:
 A polished QA report that says nothing is worse than a rough one that says what broke.
 "A critical defect was identified in the authentication module" passes every grammar
 check and tells the reader nothing. This skill rewrites QA reports, bug reports, test
-summaries, and status updates so a real engineer can act on them — and guarantees the
-rewrite invents no numbers, errors, or severities that were not in the source.
+summaries, and status updates so a real engineer can act on them. Preserve the source's
+facts and uncertainty; compare the rewrite with the source before delivering it.
 </objective>
 
 ## Discovery Questions
@@ -37,28 +37,33 @@ severity conventions; skip anything answered there. Then clarify only what chang
 - **What channel — Slack, PR comment, or a formal report?** Slack gets 2-3 lines and a
   link; a PR comment gets the specific code/selector fix; a report gets structure. Length
   and formatting follow the channel.
-- **Are the numbers and severities locked facts that must survive verbatim?** If the source
-  says "9 failed" and "P1," those carry through unchanged. If a figure is missing, you name
-  the gap — you do not invent one (see Core Principle 5).
+- **Is any information deliberately excluded from this audience?** Otherwise keep every
+  supplied count, percentage, severity, identifier, result, and material qualification.
+  These are locked by default; do not ask permission to preserve them. Name relevant
+  missing evidence instead of inventing it (see Core Principle 5).
 
 ## Core Principles
 
 1. **Specific beats comprehensive.** "Login fails when the email has a plus sign" beats
    "Various authentication edge cases were identified." The reader fixes the first and learns
-   nothing from the second. Name the behavior, the trigger, and the scope.
+   nothing from the second. Name the behavior, the trigger, and the scope when supplied.
+   When they are absent, identify the missing details without inventing a better story.
 
 2. **Say what happened, not what category it falls into.** "Authentication module" is a
    bucket; "login with plus-sign emails" is a bug. Categories let the writer sound thorough
-   while hiding that they don't know the specifics. Replace every category with the concrete
-   thing inside it.
+   while hiding that they don't know the specifics. Use concrete details from the source;
+   a vague source may need a short statement of what is still unknown.
 
 3. **If the reader can't tell what broke or what to do, the report failed.** Write for the
    person who has to fix it at 4pm on a Friday. Lead with what's broken or risky, then what
    they should do about it. Skip the parts nobody reads.
 
-4. **Preserve every fact; cut every adjective.** The rewrite changes the prose, never the
-   data. No number, error string, severity, bug description, or test result may shift. The
-   only things you delete are filler, hedging, and synonym cycling — not information.
+4. **Preserve facts and uncertainty.** The rewrite changes the prose, never the data.
+   Keep exact numbers, severities, error strings, test names, commit IDs, and timestamps
+   attached to the same result and environment. Do not round percentages or infer failure
+   counts from a rounded pass rate. Preserve "suspected," "not reproduced," "not run,"
+   and "not approved": these describe evidence, not filler. A prior build's passing run
+   does not establish the current candidate's status. A recommendation is not approval.
 
 5. **Never invent the specifics you're asked to add.** "Make it specific" tempts the model
    to manufacture an exact percentage, an incident count, or a repro it never saw. Do not.
@@ -68,94 +73,126 @@ severity conventions; skip anything answered there. Then clarify only what chang
 
 ## QA-specific AI patterns to detect and fix
 
-For each: the BAD draft, the rewrite, and why. The single most damaging one — the template
-opener — is shown in full; the rest are compact.
+Each rewrite below uses only facts in its draft. A missing detail remains missing.
 
-### 1. The template opener (the worst offender)
+### 1. The template opener
 
-Bad:
-> Test execution was completed successfully for Sprint 47. A total of 342 test cases were executed across 5 test suites, achieving a 97.4% pass rate. The following sections provide detailed results.
+Draft: "Test execution was completed successfully for Sprint 47. A total of 342 test cases
+were executed across 5 test suites, achieving a 97.4% pass rate."
 
-Better:
-> Sprint 47: 342 tests run, 9 failed. 6 of the failures are in checkout (payment form validation). The other 3 are flaky timing issues we've seen before.
+Rewrite: "Sprint 47: 342 tests run across 5 suites; reported pass rate 97.4%. The draft
+does not give the failure count, affected suites, or whether failures are new or known."
 
-Why: the first version buries the signal under throat-clearing. The second tells you what
-happened and where to look in one line.
+The rounded rate cannot establish an exact failure breakdown. Do not invent checkout
+failures or flaky tests to make the report more useful.
 
 ### 2. Inflated severity language
 
-Bad: "A critical defect was identified in the authentication module that could potentially impact the user experience across multiple touchpoints."
-Better: "Login breaks if your email has a `+` in it. We've checked analytics — about 8% of our users have plus-sign emails. Needs a fix before release."
+Draft: "A critical defect was identified in the authentication module that could
+potentially impact the user experience across multiple touchpoints."
 
-Why: a "critical defect in the authentication module" is a category; "login breaks if your email has a plus sign" is something you can fix. (The 8% here is from the source's own analytics — don't add a figure the source doesn't have.)
+Rewrite: "A critical authentication defect was reported. The broken behavior,
+reproduction steps, and affected users are not specified."
+
+Keep the reported severity without independently confirming it. Plus-sign emails and
+an affected-user percentage belong here only when the source supplies them.
 
 ### 3. The pass-rate obsession
 
-Bad: "The overall pass rate increased from 94.2% to 97.1%, demonstrating significant improvement and showcasing the team's commitment to quality."
-Better: "Pass rate went from 94% to 97%. Most of that was fixing the 3 flaky Playwright tests that kept timing out on the dashboard load. Real bugs found: 2 (both in the new export feature)."
+Draft: "The overall pass rate increased from 94.2% to 97.1%, demonstrating significant
+improvement and showcasing the team's commitment to quality."
 
-Why: pass rates are vanity metrics without context. Say what actually changed.
+Rewrite: "Pass rate increased from 94.2% to 97.1%. The cause of the change and which
+tests changed are not given."
+
+Keep exact percentages. Do not attribute the change to repairs, flakiness, or fewer
+product defects without evidence. If causes are supplied, lead with them.
 
 ### 4. Generic risk language
 
-Bad: "Several high-risk areas have been identified that require careful monitoring. The team recommends continued vigilance and proactive testing."
-Better: "The payment flow has no E2E coverage for 3D Secure cards. We've had two production incidents from this in the past 6 months. I'd prioritize this over the admin panel work."
+Draft: "Several high-risk areas have been identified that require careful monitoring.
+The team recommends continued vigilance and proactive testing."
 
-Why: "high-risk areas" and "continued vigilance" mean nothing. Name the area, name the risk, say what to do.
+Rewrite: "The draft reports high-risk areas but does not identify them or the proposed
+checks. Name the areas and evidence before setting priorities."
+
+This is an information request, not a claim that payment coverage or incidents exist.
 
 ### 5. Synonym cycling for test results
 
-Bad: "The authentication tests passed successfully. The login verification suite completed without issues. The credential validation checks returned positive results. The sign-in workflow tests executed as expected."
-Better: "All auth tests passed (login, registration, password reset, SSO)."
+Draft: "The authentication tests passed successfully. The login verification suite
+completed without issues. The credential validation checks returned positive results.
+The sign-in workflow tests executed as expected."
 
-Why: four ways to say "auth tests passed" is four times too many. One outcome gets one verb.
+Rewrite: "The reported authentication checks passed: login, credential validation,
+and the sign-in workflow."
 
-### 6. The "despite challenges" closer
+Collapse repetition without adding registration, password reset, or SSO coverage.
 
-Bad: "Despite several challenges encountered during the testing phase, the team successfully completed all planned test activities. Moving forward, the focus will be on continuous improvement."
-Better: "We didn't get to the mobile browser tests this sprint — ran out of time after the checkout regression. Carrying those to next sprint. Everything else is done."
+### 6. The vague closer
 
-Why: name the gap and the reason, then the carry-forward plan. Drop the "despite challenges" framing.
+Draft: "Despite several challenges encountered during the testing phase, the team
+successfully completed all planned test activities. Moving forward, the focus will be
+on continuous improvement."
+
+Rewrite: "The team reports that all planned test activities are complete. The draft
+does not specify the challenges, results, or next steps."
+
+Do not turn a completed plan into invented skipped mobile tests or a carry-forward plan.
 
 ### 7. Vague stakeholder updates
 
-Bad: "Quality metrics continue to trend positively. The team is aligned on priorities and committed to delivering a high-quality release."
-Better: "The release looks fine. 4 bugs open, all P2 or lower. The login plus-sign bug (P1) was fixed yesterday. Smoke tests pass on staging."
+Draft: "Quality metrics continue to trend positively. The team is aligned on priorities
+and committed to delivering a high-quality release."
 
-Why: lead with ship/no-ship and the open blockers. That's the decision the reader is making.
+Rewrite: "The draft gives no test results, open blockers, or release decision to assess
+readiness. Add that evidence before describing the release as ready."
+
+Reported optimism is not evidence that smoke tests passed or that approval was granted.
 
 ### 8. PR review comments that say nothing
 
-Bad: "Great work on this implementation! I noticed a few potential areas for improvement that might enhance the overall test coverage and robustness."
-Better: "This test only checks the happy path. What happens when the API returns a 429? And the selector `.btn-submit` will break if anyone changes the CSS class — use `getByRole('button', { name: 'Submit' })` instead."
+Draft: "Great work on this implementation! I noticed a few potential areas for
+improvement that might enhance the overall test coverage and robustness."
 
-Why: name the missing scenario and the brittle line, then the concrete fix. `getByRole` is
-Playwright's recommended user-facing locator — prefer it over CSS-class selectors.
+Rewrite: "The comment raises possible coverage gaps without identifying a test or
+missing scenario. Which case needs an assertion?"
 
-### 9. Bug report padding (with repro and evidence)
+Do not claim the code has a brittle CSS selector, a missing 429 case, or only a happy
+path unless the supplied code or review actually shows it.
 
-Bad: "While conducting comprehensive regression testing of the user management module, a significant defect was discovered that impacts the core functionality of the system."
-Better:
-> Deleting a user doesn't revoke their API tokens — they can still call the API after deletion.
-> Repro: create a user, mint a token, `DELETE /api/users/{id}`, then `GET /api/me` with that token.
-> Returns `200 OK` with the user's data instead of `401 Unauthorized`. Found in the user-management API.
+### 9. Bug report padding with supplied evidence
 
-Why: lead with the broken behavior, give a 2-line repro and the actual error/status so the
-fixer can reproduce it in seconds. Drop the passive "was discovered" and the testing-session preamble.
+Draft: "While conducting regression testing, we discovered that deleting a user does
+not revoke their API tokens. Repro: create a user, mint a token, DELETE /api/users/{id},
+then GET /api/me with that token. Actual: 200 OK with user data. Expected: 401 Unauthorized."
+
+Rewrite: "Deleting a user leaves their API tokens usable. Repro: create a user, mint
+a token, `DELETE /api/users/{id}`, then `GET /api/me` with that token. Actual: `200 OK`
+with user data. Expected: `401 Unauthorized`."
+
+The source supplies this behavior and repro. A source saying only "a user-management
+defect was found" does not justify any of these details.
 
 ### 10. The rule-of-three summary
 
-Bad: "This sprint we improved quality, velocity, and confidence. The team demonstrated strong collaboration, technical excellence, and customer focus."
-Better: "This sprint we fixed the checkout flakiness (was failing 12% of the time, now <1%) and added E2E coverage for the new export feature."
+Draft: "This sprint we improved quality, velocity, and confidence. The team demonstrated
+strong collaboration, technical excellence, and customer focus."
 
-Why: three generic virtues in a tricolon is the loudest AI tell in a sprint summary. Replace with the two things that actually happened.
+Rewrite: "The draft gives no specific work or measurements for this sprint. Add the
+completed changes and their results."
+
+Do not invent a 12% to <1% flakiness change or new export coverage.
 
 ## How to rewrite
 
-1. **Cut the opening paragraph.** Most intros are throat-clearing. Delete everything before the first useful fact.
+1. **Inventory the facts.** Note results, counts, percentages, errors, severities, owners,
+   IDs, dates, evidence links, unknowns, and proposed actions. Keep each with its subject.
 2. **Lead with what matters.** What broke? What's risky? What should someone do? That goes first.
-3. **Replace categories with specifics.** "Authentication module" → "login with plus-sign emails." "Performance degradation" → "dashboard takes 8s to load (was 2)." "Several edge cases" → "empty cart, expired coupon, currency mismatch."
-4. **Kill the filler.** Remove every phrase in `references/filler-blocklist.md` — "It is worth noting that," "Moving forward," "Despite challenges," "The team is committed to," "Stakeholders can feel confident," and the rest.
+3. **Use supplied specifics.** Replace categories only when the source identifies their
+   behavior. Name missing information when it affects the reader's decision.
+4. **Cut filler.** Use `references/filler-blocklist.md` as an editing aid. Preserve exact
+   quoted errors, UI labels, test names, and evidence even if they contain a listed phrase.
 5. **Add what's useful — without inventing it.** What should the reader do next? What's the risk if they don't? How confident are you (be honest — "I'm not sure this is stable yet" is fine)? If a number to back a claim isn't in the source, say so; don't manufacture one.
 6. **Read it out loud.** If you wouldn't say it in standup, rewrite it.
 
@@ -163,20 +200,23 @@ Why: three generic virtues in a tricolon is the loudest AI tell in a sprint summ
 
 | Format | Lead with | Skip | Also include |
 |---|---|---|---|
-| **Test execution summary** | Failure count, where they are, whether they're new | Total counts, pass % (unless asked) | What's not covered yet, what to watch |
+| **Test execution summary** | Supplied failures and their status | Template opener and duplicate wording | Exact counts and percentages, unrun checks, build identity |
 | **Bug report** | What breaks, how to reproduce it, who's affected | "while performing comprehensive testing…" | Actual error message, status code, screenshot, or console output |
 | **Sprint update (stakeholders)** | Release readiness (yes/no/conditional), open blockers | Methodology, process, team-morale lines | What you'd want to know if you were deciding whether to ship |
 | **Slack message** | The result in 2-3 lines + a link | Greetings, "I wanted to share…" | — |
 | **Postmortem** | What broke, when, how long, who was affected | "This postmortem aims to provide…" | An honest account of what you missed and why |
 
-Slack example — Bad: "Hello team, I wanted to share the results of our latest test execution…"
-Better: "E2E run passed. 2 flaky failures (both dashboard timeout, known issue). Full report: [link]"
+Slack example with supplied facts: "Hello team, I wanted to share that the E2E run has
+2 dashboard timeout failures under investigation. Full report: [link]."
+Rewrite: "E2E: 2 dashboard timeout failures under investigation. Full report: [link]."
+Do not call failures flaky, known, or passed before the source establishes that status.
 
 ## Anti-Patterns
 
-- **Inventing the specifics you were asked to add.** Rewriting a vague draft into a precise-sounding one by manufacturing a percentage, an incident count, or a repro that wasn't in the source. This breaks the fact-preservation guarantee — name the gap instead.
+- **Inventing the specifics you were asked to add.** Rewriting a vague draft into a precise-sounding one by manufacturing a percentage, an incident count, or a repro that wasn't in the source. Name the gap instead.
 - **Opening with "Test execution was completed successfully" when tests failed.** The opener contradicts the body. Lead with the failures.
-- **"Potential impact" instead of the actual impact.** If you know the impact, state it; if you don't, say it's unmeasured. "Potential" is a hedge that hides which one you mean.
+- **Turning uncertainty into certainty.** Keep potential impact as potential when the
+  source is uncertain. Say what is known and what is unmeasured without guessing either.
 - **Writing "the team is aligned" in any context.** It conveys zero information and is a pure AI tell.
 - **Padding 3 bullets into 12 by rewording the same thing.** Synonym cycling. One outcome, one statement.
 - **Closing with optimistic statements that add no information.** "Moving forward, the focus will be on continuous improvement" — delete it.
@@ -185,35 +225,33 @@ Better: "E2E run passed. 2 flaky failures (both dashboard timeout, known issue).
 
 ## Verification
 
-The fact-preservation promise (Core Principle 4) is the load-bearing claim — prove it
-mechanically, smallest check first:
+Check the source and rewrite side by side. A numeric set comparison cannot establish
+fact preservation: it misses omitted facts, switched build IDs, and reversed outcomes.
 
-1. **Numbers and severities preserved.** Extract every figure from input and output and
-   diff the sets. The output set must be a subset of the input set — anything in the output
-   that isn't in the input is a fabricated fact:
-   ```bash
-   grep -oE '[0-9]+(\.[0-9]+)?%?|P[0-3]|[0-9]{3}' input.md  | sort -u > /tmp/in.txt
-   grep -oE '[0-9]+(\.[0-9]+)?%?|P[0-3]|[0-9]{3}' output.md | sort -u > /tmp/out.txt
-   comm -13 /tmp/in.txt /tmp/out.txt   # must be empty (allow only obvious rounding, e.g. 97.4 -> 97)
-   ```
-2. **Filler blocklist returns zero matches.** Copy the "Grep-ready regex" line from
-   `references/filler-blocklist.md` into `BLOCKLIST` and grep the output:
-   ```bash
-   BLOCKLIST='it('\''?s)? worth noting|moving forward|in conclusion|despite (several )?challenges|the team is (committed|aligned)|stakeholders can feel confident'
-   grep -iE "$BLOCKLIST" output.md   # expect no output; extend BLOCKLIST with the full regex from the reference
-   ```
-   Any hit is a surviving AI tell — rewrite that line.
-3. **Second-pass clean.** Run the output through the global `humanizer` (or `avoid-ai-writing`)
-   skill in detect mode. It should flag no remaining em-dash overuse, tricolon, or vague
-   attribution. If it flags something QA-specific that this skill missed, fix it here too.
+1. **Compare an evidence ledger.** For each material source fact, check its exact value,
+   subject, environment, date, and status in the output. Check both directions: nothing
+   invented in the output and nothing silently omitted from the source. Preserve exact
+   numbers; do not allow rounding unless the user explicitly asks for it.
+2. **Check relationships and uncertainty.** Failed is not skipped; a passing retry does
+   not erase the first failure. A suspected cause is not confirmed. A run on an earlier
+   commit is not evidence for a later candidate. Proposed release is not approved release.
+   Missing evidence remains unknown. Label suggested next actions as suggestions.
+3. **Review language.** Check the filler blocklist in the reference and deduplicate
+   repeated statements. A match inside an exact error string or required quotation is
+   preserved. If the global `humanizer` or `avoid-ai-writing` skill is available, it may
+   supply a second opinion; otherwise perform this review directly. Its absence does not
+   block the rewrite. Recheck the evidence ledger after any stylistic changes.
 
 ## Done When
 
-- Every number, severity, error string, and bug description in the output also appears in the input (the `comm -13` diff in Verification step 1 is empty, rounding aside).
-- The filler blocklist regex returns zero matches against the output (Verification step 2).
+- Material source facts survive with their exact values and associations; each factual
+  assertion in the output is supported by the source (Verification step 1).
+- Unknowns, unrun checks, retries, build identity, and approval status retain their meaning
+  (Verification step 2). A missing fact is not filled from an example in this skill.
+- Filler is removed outside exact evidence strings and required quotations (Verification step 3).
 - No synonym cycling: each distinct test outcome is stated once (no "passed / completed without issues / returned positive results" chains).
-- The output passes the global humanizer/avoid-ai-writing pass with no flagged patterns (Verification step 3).
-- The deliverable is the rewritten version; the original draft is archived or discarded, not shipped alongside.
+- The deliverable is the rewritten version in the requested language and channel. Do not
+  delete or archive the user's original file unless that file action was requested.
 
 ## Related Skills
 
@@ -227,7 +265,7 @@ mechanically, smallest check first:
 These live in the global Claude skill set, **not** in this repo's `skills/` directory:
 
 - **`humanizer`** / **`avoid-ai-writing`** — General-purpose anti-AI-writing engines. When both
-  apply, run the global skill for language-level cleanup (em-dash overuse, tricolon, vague
+  apply and the skill is available, use it for language-level cleanup (em-dash overuse, tricolon, vague
   attribution) and this skill for QA-specific structure and fact preservation. If an engineer's
   real standup/Slack voice is available, feed a sample to the global humanizer's voice mode so
   the rewrite matches that person rather than a generic "human" register.
@@ -235,4 +273,4 @@ These live in the global Claude skill set, **not** in this repo's `skills/` dire
 ## Reference Files (in `references/`)
 
 - **filler-blocklist.md** — Copy-paste blocklist of banned filler phrases, the grep-ready
-  regex used in Verification, synonym-cycling tells, and passive-voice "who broke it" dodges.
+  regex for optional language screening, synonym-cycling tells, and passive-voice "who broke it" dodges.

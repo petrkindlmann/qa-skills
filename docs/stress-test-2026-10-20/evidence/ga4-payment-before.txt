@@ -1,0 +1,299 @@
+TAP version 13
+# Subtest: GET event preserves its exact event name and value
+ok 1 - GET event preserves its exact event name and value
+  ---
+  duration_ms: 1.100129
+  type: 'test'
+  ...
+# Subtest: POST batch inherits common query parameters for every event
+not ok 2 - POST batch inherits common query parameters for every event
+  ---
+  duration_ms: 2.618228
+  type: 'test'
+  location: '/workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    undefined !== 'CZK'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'CZK'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:27:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: POST fields override shared parameters without a phantom query-only event
+not ok 3 - POST fields override shared parameters without a phantom query-only event
+  ---
+  duration_ms: 0.257361
+  type: 'test'
+  location: '/workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:32:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'USD' !== 'CZK'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'CZK'
+  actual: 'USD'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:36:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: URL query supplies a default event name but each POST row is one event
+not ok 4 - URL query supplies a default event name but each POST row is one event
+  ---
+  duration_ms: 0.671615
+  type: 'test'
+  location: '/workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:40:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   'page_view',
+        'add_to_cart',
+        'purchase'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'add_to_cart'
+    1: 'purchase'
+  actual:
+    0: 'page_view'
+    1: 'add_to_cart'
+    2: 'purchase'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:42:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: blank POST rows do not create extra events
+not ok 5 - blank POST rows do not create extra events
+  ---
+  duration_ms: 0.288517
+  type: 'test'
+  location: '/workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:45:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   'one\r',
+    -   'one',
+        'two'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'one'
+    1: 'two'
+  actual:
+    0: 'one\r'
+    1: 'two'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:47:10)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: consent-only request with no event name produces no business event
+ok 6 - consent-only request with no event name produces no business event
+  ---
+  duration_ms: 0.440413
+  type: 'test'
+  ...
+# Subtest: missing and empty event names are ignored
+ok 7 - missing and empty event names are ignored
+  ---
+  duration_ms: 0.138465
+  type: 'test'
+  ...
+# Subtest: lookalike hosts and paths containing collect in query are ignored
+not ok 8 - lookalike hosts and paths containing collect in query are ignored
+  ---
+  duration_ms: 0.514171
+  type: 'test'
+  location: '/workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:58:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+    + [
+    +   {
+    +     name: 'purchase',
+    +     params: {}
+    +   }
+    + ]
+    - []
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+  actual:
+    0:
+      name: 'purchase'
+      params:
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:62:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: configured first-party collector is accepted explicitly
+ok 9 - configured first-party collector is accepted explicitly
+  ---
+  duration_ms: 0.327325
+  type: 'test'
+  ...
+# Subtest: duplicate events remain duplicated for the caller to detect
+ok 10 - duplicate events remain duplicated for the caller to detect
+  ---
+  duration_ms: 0.440772
+  type: 'test'
+  ...
+# Subtest: collector captures early events and can release its listener
+not ok 11 - collector captures early events and can release its listener
+  ---
+  duration_ms: 0.303359
+  type: 'test'
+  location: '/workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:76:1'
+  failureType: 'testCodeFailure'
+  error: "Cannot read properties of undefined (reading 'length')"
+  code: 'ERR_TEST_FAILURE'
+  name: 'TypeError'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/analytics.test.mjs:80:33)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1382:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+    Test.postRun (node:internal/test_runner/test:1522:19)
+    Test.run (node:internal/test_runner/test:1447:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: sequential redelivery fulfills once
+ok 12 - sequential redelivery fulfills once
+  ---
+  duration_ms: 1.727158
+  type: 'test'
+  ...
+# Subtest: failure after dedup insertion remains retryable instead of losing fulfillment
+not ok 13 - failure after dedup insertion remains retryable instead of losing fulfillment
+  ---
+  duration_ms: 1.003506
+  type: 'test'
+  location: '/workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/payment.test.mjs:52:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    a failed operation must not remain marked processed
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/payment.test.mjs:55:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: success commits before acknowledgment and releases its connection
+not ok 14 - success commits before acknowledgment and releases its connection
+  ---
+  duration_ms: 0.539189
+  type: 'test'
+  location: '/workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/payment.test.mjs:61:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'INSERT INTO processed_events (id) VALUES ($1) ON CONFLICT (id) DO NOTHING RETURNING id'
+    - 'BEGIN'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'BEGIN'
+  actual: 'INSERT INTO processed_events (id) VALUES ($1) ON CONFLICT (id) DO NOTHING RETURNING id'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/payment.test.mjs:68:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+# Subtest: duplicate path closes the transaction before returning
+not ok 15 - duplicate path closes the transaction before returning
+  ---
+  duration_ms: 0.669161
+  type: 'test'
+  location: '/workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/payment.test.mjs:72:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    
+      [
+    +   'INSERT INTO processed_events (id) VALUES ($1) ON CONFLICT (id) DO NOTHING RETURNING id'
+    -   'COMMIT',
+    -   'RELEASE'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'COMMIT'
+    1: 'RELEASE'
+  actual:
+    0: 'INSERT INTO processed_events (id) VALUES ($1) ON CONFLICT (id) DO NOTHING RETURNING id'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/payment.test.mjs:80:10)
+    async Test.run (node:internal/test_runner/test:1389:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 6
+# fail 9
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 71.72886

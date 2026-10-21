@@ -122,17 +122,22 @@ dev-time exploratory mocking. Heavy code for each lives in `references/` — poi
 
 ### MSW (Mock Service Worker)
 
-MSW 2.x intercepts HTTP at the network layer (Service Worker in the browser, request interception
-in Node). The default for JS/TS projects. Stub at the HTTP layer (`POST /v1/payment_intents`),
-never at the SDK method — that decouples the test from the SDK version.
+MSW intercepts HTTP in the browser or Node. The reference targets the pinned **2.15.0** API;
+check the installed major before copying it, since MSW 3 changes imports and options.
+Stub at the HTTP layer (`POST /v1/payment_intents`), never at the SDK method — that decouples
+the test from the SDK version.
 
-The strongest enforcement seam this skill offers: `setupServer(...).listen({ onUnhandledRequest })`.
-Set it to `"error"` in CI so any escaped real call fails the run; `"warn"` is fine locally while
-iterating.
+For MSW 2, use `setupServer(...).listen({ onUnhandledRequest: "error" })` to reject intercepted
+requests without a matching handler. Prove both an expected mock response and a deliberate
+unhandled rejection. Explicit passthrough, uncaptured transports, or application code that
+swallows the rejection need separate checks; a green suite or empty log search is not an
+egress guarantee.
 
-See `references/msw.md` for centralized stateful handlers (payments), the Vitest setup with the
-CI/local `onUnhandledRequest` switch, per-test timeout/retry overrides, and a full stateful auth
-flow (create / verify / refresh / **revoke via `http.delete`**) keyed on a `Bearer` token.
+Put opt-in error handlers before a matching success handler. Rebuild stateful factories
+between tests: `resetHandlers()` alone does not clear their captured maps. See
+`references/msw.md` for payment handlers, explicit local fallback, state reset, an executable
+sample client with timeout/retry cases, and a stateful auth flow (create / verify / refresh /
+**revoke via `http.delete`**) keyed on a `Bearer` token.
 
 ### WireMock
 
@@ -200,9 +205,10 @@ and a replay harness driving a multi-step flow (create order → add items → a
 
 ## CI Integration
 
-MSW needs zero infrastructure — it intercepts in-process, so CI runs exactly like local; the only
-rule is to set `onUnhandledRequest: error` in CI (quoted `"error"` in JS) so an escaped real call
-hard-fails the run. WireMock and Testcontainers need Docker.
+MSW needs no separate stub server. Set `onUnhandledRequest: "error"` in CI, assert the expected
+mock response was observed, and exercise a deliberately unhandled request to prove the guard.
+Record unexpected bypasses; use CI network controls when zero egress is required. WireMock and
+Testcontainers need Docker.
 
 Two **incompatible port models** coexist and must not be mixed in one suite: the docker-compose
 model publishes **fixed** ports (a hardcoded `DATABASE_URL=...localhost:5432...` works), while the
@@ -247,26 +253,39 @@ test run starts its own isolated stub server.
 Recordings from six months ago reflect an API that no longer exists. Stamp `recordedAt` and fail
 the test when recordings exceed 30 days, forcing a re-record (see `references/record-replay.md`).
 
+### 8. A success handler shadows the error scenario
+MSW stops at the first matching handler that returns a response. A rate-limit handler placed
+after the create-payment handler never gets to return 429. Put opt-in errors first, then
+verify both the error and ordinary success request against the same endpoint.
+
+### 9. Resetting handlers while retaining fixture state
+`server.resetHandlers()` removes runtime overrides, but existing closures still hold payment
+or session maps. Recreate each stateful handler factory between tests and verify a previously
+existing record is absent afterward. Use IDs unique within the fixture instead of timestamps
+that collide under a frozen clock.
+
 ---
 
 ## Verification
 
-Prove no real call escaped, smallest check first:
+Verify the actual code and observed requests, smallest check first:
 
 ```bash
-# 1. MSW: any unhandled request must hard-fail the suite in CI
-CI=1 npm run test:integration            # onUnhandledRequest:"error" → exit 0 means nothing escaped
-
-# 2. WireMock/Testcontainers: confirm containers are reachable, then teardown leaves nothing
-docker compose -f docker-compose.test.yml up -d --wait --wait-timeout 120 && echo OK
-docker compose -f docker-compose.test.yml down -v
-
-# 3. Grep CI logs for outbound calls to the real provider's host (should print nothing)
-grep -iE "api\.stripe\.com|api\.twilio\.com" ci-run.log && echo "LEAK" || echo "clean"
+# In this skill repository: execute the actual MSW reference code fences.
+node --test --test-isolation=none tests/examples/msw.test.mjs
 ```
 
-A green run under `CI=1` with `onUnhandledRequest:"error"` plus an empty grep for the real host is
-the proof that the suite ran fully virtualized.
+The regression must observe a healthy create/retrieve/confirm flow, the opt-in 429, a client
+timeout after its handler was reached, bounded 503 retries, fresh state after reset, and a
+deliberate unhandled request rejected before fallback. Moving the rate-limit handler behind
+success or retaining the old state must make the corresponding case fail.
+
+For a consumer project, run its actual integration command with CI settings and verify the
+same signals. An absent provider hostname in logs proves only that the search found no line;
+mocked requests themselves can log provider URLs. Inspect matched/unhandled/bypassed request
+evidence and network enforcement separately. For container fixtures, verify healthy startup
+and guaranteed teardown. State which transports and scenarios were exercised; this recipe
+test does not validate a live provider contract.
 
 ---
 
@@ -277,15 +296,18 @@ the proof that the suite ran fully virtualized.
 - Stubs cover all critical external dependencies with at least one error path each (4xx/5xx,
   timeout, or rate limit).
 - Stubs and mapping files are versioned alongside test code in the same repository.
-- The suite runs green in CI with `onUnhandledRequest: "error"` (or the WireMock equivalent), and a
-  grep of CI logs for the real provider host returns nothing.
+- The suite runs green with the installed framework's unhandled-request guard, an expected
+  mocked request was observed, and an intentionally unhandled request proves the guard rejects
+  fallback. Unexpected bypasses are accounted for; zero-egress claims have network evidence.
+- Stateful fixtures and runtime overrides reset between tests; a record created before reset
+  is absent afterward, and a prior error override no longer affects the next test.
 - Any record-replay baseline carries a `recordedAt` stamp and a 30-day expiry check that fails the
   test when stale.
 
 ## Reference Files (in `references/`)
 
-- **msw.md** — centralized stateful handlers, Vitest setup with the CI/local `onUnhandledRequest`
-  switch, per-test timeout/retry overrides, and the full create/verify/refresh/revoke auth flow.
+- **msw.md** — ordered payment/error handlers, Vitest setup with an explicit local fallback
+  switch and state reset, executable timeout/retry examples, and create/verify/refresh/revoke auth.
 - **wiremock.md** — Docker setup, response-templated and paginated mappings, the priority-based
   error mapping, the admin API, and the contract-drift seam (Pact/Prism).
 - **testcontainers.md** — parallel PostgreSQL/Redis/Elasticsearch startup, `globalSetup` wiring,

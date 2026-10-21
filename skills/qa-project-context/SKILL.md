@@ -11,7 +11,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: foundation
 ---
 
@@ -20,7 +20,8 @@ This skill writes the single file every other QA skill reads. Without it, each s
 re-asks "what framework? what CI? where do tests live?" from scratch and gives generic
 advice. It produces `.agents/qa-project-context.md` in the project root, capturing product,
 tech stack, test stack, CI/CD, environments, quality goals, risk areas, team, and
-conventions — with no `[bracketed placeholders]` left behind.
+conventions. Replace template placeholders with evidenced values or explicit unknowns;
+an unavailable answer is not permission to invent a value.
 </objective>
 
 Downstream skills consume specific sections: Risk Areas feeds `risk-based-testing` and
@@ -31,8 +32,9 @@ well and the rest of the library gets sharper for free.
 ## Discovery Questions
 
 First, check whether `.agents/qa-project-context.md` already exists — if it does, read it and
-skip every section already filled (no `[brackets]`). Then scan the repo for config files (see
-Codebase Detection) and present detected values for confirmation rather than asking blind.
+use the existing sections as context. Check their provenance and whether relevant config
+has changed. Scan the repo for config files (see Codebase Detection), record observed
+values with their source, and ask only about gaps or conflicts that affect the work.
 Walk the remaining questions **section by section**, never all at once.
 
 ### Product
@@ -48,7 +50,9 @@ Walk the remaining questions **section by section**, never all at once.
 
 ### Test Stack
 - E2E tests today? Framework, config location, test directory. Same for unit, API, visual, performance.
-- If a framework is detected from config files, populate Test Stack with its name + version + path — don't re-ask.
+- If a framework is detected, record its name, config path, and resolved version from the
+  lockfile or installed package. Label a manifest constraint such as `^1.62.0` as a range,
+  not an installed version. Config presence does not establish that tests can execute.
 - Zero test infrastructure? That's a valid answer; record "None selected yet" and note a default (see Core Principle 3).
 
 ### CI/CD
@@ -86,20 +90,21 @@ Walk the remaining questions **section by section**, never all at once.
    triggers a setup suggestion; a fake one sends them building on sand.
 
 3. **Detect before you ask; recommend a default only when there's nothing to detect.**
-   Read `package.json` and config files first and confirm what you find. Tool *recommendations*
+   Read `package.json`, lockfiles, and config files first and cite what you find. Tool *recommendations*
    belong to the specialized skills — the one exception is a project with zero test
    infrastructure, where you note **Playwright** (E2E) and **Vitest** (unit) as defaults in the
    Test Stack and hand off to `playwright-automation` / `unit-testing`. This is the single
    carve-out to the "no recommendations" rule; everywhere else, just record.
 
-4. **Risk Areas is the highest-leverage section — never skip it.** It is the direct input to
-   `risk-based-testing` and `test-strategy`. Push for at least 3–4 entries scored by impact and
-   likelihood even when the user says "everything's fine."
+4. **Risk Areas needs evidence.** It is input to `risk-based-testing` and `test-strategy`.
+   Capture known risks and label proposed risks or scores as assumptions. If incident history,
+   likelihood, or business impact is unavailable, record that gap. Do not invent three risks
+   or a precise score solely to fill a table.
 
 ## Codebase Detection
 
-Scan for these before asking about the stack. Present detected values for confirmation; when a
-test config is found, write the framework name into Test Stack rather than re-asking.
+Scan for these before asking about the stack. Cite detected values and their files; when a
+test config is found, record the framework and whether its version and execution are known.
 
 | File | Indicates |
 |------|-----------|
@@ -224,16 +229,18 @@ survive markup churn, but are less stable than `data-testid` when copy or roles 
 Dumping 30 questions is overwhelming and gets shallow answers. Walk section by section, Product first.
 
 ### 2. Leaving `[brackets]` in the final file
-If the user has no answer, record the actual state ("None — no E2E framework selected yet"), not a
-placeholder. Placeholders left in the file silently break every downstream skill that parses it.
+If the user confirms there is no framework, record "None selected yet." If no evidence is
+available, record "Unknown; not inspected" or the specific missing input. Those states are
+different. Ordinary Markdown links, task checkboxes, and selectors with brackets are valid
+content; square brackets alone do not identify a template placeholder.
 
 ### 3. Inventing information
-Detect the stack from `package.json`, `requirements.txt`, or config files — then confirm with the
-user before writing. Don't guess a database or hosting provider.
+Detect the stack from manifests, lockfiles, and config files, citing the source. Don't guess
+a database, hosting provider, installed version, team size, or agreed quality target.
 
 ### 4. Skipping Risk Areas
-The single most valuable section for downstream skills. Push for at least 3–4 scored entries even
-when the user insists everything is fine.
+Keep the section even if evidence is missing. Mark candidate risks as proposals and unknown
+scores as unknown; do not present a hypothetical incident as project history.
 
 ### 5. Recommending tools beyond the zero-infra default
 This skill records current state; tool selection belongs to `playwright-automation`,
@@ -242,34 +249,28 @@ Playwright + Vitest default when there is no test infrastructure at all (Princip
 
 ## Verification
 
-Prove the produced file is complete, smallest check first. From the project root:
+Read the produced file and compare each section with its sources. A grep for square brackets
+rejects valid Markdown links and selectors, while counting nine arbitrary headings can accept
+the wrong sections. Neither proves completeness or factual accuracy.
 
-```bash
-test -f .agents/qa-project-context.md \
-  && ! grep -q '\[.*\]' .agents/qa-project-context.md \
-  && echo "context complete: file exists, no placeholders"
-```
-
-Exit 0 with the message means the file exists and every `[bracketed placeholder]` is gone. A
-non-zero exit means either the file is missing or placeholders remain — fix those before handing
-off to any other skill. Then eyeball that all nine section headers are present:
-
-```bash
-grep -c '^## ' .agents/qa-project-context.md   # expect >= 9
-```
+Check the nine named sections below outside code fences, each with substantive content or an
+explicit unknown. Compare template fields with their replacements, preserving legitimate
+bracket syntax. Check framework versions against lockfiles, separate current state from
+recommendations, and retain provenance for detected values. Report unresolved gaps and the
+next useful action; a missing optional detail does not block every downstream skill.
 
 ## Done When
 
-- `.agents/qa-project-context.md` exists in the project root and `grep -q '\[.*\]'` returns
-  non-zero (no bracketed placeholders remain).
+- `.agents/qa-project-context.md` exists and its template fields contain evidenced values or
+  explicit unknowns. Valid Markdown links and bracketed selectors remain intact.
 - All nine sections are present: Product, Tech Stack, Test Stack, CI/CD, Environments, Quality
   Goals, Risk Areas, Team, Conventions.
-- Product lists at least 5 specific, testable key user flows (no "user uses the app").
-- Test Stack names the actual frameworks + versions + paths in use, or states "None selected yet"
-  with the recommended default noted.
-- Risk Areas table has at least 3 entries scored by impact and business impact.
-- Quality Goals are concrete numbers (coverage %, flake %, durations) — not aspirational prose.
-- Team section shows actual headcount and the dev:QA ratio (or "solo").
+- Product lists the known, specific user flows; missing flow evidence is called out.
+- Test Stack distinguishes configured frameworks, manifest ranges, resolved versions,
+  observed execution, and explicitly absent or unknown tooling.
+- Risk Areas separates evidenced risks from proposals and identifies unknown scores.
+- Quality Goals distinguishes agreed numeric targets from proposed or unknown targets.
+- Team contains supplied headcount and ratio, or explicitly says they are unknown.
 
 ## Related Skills
 

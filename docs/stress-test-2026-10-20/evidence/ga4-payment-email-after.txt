@@ -1,0 +1,160 @@
+TAP version 13
+# Subtest: GET event preserves its exact event name and value
+ok 1 - GET event preserves its exact event name and value
+  ---
+  duration_ms: 1.686137
+  type: 'test'
+  ...
+# Subtest: POST batch inherits common query parameters for every event
+ok 2 - POST batch inherits common query parameters for every event
+  ---
+  duration_ms: 0.800536
+  type: 'test'
+  ...
+# Subtest: POST fields override shared parameters without a phantom query-only event
+ok 3 - POST fields override shared parameters without a phantom query-only event
+  ---
+  duration_ms: 0.304971
+  type: 'test'
+  ...
+# Subtest: URL query supplies a default event name but each POST row is one event
+ok 4 - URL query supplies a default event name but each POST row is one event
+  ---
+  duration_ms: 0.269669
+  type: 'test'
+  ...
+# Subtest: blank POST rows do not create extra events
+ok 5 - blank POST rows do not create extra events
+  ---
+  duration_ms: 0.232414
+  type: 'test'
+  ...
+# Subtest: consent-only request with no event name produces no business event
+ok 6 - consent-only request with no event name produces no business event
+  ---
+  duration_ms: 0.308907
+  type: 'test'
+  ...
+# Subtest: missing and empty event names are ignored
+ok 7 - missing and empty event names are ignored
+  ---
+  duration_ms: 0.156081
+  type: 'test'
+  ...
+# Subtest: lookalike hosts and paths containing collect in query are ignored
+ok 8 - lookalike hosts and paths containing collect in query are ignored
+  ---
+  duration_ms: 0.136281
+  type: 'test'
+  ...
+# Subtest: configured first-party collector is accepted explicitly
+ok 9 - configured first-party collector is accepted explicitly
+  ---
+  duration_ms: 0.234848
+  type: 'test'
+  ...
+# Subtest: duplicate events remain duplicated for the caller to detect
+ok 10 - duplicate events remain duplicated for the caller to detect
+  ---
+  duration_ms: 0.200306
+  type: 'test'
+  ...
+# Subtest: collector captures early events and can release its listener
+ok 11 - collector captures early events and can release its listener
+  ---
+  duration_ms: 0.210903
+  type: 'test'
+  ...
+# Subtest: OTP is selected by label rather than an earlier order number
+ok 12 - OTP is selected by label rather than an earlier order number
+  ---
+  duration_ms: 0.257292
+  type: 'test'
+  ...
+# Subtest: missing and ambiguous OTPs fail instead of guessing
+ok 13 - missing and ambiguous OTPs fail instead of guessing
+  ---
+  duration_ms: 0.305823
+  type: 'test'
+  ...
+# Subtest: a repeated rendering of the same OTP is unambiguous
+ok 14 - a repeated rendering of the same OTP is unambiguous
+  ---
+  duration_ms: 0.240496
+  type: 'test'
+  ...
+# Subtest: localized template can specify its label without changing extraction logic
+ok 15 - localized template can specify its label without changing extraction logic
+  ---
+  duration_ms: 0.15537
+  type: 'test'
+  ...
+# Subtest: Mailpit uses search endpoint and exact recipient, then fetches matching body
+ok 16 - Mailpit uses search endpoint and exact recipient, then fetches matching body
+  ---
+  duration_ms: 10.417576
+  type: 'test'
+  ...
+# Subtest: a second request for the same account excludes previously seen mail
+ok 17 - a second request for the same account excludes previously seen mail
+  ---
+  duration_ms: 1.491388
+  type: 'test'
+  ...
+# Subtest: delayed delivery is polled without an arbitrary browser sleep
+ok 18 - delayed delivery is polled without an arbitrary browser sleep
+  ---
+  duration_ms: 16.061945
+  type: 'test'
+  ...
+# Subtest: server errors and malformed search responses are visible failures
+ok 19 - server errors and malformed search responses are visible failures
+  ---
+  duration_ms: 1.005659
+  type: 'test'
+  ...
+# Subtest: detail response cannot substitute another recipient or message ID
+ok 20 - detail response cannot substitute another recipient or message ID
+  ---
+  duration_ms: 1.573761
+  type: 'test'
+  ...
+# Subtest: missing mail times out rather than becoming an empty successful result
+ok 21 - missing mail times out rather than becoming an empty successful result
+  ---
+  duration_ms: 19.798518
+  type: 'test'
+  ...
+# Subtest: sequential redelivery fulfills once
+ok 22 - sequential redelivery fulfills once
+  ---
+  duration_ms: 2.471941
+  type: 'test'
+  ...
+# Subtest: failure after dedup insertion remains retryable instead of losing fulfillment
+ok 23 - failure after dedup insertion remains retryable instead of losing fulfillment
+  ---
+  duration_ms: 0.934004
+  type: 'test'
+  ...
+# Subtest: success commits before acknowledgment and releases its connection
+ok 24 - success commits before acknowledgment and releases its connection
+  ---
+  duration_ms: 0.53981
+  type: 'test'
+  ...
+# Subtest: duplicate path closes the transaction before returning
+ok 25 - duplicate path closes the transaction before returning
+  ---
+  duration_ms: 0.654949
+  type: 'test'
+  ...
+1..25
+# tests 25
+# suites 0
+# pass 25
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 462.128818

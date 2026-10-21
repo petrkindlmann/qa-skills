@@ -1,0 +1,26 @@
+{
+  "base_commit": "b3bb61bd268b147476252c6ed5a0440c87b97441",
+  "node": "v24.19.0",
+  "msw": "2.15.0",
+  "command": "node --test --test-isolation=none tests/examples/msw.test.mjs",
+  "before": {
+    "log": "/tmp/qa-skill-scenarios/msw-before.log",
+    "tests": 5,
+    "passed": 2,
+    "failed": 3
+  },
+  "after": {
+    "log": "/tmp/qa-skill-scenarios/msw-after.log",
+    "tests": 10,
+    "passed": 10,
+    "failed": 0
+  },
+  "scope": "Actual MSW handlers, lifecycle, sample client and scenario fences loaded by snippets.mjs. Node assertion/lifecycle adapters replace Vitest registration; no live provider contract, full Vitest runner or TypeScript typecheck was exercised.",
+  "sha256_after": {
+    "skills/service-virtualization/SKILL.md": "9b2cae1125d2c16c0cf612689defe3342667876db7a5ad91a8955644cd818db2",
+    "skills/service-virtualization/references/msw.md": "26f11a1a32a1197dbb3636519dd3f5d4c7f5f45812f4097d7fcffe55a7bc81c2",
+    "tests/examples/msw.test.mjs": "98f453c978a7fa96f2651d766fc70206cafbe790a00b422179d814a80a90f409",
+    "package.json": "7a0df9b3c54241d578445015b58acc7611ab95e4e752a9fe35f4a9620be82661",
+    "package-lock.json": "a7d55a05085137f2c1fc0617e5593e46d2e3652b69bbd26fde14ea561dcc2d14"
+  }
+}

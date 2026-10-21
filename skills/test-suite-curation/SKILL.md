@@ -16,7 +16,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "1.1"
   category: process
 ---
 
@@ -74,7 +74,12 @@ The wrong answer is a single combined `--cov` report that tells you per-*file* p
 pytest --cov=src --cov-branch --cov-context=test
 ```
 
-`--cov-context=test` makes coverage.py call `switch_context()` around each test, tagging every measured line with the test that ran it. Add `--cov-branch` so a test that takes the `if` and one that takes the `else` are not treated as covering "the same line." The result is written into the `.coverage` SQLite database, in the `context` and `line_bits`/`arc` tables.
+`--cov-context=test` makes pytest-cov switch coverage.py contexts for each pytest test ID
+and execution phase (`setup`, `run`, `teardown`). Parameter IDs remain distinct. Union the
+three phases for each test before comparing fingerprints; keep the raw phase data to
+inspect fixture attribution. Coverage.py's `dynamic_context = test_function` records
+function contexts and does not provide the same pytest phase/parameter identity. Add
+`--cov-branch` to distinguish executed arcs. The result is written into `.coverage`.
 
 Then read the **contexts table out of the `.coverage` SQLite DB** to build a per-test fingerprint: for each test, the exact set of `(file, line)` and `(file, branch-arc)` pairs it covered. From those sets you compute:
 
@@ -228,7 +233,10 @@ Git history is not a recovery plan — nobody watches for the defect the deleted
 
 Prove the audit actually holds before anyone deletes anything, smallest check first:
 
-- **Per-test contexts were captured, not a flat report.** `sqlite3 .coverage "SELECT COUNT(*) FROM context WHERE context != '';"` returns a count roughly equal to your test count (not 0/1). Zero means `--cov-context=test` did not run.
+- **Per-test contexts were captured.** Inspect `.coverage` context names for pytest test IDs
+  ending in `|setup`, `|run`, or `|teardown`, retaining parameter IDs. Compare the aggregated
+  IDs with collected tests and investigate missing cases; tests with no measured application
+  code may have no context. Raw context count is not test count because phases are separate.
 - **No deletion rests on coverage equality alone.** For every `redundant` row, the audit log's `mutation_check` column is filled (`yes` + run id). `grep -c 'redundant' docs/test-curation-log.md` equals the number of rows whose `mutation_check` is non-blank.
 - **Quarantine, not removal, hit the repo first.** `git log --diff-filter=D --name-only -- tests/ | grep test_` shows no test files deleted in the quarantine PR; the flagged tests are skipped/xfail or moved under `tests/quarantine/`, still collectible (`pytest --collect-only -m skip` or equivalent lists them).
 - **Tiers select correctly.** `pytest -m smoke --collect-only` returns only the risk/defect-catcher cohort and runs under the smoke budget; `pytest -m "smoke or core or extended" --collect-only` accounts for every test (no test is untagged).

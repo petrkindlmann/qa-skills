@@ -13,7 +13,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: metrics
 ---
 
@@ -78,14 +78,16 @@ Allure generates rich HTML reports from test results with history, categories, a
 
 Choose Allure 3 for new projects. If you follow only the `brew install allure` / `allure generate` commands you are on the **v2** path — that is fine and fully supported; just know which one you are running.
 
-Minimal Playwright reporter wiring — register the adapter as `reporter: ["allure-playwright", { outputFolder, environmentInfo }]` so every run drops results into `allure-results/` with the environment captured:
+For the Allure Playwright 3.x adapter, register `resultsDir` and `environmentInfo`
+inside its reporter entry so each run writes raw results to the configured directory.
+See the [adapter configuration](https://allurereport.org/docs/playwright-configuration/).
 
 ```typescript
 // playwright.config.ts
 reporter: [
   ["list"],
   ["allure-playwright", {
-    outputFolder: "allure-results",
+    resultsDir: "allure-results",
     environmentInfo: {
       Environment: process.env.TEST_ENV ?? "local",
       BaseURL: process.env.BASE_URL ?? "http://localhost:3000",

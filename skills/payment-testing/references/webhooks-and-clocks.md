@@ -46,7 +46,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const app = express();
 
 // Webhook route gets the RAW body. Mount this BEFORE app.use(express.json()).
-app.post('/webhooks', express.raw({ type: 'application/json' }), (req, res) => {
+app.post('/webhooks', express.raw({ type: 'application/json' }), async (req, res, next) => {
   const sig = req.headers['stripe-signature'] as string;
   let event: Stripe.Event;
   try {
@@ -56,7 +56,11 @@ app.post('/webhooks', express.raw({ type: 'application/json' }), (req, res) => {
     // Bad/forged/tampered signature → reject with 400. Do NOT process the payload.
     return res.status(400).send(`Webhook Error: ${(err as Error).message}`);
   }
-  return handleEvent(event, res);
+  try {
+    return await handleEvent(event, res);
+  } catch (err) {
+    return next(err); // processing failure is 5xx and retryable, not a bad signature
+  }
 });
 
 app.use(express.json()); // everything else parses JSON normally
@@ -97,8 +101,16 @@ test the happy path without a live event.
 
 Stripe retries webhook delivery, so the same `event.id` can arrive twice. Request-side
 idempotency keys (for *outbound* API calls) do not help here. Store `event.id` with a
-**UNIQUE** constraint and short-circuit on conflict. An in-memory `Set` is wrong: lost on
-restart, useless across instances.
+**UNIQUE** constraint. Commit that marker and the order's database changes in the
+same transaction. A crash after inserting the marker but before fulfillment must
+roll back both, so a retry can finish the work. An in-memory `Set` is lost on restart
+and cannot coordinate instances.
+
+`pool` below is a node-postgres pool. `fulfillOrderInTransaction` must use the supplied
+client for every database write and enforce a unique order/payment operation. If it
+sends email, ships goods, or calls another service, write a transactional outbox job
+instead and use a stable idempotency key at the consumer. A database transaction
+cannot make an external side effect happen exactly once.
 
 ```sql
 CREATE TABLE processed_events (
@@ -109,20 +121,32 @@ CREATE TABLE processed_events (
 
 ```ts
 async function handleEvent(event: Stripe.Event, res: express.Response) {
-  // Persisted dedup keyed on event.id — survives restarts and works across instances.
-  const inserted = await db.query(
-    `INSERT INTO processed_events (id) VALUES ($1) ON CONFLICT (id) DO NOTHING RETURNING id`,
-    [event.id],
-  );
-  if (inserted.rowCount === 0) {
-    return res.status(200).send('duplicate ignored'); // already processed → ack, do nothing
+  const client = await pool.connect();
+  try {
+    await client.query('BEGIN');
+    const inserted = await client.query(
+      `INSERT INTO processed_events (id) VALUES ($1) ON CONFLICT (id) DO NOTHING RETURNING id`,
+      [event.id],
+    );
+    if (inserted.rowCount !== 0 && event.type === 'payment_intent.succeeded') {
+      await fulfillOrderInTransaction(client, event.data.object as Stripe.PaymentIntent);
+    }
+    await client.query('COMMIT');
+    return res.status(200).send(inserted.rowCount === 0 ? 'duplicate ignored' : 'ok');
+  } catch (err) {
+    await client.query('ROLLBACK');
+    throw err;
+  } finally {
+    client.release();
   }
-  if (event.type === 'payment_intent.succeeded') {
-    await fulfillOrder(event.data.object as Stripe.PaymentIntent);
-  }
-  return res.status(200).send('ok');
 }
 ```
+
+Test sequential and concurrent redelivery, an exception after the marker insert,
+restart with the same database, and two different event IDs describing the same
+payment. The event ID gate alone cannot prevent that last business-level duplicate.
+Also replay events out of order; an older event must not undo a terminal order state.
+Reference: [Stripe webhook delivery and duplicate-event guidance](https://docs.stripe.com/webhooks).
 
 ```ts
 // Test: deliver the SAME event twice, assert fulfillment happens exactly once.
@@ -211,7 +235,7 @@ app.get('/return', async (req, res) => {
 });
 
 // RIGHT — fulfill from the verified webhook only:
-async function handleEvent(event: Stripe.Event) {
+async function reconcileVerifiedPayment(event: Stripe.Event) {
   if (event.type === 'payment_intent.succeeded') {
     const pi = event.data.object as Stripe.PaymentIntent;
     // Re-confirm against the API; don't trust the event body alone for money.

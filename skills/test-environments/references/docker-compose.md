@@ -6,9 +6,17 @@ runner script, the multi-stage Dockerfile (with the production target), and the 
 
 ## `docker-compose.test.yml`
 
-A production-quality compose file that spins up the full stack for integration and E2E tests.
+A Compose template that spins up the full stack for integration and E2E tests.
 Note `mailpit` (not MailHog — unmaintained, last release 2020) and the `seed` service using
 `condition: service_completed_successfully` so the app only starts after seeding *finishes*.
+Adapt the build, seed command, and `/health` endpoint to the application. The health check
+uses [Node's built-in `fetch`](https://nodejs.org/api/globals.html#fetch), available in the
+shown Node 24 image, without installing curl.
+
+For PostgreSQL 18, mount the named volume at `/var/lib/postgresql`; the image's default
+`PGDATA` is `/var/lib/postgresql/18/docker`. The older `/var/lib/postgresql/data` mount
+belongs to the default layout of PostgreSQL 17 and earlier. See the
+[official image documentation](https://github.com/docker-library/docs/blob/master/postgres/README.md#pgdata).
 
 ```yaml
 # docker-compose.test.yml
@@ -21,7 +29,7 @@ services:
       dockerfile: Dockerfile
       target: test  # Multi-stage: use the test stage
     ports:
-      - "3000:3000"
+      - "127.0.0.1:${TEST_APP_PORT:-3000}:3000"
     environment:
       NODE_ENV: test
       DATABASE_URL: postgres://test:test@postgres:5432/testdb
@@ -36,19 +44,21 @@ services:
       seed:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:' + (process.env.PORT || 3000) + '/health').then(r => process.exit(r.ok ? 0 : 1)).catch(() => process.exit(1))"]
       interval: 5s
       timeout: 3s
       retries: 10
 
   postgres:
     image: postgres:18-alpine
+    ports:
+      - "127.0.0.1:${TEST_POSTGRES_PORT:-5432}:5432"
     environment:
       POSTGRES_DB: testdb
       POSTGRES_USER: test
       POSTGRES_PASSWORD: test
     volumes:
-      - postgres-test-data:/var/lib/postgresql/data
+      - postgres-test-data:/var/lib/postgresql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U test -d testdb"]
       interval: 3s
@@ -57,6 +67,8 @@ services:
 
   redis:
     image: redis:8-alpine
+    ports:
+      - "127.0.0.1:${TEST_REDIS_PORT:-6379}:6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 3s
@@ -78,8 +90,8 @@ services:
   mailpit:
     image: axllent/mailpit:latest
     ports:
-      - "8025:8025"   # Web UI for inspecting sent emails
-      - "1025:1025"   # SMTP
+      - "127.0.0.1:${TEST_MAILPIT_UI_PORT:-8025}:8025"   # Web UI
+      - "127.0.0.1:${TEST_MAILPIT_SMTP_PORT:-1025}:1025" # SMTP
 
 volumes:
   postgres-test-data:
@@ -87,8 +99,26 @@ volumes:
 
 ## Running Tests Against Docker Compose
 
-A `trap`-guarded runner: it tears the environment down on *any* exit (success, failure, or
-Ctrl-C), so a crashed test never leaves dangling containers or volumes behind.
+This host runner assumes a local Docker daemon. It connects through the published
+loopback ports; containers use the service names `postgres:5432` and `redis:6379` instead.
+Export `TEST_POSTGRES_PORT` and `TEST_REDIS_PORT` when overriding the defaults. The runner
+exports their resolved values so Compose interpolation and the host connection URLs agree,
+including when a Compose `.env` file contains different defaults.
+
+The default `app-test` project and host ports support one stack at a time on a Docker host.
+For parallel jobs, set a unique `COMPOSE_PROJECT_NAME` **and** allocate noncolliding values
+for all five `TEST_*_PORT` variables above. Project names isolate containers, networks,
+and named volumes; they do not isolate published host ports. Update any host-side app or
+Mailpit URLs to those ports too. Each runner must own its project exclusively because
+`down -v` removes that project's volumes. See Docker's
+[project names](https://docs.docker.com/compose/how-tos/project-name/) and
+[port mappings](https://docs.docker.com/reference/compose-file/services/#ports).
+
+The `EXIT` trap attempts cleanup after normal success or failure, preserving the original
+startup/test exit status even if teardown fails. Handled `INT` and `TERM` signals exit
+through the same cleanup path. This is best effort: `SIGKILL`, host loss, or an unavailable
+Docker daemon can leave resources behind. CI should also have an independent cleanup job
+or resource expiry policy for those cases.
 
 ```bash
 #!/bin/bash
@@ -96,19 +126,28 @@ Ctrl-C), so a crashed test never leaves dangling containers or volumes behind.
 set -euo pipefail
 
 COMPOSE_FILE="docker-compose.test.yml"
+export TEST_POSTGRES_PORT="${TEST_POSTGRES_PORT:-5432}"
+export TEST_REDIS_PORT="${TEST_REDIS_PORT:-6379}"
 
 cleanup() {
+  local original_status=$?
+  trap - EXIT
+  set +e
   echo "Tearing down test environment..."
-  docker compose -f "$COMPOSE_FILE" down -v --remove-orphans
+  docker compose -f "$COMPOSE_FILE" down -v --remove-orphans ||
+    echo "Warning: test environment teardown failed." >&2
+  exit "$original_status"
 }
 trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
 
 echo "Starting test infrastructure..."
 docker compose -f "$COMPOSE_FILE" up -d --wait --wait-timeout 60
 
 echo "Running integration tests..."
-DATABASE_URL="postgres://test:test@localhost:5432/testdb" \
-REDIS_URL="redis://localhost:6379" \
+DATABASE_URL="postgres://test:test@127.0.0.1:${TEST_POSTGRES_PORT}/testdb" \
+REDIS_URL="redis://127.0.0.1:${TEST_REDIS_PORT}" \
   npx vitest run --project=integration
 
 echo "Tests complete."

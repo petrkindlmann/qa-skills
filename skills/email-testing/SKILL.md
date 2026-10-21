@@ -4,7 +4,7 @@ description: >-
   End-to-end testing of email-dependent flows — signup confirmation, password reset,
   magic-link login, OTP/MFA codes, and notification emails. Covers the capture-inbox
   decision tree (Mailpit, Mailosaur, MailSlurp, Ethereal), Playwright polling without
-  fixed sleeps, regex extraction of links/OTPs from the email body, deterministic
+  fixed sleeps, template-aware extraction of links/OTPs from the email body, deterministic
   per-test addresses (plus-addressing, per-inbox), subject/from/header/link assertions,
   and SPF/DKIM/DMARC deliverability checks as a separate suite.
   Use when: "test the signup confirmation email," "password reset email test,"
@@ -18,7 +18,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "1.1"
   category: specialized
 ---
 
@@ -26,7 +26,7 @@ metadata:
 Email-dependent flows fail silently: a test that "signs up and clicks confirm" by calling
 the confirm endpoint directly never proves the email was generated, addressed, templated,
 and linkable. This skill captures the real email, waits for it without a fixed sleep,
-extracts the OTP or link from the body with an anchored regex, and completes the flow —
+extracts one unambiguous OTP or link from the body, and completes the flow —
 so a broken template, an unsigned token, or a wrong-recipient bug actually fails the test.
 It also keeps deliverability (SPF/DKIM/DMARC) in a separate non-blocking suite so a DNS
 problem never reds your functional gate.
@@ -79,7 +79,7 @@ answered there.
 
 2. **Poll, never sleep.** Email arrival is asynchronous. A fixed `waitForTimeout` is either
    too short (flake) or too slow (wasted minutes) and is the #1 cause of flaky email tests.
-   Use `expect.poll` / `.toPass` against `/api/v1/messages`, or a built-in waiter
+   Use `expect.poll` / `.toPass` against `/api/v1/search?query=...`, or a built-in waiter
    (`messages.get`, `waitForLatestEmail`) that already polls for you.
 
 3. **One unique recipient per test.** Two parallel tests both reading "the latest signup
@@ -87,10 +87,10 @@ answered there.
    per-test inbox) and **filter by recipient** when reading. Clearing the inbox between
    tests does NOT survive parallelism.
 
-4. **Extract from the body with an anchored regex, guarded.** Pull the OTP / link from the
-   email body (`message.Text` / `message.HTML`), not the live page. Use `\d{6}` /
-   `.match(` and assert the match is not null — a missing code must fail loudly, not become
-   `undefined`.
+4. **Extract against the real template and reject ambiguity.** Pull the OTP from the
+   email body with a label-specific regex and require one distinct code. Parse HTML
+   links with a DOM parser, then require the exact approved origin and the flow's path
+   and token. A missing or ambiguous match fails; never navigate to a guessed URL.
 
 5. **Assert content, not existence.** "An email arrived" is a weak assertion. Check the
    `subject`, the `from` address, and that links point to the right domain. Wrong-template
@@ -133,7 +133,7 @@ extraction utilities; `references/hosted-inboxes.md` for Mailosaur / MailSlurp /
 
 ## Polling an inbox (Mailpit)
 
-Read the list endpoint with Playwright's `request` fixture, find the message addressed to
+Read the search endpoint with Playwright's `request` fixture, find the message addressed to
 *this test's* recipient, then fetch the full body by ID. Use `expect.poll` with a `timeout`
 and `intervals` — it retries until a match appears, so fast inboxes resolve instantly and
 slow ones still pass.
@@ -141,35 +141,39 @@ slow ones still pass.
 ```ts
 // `request` is the Playwright APIRequestContext fixture; plain fetch() works too.
 await expect.poll(async () => {
-  const res = await request.get(`http://localhost:8025/api/v1/messages?query=to:${encodeURIComponent(to)}`);
+  const query = new URLSearchParams({ query: `to:${to}` });
+  const res = await request.get(`http://localhost:8025/api/v1/search?${query}`);
+  expect(res.ok(), `Mailpit search HTTP ${res.status()}`).toBe(true);
   const { messages } = await res.json();
   return messages.find((m) => m.To.some((t) => t.Address === to))?.ID ?? null;
 }, { timeout: 30_000, intervals: [500, 1_000, 2_000] }).not.toBeNull();
 // then: request.get(`http://localhost:8025/api/v1/message/${id}`) → { Text, HTML, Subject, From, To }
 ```
 
-The `query=to:` filter plus the `.find` on the recipient is what makes parallel tests
+The search endpoint's `query=to:` filter plus the `.find` on the recipient is what makes parallel tests
 deterministic. Never take `messages[0]` / `messages.at(-1)` (newest overall) with no
-recipient filter. Full helper in `references/mailpit-playwright.md`.
+recipient filter. When asking for a second email to the same account, exclude IDs
+already seen; an old matching message must not satisfy a new request. Full helper in
+`references/mailpit-playwright.md`, including HTTP/schema failures and detail checks.
 
 ---
 
 ## Extracting OTPs and links
 
-Match against the **email body**, anchored, with a null guard:
+Use the guarded helpers in `references/mailpit-playwright.md` against the **email body**:
 
 ```ts
-const otp = body.match(/\b(\d{6})\b/)?.[1];
-expect(otp, 'no OTP in email body').toBeTruthy();   // throw / fail if null
-
-const link = body.match(/https?:\/\/\S*(?:verify|confirm|reset|token=)\S*/i)?.[0];
-if (!link) throw new Error('no verification link in email body');
+const otp = extractOtp(message.Text, /\bcode:\s*(\d{6})\b/gi);
+const resetUrl = await extractLink(page, message, new URL(baseURL).origin,
+  url => url.pathname === '/reset' && Boolean(url.searchParams.get('token')));
+await page.goto(resetUrl);
 ```
 
 Do NOT slice by index (`body.split(' ')[3]`, `substring(0, 6)`, `indexOf('code')`) — those
 break the moment the template changes a word. Do NOT read `innerText` of the live page when
 you mean the email body. If a 6-digit code could collide with other numbers, anchor on the
-label: `body.match(/code[:\s]+(\d{6})/i)`. Hosted services expose structured
+label and reject multiple distinct matches. A broad `\S*` URL regex can consume closing
+HTML tags and preserve `&amp;` in query parameters. Hosted services expose structured
 `message.html.links` / `message.html.codes` — prefer those when available. See
 `references/mailpit-playwright.md`.
 
@@ -181,7 +185,8 @@ The parallel-flake bug: two tests sign up at once and both poll for "the latest 
 email," so they swap messages. Fixes, in order of preference:
 
 - **Per-test unique address** — plus-addressing / sub-addressing:
-  `user+${randomUUID()}@example.com`, or `signup.${Date.now()}@...`. Most providers route
+  `user+${randomUUID()}@example.test`, created anew on every retry. Timestamps alone can
+  collide across workers. Most providers route
   `user+anything@` to `user@`, so one real mailbox yields infinite unique recipients.
 - **Filter every read by recipient** — `sentTo` (Mailosaur) or a `query=to:` + `.find`
   match (Mailpit). Never take the newest message overall.
@@ -203,7 +208,9 @@ After capture, assert on content:
   sender / reply-to.
 - Headers (`List-Unsubscribe`, custom `X-` headers) when your product sets them.
 - Links point to the right domain:
-  `expect(links.every((l) => new URL(l.href).hostname.endsWith('staging.example.com'))).toBe(true)`.
+  `expect(new URL(link.href).origin).toBe('https://staging.example.com')` before navigation.
+  A hostname suffix check also accepts `evil-staging.example.com`; require an exact
+  origin or a deliberately approved subdomain boundary.
 
 Mailosaur example asserting `subject`, `from`, and link domain is in
 `references/hosted-inboxes.md`.
@@ -314,8 +321,9 @@ Prove the suite actually captures and asserts, smallest check first:
   clean; arrival is awaited via `expect.poll` / `.toPass` / a built-in waiter.
 - Each email test uses a unique recipient (plus-address or per-test inbox) and filters
   reads by that recipient — no `messages[0]` / `messages.at(-1)` without a filter.
-- OTP/link extraction uses an anchored regex (`\d{6}`, `https?://...`) with a null guard
-  that fails the test on no match.
+- OTP extraction uses a template label and rejects distinct competing codes; link
+  extraction parses HTML anchors and requires one match for the exact approved origin,
+  path, and token. Missing or ambiguous results fail before navigation.
 - At least the signup-confirmation (or reset / magic-link) flow has a green E2E test that
   captures the real email and completes the flow through `page.goto(link)`.
 - Content assertions on `subject`, `from`, and link domain exist — not just existence.

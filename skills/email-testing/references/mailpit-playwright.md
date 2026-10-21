@@ -5,10 +5,15 @@ Mailpit is the default local/self-host capture inbox: a single Go binary (or
 It is the maintained drop-in replacement for MailHog (MailHog is archived — see the
 Avoid note in `SKILL.md`). The API your tests use:
 
-- `GET /api/v1/messages` — list messages, newest first, with `?query=` full-text search.
+- `GET /api/v1/messages` — list messages, newest first, with pagination.
+- `GET /api/v1/search?query=to:...` — search messages by recipient and other filters.
 - `GET /api/v1/message/{ID}` — full parsed message: `.Text`, `.HTML`, `.Subject`,
   `.From`, `.To`, headers.
 - `DELETE /api/v1/messages` — purge (use in global setup, never as your only isolation).
+
+Use the [Mailpit API specification](https://mailpit.axllent.org/docs/api-v1/view.html)
+for the installed version. Adding `query` to the list endpoint does not select the
+search endpoint; under a busy inbox this can leave the target outside the first page.
 
 Point your app's SMTP at `localhost:1025` in the test environment. Docker:
 
@@ -33,7 +38,7 @@ inbox resolves immediately and a slow one still passes.
 
 ```ts
 // helpers/mailpit.ts
-import { APIRequestContext, expect, request } from '@playwright/test';
+import { APIRequestContext, Page, expect, request } from '@playwright/test';
 
 const BASE = process.env.MAILPIT_URL ?? 'http://localhost:8025';
 
@@ -48,7 +53,7 @@ type Message = {
 export async function waitForEmail(
   api: APIRequestContext,
   recipient: string,
-  opts: { timeout?: number; intervals?: number[] } = {},
+  opts: { timeout?: number; intervals?: number[]; excludeIds?: string[] } = {},
 ): Promise<Message> {
   let summary: Summary | undefined;
 
@@ -57,11 +62,14 @@ export async function waitForEmail(
       async () => {
         // Search by recipient so parallel tests never read each other's mail.
         const res = await api.get(
-          `${BASE}/api/v1/messages?query=to:${encodeURIComponent(recipient)}`,
+          `${BASE}/api/v1/search?${new URLSearchParams({ query: `to:${recipient}` })}`,
         );
+        if (!res.ok()) throw new Error(`Mailpit search returned HTTP ${res.status()}`);
         const { messages } = (await res.json()) as { messages: Summary[] };
+        if (!Array.isArray(messages)) throw new Error('Mailpit search has no messages array');
         summary = messages.find((m) =>
-          m.To.some((t) => t.Address.toLowerCase() === recipient.toLowerCase()),
+          !opts.excludeIds?.includes(m.ID)
+          && m.To.some((t) => t.Address.toLowerCase() === recipient.toLowerCase()),
         );
         return summary?.ID ?? null;
       },
@@ -73,8 +81,13 @@ export async function waitForEmail(
     )
     .not.toBeNull();
 
-  const res = await api.get(`${BASE}/api/v1/message/${summary!.ID}`);
-  return (await res.json()) as Message;
+  const res = await api.get(`${BASE}/api/v1/message/${encodeURIComponent(summary!.ID)}`);
+  if (!res.ok()) throw new Error(`Mailpit message returned HTTP ${res.status()}`);
+  const message = (await res.json()) as Message;
+  if (message.ID !== summary!.ID || !message.To?.some(t => t.Address.toLowerCase() === recipient.toLowerCase())) {
+    throw new Error('Mailpit returned a different message or recipient');
+  }
+  return message;
 }
 
 /** Standalone request context if you are not inside a test with the `request` fixture. */
@@ -83,33 +96,57 @@ export async function mailpitContext(): Promise<APIRequestContext> {
 }
 ```
 
-Note: the `query=to:` filter plus the in-code `.find` on `To[].Address` is what makes
-each test deterministic. We filter by recipient — we never blindly take `messages[0]`.
+Use a fresh UUID recipient for every test attempt, including retries. When one scenario
+requests a second email for the same account, pass the previously seen IDs in
+`excludeIds`; otherwise the first message can satisfy the second wait. Do not purge an
+inbox used by concurrent workers. The search result still gets an exact recipient check.
 
 ## Extracting an OTP and a magic link from the body
 
-Extract with an anchored regex against the email **body** (`message.Text` /
-`message.HTML`), not the live page's `innerText`. Guard the match: a `null` result must
-throw or fail an assertion, otherwise a missing code silently becomes `undefined` and
-the failure surfaces three steps later with a useless message.
+Anchor the OTP on the real template's label, then require one distinct code. An order
+number is not an OTP. The default below covers English `Code: 123456` / `code is 123456`;
+pass a template-specific expression with one capture group for localized templates.
+For links, parse HTML attributes with a DOM parser and require an exact origin plus
+the flow's path/token predicate before navigation. Do not trim characters off a token
+or treat a suffix such as `evil-staging.example.com` as the trusted origin.
 
 ```ts
-export function extractOtp(body: string): string {
-  // Anchored 6-digit code. Prefer a label if your template has one.
-  const m = body.match(/\b(\d{6})\b/);
-  expect(m, 'No 6-digit OTP found in email body').not.toBeNull();
-  return m![1];
+export function extractOtp(body: string, pattern = /\bcode\s*(?:is|:)?\s*(\d{6})\b/gi): string {
+  const flags = pattern.flags.includes('g') ? pattern.flags : `${pattern.flags}g`;
+  const codes = [...body.matchAll(new RegExp(pattern.source, flags))].map(match => match[1]);
+  const unique = [...new Set(codes)];
+  if (unique.length !== 1 || !/^\d{6}$/.test(unique[0] ?? '')) {
+    throw new Error('Expected one distinct 6-digit OTP under the template label');
+  }
+  return unique[0];
 }
 
-export function extractLink(body: string, pattern = /https?:\/\/\S*(?:verify|confirm|reset|token=)\S*/i): string {
-  const m = body.match(pattern);
-  if (!m) throw new Error('No verification link found in email body');
-  return m[0].replace(/[)>"'.]+$/, ''); // trim trailing punctuation/quotes
+export async function extractLink(
+  page: Page, message: { Text: string; HTML: string }, expectedOrigin: string,
+  accepts: (url: URL) => boolean,
+): Promise<string> {
+  const htmlLinks = message.HTML ? await page.evaluate(html => {
+    const document = new DOMParser().parseFromString(html, 'text/html');
+    return [...document.querySelectorAll('a[href]')].map(anchor => anchor.getAttribute('href')!);
+  }, message.HTML) : [];
+  const candidates = htmlLinks.length ? htmlLinks : (message.Text ?? '').match(/https?:\/\/[^\s<>"']+/g) ?? [];
+  const origin = new URL(expectedOrigin).origin;
+  const links = new Set<string>();
+  for (const candidate of candidates) {
+    let url: URL;
+    try { url = new URL(candidate); } catch { continue; }
+    if (!['https:', 'http:'].includes(url.protocol) || url.origin !== origin || url.username || url.password) continue;
+    if (accepts(url)) links.add(url.href);
+  }
+  if (links.size !== 1) throw new Error('Expected exactly one matching email link at the approved origin');
+  return [...links][0];
 }
 ```
 
-If your OTP could collide with other 6-digit numbers (order IDs, years), anchor on the
-label instead: `body.match(/code[:\s]+(\d{6})/i)`.
+Import the `Page` type from `@playwright/test` when copying the helper. HTML entity
+decoding comes from the parser; `&amp;token=` must become `&token=`. Plain-text URLs need
+a known template delimiter if punctuation touches the token. For hosted inboxes,
+prefer their structured links and codes, applying the same origin and ambiguity checks.
 
 ## Password-reset E2E (full flow)
 
@@ -119,11 +156,11 @@ token — that skips the exact integration (templating, link generation, token s
 the test exists to cover.
 
 ```ts
-import { test, expect } from '@playwright/test';
+import { test, expect } from '../fixtures/users';
 import { waitForEmail, extractLink } from '../helpers/mailpit';
 
-test('password reset end-to-end', async ({ page, request }) => {
-  const email = `reset+${Date.now()}@example.test`; // unique per run
+test('password reset end-to-end', async ({ page, request, testUser, baseURL }) => {
+  const email = testUser.email;
 
   // 1. Request reset on the UI.
   await page.goto('/forgot-password');
@@ -134,7 +171,8 @@ test('password reset end-to-end', async ({ page, request }) => {
   // 2. Capture the email and pull the reset link out of the body.
   const message = await waitForEmail(request, email);
   expect(message.Subject).toContain('Reset your password');
-  const resetUrl = extractLink(message.HTML || message.Text, /https?:\/\/\S*reset\S*token=\S*/i);
+  const resetUrl = await extractLink(page, message, new URL(baseURL!).origin,
+    url => url.pathname === '/reset' && Boolean(url.searchParams.get('token')));
 
   // 3. Visit the link, set a new password.
   await page.goto(resetUrl);
@@ -152,10 +190,15 @@ test('password reset end-to-end', async ({ page, request }) => {
 });
 ```
 
+The project adapter `../fixtures/users` must extend Playwright with a `testUser`
+fixture that creates a real sandbox account, assigns a UUID recipient for each test
+attempt, and cleans it up. A randomly generated address without an existing account
+will correctly receive no reset email in an app that prevents account enumeration.
+
 ## Signup / OTP / magic-link variations
 
 - **Signup confirmation:** identical shape — submit signup form, `waitForEmail`, assert
-  `Subject`/`From`, `extractLink(body, /confirm/)`, `page.goto(confirmUrl)`, assert the
+  `Subject`/`From`, `extractLink(page, message, origin, confirmPredicate)`, `page.goto(confirmUrl)`, assert the
   account is now active.
 - **OTP / MFA:** submit credentials, `waitForEmail`, `extractOtp(body)`, type the code
   into the page, assert you land authenticated.

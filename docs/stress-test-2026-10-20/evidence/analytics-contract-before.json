@@ -1,0 +1,26 @@
+[
+  {
+    "name": "empty number",
+    "query": "epn.value=",
+    "expected": "violation",
+    "observed": []
+  },
+  {
+    "name": "whitespace number",
+    "query": "epn.value=+",
+    "expected": "violation",
+    "observed": []
+  },
+  {
+    "name": "infinite number",
+    "query": "epn.value=Infinity",
+    "expected": "violation",
+    "observed": []
+  },
+  {
+    "name": "wrong string wire type",
+    "query": "epn.currency=123",
+    "expected": "violation",
+    "observed": []
+  }
+]

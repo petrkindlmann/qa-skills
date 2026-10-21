@@ -33,7 +33,7 @@ export default defineConfig({
   reporter: [
     ["list"],
     ["allure-playwright", {
-      outputFolder: "allure-results",
+      resultsDir: "allure-results", // Allure Playwright 3.x adapter option
       detail: true,
       suiteTitle: true,
       environmentInfo: {

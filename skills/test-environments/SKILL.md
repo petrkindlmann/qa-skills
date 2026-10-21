@@ -12,7 +12,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: infrastructure
 ---
 
@@ -218,8 +218,8 @@ a bare `CREATE SCHEMA public` restores the prior grants — it does not.
 
 ## Docker Compose for Testing
 
-A production-quality `docker-compose.test.yml` spins up the full stack (app, Postgres, Redis,
-a one-shot seed container, Mailpit) for integration and E2E tests. Two details that matter:
+The `docker-compose.test.yml` example spins up the full stack (app, Postgres, Redis,
+a one-shot seed container, Mailpit) for integration and E2E tests. Details that matter:
 
 - **Health checks gate `depends_on`.** Without a `healthcheck` + `condition: service_healthy`,
   `depends_on` only waits for the container to *start*, not for the service to accept
@@ -227,10 +227,14 @@ a one-shot seed container, Mailpit) for integration and E2E tests. Two details t
 - **Seed is a one-shot container, not a long-running service.** It uses `depends_on:
   condition: service_completed_successfully`, so the app starts only after seeding *exits 0*.
   Teams that model seed as a long-running service get a race where the app boots mid-seed.
+- **Host tests need published ports.** The reference binds host ports to loopback and keeps
+  the runner URLs aligned. Parallel stacks need distinct project names and host ports.
+- **PostgreSQL 18 uses a different volume layout.** Mount at `/var/lib/postgresql` for its
+  versioned data directory; use the image documentation for other major versions.
 
 See `references/docker-compose.md` for the full `docker-compose.test.yml`, the
-`trap`-guarded integration test runner, the multi-stage Dockerfile (with the `production`
-target), and the MinIO block.
+integration test runner with best-effort cleanup that preserves the original exit status,
+the multi-stage Dockerfile (with the `production` target), and the MinIO block.
 
 ### Multi-Stage Dockerfile
 
@@ -337,9 +341,11 @@ Run these against the artifacts you produce, smallest check first:
 1. **Compose file is valid** — `docker compose -f docker-compose.test.yml config -q` exits 0
    (catches YAML and schema errors before you ever pull an image).
 2. **Stack comes up healthy** — `docker compose -f docker-compose.test.yml up -d --wait
-   --wait-timeout 60` exits 0; a non-zero exit means a healthcheck never went green.
-3. **Database accepts connections** — `docker compose exec postgres pg_isready -U test -d
-   testdb` reports `accepting connections`.
+   --wait-timeout 60` exits 0. Inspect the output on failure: startup can also fail during
+   an image pull, build, or seed command, before health checks pass.
+3. **Database accepts connections** — `docker compose -f docker-compose.test.yml exec
+   postgres pg_isready -U test -d testdb` reports `accepting connections`. Also run the host
+   test runner to verify its published-port connection URLs.
 4. **Dockerfile builds the production target** — `docker build --target production -t app:prod
    .` succeeds, and `docker run --rm app:prod npm ls --omit=dev --depth=0` shows no dev deps.
 5. **Stubs fail loud** — run the suite with `onUnhandledRequest: "error"`; any real outbound
@@ -350,7 +356,7 @@ Run these against the artifacts you produce, smallest check first:
 ## Done When
 
 - Environment inventory documented (dev, CI, preview, staging, production) with characteristics and access notes per tier.
-- `docker compose -f docker-compose.test.yml config -q` exits 0 and `docker compose up -d --wait` brings every service to a passing healthcheck (exit 0).
+- `docker compose -f docker-compose.test.yml config -q` and `up -d --wait` exit 0; long-running services satisfy their configured readiness checks and the one-shot seed exits 0.
 - Multi-stage Dockerfile builds the `production` target with `--omit=dev` (no dev dependencies in the shipped image).
 - Seed scripts are idempotent (running twice exits 0, no duplicate-key errors) and checked into the repository.
 - External dependencies are stubbed at the HTTP boundary with `onUnhandledRequest: "error"`; no real third-party credentials in non-prod.

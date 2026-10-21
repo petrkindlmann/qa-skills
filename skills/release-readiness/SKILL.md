@@ -14,7 +14,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.0"
+  version: "2.1"
   category: process
 ---
 
@@ -56,6 +56,13 @@ Check `.agents/qa-project-context.md` first — if it exists, use it and skip an
 ### 1. Release confidence comes from evidence, not feelings
 "I think it's fine" is not a go/no-go criterion. Evidence means: all CI pipelines green, smoke tests pass on staging, performance budgets met, no open P0/P1 bugs. If you can't point to data, you're not ready.
 
+Bind each result to the candidate commit, deployed build, environment, configuration, and
+run time. Preserve first-attempt failures and retry outcomes. List passed, failed, skipped,
+blocked, and unrun checks separately; a green exit can still conceal excluded tests.
+Evidence from a prior commit does not establish readiness after a change. An unavailable
+payment sandbox means the payment check is blocked, not passed. Record the named approver's
+actual decision separately from the QA recommendation; do not infer sign-off from optimism.
+
 ### 2. Smoke tests are the last safety net, not the only safety net
 Smoke tests catch catastrophic failures. They are not a substitute for thorough testing throughout the development cycle. If your smoke test suite is the only thing between you and production, you have a process problem upstream.
 
@@ -73,6 +80,11 @@ Post-deployment verification isn't just about catching bugs. Track what went wel
 ## Go/No-Go Checklist
 
 Use this as a template. Adapt it to your context. Every item should be verifiable with evidence, not just "I checked." Store the completed checklist as a versioned artifact (e.g. `RELEASE-<version>.md` or a tracked issue) so sign-off is auditable.
+
+Include an evidence table with check, candidate/build, environment, command or report link,
+execution time, result, and outstanding gap. A readiness review can legitimately finish with
+a no-go recommendation and missing evidence. It does not require deploying or performing
+post-deployment actions to make the checklist look complete.
 
 ### Automated Checks (Must Pass)
 
@@ -420,11 +432,16 @@ Pass criteria: health returns `healthy`, status is `200` within your latency bud
 
 ## Done When
 
-- Go/no-go checklist completed with evidence for each item and stored as a versioned artifact (e.g. `RELEASE-<version>.md` or a tracked issue), signed off by the named approver with a timestamp
-- Smoke test suite run against the release candidate in staging — all tests pass (exit code 0)
+- Go/no-go checklist records evidence or an explicit gap for each in-scope item, with exact
+  candidate identity, and is stored as a versioned artifact. The recommendation and actual
+  approver decision are distinct; missing sign-off remains missing.
+- Smoke results refer to the release candidate and disclose failures, retries, skipped,
+  blocked, and unrun checks. A go recommendation meets the project's agreed evidence gates;
+  otherwise deliver a no-go or conditional recommendation with concrete outstanding work.
 - Rollback criteria documented as specific baseline-relative thresholds, and the rollback procedure practiced on staging at least once
 - Staged rollout plan defined with traffic percentages, per-stage promotion criteria, and guardrail metrics for each stage
-- Post-deployment verification commands run and passing (health 200, no new Sentry issues, 5xx count at or below baseline)
+- Post-deployment verification is defined for a readiness-only review. If deployment and
+  verification are in scope and authorized, record their actual results separately.
 
 ## Reference Files (in `references/`)
 

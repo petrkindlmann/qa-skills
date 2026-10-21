@@ -1,0 +1,21 @@
+{
+  "source": "b3bb61b:skills/observability-driven-testing/references/trace-assertions.md",
+  "expression": "spans.filter(s => s.status?.code === 'ERROR')",
+  "observations": [
+    {
+      "code": 2,
+      "errorCount": 0,
+      "expectedErrorCount": 1
+    },
+    {
+      "code": "STATUS_CODE_ERROR",
+      "errorCount": 0,
+      "expectedErrorCount": 1
+    },
+    {
+      "code": "ERROR",
+      "errorCount": 1,
+      "expectedErrorCount": 1
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+✔ documented payment handlers support create, retrieve, confirm, and missing IDs (77.603064ms)
+✖ rate-limit scenario wins over the matching payment success handler (4.139881ms)
+✖ documented lifecycle clears payment state between tests (6.736132ms)
+✖ payments created at the same clock tick receive distinct fixture IDs (3.837621ms)
+✔ the documented CI setup rejects an unhandled request before network fallback (3.919313ms)
+(node:5) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 2
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 261.583219
+
+✖ failing tests:
+
+test at tests/examples/msw.test.mjs:54:1
+✖ rate-limit scenario wins over the matching payment success handler (4.139881ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  201 !== 429
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/msw.test.mjs:57:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 201,
+    expected: 429,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/examples/msw.test.mjs:63:1
+✖ documented lifecycle clears payment state between tests (6.736132ms)
+  AssertionError [ERR_ASSERTION]: handler reset must also replace its closure state
+  
+  200 !== 404
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/msw.test.mjs:69:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 200,
+    expected: 404,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/examples/msw.test.mjs:72:1
+✖ payments created at the same clock tick receive distinct fixture IDs (3.837621ms)
+  AssertionError [ERR_ASSERTION]: Expected "actual" to be strictly unequal to:
+  
+  'pi_test_1700000000000'
+      at TestContext.<anonymous> (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/msw.test.mjs:76:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'pi_test_1700000000000',
+    expected: 'pi_test_1700000000000',
+    operator: 'notStrictEqual',
+    diff: 'simple'
+  }

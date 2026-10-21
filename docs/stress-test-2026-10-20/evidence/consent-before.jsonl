@@ -1,0 +1,8 @@
+{"title":"BEFORE: broken app with no own default passes seeded recipe","result":"passed","requests":["http://consent.test/","http://consent.test/g/collect?en=page_view&gcs=G100"]}
+{"title":"CONTROL: unseeded broken app emits granted request","result":"passed","requests":["http://consent.test/","http://consent.test/g/collect?en=page_view&gcs=G111"]}
+{"title":"BEFORE: valid accept update fails because observer is absent","result":"failed","message":"No gtag consent update fired after accept\n\nexpect(received).toBeDefined()\n\nReceived: undefined","requests":["http://consent.test/"]}
+{"title":"BEFORE: valid fresh layer assignment loses default observer","result":"failed","message":"No gtag consent default fired\n\nexpect(received).toBeDefined()\n\nReceived: undefined","requests":["http://consent.test/"]}
+{"title":"BEFORE: HTTP header does not create DOM GPC property","result":"failed","message":"navigator.globalPrivacyControl not set despite Sec-GPC: 1\n\nexpect(received).toBe(expected) // Object.is equality\n\nExpected: true\nReceived: undefined","requests":["http://consent.test/"]}
+{"title":"BEFORE: script-blocking test already passed before deferred request"}
+{"title":"BEFORE: networkidle passes before deferred tracker request","result":"passed","requests":["http://consent.test/","http://google-analytics.com/g/collect?en=page_view"]}
+{"title":"BEFORE: >=4 guard accepts object without TC string or v2.3 evidence","result":"passed","requests":["http://consent.test/"]}

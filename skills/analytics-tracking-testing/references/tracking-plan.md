@@ -1,91 +1,115 @@
 # The Tracking Plan as a Typed Contract
 
-The tracking plan is the single source of truth: for each event, its required params and their types. Keep it versioned and import it into both app and tests. Tests validate captured events against it — they do not hardcode expected values inline.
+A tracking plan describes logical event payloads. Keep it versioned and use the same
+contract in application and test code. Required types and per-scenario expected values
+serve different purposes: check both. A schema alone accepts the wrong finite price.
 
-## JSON form
+## Ecommerce plan
+
+Google's [ecommerce guide](https://developers.google.com/analytics/devguides/collection/ga4/ecommerce)
+puts `currency` and `value` at event level and product details in `items[]`. For GTM
+object pushes, these fields are normally inside `ecommerce`; for gtag event commands,
+they are in the event payload. The example below is an application contract requiring
+an ID, price and quantity per item, which is stricter than Google's minimum fields.
 
 ```json
 {
   "add_to_cart": {
-    "required": { "currency": "string", "value": "number", "item_id": "string" }
+    "required": {
+      "currency": "string",
+      "value": "number",
+      "items": { "array": { "item_id": "string", "price": "number", "quantity": "number" } }
+    }
   },
   "purchase": {
-    "required": { "transaction_id": "string", "value": "number", "currency": "string" }
+    "required": {
+      "transaction_id": "string",
+      "currency": "string",
+      "value": "number",
+      "items": { "array": { "item_id": "string", "price": "number", "quantity": "number" } }
+    }
   }
 }
 ```
 
-## YAML form (often easier for non-engineers to maintain)
+## Validate normalized payloads
 
-```yaml
-add_to_cart:
-  required:
-    currency: string
-    value: number
-    item_id: string
-purchase:
-  required:
-    transaction_id: string
-    value: number
-    currency: string
-```
+Pass a logical JavaScript payload, not `URLSearchParams`. The browser web-tag transport
+has reserved fields and item encodings; `ep.<name>` / `epn.<name>` are not a universal
+mapping for standard ecommerce. Use a version-specific decoder checked against actual
+redacted tag captures for network events. Keep a numeric wire field missing/blank/invalid
+as an error; coercing `null` or an empty string with `Number()` creates a false zero.
+Do not strip wire type information before checking it. Input validation and network
+emission are separate observations, and neither proves downstream ingestion.
 
-## Zod-typed contract
+This helper supports nonempty strings, finite numbers, and nonempty arrays of required
+objects. Add a reviewed schema for booleans, enums, ranges, optional values or other
+structures. An unsupported or empty plan is a configuration error, not a passing check.
 
 ```ts
-import { z } from 'zod';
-
-export const plan = {
-  add_to_cart: z.object({ currency: z.string(), value: z.number(), item_id: z.string() }),
-  purchase: z.object({ transaction_id: z.string(), value: z.number(), currency: z.string() }),
-} as const;
-```
-
-## The validator — report violations, not a boolean
-
-GA4 splits params into `ep.` (string) and `epn.` (number). The validator reads either prefix, then checks presence and type. It returns an array of violations — empty means the event satisfies the contract.
-
-```ts
+type Rule = 'string' | 'number' | { array: Record<string, Rule> };
+type Plan = Record<string, { required: Record<string, Rule> }>;
 type Violation = { param: string; problem: 'missing' | 'type'; expected?: string };
 
-export function validateEvent(
-  plan: Record<string, { required: Record<string, 'string' | 'number'> }>,
-  eventName: string,
-  params: URLSearchParams,
-): Violation[] {
-  const spec = plan[eventName];
-  if (!spec) return [{ param: eventName, problem: 'missing', expected: 'event in plan' }];
-
+export function validateEvent(plan: Plan, eventName: string, payload: unknown): Violation[] {
+  const object = (value: unknown): value is Record<string, any> => value !== null
+    && typeof value === 'object' && !Array.isArray(value);
+  if (!object(plan)) throw new Error('Tracking plan must be an object');
+  if (!Object.hasOwn(plan, eventName)) return [{ param: eventName, problem: 'missing', expected: 'event in plan' }];
+  const required = plan[eventName]?.required;
+  const checkRules = (rules: Record<string, Rule>) => {
+    if (!object(rules) || !Object.keys(rules).length) throw new Error('Required tracking fields must be nonempty');
+    for (const rule of Object.values(rules)) {
+      if (rule === 'string' || rule === 'number') continue;
+      if (!object(rule) || Object.keys(rule).length !== 1 || !Object.hasOwn(rule, 'array')) {
+        throw new Error('Unsupported tracking field rule');
+      }
+      checkRules(rule.array);
+    }
+  };
+  checkRules(required);
   const violations: Violation[] = [];
-  for (const [name, type] of Object.entries(spec.required)) {
-    const raw = params.get(`ep.${name}`) ?? params.get(`epn.${name}`);
-    if (raw == null) { violations.push({ param: name, problem: 'missing' }); continue; }
-    if (type === 'number' && Number.isNaN(Number(raw)))
-      violations.push({ param: name, problem: 'type', expected: 'number' });
-  }
+  const inspect = (rules: Record<string, Rule>, value: unknown, prefix: string) => {
+    if (!object(value)) { violations.push({ param: prefix || eventName, problem: 'type', expected: 'object' }); return; }
+    for (const [name, rule] of Object.entries(rules)) {
+      const param = prefix ? `${prefix}.${name}` : name;
+      if (!Object.hasOwn(value, name) || value[name] === undefined) {
+        violations.push({ param, problem: 'missing' }); continue;
+      }
+      const actual = value[name];
+      if (rule === 'string') {
+        if (typeof actual !== 'string' || !actual.trim()) violations.push({ param, problem: 'type', expected: 'nonempty string' });
+      } else if (rule === 'number') {
+        if (typeof actual !== 'number' || !Number.isFinite(actual)) violations.push({ param, problem: 'type', expected: 'finite number' });
+      } else if (!Array.isArray(actual) || actual.length === 0) {
+        violations.push({ param, problem: 'type', expected: 'nonempty array' });
+      } else {
+        for (let i = 0; i < actual.length; i++) inspect(rule.array, actual[i], `${param}[${i}]`);
+      }
+    }
+  };
+  inspect(required, payload, '');
   return violations;
 }
 ```
 
-## Reusable matcher
+## Use both schema and scenario assertions
 
 ```ts
+import { expect } from '@playwright/test';
 import plan from './tracking-plan.json';
+import { validateEvent } from './validate';
 
-export function assertAgainstPlan(eventName: string, params: URLSearchParams) {
-  const violations = validateEvent(plan, eventName, params);
-  expect(violations, `tracking-plan violations for ${eventName}: ${JSON.stringify(violations)}`).toEqual([]);
-}
+// viewItem is an observed GTM object event from the passive data-layer observer.
+expect(validateEvent(plan, 'add_to_cart', addToCart.ecommerce)).toEqual([]);
+expect(addToCart.ecommerce).toMatchObject({
+  currency: 'USD', value: 49.99,
+  items: [{ item_id: 'SKU-42', price: 49.99, quantity: 1 }],
+});
 ```
 
-Usage in a test:
-
-```ts
-const params = new URL(request.url()).searchParams;
-expect(params.get('en')).toBe('add_to_cart');
-assertAgainstPlan('add_to_cart', params); // fails listing every missing/mismatched param
-```
-
-## Why external
-
-A plan file gives one place to change when a param is renamed, makes the contract reviewable in PRs, and lets the same schema power the CI regression gate (see `ci-gating.md`). Inline hardcoded values rot on the first change and assert nothing about the params you forgot to list.
+For a network assertion, decode the observed web-tag payload through the application's
+capture-tested adapter, then run the same validator and scenario assertions. Missing
+or unsupported wire fields must fail that adapter. Do not fabricate a decoder by
+assuming every logical field is an `ep.` key, and do not count a gtag/dataLayer input
+object as evidence that a beacon left the browser.

@@ -17,6 +17,8 @@ exact frontmatter, section set and order, line caps, and voice. The short versio
    `## Anti-Patterns`, `## Done When` (objectively checkable items), `## Related Skills`.
 5. Regenerate the index: `python3 scripts/build_index.py`. Update `VERSIONS.md`.
 6. Verify before opening a PR:
+   - `python3 -m pip install -r requirements-dev.txt`
+   - `python3 -m unittest discover -s tests -p 'test_*.py' -v`
    - `python3 scripts/validate_skills.py` (must be 0 errors)
    - `python3 scripts/run_evals.py --static --skill your-skill-name`
    - add the skill to the tables in `README.md`, `CLAUDE.md`, and `AGENTS.md`.
@@ -49,6 +51,36 @@ metadata: { author: kindlmann, version: "1.0", category: <whitelist> }
 - Fix errors, add missing patterns, improve code examples
 - One concern per PR
 - Update `VERSIONS.md` if the change is significant
+
+### Test the behavior being taught
+
+Static evals check words in the skill and references. They do not run the user's request,
+compile examples, establish a legal conclusion, or judge whether an answer is correct.
+Inspect their reported semantic criteria and distinguish content flags from observed defects.
+Do not add fixture-specific facts to a skill just to satisfy a static pattern.
+
+For a recipe change, reproduce the defect with a controlled case, change the actual code
+fence that users copy, and make the same case pass. The `tests/examples/` and `tests/browser/`
+suite loads documented helpers directly, so a disconnected implementation cannot satisfy it.
+Include a healthy fixture as well as a broken one so an assertion that always fails cannot pass.
+
+```bash
+npm ci
+npm test
+npx playwright install chromium
+npm run test:browser
+```
+
+Node 24 is required for the TypeScript-stripping test loader. Set `QA_BROWSER_EXECUTABLE`
+only when intentionally testing a system Chromium/Chrome; otherwise use the pinned
+Playwright browser. Record the actual version and do not generalize one engine's result.
+
+For instruction changes, give a fresh agent a realistic request and the skill without the
+expected answer. Save the request, complete output, skill revision, and separate review.
+Use new examples after revisions; repeating the demonstration alone is not a held-out check.
+The `run_evals.py --live` and `--baseline` modes require Claude Code and are response-only
+pattern checks. Their generated code still needs execution and their deferred criteria
+still need a judge. Never substitute a fake model process for evidence of model quality.
 
 ## Reference files
 

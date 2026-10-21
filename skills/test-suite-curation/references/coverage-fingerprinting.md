@@ -6,55 +6,69 @@ database into per-test line/branch fingerprints. The decision rules live in `SKI
 ## Capture per-test contexts (pytest / coverage.py)
 
 ```bash
-# --cov-context=test tags every measured line with the test that ran it.
+# --cov-context=test records pytest test IDs plus setup/run/teardown phases.
 # --cov-branch records branch arcs so if/else on one line are distinct.
 pytest --cov=src --cov-branch --cov-context=test
 ```
 
-Equivalent in `.coveragerc` if you prefer config over flags:
+To persist these pytest-cov flags, add them to `pytest.ini` (merge with existing `addopts`):
 
 ```ini
-[run]
-branch = true
-dynamic_context = test_function
+[pytest]
+addopts = --cov=src --cov-branch --cov-context=test
 ```
 
-Under the hood coverage.py calls `switch_context()` around each test (pytest-cov wires
-this automatically). Results land in the `.coverage` SQLite DB.
+[pytest-cov](https://pytest-cov.readthedocs.io/en/latest/contexts.html) calls coverage.py's
+`switch_context()` with the pytest test ID and phase, separated by a final `|`, for example
+`tests/test_price.py::test_price[USD]|run`. The phases are `setup`, `run`, and `teardown`;
+parameterized cases have separate test IDs. Results land in the `.coverage` SQLite DB.
+
+Coverage.py's [`dynamic_context = test_function`](https://coverage.readthedocs.io/en/latest/contexts.html)
+starts contexts for Python functions whose names begin with `test`. It does **not** supply
+pytest's parameter IDs or phase labels and is not an equivalent configuration. Use one
+dynamic-context mechanism; leave that coverage.py setting unset when using pytest-cov's flag.
 
 ## Read the contexts out of the .coverage SQLite DB
 
-coverage.py exposes a stable Python API — prefer it over raw SQL so schema changes do
-not break you. But the raw tables are `context`, `file`, `line_bits`, and `arc`.
+coverage.py exposes a [supported Python API](https://coverage.readthedocs.io/en/latest/api_coveragedata.html)
+for this. The example below assumes pytest-cov contexts without a static `[run] context`
+prefix. It unions the three phases for each test; splitting at the final `|` preserves any
+`|` inside a parameter ID. The raw tables are `context`, `file`, `line_bits`, and `arc`.
 
 ```python
+from collections import defaultdict
 import coverage
 
 cov = coverage.Coverage(data_file=".coverage")
 cov.load()
 data = cov.get_data()
 
-# Per-test line sets: {test_context: {(file, line), ...}}
-line_sets = {}
-branch_sets = {}
+# Per-test sets: all phases combined, parameterized cases kept separate.
+line_sets = defaultdict(set)
+branch_sets = defaultdict(set)
 for ctx in data.measured_contexts():
-    if not ctx:                      # "" is the no-context bucket; skip it
+    test_id, separator, phase = ctx.rpartition("|")
+    if not separator or phase not in {"setup", "run", "teardown"}:
+        # Includes the empty startup/no-context bucket.
         continue
     data.set_query_context(ctx)
-    lset, bset = set(), set()
     for f in data.measured_files():
         for line in (data.lines(f) or []):
-            lset.add((f, line))
+            line_sets[test_id].add((f, line))
         for arc in (data.arcs(f) or []):     # arcs present only with --cov-branch
-            bset.add((f, arc))
-    line_sets[ctx] = lset
-    branch_sets[ctx] = bset
+            branch_sets[test_id].add((f, arc))
+data.set_query_contexts(None)  # Clear the query filter for subsequent analysis.
 ```
+
+Keep the original phase contexts when reviewing candidates. Shared or session-scoped
+fixtures may be attributed to whichever test first triggers them; apparent unique setup
+coverage can move when execution order changes. An absent fingerprint is not evidence
+that a test is redundant: reconcile it with collection and the measured source scope.
 
 Raw SQL fallback (when you only have the file, no coverage.py installed):
 
 ```sql
--- contexts table maps context_id -> test name
+-- context table maps context_id -> raw test ID plus phase
 SELECT context, c.id FROM context c;
 -- line_bits maps (file_id, context_id) -> bitmap of covered lines
 SELECT f.path, lb.context_id, lb.numbits

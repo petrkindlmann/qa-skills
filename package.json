@@ -1,0 +1,16 @@
+{
+  "name": "qa-skills-regression-tests",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "test": "node --test --test-isolation=none tests/examples/*.test.mjs",
+    "test:browser": "node --test --test-isolation=none tests/browser/*.test.mjs"
+  },
+  "devDependencies": {
+    "msw": "2.15.0",
+    "playwright": "1.62.1"
+  }
+}
