@@ -26,7 +26,7 @@ A framework migration is where coverage quietly leaks: twenty old tests become f
 | You're going from → to | Jump to | First-pass tooling |
 |------------------------|---------|--------------------|
 | Selenium → Playwright | Translation Patterns + `references/framework-guides.md` | hand-write; no codemod worth trusting |
-| Cypress → Playwright | Translation Patterns + `references/framework-guides.md` | cy2pw web converter / community CLI (see tooling table) |
+| Cypress → Playwright | Translation Patterns + `references/framework-guides.md` | cy2pw web converter / community CLI (see tooling table); hand-write from the golden reference when no new dependency or interactive tool is allowed, and for fewer than about twenty tests, where it is faster anyway |
 | Protractor → Playwright | `references/framework-guides.md` (urgent — EOL 2023) | hand-write; map `by.model`/`by.binding` |
 | Jest → Vitest | `references/framework-guides.md` | `jest.`→`vi.` sed pass, then verify |
 | Mocha → Vitest | `references/framework-guides.md` | chai-matcher codemod, then verify |
@@ -36,7 +36,7 @@ A framework migration is where coverage quietly leaks: twenty old tests become f
 
 ## Discovery Questions
 
-Check `.agents/qa-project-context.md` first. If it exists, use it as context and skip questions already answered there.
+Check `.agents/qa-project-context.md` first. If it exists and is filled in, use it as context and skip questions already answered there; an unfilled template answers nothing, so treat it as absent.
 
 **Current state:**
 - What framework are you migrating from and to? (drives the translation tables and which guide section applies)
@@ -122,6 +122,8 @@ There is no AI magic button. Pick the right first-pass tool by path, then refine
 | `By.css('[data-testid="user-menu"]')` | `page.getByTestId('user-menu')` | testid as fallback |
 | `cy.get('.product-card').first()` | `page.getByRole('article').first()` | Semantic elements preferred |
 | `cy.contains('Add to cart')` | `page.getByRole('button', { name: 'Add to cart' })` | Specific role is better |
+| `cy.contains('.filters a', 'Active')` | `page.getByRole('link', { name: 'Active' })`, or `page.locator('.filters').getByRole('link', { name: 'Active' })` when the name is not unique on the page | Two-argument form scopes the text to a container |
+| Two elements with the same role and no name (two `role=list`) | one CSS anchor for the container, role-based locators inside it | Roles cannot tell identical unnamed containers apart; keep the anchor and say why |
 | `element(by.model('username'))` | `page.getByLabel('Username')` | Angular model → label |
 
 Role/label names above are illustrative — replace them with the accessible name your app actually renders.
@@ -143,7 +145,9 @@ Role/label names above are illustrative — replace them with the accessible nam
 | Old Pattern | New Pattern (Playwright) | Notes |
 |-------------|--------------------------|-------|
 | `assert element.is_displayed()` | `await expect(locator).toBeVisible()` | Auto-retrying |
-| `cy.get('.msg').should('have.text', 'Done')` | `await expect(locator).toHaveText('Done')` | Auto-retrying |
+| `cy.get('.msg').should('have.text', 'Done')` | `await expect(locator).toHaveText('Done')` | Auto-retrying; normalises whitespace, so an assertion about trimming is vacuous with it |
+| `should($els => expect(texts).to.deep.equal([...]))` (callback assertion), exact text | `await expect.poll(() => locator.allTextContents()).toEqual([...])` | Keeps raw text and order; use it wherever whitespace or exact equality is the point |
+| `cy.get('.box').each($el => expect($el).to.be.checked)` | `await expect(locator).toHaveCount(n)` then `for (const el of await locator.all()) await expect(el).toBeChecked()` | Assert the count first so an empty set cannot pass |
 | `expect(element.getText()).toBe('Done')` | `await expect(locator).toHaveText('Done')` | Auto-retrying |
 | `cy.url().should('include', '/dashboard')` | `await expect(page).toHaveURL(/dashboard/)` | Auto-retrying |
 | `assert len(elements) == 5` | `await expect(locator).toHaveCount(5)` | Auto-retrying |
@@ -158,6 +162,7 @@ Role/label names above are illustrative — replace them with the accessible nam
 | `retries: { runMode: 2 }` | `retries: 2` |
 | `video: true` | `use.video: 'on'` |
 | `screenshotOnRunFailure: true` | `use.screenshot: 'only-on-failure'` |
+| `Cypress.env('TODO_URL')` | `process.env.TODO_URL`, or a fixture that owns the value |
 
 ---
 
@@ -264,8 +269,8 @@ Migrating to Playwright while the team has never used it means the champions wri
 
 Prove the migrated artifacts work — smallest check first:
 
-- **The migrated test passes:** `npx playwright test <migrated-file>` (or `npx vitest run <migrated-file>`) exits 0. A green run is the floor, not the finish.
-- **No count leaked:** diff the new vs old test count per feature area against the coverage spreadsheet. Numbers in the "New Suite Tests" column match what actually ran (`npx playwright test --list | wc -l` per area).
+- **The migrated test passes:** `npx playwright test <migrated-file>` (or `npx vitest run <migrated-file>`) exits 0, run the way the project runs its suite (its config path and environment variables, not a bare `npx`). A green run is the floor, not the finish.
+- **No count leaked:** diff the new vs old test count per feature area against the coverage spreadsheet. Numbers in the "New Suite Tests" column match what actually ran (`npx playwright test --list --reporter=list` per area; a custom reporter may print one summary line, so do not count lines of its output).
 - **Both suites run in CI:** the parallel-run workflow shows the legacy job as `continue-on-error: true` and the new job blocking; both appear in the pipeline run.
 - **No regression introduced:** the new suite stays green across 2+ consecutive sprint CI runs before any old test is deleted.
 
@@ -278,6 +283,7 @@ Prove the migrated artifacts work — smallest check first:
 - Both frameworks have run in CI in parallel for at least 2 consecutive sprints with the new suite green.
 - A migration retrospective document exists capturing flakiness root causes, pattern improvements, and team-training gaps.
 - Old framework is fully removed: dependencies deleted from `package.json`, old test files deleted (not just disabled), and CI config updated to run only the new suite.
+- One-shot migration of a suite whose source framework is already gone (it cannot run, so parallel running and the two-sprint criterion are not applicable): done when the migrated suite passes twice on one commit, the assertion ledger shows every legacy assertion mapped with zero silent drops and each intentional change explained, and a negative probe (deliberately wrong expectations) proves the migrated assertions fail. Record the not-applicable items as such.
 
 ---
 

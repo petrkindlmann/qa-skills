@@ -143,7 +143,8 @@ await expect(page.locator('.product-card').first().locator('.price')).toContainT
 
 **Migration notes:**
 - Replace `cy.visit()` with `await page.goto()`.
-- Replace `cy.get().type()` with `await locator.fill()` (fill clears first, which is almost always correct).
+- Replace `cy.get().type()` with `await locator.fill()` (fill clears first, which is almost always correct). Key tokens inside the typed string (`{enter}`, `{esc}`, `{selectall}`) are separate calls after the fill: `await locator.press('Enter')`, `press('Escape')`; `fill` presses nothing.
+- `{ force: true }` has no direct equivalent and usually should not get one. Work out why Cypress needed it: a control revealed on hover becomes `await row.hover()` before the click; a visually hidden checkbox (opacity 0, off-screen label) is already actionable for `check()`; only an element genuinely covered by another needs Playwright's `{ force: true }`, and then say why in a comment.
 - Replace `cy.intercept()` + `cy.wait()` with `page.route()` + `page.waitForResponse()`. When the test asserts on a *real* (un-stubbed) network call, pair the action with an explicit wait so you don't race the response:
 
 ```typescript

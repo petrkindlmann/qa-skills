@@ -1,0 +1,12 @@
+campaign3 matrix (test-migration) started 2026-10-21T19:06:57.614Z node v26.0.0 playwright 1.62.1
+c3-mig-healthy: healthy_pass; 7 tests; 0 failed; 5856ms; code 0
+c3-mig-persistence: assertion_detection_verified; 7 tests; 3 failed; 13685ms; code 1 oracle={"id":"c3-mig-persistence","matcher":"toHaveCount"} verified=true
+  failing: Enter saves an edit and Escape preserves the saved title
+  failing: items and their completion persist through reload
+  failing: a deleted item stays deleted after reload
+c3-mig-filter: assertion_detection_verified; 7 tests; 1 failed; 8475ms; code 1 oracle={"id":"c3-mig-filter","matcher":"toEqual"} verified=true
+  failing: filters visibly select the correct subset
+c3-mig-cancel: assertion_detection_verified; 7 tests; 1 failed; 11949ms; code 1 oracle={"id":"c3-mig-cancel","matcher":"toHaveText"} verified=true
+  failing: Enter saves an edit and Escape preserves the saved title
+c3-mig-duplicates: not_established; 7 tests; 0 failed; 7551ms; code 0 oracle={"id":"c3-mig-duplicates","matcher":"toEqual"} verified=false
+finished 2026-10-21T19:07:45.249Z

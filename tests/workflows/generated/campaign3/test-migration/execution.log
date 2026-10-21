@@ -1,0 +1,91 @@
+# execution.log — campaign3/test-migration (Cypress → Playwright)
+# Repo: /Users/petr/projects/qa-skills, branch main, HEAD fff3118 (dirty tree, untouched by this task)
+# Playwright @playwright/test 1.62.1, Chromium bundled, macOS (Darwin 27.0.0), Node from PATH
+
+## 1. Reading (no execution)
+cat skills/test-migration/SKILL.md
+cat skills/test-migration/references/framework-guides.md
+cat skills/test-migration/references/parallel-ci.md
+cat tests/workflows/todomvc-contract.md
+cat AGENTS.md
+cat tests/workflows/support/fixtures.mjs           # todo fixture is worker-scoped, not per test
+cat tests/workflows/playwright.config.mjs          # testMatch **/*.spec.mjs, workers 2, expect 4s, action 8s
+sed -n '105,140p' tests/workflows/support/runtime.mjs   # startTodo(directory) -> { baseURL, stop }
+cat .agents/qa-project-context.md                  # exists, but is the unfilled template (all [placeholders])
+node -e "console.log(require('@playwright/test/package.json').version)"   # 1.62.1
+
+## 2. Exploration of the served build (foreground script, one Chromium)
+node /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/explore/snapshot.mjs
+# URL: http://127.0.0.1:52357/
+# EMPTY aria snapshot: heading "todos"; textbox "What needs to be done?"; contentinfo (info footer)
+# 3 items, one completed:
+#   checkbox "❯ Mark all as complete"
+#   list > listitem: checkbox / text: Buy milk            (row checkbox has NO accessible name)
+#          listitem: checkbox [checked] / text: Buy milk / button "×"   (× only present while hovered)
+#          listitem: checkbox / text: Keep receipt
+#   strong: "2" / text: items left                        (count has no role)
+#   list > listitem > link "All" (#/), "Active" (#/active), "Completed" (#/completed)
+#   button "Clear completed"
+# Markup: <li data-id class=""><div class="view"><input class="toggle" type="checkbox"><label>Buy milk</label><button class="destroy"></button></div></li>
+#   -> li.textContent === label.textContent (no whitespace between elements)
+# Editing row: <li class=" editing"> ... <input class="edit"></li>; aria: listitem > textbox: Buy milk
+# localStorage key: todos-vanillajs
+
+## 3. Authoring
+# wrote todo-page.mjs (page helper) and todomvc.spec.mjs (7 tests, legacy names kept verbatim)
+
+## 4. Parity count (skill "Verification: No count leaked" — repo has no npx wrapper, used the runner command with --list)
+cd /Users/petr/projects/qa-skills && QA_WORKFLOW_SUITE=.../campaign3/test-migration QA_WORKFLOW_OUTPUT=.../scratchpad/campaign3-test-migration \
+  node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --list
+# WORKFLOW RUN: 7 scheduled cases
+grep -c "^  it('" legacy/todomvc.cy.js
+# 7
+
+## 5. Run 1 (HEAD a5d27c1 — note: the session's git snapshot said fff3118; HEAD had moved before this task ran. Tree dirty elsewhere, untouched here)
+# 2026-10-21T19:00:15Z
+cd /Users/petr/projects/qa-skills && QA_WORKFLOW_SUITE=/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/test-migration \
+  QA_WORKFLOW_OUTPUT=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-test-migration \
+  node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+# WORKFLOW RUN: 7 scheduled cases
+# WORKFLOW RESULT: passed; attempts=7; {"passed":7}
+# verbose.json (copied to verbose-run1.json): expected=7 unexpected=0 flaky=0 skipped=0, duration 3622ms
+#   passed 651ms worker0 | creates trimmed non-blank titles in order and clears the entry field
+#   passed 905ms worker1 | duplicate titles remain independent through complete, edit and delete
+#   passed 724ms worker0 | filters visibly select the correct subset
+#   passed 549ms worker1 | Enter saves an edit and Escape preserves the saved title
+#   passed 435ms worker0 | items and their completion persist through reload
+#   passed 484ms worker1 | a deleted item stays deleted after reload
+#   passed 469ms worker0 | mark-all completes and restores every item
+
+## 6. Run 2 (same command, same HEAD a5d27c1, 2026-10-21T19:00:36Z)
+# WORKFLOW RUN: 7 scheduled cases
+# WORKFLOW RESULT: passed; attempts=7; {"passed":7}
+# EXIT=0
+# verbose.json (copied to verbose-run2.json): expected=7 unexpected=0 flaky=0 skipped=0, duration 3366ms
+#   passed 519ms | creates trimmed non-blank titles in order and clears the entry field
+#   passed 797ms | duplicate titles remain independent through complete, edit and delete
+#   passed 595ms | filters visibly select the correct subset
+#   passed 538ms | Enter saves an edit and Escape preserves the saved title
+#   passed 347ms | items and their completion persist through reload
+#   passed 529ms | a deleted item stays deleted after reload
+#   passed 514ms | mark-all completes and restores every item
+# test-results/ holds only the two worker todo-server directories; no failure screenshots or traces.
+
+## 7. Negative probe (AGENTS.md: exercise a known-broken case; throwaway spec lives in the scratchpad, not in this folder)
+# probe spec: /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/probe-suite/probe.spec.mjs
+cd /Users/petr/projects/qa-skills && QA_WORKFLOW_SUITE=.../scratchpad/probe-suite QA_WORKFLOW_OUTPUT=.../scratchpad/probe-output \
+  node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+# WORKFLOW RESULT: failed; attempts=5; {"passed":1,"failed":4}   EXIT=1   (expected 1 pass / 4 fail)
+#   passed | PASS expected: toHaveText normalises whitespace, so an untrimmed expectation still matches a trimmed title
+#   failed | FAIL expected: expectTitles keeps raw textContent, so the same untrimmed expectation is rejected
+#            -> Error: todo titles in order (expect.poll toEqual mismatch)
+#   failed | FAIL expected: wrong remaining count is rejected
+#            -> expect(locator).toBeVisible() failed; Locator: getByText('3 items left', { exact: true })
+#   failed | FAIL expected: wrong selected filter is rejected
+#            -> toContainClass failed; Received: "" for <a href="#/completed">Completed</a>
+#   failed | FAIL expected: Escape-cancelled edit must not read as saved
+#            -> toHaveText failed; Expected "Discard this draft", Received "Pack bag"
+
+## 8. Final checks
+git status --porcelain -- tests/workflows/generated/campaign3/test-migration   # only this folder's new files
+ls -la legacy/ ; wc -c legacy/todomvc.cy.js                                     # 4420 bytes, mtime 20:23, untouched

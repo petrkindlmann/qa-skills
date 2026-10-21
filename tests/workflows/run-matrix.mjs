@@ -64,12 +64,21 @@ const campaign3Cases = [
   { id: 'c3-analytics-currency', suite: 'campaign3/analytics-tracking-testing', count: 8, env: { QA_SHOP_FAULT: 'wrong_currency_event' }, title: 'purchase carries the created order' },
   { id: 'c3-virt-healthy', suite: 'campaign3/service-virtualization', healthy: true, count: 10 },
   { id: 'c3-virt-catalog-drift', suite: 'campaign3/service-virtualization', count: 10, env: { QA_SHOP_FAULT: 'catalog_currency_missing' }, title: 'every recorded request still draws' },
+  // The migrated legacy suite renames a duplicate before deleting it, so delete-wrong-duplicate is
+  // expected to pass through undetected; the case records that limit of the legacy coverage.
+  { id: 'c3-mig-healthy', suite: 'campaign3/test-migration', healthy: true, count: 7 },
+  { id: 'c3-mig-persistence', suite: 'campaign3/test-migration', count: 7, env: { QA_TODO_FAULT: 'persistence-lost' }, title: 'items and their completion persist' },
+  { id: 'c3-mig-filter', suite: 'campaign3/test-migration', count: 7, env: { QA_TODO_FAULT: 'filter-state-error' }, title: 'filters visibly select' },
+  { id: 'c3-mig-cancel', suite: 'campaign3/test-migration', count: 7, env: { QA_TODO_FAULT: 'escape-commits-edit' }, title: 'Escape preserves' },
+  { id: 'c3-mig-duplicates', suite: 'campaign3/test-migration', count: 7, env: { QA_TODO_FAULT: 'delete-wrong-duplicate' }, title: 'duplicate titles remain independent' },
 ];
 const oracleMatchers = {
   'c3-visual-style': 'toHaveScreenshot', 'c3-bugrepro-logout': 'toBe', 'c3-bugrepro-idempotency': 'toBe',
   'c3-synth-slow-health': 'toBeLessThanOrEqual', 'c3-synth-reset-email': 'toBe',
   'c3-analytics-currency': 'toEqual',
   'c3-virt-catalog-drift': 'toEqual',
+  'c3-mig-persistence': 'toHaveCount', 'c3-mig-filter': 'toEqual', 'c3-mig-cancel': 'toHaveText',
+  'c3-mig-duplicates': 'toEqual',
   'shop-ownership': 'toBe', 'shop-pricing': 'toBe', 'shop-deduplication': 'toMatchObject',
   'shop-transaction': 'toHaveLength', 'shop-key-conflict': 'toBe', 'shop-reset-reuse': 'toBe',
   'todo-persistence': 'toHaveText', 'todo-duplicates': 'toHaveText', 'todo-filter': 'toHaveText',
