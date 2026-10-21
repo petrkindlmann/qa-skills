@@ -1,0 +1,27 @@
+# Execution log: visual-testing on TodoMVC (campaign 3)
+
+Authoring agent session ended with the host window on 2026-10-21 before it wrote this
+log; the commands below are recovered from its transcript, then continued by the
+orchestrating session. Commit under test: 201d1d4 (fixtures), macOS arm64, Node 26,
+Playwright 1.62.1 bundled Chromium, --workers 2.
+
+Agent (recovered):
+  read skills/visual-testing/SKILL.md, references/recipes.md, tests/workflows/todomvc-contract.md,
+    support/fixtures.mjs, playwright.config.mjs, reporters/minimal.mjs
+  node scratchpad/inspect-dom.mjs            # DOM and class inventory of the running app
+  grep transition|animation|@font-face vendor/todomvc-app-css/2.4.1/index.css
+                                             # label colour fade 0.4 s, destroy control 0.2 s
+  node scratchpad/probe-clock.mjs            # no clock or date in the rendered page
+  grep stylePath|caret|animations|maxDiffPixels node_modules/playwright/types/test.d.ts
+  wrote screenshot.css, visual-helpers.mjs, todomvc-visual.spec.mjs, task-prompt.txt
+  QA_WORKFLOW_SUITE=.../campaign3/visual-testing QA_WORKFLOW_OUTPUT=... playwright test --workers 2 --update-snapshots
+                                             # baseline run; 9 PNGs written (listed below)
+  ls ...-snapshots/ ; file *.png             # 9 darwin PNGs: 550x286, 550x226, 550x166, 1280x800, 981x1744
+  playwright test --workers 2                # run 2: 10 scheduled, passed 9, skipped 1 (opt-in detector)
+
+Orchestrator (after the fixture commit 201d1d4):
+  npm run test:workflows                     # whole lab incl. this folder: 46 scheduled, passed 45, skipped 1
+  playwright test --workers 2                # determinism-1: passed 9, skipped 1
+  playwright test --workers 2                # determinism-2: passed 9, skipped 1
+  VISUAL_DETECTOR_CHECK=1 playwright test --workers 2
+                                             # detector: 10 scheduled, passed 10
