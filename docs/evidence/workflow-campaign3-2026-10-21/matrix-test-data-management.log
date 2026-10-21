@@ -1,0 +1,8 @@
+campaign3 matrix (test-data-management) started 2026-10-21T20:13:45.752Z node v26.0.0 playwright 1.62.1
+c3-tdm-healthy: healthy_pass; 7 tests; 0 failed; 18353ms; code 0
+c3-tdm-idempotency-index: not_established; 7 tests; 0 failed; 16421ms; code 0 oracle={"id":"c3-tdm-idempotency-index","matcher":"toHaveLength"} verified=false
+c3-tdm-cross-user: assertion_detection_verified; 7 tests; 1 failed; 21065ms; code 1 oracle={"id":"c3-tdm-cross-user","matcher":"toEqual"} verified=true
+  failing: scopes running in parallel on one Shop cannot see each other's orders
+c3-tdm-duplicate-fulfillment: assertion_detection_verified; 7 tests; 1 failed; 17855ms; code 1 oracle={"id":"c3-tdm-duplicate-fulfillment","matcher":"toBe"} verified=true
+  failing: a signed payment payload from the factory is accepted; tampered, re-signed, unsigned and mismatched ones are not
+finished 2026-10-21T20:15:00.161Z

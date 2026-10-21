@@ -37,7 +37,7 @@ Create, maintain, and clean up test data that is deterministic, isolated, realis
 
 ## Discovery Questions
 
-Before designing a test data strategy, understand the current state. Check `.agents/qa-project-context.md` first -- if it exists, use it as the foundation and skip questions already answered there.
+Before designing a test data strategy, understand the current state. Check `.agents/qa-project-context.md` first -- if it exists and is filled in, use it as the foundation and skip questions already answered there; an unfilled template answers nothing, so treat it as absent.
 
 ### Current Data Practices
 - How is test data created today? (manually, scripts, copy of production, none)
@@ -69,7 +69,7 @@ Static fixtures (JSON/YAML files) are appropriate for reference data that does n
 Production databases contain the most realistic data, but they also contain real user information. Never copy production data to test environments without anonymization. Replace PII with synthetic equivalents while preserving data distributions and relationships.
 
 ### 4. Deterministic Data Enables Reproducible Tests
-Tests should produce the same results regardless of when or where they run. Avoid `Math.random()`, `Date.now()`, or auto-increment IDs in assertions. Use seeded random generators (`faker.seed(n)`), fixed timestamps, factory sequences, and -- when an ID must be a UUID you assert on -- a seeded `faker.string.uuid()` so it stays stable across runs.
+Tests should produce the same results regardless of when or where they run. Avoid `Math.random()`, `Date.now()`, or auto-increment IDs in assertions. Use seeded random generators (`faker.seed(n)`), fixed timestamps, factory sequences, and -- when an ID must be a UUID you assert on -- a seeded `faker.string.uuid()` so it stays stable across runs. State the factory's promise in the server's canonical form: if the application sorts items by SKU, trims names or lower-cases emails, the promise does the same, or "reads back equal to the promise" fails on a detail the contract does not consider a difference.
 
 ### 5. Minimize Data, Maximize Signal
 Create only the data each test needs. A test for user search does not need a complete user profile with billing address, payment method, and order history. Over-specified test data obscures the intent of the test and increases maintenance burden.
@@ -85,7 +85,8 @@ See `references/factories.md` for the full Fishery (with associations and determ
 - **Defaults + overrides** — `Factory.define` produces sensible defaults; tests pass overrides for the one field they care about (`userFactory.build({ role: 'admin' })`).
 - **Sequences for unique fields** — `sequence` (Fishery), `sequence(:email)` (FactoryBot), `factory.Sequence` (Factory Boy) — never hardcode IDs or emails.
 - **Traits for variants** — name common states (`:admin`, `:inactive`, `out_of_stock`, `discounted`) instead of spawning a fixture file per combination.
-- **Associations** — one factory builds another (an order builds its user), keeping referential structure without manual wiring.
+- **Associations** — one factory builds another (an order builds its user), keeping referential structure without manual wiring. When the application cannot create the parent (seeded accounts only, no sign-up API), invert the direction: the factory takes a confirmed parent as input (`orderFactory.build({ user })`) and never invents one.
+- **No library available** — none of this needs Fishery or Faker. A seeded generator (hash the test or scope name into a 32-bit seed, step it with a small PRNG such as mulberry32, fork a stream per factory so one factory's extra draw cannot shift another's values) plus a per-factory sequence gives `build`, `buildList`, defaults and overrides in about forty lines of plain code. Reach for the library when the realistic field values matter, not for the mechanics.
 
 ### When to Use Factories vs Fixtures
 
@@ -181,7 +182,7 @@ For the worker-scoped fixture (`test.extend` with `{ scope: 'worker' }`) that po
 | **Truncation** (`TRUNCATE ... CASCADE`) | Resetting tables between suites | Medium |
 | **API-based cleanup** | E2E tests with no direct DB access | Slowest |
 
-Transaction rollback cannot clean up E2E tests -- the app opens its own DB connections, so a test-side transaction can't undo the app's writes; use API-based cleanup (delete in reverse creation order) there. All three implementations are in `references/seeding-and-synthetic.md` (Cleanup Strategies).
+Transaction rollback cannot clean up E2E tests -- the app opens its own DB connections, so a test-side transaction can't undo the app's writes; use API-based cleanup (delete in reverse creation order) there. Some systems delete nothing (ledgers, orders, audit records): there the strategy is a fresh instance or namespace per test where the runtime allows it, and otherwise a ledger of every record the application confirmed, assertions scoped to that ledger (own records visible, foreign records never asserted on), and a reconcile step that checks the durable state against baseline plus ledger instead of against an empty table. All three implementations are in `references/seeding-and-synthetic.md` (Cleanup Strategies).
 
 ---
 
@@ -203,7 +204,7 @@ Copying the production database to staging for "realistic testing." This violate
 Using `Math.random()` or `Date.now()` in test data creation without seeding. Tests pass on Monday and fail on Tuesday because the random name generated happens to exceed a field length limit. Use seeded Faker instances and fixed timestamps.
 
 ### No Cleanup Strategy
-Tests that create data and never clean it up. The test database grows until it affects performance, or stale data causes false positives in other tests. Every data creation must have a corresponding cleanup.
+Tests that create data and never clean it up. The test database grows until it affects performance, or stale data causes false positives in other tests. Every data creation must have a corresponding cleanup, or, where the application cannot delete, a ledger and scoped assertions that make the leftover data harmless (see Cleanup Strategies).
 
 ### Fixture File Explosion
 Creating a separate JSON fixture file for every test variation. Instead of `user-admin.json`, `user-inactive.json`, `user-admin-inactive.json`, use a factory with traits. Fixtures should be reserved for static reference data and API response mocks.
@@ -220,8 +221,8 @@ Using `userId: '1'` in tests. This couples tests to database state and breaks wh
 
 Prove the data layer is deterministic, isolated, and PII-free, smallest check first:
 
-1. **Seeds are idempotent** — run the seed twice back-to-back and diff the row counts: `psql -c "SELECT count(*) FROM countries" && <seed> && psql -c "SELECT count(*) FROM countries"` returns the same number both times and exits 0. A growing count means a missing `ON CONFLICT`.
-2. **No shared mutable state** — run the suite under parallelism *and* randomized order: `npx playwright test --workers=4` (or `pytest -n auto -p randomly`) stays green. A failure that only appears here is an ordering or shared-data dependency.
+1. **Seeds are idempotent** — run the seed twice back-to-back and diff the row counts: `psql -c "SELECT count(*) FROM countries" && <seed> && psql -c "SELECT count(*) FROM countries"` returns the same number both times and exits 0. A growing count means a missing `ON CONFLICT`. An application that seeds itself at start has no script to run twice; restart it on the same database and compare the durable state before and after, and say that this is the analogue, not the recipe.
+2. **No shared mutable state** — run the suite under parallelism *and* randomized order: `npx playwright test --workers=4` (or `pytest -n auto -p randomly`) stays green. Playwright has no shuffle flag; use `--workers=N` with `fullyParallel: true` and `--repeat-each=2`, and run the files in reverse with an explicit list for the ordering check. A failure that only appears here is an ordering or shared-data dependency.
 3. **Determinism holds** — run the same data-generating test twice; with `faker.seed(n)` set, generated names/IDs/UUIDs match across runs. If they drift, an unseeded Faker call or `Date.now()`/`crypto.randomUUID()` leaked in.
 4. **No real PII** — `grep -rE '@(gmail|outlook|yahoo)\.com|[0-9]{3}-[0-9]{2}-[0-9]{4}' tests/ fixtures/` returns nothing (real-looking emails and SSNs). Anything it finds is an anonymization gap.
 5. **Cleanup returns to baseline** — snapshot row counts before the suite, run it, snapshot again: the test DB is back to baseline with no orphaned records.
@@ -231,7 +232,7 @@ Prove the data layer is deterministic, isolated, and PII-free, smallest check fi
 ## Done When
 
 - Every entity type the suite creates has a factory or fixture (no inline ad-hoc object literals in tests for shared entities -- grep the test dir for hand-built fixtures and confirm none remain).
-- Test data is isolated per test -- the suite passes with parallelism on (`--workers=N` / `pytest -n auto`) **and** under randomized order (`--shuffle` / `-p randomly`), proving no shared mutable state or ordering dependency.
+- Test data is isolated per test -- the suite passes with parallelism on (`--workers=N` / `pytest -n auto`) **and** under randomized order (`-p randomly`; Playwright has no shuffle, so a reversed explicit file list with `--repeat-each`), proving no shared mutable state or ordering dependency.
 - Seed scripts are idempotent -- running the seed twice in a row produces the same row count and exits 0; the CI job runs them with no manual intervention.
 - No real PII used in test fixtures -- all sensitive data anonymized or synthetic (grep for production domains / real-looking SSNs returns nothing).
 - Data cleanup verified -- row counts in the test DB return to baseline after the suite (no orphaned records accumulate across runs).

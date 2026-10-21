@@ -1,0 +1,107 @@
+# execution.log — test-data-management against the Shop
+# Repo /Users/petr/projects/qa-skills, branch main, HEAD 9b08fa8 (working tree also had unrelated
+# uncommitted test-suite-curation changes that are not mine). Node v26.0.0, Playwright 1.62.1,
+# macOS Darwin 27.0.0. Date 2026-10-21. All commands run from the repo root unless noted.
+
+## Reading (no execution)
+cat skills/test-data-management/SKILL.md
+cat skills/test-data-management/references/factories.md
+cat skills/test-data-management/references/seeding-and-synthetic.md
+cat tests/workflows/fixture-app-contract.md
+cat tests/workflows/support/fixtures.mjs tests/workflows/playwright.config.mjs
+cat .agents/qa-project-context.md            # exists, but every field is still a [placeholder]
+sed -n 1,200p tests/workflows/support/runtime.mjs
+sed -n 1,60p tests/workflows/reporters/minimal.mjs
+grep -nE 'base_url|smtp_port|api/v1|def |add_argument' tests/workflows/mailpit/mailpit_service.py
+  -> real Mailpit binary, readiness probed at /api/v1/info
+
+## Environment facts
+node --version                               -> v26.0.0
+cat package.json                             -> devDependencies: @playwright/test 1.62.1, playwright 1.62.1, msw, @axe-core/playwright
+ls node_modules | grep -iE 'faker|fishery'   -> (nothing) exit 1   # the skill's default factory stack is absent
+git rev-parse --short HEAD                   -> 9b08fa8
+
+## Scaffold
+mkdir -p tests/workflows/generated/campaign3/test-data-management/{factories,support}
+cat > .../task-prompt.txt (verbatim task)    -> 4990 bytes
+
+## Probe the live Shop (foreground Node script, startMailpit + startShop from support/runtime.mjs)
+node /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/tdm-probe/probe.mjs
+  users    {"alice":{"id":"alice","email":"alice+d276a2d1…@example.test",…},"bob":{…}}
+  catalog  200 {"currency":"EUR","products":[{"sku":"TEA-50","name":"Mountain tea 50 g","unit_amount":1200},{"sku":"CUP-01","name":"Tea cup","unit_amount":1800}]}
+  login    200 {"user":{"id":"alice",…}}
+  order    201 {"order":{"id":"335d25d2-…","user_id":"alice","currency":"EUR","amount":4200,"status":"pending","fulfillment_count":0,
+                "items":[{"sku":"CUP-01","quantity":1},{"sku":"TEA-50","quantity":2}]},"replayed":false}
+           NOTE: items come back sorted by SKU, not in submission order -> factory promise must be canonical
+  replay   200 … "replayed": true  (same key, items reversed)
+  payment  200 {"received":true,"duplicate":false,"order_id":"335d25d2-…"}   (HMAC over exact string body)
+  get order 200 … "status":"paid","fulfillment_count":1
+  reset request 202 {"message":"If this account exists, a reset email has been sent."}
+  mailpit search 200 {"total":1,…,"messages":[{"ID":"2WNL7xykCbcurNmtrORdMw",…,"To":[{"Address":"bob+d276a2d1…@example.test"}],"Subject":"Reset your Shop password",…}]}
+  message keys ID,MessageID,From,To,…,Text,HTML,…   TEXT contains http://127.0.0.1:60786/reset-password?token=cvPxiowUAc9c…
+  state    200 {"now":…,"orders":[…],"receipts":[{"id":"evt-probe-1","order_id":"335d25d2-…","created":…}],
+                "reset_tokens":[{"user_id":"bob","expires":…,"consumed":null}],"sessions":{"alice":1},"smtp_errors":0}
+
+## Author the data layer
+cat > factories/prng.mjs, catalogue.mjs, order.factory.mjs, payment.factory.mjs, reset.factory.mjs, index.mjs
+cat > support/ledger.mjs, support/scope.mjs, support/test.mjs
+cat > test-data.spec.mjs
+for f in factories/*.mjs support/*.mjs test-data.spec.mjs; do node --check "$f"; done   -> all clean
+
+## In-process factory check (no Shop)
+node --input-type=module -e "…createFactories({scope:'determinism'}) twice, 'determinism-other', seed 7, variants…"
+  same scope equal: true
+  other scope payload differs: true
+  a: [["determinism.order-1",[{"sku":"CUP-01","quantity":10},{"sku":"TEA-50","quantity":7}],26400],["determinism.order-2",…,17400],["determinism.order-3",[{"sku":"TEA-50","quantity":10}],12000]]
+  payment: evt-determinism-1 sha256=e28e20bd… {"id":"evt-determinism-1","type":"payment.succeeded","data":{"order_id":"order-fixed","currency":"EUR","amount":4200}}
+  tampered body: …"amount":4201} same sig: true
+  reset: Reset-1-4913aedee13b! 21 11
+  seed 7 differs: true
+  sanitise: spaces-and-slashes-
+
+## Suite runs
+# RUN=QA_WORKFLOW_SUITE=/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/test-data-management \
+#     QA_WORKFLOW_OUTPUT=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-test-data-management \
+#     node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+
+$RUN   # attempt A — my import path bug
+  WORKFLOW RUN: 0 scheduled cases
+  RUN ERROR: Error: Cannot find module '/Users/petr/projects/qa-skills/tests/workflows/generated/support/fixtures.mjs' imported from …/support/test.mjs
+  WORKFLOW RESULT: failed; attempts=0; {}
+sed -i '' "s#'../../../support/fixtures.mjs'#'../../../../support/fixtures.mjs'#" support/test.mjs   # support/ is one level deeper than the spec
+
+$RUN   # attempt B — my reconcile API bug
+  WORKFLOW RUN: 7 scheduled cases
+  FAILED: reset-flow data from the factory drives a real inbox round trip       TypeError: ledger.expectedOrders is not a function
+  FAILED: durable state from the test-support endpoint matches the ledger …     TypeError: ledger.expectedOrders is not a function
+  WORKFLOW RESULT: failed; attempts=7; {"passed":5,"failed":2}
+python3 patch: reconcileState now maps each item through `item.ledger ?? item` (tests pass scopes, which carry .ledger)
+
+$RUN   # run 1 of 2 on the final code
+  WORKFLOW RUN: 7 scheduled cases
+  WORKFLOW RESULT: passed; attempts=7; {"passed":7}
+
+$RUN   # run 2 of 2 on the final code
+  WORKFLOW RUN: 7 scheduled cases
+  WORKFLOW RESULT: passed; attempts=7; {"passed":7}
+  verbose.json: expected 7, unexpected 0, flaky 0, skipped 0, duration 9533 ms
+    964ms  a factory-built order is accepted and reads back equal to the factory promise        | ledger-order-roundtrip.json
+    198ms  factories are deterministic by scope and seed, and honour overrides                   | (no Shop started)
+   1217ms  scopes running in parallel on one Shop cannot see each other's orders                | ledger-parallel-a/b/c.json
+   1109ms  an idempotent replay through the factory returns the same order; a changed intent conflicts | ledger-replay.json
+   1076ms  a signed payment payload … accepted; tampered, re-signed, unsigned and mismatched … not | ledger-payment.json
+   1865ms  durable state from the test-support endpoint matches the ledger, before and after a restart | ledger-durable-alice/bob.json
+   1229ms  reset-flow data from the factory drives a real inbox round trip                       | ledger-reset.json
+
+## Skill verification steps applied
+grep -rnE '@(gmail|outlook|yahoo)\.com|[0-9]{3}-[0-9]{2}-[0-9]{4}' tests/workflows/generated/campaign3/test-data-management/
+  -> no matches (exit 1)                                                     # SKILL.md Verification 4: passes
+grep -rnE 'Math\.random|Date\.now|randomUUID' factories support test-data.spec.mjs
+  -> prng.mjs:1 (a comment); scope.mjs:119,121 Date.now() for the inbox polling deadline only; no data uses it
+grep -nE "sku: '|payment\.succeeded|createHmac" test-data.spec.mjs
+  -> line 75 only: an assertion on factory output ([{ sku: 'CUP-01', quantity: 10 }]), no hand-built request bodies   # Done When 1
+node node_modules/playwright/cli.js test --help | grep -iE 'shuffle|random'
+  -> nothing: Playwright 1.62.1 has no --shuffle                              # Done When 2 "randomized order" not applicable
+cd scratchpad/tdm-probe && node --input-type=module -e "import productsResponse from './products.json'; …"
+  -> see final-response.md for the result (references/factories.md Static Fixtures import line as written)
+git status --short  -> only tests/workflows/generated/campaign3/test-data-management/ is new from this work

@@ -85,6 +85,12 @@ const campaign3Cases = [
     { id: 'cur-virt-catalog-drift', oracleId: 'c3-virt-catalog-drift', env: { QA_SHOP_FAULT: 'catalog_currency_missing' }, title: 'every recorded request still draws' },
   ].map(scenario => ({ ...scenario, suite: 'campaign3/test-suite-curation/curated', count: 81, skipped: 9,
     env: { VISUAL_DETECTOR_CHECK: '1', ...scenario.env } })),
+  { id: 'c3-tdm-healthy', suite: 'campaign3/test-data-management', healthy: true, count: 7 },
+  // A three-request burst does not reliably hit the dropped-constraint race; the case stays to
+  // record that limit (the database-testing addon catches the fault at the schema level).
+  { id: 'c3-tdm-idempotency-index', suite: 'campaign3/test-data-management', count: 7, env: { QA_SHOP_FAULT: 'missing_idempotency_index' }, title: 'an idempotent replay through the factory' },
+  { id: 'c3-tdm-cross-user', suite: 'campaign3/test-data-management', count: 7, env: { QA_SHOP_FAULT: 'cross_user_order_read' }, title: 'scopes running in parallel on one Shop' },
+  { id: 'c3-tdm-duplicate-fulfillment', suite: 'campaign3/test-data-management', count: 7, env: { QA_SHOP_FAULT: 'duplicate_fulfillment' }, title: 'a signed payment payload from the factory' },
 ];
 const oracleMatchers = {
   'c3-visual-style': 'toHaveScreenshot', 'c3-bugrepro-logout': 'toBe', 'c3-bugrepro-idempotency': 'toBe',
@@ -93,6 +99,8 @@ const oracleMatchers = {
   'c3-virt-catalog-drift': 'toEqual',
   'c3-mig-persistence': 'toHaveCount', 'c3-mig-filter': 'toEqual', 'c3-mig-cancel': 'toHaveText',
   'c3-mig-duplicates': 'toEqual',
+  'c3-tdm-idempotency-index': 'toHaveLength', 'c3-tdm-duplicate-fulfillment': 'toBe',
+  'c3-tdm-cross-user': 'toEqual',
   'shop-ownership': 'toBe', 'shop-pricing': 'toBe', 'shop-deduplication': 'toMatchObject',
   'shop-transaction': 'toHaveLength', 'shop-key-conflict': 'toBe', 'shop-reset-reuse': 'toBe',
   'todo-persistence': 'toHaveText', 'todo-duplicates': 'toHaveText', 'todo-filter': 'toHaveText',

@@ -178,6 +178,9 @@ Best for API response mocks, configuration data, and golden file comparisons.
 
 ```typescript
 // Using JSON fixtures in Playwright tests
+// Under Node ESM a bare JSON import throws ERR_IMPORT_ATTRIBUTE_MISSING; write
+// `import productsResponse from '.../products.json' with { type: 'json' }`, or keep the
+// fixture as a .ts/.mjs export when the runner's loader is in doubt.
 import productsResponse from '../fixtures/data/api-responses/products.json';
 
 test('displays products from API', async ({ page }) => {
@@ -201,6 +204,10 @@ import { userFactory } from '../factories/user.factory';
 export const test = base.extend<{ testOrder: { id: string; userId: string } }>({
   testOrder: async ({ request }, use) => {
     // Unique userId from the factory sequence -- never `Date.now()` (Core Principle 4)
+    // `data:` lets Playwright serialise the object. A payload whose bytes are signed (an
+    // HMAC webhook) must be sent as the exact string the signature was computed over:
+    // build `body = JSON.stringify(event)` in the factory, sign `body`, and post it with
+    // `{ data: body, headers: { 'content-type': 'application/json', 'x-signature': sig } }`.
     const response = await request.post('/api/test/orders', {
       data: { userId: userFactory.build().id, items: [{ productId: 'prod-1', quantity: 1 }] },
     });
@@ -211,6 +218,10 @@ export const test = base.extend<{ testOrder: { id: string; userId: string } }>({
   },
 });
 ```
+
+Where no delete endpoint exists, the fixture records the confirmed order in a ledger
+attached to the test result instead of deleting it, and the test's assertions read only the
+ledger's records (own ids, own idempotency keys) so data from other tests cannot leak in.
 
 ### Fixture Composition
 
