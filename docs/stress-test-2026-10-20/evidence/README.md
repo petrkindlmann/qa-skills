@@ -50,3 +50,7 @@ same ten-request batch shared context. These are not end-to-end application runs
 project context. Their bounded manual review is reported separately from automated
 checks. `static-original.json` preserves the original 471/512 content result; changes
 to rubrics and deferred-criterion accounting prevent a direct reliability comparison.
+
+The whitespace check covers source and structured artifacts relative to the baseline.
+Raw `.log` and `.txt` process output retains original trailing spaces and is excluded
+from that formatting check so its recorded bytes remain intact.

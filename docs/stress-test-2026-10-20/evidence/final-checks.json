@@ -48,14 +48,20 @@
     "log": "final-static.log"
   },
   {
-    "check": "whitespace",
+    "check": "source-and-structured-artifact-whitespace",
     "command": [
       "git",
       "diff",
-      "--check"
+      "b3bb61bd268b147476252c6ed5a0440c87b97441",
+      "--check",
+      "--",
+      ".",
+      ":(exclude)docs/stress-test-2026-10-20/evidence/*.log",
+      ":(exclude)docs/stress-test-2026-10-20/evidence/*.txt"
     ],
     "exit_code": 0,
-    "seconds": 0.004,
-    "log": "final-whitespace.log"
+    "seconds": 0.013,
+    "log": "final-whitespace.log",
+    "scope": "Raw .log and .txt process output excluded to preserve original bytes."
   }
 ]

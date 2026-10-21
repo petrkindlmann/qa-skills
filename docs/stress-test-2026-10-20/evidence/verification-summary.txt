@@ -8,6 +8,6 @@ Structure: 50 skills, 0 errors
 Index: in sync
 Scanner selftest: passed; all 10 expected rules fired
 Static: 481/513 lexical matches; 32 flags; 811 semantic criteria deferred
-Whitespace: clean
+Source and structured-artifact whitespace: clean; raw process logs retain original spaces
 
 See verification.json for commands, versions, exit codes and hashes.

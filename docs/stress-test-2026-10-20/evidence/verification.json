@@ -369,15 +369,21 @@
       "log": "final-static.log"
     },
     {
-      "check": "whitespace",
+      "check": "source-and-structured-artifact-whitespace",
       "command": [
         "git",
         "diff",
-        "--check"
+        "b3bb61bd268b147476252c6ed5a0440c87b97441",
+        "--check",
+        "--",
+        ".",
+        ":(exclude)docs/stress-test-2026-10-20/evidence/*.log",
+        ":(exclude)docs/stress-test-2026-10-20/evidence/*.txt"
       ],
       "exit_code": 0,
-      "seconds": 0.004,
-      "log": "final-whitespace.log"
+      "seconds": 0.013,
+      "log": "final-whitespace.log",
+      "scope": "Raw .log and .txt process output excluded to preserve original bytes."
     }
   ],
   "static_content": {
@@ -401,7 +407,7 @@
   },
   "scope": "Actual fenced helpers and local fixtures; no live application-wide campaign. See report for adapters, semantic deferrals and unexecuted integrations.",
   "evidence_files_sha256": {
-    "README.md": "8f37449555a3c8b69da2550e53632f697b76daa07e8dd1fcdc2b526c94f43665",
+    "README.md": "bc8c2c534e321fdc07aaf0d5788099a5da582dc73b6cb5b53695ebb6913d2f68",
     "analytics-after.log": "a4c0e945e170310426011aa5183008a19fef18afd7150067c4c5149382a88f3a",
     "analytics-after.txt": "ab8c262f2d38cdfa88f2840341e1c498c791129d30d67a230df431a667cadafe",
     "analytics-before.log": "40662b7fcf8055c269d540b154374e40ae7abca0585b2dfb608de8f3942c8dd4",
@@ -418,7 +424,7 @@
     "environment-manifest.json": "4c799e137438eb4c56b1fad0c5445d705c02df6a9d705768eb217b8789543653",
     "environment-results.json": "01b4fc0aed4b13fea0f35c5bbc90cf431df3d829810fba52bc24237070382125",
     "final-browser.log": "e715eb903265e01161f3e526f4521db44c4af97d2a363f7f35791cbfad56cb99",
-    "final-checks.json": "988182733f116f041d4f25eefa33159df19d726d408406da1f70b0933eae3827",
+    "final-checks.json": "4568eeab703ce0806153a783482061873e6dc7db15b2431fbe67bec1b99b820d",
     "final-index.log": "4f11b5921cc99ee2680a9695b9c837f72fbe9a252b13518b852de38613fabaa0",
     "final-node.log": "09766460fececadac52b4872da1ae051c05dfc55523f787bbfbdc6fe42f316f8",
     "final-python.log": "39859b801b365d7b62dc3c76bd6488f2239467dc0e77e641a0ef36ebbc53618c",
@@ -451,6 +457,6 @@
     "structure-after.txt": "480440b40329ac60b420eb07d18f1dcdb8c4c71beeaef3f2c82ca15e352f3a88",
     "structure-before.txt": "71999a16107fff455ad93634d48d6eb6a40ccf88f3b7bad9109111411c301bda",
     "trace-status-before.json": "5664c5263751d36e383f6f44dd814b4c3781fcf403514dfa2201f218450a4c7a",
-    "verification-summary.txt": "9622504b950c43e24169dcb2ae1af1e7b3161a5f0d983b789bb4a20f3df262bf"
+    "verification-summary.txt": "b5253634070360d5bd7a106876723109c626bd0e6f26c307b8dc0df8e12de92f"
   }
 }
