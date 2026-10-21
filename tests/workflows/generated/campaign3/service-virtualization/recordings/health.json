@@ -1,0 +1,22 @@
+{
+  "name": "health",
+  "recordedAt": "2026-10-21T18:43:51.788Z",
+  "build": "shop-lab-v1",
+  "source": "live Shop (fixture-app) started by record.mjs",
+  "request": {
+    "method": "GET",
+    "path": "/health",
+    "headers": {},
+    "body": null
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8"
+    },
+    "body": {
+      "status": "ok",
+      "build": "shop-lab-v1"
+    }
+  }
+}

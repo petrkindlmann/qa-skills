@@ -328,6 +328,9 @@ class Handler(BaseHTTPRequestHandler):
                 time.sleep(2.5)  # Fixture fault: the probe target answers, but far outside its budget.
             return self.respond(200, {"status": "ok", "build": "shop-lab-v1"})
         if method == "GET" and path == "/api/catalog":
+            if self.app.faults.has("catalog_currency_missing"):
+                # Fixture fault: the catalogue response drops its top-level currency field.
+                return self.respond(200, {"products": list(self.app.catalog.values())})
             return self.respond(200, {"currency": "EUR", "products": list(self.app.catalog.values())})
         if method == "POST" and path == "/api/login":
             body, _ = self.read_json()

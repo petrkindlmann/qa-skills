@@ -1,0 +1,5 @@
+campaign3 matrix (service-virtualization) started 2026-10-21T18:53:19.185Z node v26.0.0 playwright 1.62.1
+c3-virt-healthy: healthy_pass; 10 tests; 0 failed; 12446ms; code 0
+c3-virt-catalog-drift: assertion_detection_verified; 10 tests; 1 failed; 8977ms; code 1 oracle={"id":"c3-virt-catalog-drift","matcher":"toEqual"} verified=true
+  failing: every recorded request still draws a response of the recorded shape from the live Shop
+finished 2026-10-21T18:53:41.048Z

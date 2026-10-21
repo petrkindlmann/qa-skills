@@ -16,6 +16,7 @@ KNOWN = frozenset({
     "no_login_throttle", "open_test_support", "smtp_failure_503",
     # 2026-10-21 campaign 3: monitoring and analytics.
     "slow_health", "wrong_currency_event", "reset_email_dropped",
+    "catalog_currency_missing",
 })
 
 

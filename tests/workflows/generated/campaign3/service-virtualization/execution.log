@@ -1,0 +1,99 @@
+# Execution log — service-virtualization campaign 3
+# Repo: /Users/petr/projects/qa-skills @ fff3118 (main, dirty: unrelated analytics-tracking-testing edits). Playwright 1.62.1, msw 2.15.0 (unused), macOS, Chromium bundled.
+
+## 1. Explore: serve the storefront from a live Shop (foreground Node script in scratchpad)
+$ node /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/explore/fetch-page.mjs
+baseURL http://127.0.0.1:50983 users {"alice":{"id":"alice","email":"alice+c752...@example.test",...}}
+--- / HTML (8388 bytes) --- (single page: #login-form, #checkout-form with #checkout-button, #refresh, #orders, #notice[role=status]; api() throws data.error || request_failed; pendingKey kept on failure, cleared on success or quantity change)
+
+## 2. Record live responses
+$ QA_RECORD_WORKDIR=<scratchpad>/record node tests/workflows/generated/campaign3/service-virtualization/record.mjs
+health                   GET /health -> 200 {"status":"ok","build":"shop-lab-v1"}
+catalog                  GET /api/catalog -> 200 {"currency":"EUR","products":[{"sku":"TEA-50","name":"Mountain tea 50 g","unit_amount":120
+me-unauthenticated       GET /api/me -> 401 {"error":"unauthenticated"}
+login-invalid            POST /api/login -> 401 {"error":"invalid_credentials"}
+login-ok                 POST /api/login -> 200 {"user":{"id":"alice","email":"alice+5aba34b1837a48e190fc5563eb180bab@example.test"}}
+me-authenticated         GET /api/me -> 200 {"user":{"id":"alice","email":"alice+5aba34b1837a48e190fc5563eb180bab@example.test"}}
+orders-create            POST /api/orders -> 201 {"order":{"id":"3f185ac0-f371-4229-ba0f-1911f40d76e9","user_id":"alice","currency":"EUR","
+orders-create-replayed   POST /api/orders -> 200 {"order":{"id":"3f185ac0-f371-4229-ba0f-1911f40d76e9","user_id":"alice","currency":"EUR","
+orders-create-conflict   POST /api/orders -> 409 {"error":"idempotency_conflict"}
+orders-create-invalid    POST /api/orders -> 400 {"error":"invalid_order"}
+orders-list              GET /api/orders -> 200 {"orders":[{"id":"3f185ac0-f371-4229-ba0f-1911f40d76e9","user_id":"alice","currency":"EUR"
+orders-get               GET /api/orders/3f185ac0-f371-4229-ba0f-1911f40d76e9 -> 200 {"order":{"id":"3f185ac0-f371-4229-ba0f-1911f40d76e9","
+orders-get-unknown       GET /api/orders/does-not-exist -> 404 {"error":"not_found"}
+logout                   POST /api/logout -> 204 null
+login-throttled          POST /api/login -> 429 {"error":"too_many_attempts"}
+recorded 15 responses at 2026-10-21T18:43:51.788Z from http://127.0.0.1:51390 (build shop-lab-v1)
+exit=0; 15 files in recordings/
+
+## 3. Syntax checks
+$ node --check virtual-api.mjs && node --check cassette.mjs && node --check scenario.mjs  -> syntax-ok
+$ node --check virtualized-ui.spec.mjs && node --check stub-fidelity.spec.mjs -> syntax-ok
+
+## 4. Suite run 1 (10 tests, 2 workers; spec files as first written, before the empty-catalogue annotation)
+$ QA_WORKFLOW_SUITE=.../campaign3/service-virtualization QA_WORKFLOW_OUTPUT=<scratchpad>/campaign3-service-virtualization node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+WORKFLOW RUN: 10 scheduled cases
+WORKFLOW RESULT: passed; attempts=10; {"passed":10}
+verbose.json per test (ms status title):
+   538 passed   every recorded request still draws a response of the recorded shape fr
+    12 passed   the comparator flags a dropped field, a changed type, a changed status
+    15 passed   the freshness gate accepts every current recording and rejects a 31-da
+   926 passed   500 on order creation: error shown, no purchase event, retry reuses th
+   715 passed   429 on login: too_many_attempts shown, sign-in form kept, no login eve
+  1030 passed   slow /api/orders: sign-in does not claim completion before the list ar
+   787 passed   malformed JSON on a 200 login response is reported as an error, never
+   854 passed   empty catalogue: no products, zero total, and an order attempt is a vi
+   706 passed   500 on the orders list right after sign-in is shown; Refresh orders re
+   538 passed   fully virtualized load from recordings; an unstubbed call is rejected
+stats {"duration":6046.998,"expected":10,"skipped":0,"unexpected":0,"flaky":0}
+
+## 5. Edit: empty-catalogue test records the branch it took as a test annotation (python3 in-place replace; node --check ok)
+
+## 6. Drift simulation (intentionally broken detector input): recordings/catalog.json mutated on disk (unit_amount -> "1200" string, extra top-level body.version), fidelity test only, then restored from a scratchpad copy
+$ QA_WORKFLOW_OUTPUT=<scratchpad>/campaign3-service-virtualization-drift node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 1 --grep "recorded shape"
+WORKFLOW RUN: 1 scheduled cases
+FAILED:  /  / stub-fidelity.spec.mjs / every recorded request still draws a response of the recorded shape from the live Shop (attempt 1)
+Error: catalog: GET /api/catalog drifted from recordings/catalog.json
+expect(received).toEqual(expected) // deep equality
+- Expected  - 1
++ Received  + 4
+- Array []
++ Array [
++   "body.products[0].unit_amount: \"string\" -> \"number\"",
++   "body.version: missing in live response",
++ ]
+WORKFLOW RESULT: failed; attempts=1; {"failed":1}
+$ cp <scratchpad>/catalog.json.bak recordings/catalog.json -> restored: number, no version field
+
+## 7. Suite run 2 (final files)
+WORKFLOW RUN: 10 scheduled cases
+WORKFLOW RESULT: passed; attempts=10; {"passed":10}
+verbose.json: 10 passed, expected=10 unexpected=0 flaky=0, duration 7477.9 ms; annotation on the empty-catalogue test: "Place order is enabled with an empty catalogue; the real Shop answered 400 invalid_order"
+
+## 8. Suite run 3 (final files; second consecutive pass on the same code as run 2)
+WORKFLOW RUN: 10 scheduled cases
+WORKFLOW RESULT: passed; attempts=10; {"passed":10}
+verbose.json per test (ms status title):
+   461 passed   every recorded request still draws a response of the recorde
+     9 passed   the comparator flags a dropped field, a changed type, a chan
+     8 passed   the freshness gate accepts every current recording and rejec
+   863 passed   500 on order creation: error shown, no purchase event, retry
+   744 passed   429 on login: too_many_attempts shown, sign-in form kept, no
+   810 passed   slow /api/orders: sign-in does not claim completion before t
+   554 passed   malformed JSON on a 200 login response is reported as an err
+   691 passed   empty catalogue: no products, zero total, and an order attem
+   560 passed   500 on the orders list right after sign-in is shown; Refresh
+   469 passed   fully virtualized load from recordings; an unstubbed call is
+stats {"startTime":"2026-10-21T18:49:18.516Z","duration":5236.9259999999995,"expected":10,"skipped":0,"unexpected":0,"flaky":0}
+
+## 9. Tally: 3 full runs x 10 tests = 30 passed, 0 unexpected, 0 flaky; 1 intentionally failing fidelity run in the drift simulation (step 6). Wall time per run ~40 s including Mailpit/Shop startup; test time 6.0 s / 7.5 s / 5.2 s.
+## 10. Scope check
+$ git status --short
+ M tests/workflows/fixture-app/faults.py          <- NOT mine, not read: concurrent edit in this checkout, mtime 20:38:15 (numstat +1)
+ M tests/workflows/fixture-app/server.py          <- NOT mine, not read: same, mtime 20:38:15 (numstat +3)
+ M tests/workflows/generated/experiment/with-1/task-prompt.txt   <- pre-existing
+?? tests/workflows/generated/campaign3/service-virtualization/   <- this task
+?? tests/workflows/generated/campaign3/test-migration/           <- pre-existing
+$ git rev-parse --short HEAD -> fff3118 (unchanged since task start)
+$ stat mtimes: fixture edit 20:38:15 < recordings 20:43 < run1 20:47:06 < run2 20:48:28 < run3 20:49:23, so all evidence is against one build: fff3118 + that uncommitted fixture edit.
+$ git diff --stat -- skills package.json package-lock.json tests/workflows/support tests/workflows/playwright.config.mjs -> no changes

@@ -30,6 +30,7 @@ makes the CI run fail when any real call escapes the stubs.
 | Situation | Go to |
 |-----------|-------|
 | Node/browser test hitting an external HTTP API | MSW → `references/msw.md` |
+| Browser page driven by Playwright, calling its own backend under `/api/*` | `page.route` in the test runner (reverse registration order, `route.fallback()` to chain, an unhandled-request guard that aborts and logs); MSW browser mode needs the application to serve `mockServiceWorker.js`, which a frozen build does not. Cassettes: `references/record-replay.md` |
 | Polyglot CI, complex matching, or you need a standalone stub server | WireMock → `references/wiremock.md` |
 | Dependency is a DB / cache / queue | Testcontainers → `references/testcontainers.md` |
 | Testing timeouts, latency, connection resets | Toxiproxy → `references/toxiproxy.md` |
@@ -41,7 +42,7 @@ makes the CI run fail when any real call escapes the stubs.
 
 ## Discovery Questions
 
-Check `.agents/qa-project-context.md` first — if it exists, use it, respect existing mocking
+Check `.agents/qa-project-context.md` first — if it exists and is filled in, use it (an unfilled template answers nothing), respect existing mocking
 conventions, and skip anything answered there. Then:
 
 - **How many external dependencies does the system call, and which are painful in tests?**
@@ -100,7 +101,8 @@ Testcontainers setup behind a consistent interface so switching tools doesn't me
 
 ```
 Is the dependency internal to your codebase?
-├─ Yes → In-process mock (vi.mock / jest.mock / monkeypatch)
+├─ Yes → Same process as the test? In-process mock (vi.mock / jest.mock / monkeypatch)
+│        A browser page calling its own HTTP backend → stub at the HTTP layer (page.route)
 └─ No → Is it a database, cache, or message queue?
          ├─ Yes → Testcontainers (ephemeral real instance)
          └─ No → Is it a third-party HTTP API?
@@ -191,15 +193,23 @@ For broad resilience/game-day work, go to `chaos-engineering` instead.
 
 Record-replay captures real API responses once and replays them deterministically — good for
 bootstrapping stubs and for a regression baseline of a multi-step interaction. Implement it with a
-record-replay library (**Hoverfly**, **Polly.JS**, or **VCR**-style cassettes), not a hand-rolled
-recorder.
+record-replay library (**Hoverfly**, **Polly.JS**, or **VCR**-style cassettes) when one is
+installed. When none is and a new dependency is not allowed, or when the steps include responses
+the UI never triggers on its own (a 429 after repeated failures, a 409 on a changed replay, a 404),
+a short recorder that writes the cassette format in `references/record-replay.md` through the
+test runner's request context is the right tool; Playwright's `routeFromHAR` captures only what
+the page requests.
 
 It breaks on dynamic data (timestamps, UUIDs), stateful sequences, and age — recordings go stale
 within weeks. Always stamp a `recordedAt` and **fail the test when a recording is older than 30
-days**, forcing a re-record.
+days**, forcing a re-record. Age is a proxy; a fidelity check that replays every recorded
+request against the live provider and compares the response shape is the evidence. Where that
+check runs in the same suite, schedule the recorder from it so the stamp never reaches the limit,
+rather than letting a green suite turn red on a date.
 
 See `references/record-replay.md` for the cassette format, the `assertFresh()` 30-day expiry check,
-and a replay harness driving a multi-step flow (create order → add items → apply coupon → checkout).
+the fidelity check against the live provider, and a replay harness driving a multi-step flow
+(create order → add items → apply coupon → checkout).
 
 ---
 

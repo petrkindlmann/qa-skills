@@ -52,3 +52,4 @@ runs.
 | Need real database behavior | Testcontainers or GitHub Actions services |
 | Testing network failures | Toxiproxy + real/containerized services |
 | Browser-based API mocking | MSW (browser mode with Service Worker) |
+| Browser page driven by Playwright against its own backend | `page.route` in the runner (the app need not serve a worker) |

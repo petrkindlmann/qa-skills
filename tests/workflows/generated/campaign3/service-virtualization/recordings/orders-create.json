@@ -1,0 +1,54 @@
+{
+  "name": "orders-create",
+  "recordedAt": "2026-10-21T18:43:51.788Z",
+  "build": "shop-lab-v1",
+  "source": "live Shop (fixture-app) started by record.mjs",
+  "request": {
+    "method": "POST",
+    "path": "/api/orders",
+    "headers": {
+      "content-type": "application/json",
+      "Idempotency-Key": "rec-key-1"
+    },
+    "body": {
+      "currency": "EUR",
+      "items": [
+        {
+          "sku": "TEA-50",
+          "quantity": 2
+        },
+        {
+          "sku": "CUP-01",
+          "quantity": 1
+        }
+      ]
+    }
+  },
+  "response": {
+    "status": 201,
+    "headers": {
+      "content-type": "application/json; charset=utf-8"
+    },
+    "body": {
+      "order": {
+        "id": "3f185ac0-f371-4229-ba0f-1911f40d76e9",
+        "user_id": "alice",
+        "currency": "EUR",
+        "amount": 4200,
+        "status": "pending",
+        "fulfillment_count": 0,
+        "items": [
+          {
+            "sku": "CUP-01",
+            "quantity": 1
+          },
+          {
+            "sku": "TEA-50",
+            "quantity": 2
+          }
+        ]
+      },
+      "replayed": false
+    }
+  }
+}

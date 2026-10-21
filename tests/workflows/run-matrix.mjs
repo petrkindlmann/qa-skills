@@ -62,11 +62,14 @@ const campaign3Cases = [
   { id: 'c3-synth-reset-email', suite: 'campaign3/synthetic-monitoring', count: 5, env: { QA_SHOP_FAULT: 'reset_email_dropped' }, title: 'reset request delivers' },
   { id: 'c3-analytics-healthy', suite: 'campaign3/analytics-tracking-testing', healthy: true, count: 8 },
   { id: 'c3-analytics-currency', suite: 'campaign3/analytics-tracking-testing', count: 8, env: { QA_SHOP_FAULT: 'wrong_currency_event' }, title: 'purchase carries the created order' },
+  { id: 'c3-virt-healthy', suite: 'campaign3/service-virtualization', healthy: true, count: 10 },
+  { id: 'c3-virt-catalog-drift', suite: 'campaign3/service-virtualization', count: 10, env: { QA_SHOP_FAULT: 'catalog_currency_missing' }, title: 'every recorded request still draws' },
 ];
 const oracleMatchers = {
   'c3-visual-style': 'toHaveScreenshot', 'c3-bugrepro-logout': 'toBe', 'c3-bugrepro-idempotency': 'toBe',
   'c3-synth-slow-health': 'toBeLessThanOrEqual', 'c3-synth-reset-email': 'toBe',
   'c3-analytics-currency': 'toEqual',
+  'c3-virt-catalog-drift': 'toEqual',
   'shop-ownership': 'toBe', 'shop-pricing': 'toBe', 'shop-deduplication': 'toMatchObject',
   'shop-transaction': 'toHaveLength', 'shop-key-conflict': 'toBe', 'shop-reset-reuse': 'toBe',
   'todo-persistence': 'toHaveText', 'todo-duplicates': 'toHaveText', 'todo-filter': 'toHaveText',
