@@ -5,8 +5,16 @@ import { deletePersistenceLost } from './delete-persistence-lost.mjs';
 export const faultNames = Object.freeze([
   'none', 'persistence-lost', 'delete-wrong-duplicate',
   'filter-state-error', 'escape-commits-edit', 'delete-persistence-lost',
-  'delayed-render', 'layout-shift',
+  'delayed-render', 'layout-shift', 'redesign-classes',
 ]);
+
+// A front-end redesign: the same behavior behind renamed class hooks. Applied to every
+// served HTML, JS and CSS file so the app keeps working while selector-based tests break.
+const redesign = [
+  ['clear-completed', 'purge-done'], ['toggle-all', 'check-all'], ['new-todo', 'task-entry'],
+  ['todo-list', 'task-list'], ['todo-count', 'task-count'], ['todoapp', 'taskapp'],
+  ['toggle', 'check-done'], ['destroy', 'remove-task'], ['filters', 'filter-tabs'], ['edit', 'task-edit'],
+];
 
 function replaceOnce(source, from, to, fault) {
   if (source.split(from).length !== 2)
@@ -41,6 +49,9 @@ export function mutateSource(path, bytes, fault) {
   } else if (fault === 'delayed-render' && path === '/js/app.js') {
     text = replaceOnce(text, "\t$on(window, 'hashchange', setView);\n})();",
       "\t$on(window, 'hashchange', setView);\n\tsetTimeout(function () { document.querySelector('.todoapp').style.visibility = 'visible'; }, 2500);\n})();", fault);
+  } else if (fault === 'redesign-classes' && (path === '/' || /\.(?:html|js|css)$/.test(path))) {
+    // Only hooks are renamed: a token after `.`, `#` or a quote. Visible prose such as "Double-click to edit" stays.
+    for (const [from, to] of redesign) text = text.replace(new RegExp(`(?<=[.#"'])${from}(?![\\w-])`, 'g'), to);
   } else if (fault === 'layout-shift' && path === '/js/app.js') {
     // A late banner inserted above the app pushes the whole list down without user input.
     text = replaceOnce(text, "\t$on(window, 'hashchange', setView);\n})();",

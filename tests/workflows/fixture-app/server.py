@@ -18,6 +18,7 @@ import json
 import os
 from pathlib import Path
 import re
+import time
 import secrets
 import signal
 import smtplib
@@ -146,6 +147,11 @@ class Runtime:
                                      rb"<span>\1</span> \2", data)
             if replaced != 4:
                 raise RuntimeError("unlabeled_controls no longer matches the four labelled inputs")
+        if self.faults.has("wrong_currency_event"):
+            # Fixture fault: the purchase event reports a hard-coded currency.
+            data, replaced = re.subn(rb"currency: result\.order\.currency", rb"currency: 'USD'", data)
+            if replaced != 1:
+                raise RuntimeError("wrong_currency_event no longer matches the purchase event")
         return data
 
     def consume_transient_failure(self):
@@ -314,6 +320,8 @@ class Handler(BaseHTTPRequestHandler):
             self.wfile.write(data)
             return
         if method == "GET" and path == "/health":
+            if self.app.faults.has("slow_health"):
+                time.sleep(2.5)  # Fixture fault: the probe target answers, but far outside its budget.
             return self.respond(200, {"status": "ok", "build": "shop-lab-v1"})
         if method == "GET" and path == "/api/catalog":
             return self.respond(200, {"currency": "EUR", "products": list(self.app.catalog.values())})

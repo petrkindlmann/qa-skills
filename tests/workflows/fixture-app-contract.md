@@ -150,3 +150,18 @@ Test support supplies an independent durable-state observation; assertions shoul
 still exercise and inspect the public requests or browser actions under test.
 There is no endpoint that enables application defects or asks the server to mark a
 test as passing. Each scenario should own its database and inbox messages.
+
+## Service health and analytics events
+
+`GET /health` returns 200 `{ "status": "ok", "build": "shop-lab-v1" }` and, on a healthy
+service, answers within 500 ms. It is the probe target for monitoring.
+
+The page pushes analytics events to `window.dataLayer` (created on load, never cleared):
+
+- `{ "event": "login", "method": "password" }` once after a successful sign-in.
+- `{ "event": "purchase", "ecommerce": { "transaction_id": "<order id>", "value": <amount in
+  major units, e.g. 42.00>, "currency": "<the order's currency>", "items": [ { "item_id":
+  "<sku>", "quantity": <n> } ] } }` exactly once per created order, after the order
+  response arrives and before the orders list refreshes.
+
+No event is pushed for a rejected sign-in, a rejected order, sign-out or password reset.

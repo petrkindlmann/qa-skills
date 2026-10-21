@@ -14,6 +14,8 @@ KNOWN = frozenset({
     # 2026-10-21 addon scenarios: accessibility, data at rest, hardening, resilience.
     "unlabeled_controls", "plaintext_session_tokens", "missing_idempotency_index",
     "no_login_throttle", "open_test_support", "smtp_failure_503",
+    # 2026-10-21 campaign 3: monitoring and analytics.
+    "slow_health", "wrong_currency_event",
 })
 
 

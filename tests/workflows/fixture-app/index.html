@@ -61,6 +61,8 @@
 </main>
 <script>
   const $ = selector => document.querySelector(selector);
+  window.dataLayer = window.dataLayer || [];
+  const track = event => { window.dataLayer.push(event); };
   const money = amount => 'EUR ' + (amount / 100).toFixed(2);
   let products = [], signedIn = false, pendingKey;
   async function api(path, options = {}) {
@@ -96,7 +98,7 @@
   }
   $('#login-form').addEventListener('submit', async event => {
     event.preventDefault();
-    try { const {user} = await api('/api/login', {method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(event.target)))}); account(user); await refreshOrders(); say('Signed in.'); }
+    try { const {user} = await api('/api/login', {method:'POST',body:JSON.stringify(Object.fromEntries(new FormData(event.target)))}); account(user); track({event: 'login', method: 'password'}); await refreshOrders(); say('Signed in.'); }
     catch(error) { say(error.message); }
   });
   $('#logout').addEventListener('click', async () => {
@@ -108,7 +110,9 @@
     try {
       pendingKey ||= crypto.randomUUID();
       const result = await api('/api/orders', {method:'POST',headers:{'Idempotency-Key':pendingKey},body:JSON.stringify({currency:'EUR',items:cartItems()})});
-      pendingKey = undefined; await refreshOrders(); say('Order created: ' + result.order.id + '. Amount: ' + money(result.order.amount));
+      pendingKey = undefined;
+      track({event: 'purchase', ecommerce: {transaction_id: result.order.id, value: result.order.amount / 100, currency: result.order.currency, items: result.order.items.map(item => ({item_id: item.sku, quantity: item.quantity}))}});
+      await refreshOrders(); say('Order created: ' + result.order.id + '. Amount: ' + money(result.order.amount));
     } catch(error) { say(error.message); } finally { $('#checkout-button').disabled = !signedIn; }
   });
   $('#refresh').addEventListener('click', () => refreshOrders().catch(error => say(error.message)));
