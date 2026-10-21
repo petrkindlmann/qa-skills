@@ -1,0 +1,124 @@
+[
+  {
+    "skill": "contract-testing",
+    "scope": "skill_content",
+    "document_chars": 34767,
+    "calls": 1,
+    "items": [
+      {
+        "case": "ct-001",
+        "kind": "anti",
+        "text": "testing business logic in contract",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document explicitly lists testing business logic in contracts as an anti-pattern and tells readers to keep contracts thin.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-001",
+        "kind": "anti",
+        "text": "hardcoded test data without matchers",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "All consumer test response bodies use Matchers (integer, string, regex, eachLike) and the document instructs using them so contracts assert types, not brittle values.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-003",
+        "kind": "anti",
+        "text": "hardcoded passwords in compose file",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The compose file injects DB_PASSWORD and PACT_BROKER_PASSWORD from the environment and the document warns that hardcoding them leaks secrets.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-005",
+        "kind": "anti",
+        "text": "skipping can-i-deploy on main branch",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document repeatedly states never to skip can-i-deploy on main and gates both pipelines on it.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-006",
+        "kind": "anti",
+        "text": "one massive pact covering every endpoint",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Listed as an anti-pattern; the document recommends starting with critical integration points and adding incrementally.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-006",
+        "kind": "anti",
+        "text": "business logic validation in contract test",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Consumer test assertions only check shape (id, name defined, email contains @) and the document says business rules belong in unit/integration tests.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-007",
+        "kind": "anti",
+        "text": "provider state without database setup",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Provider stateHandlers seed or delete users in a real test database and skipping provider states is called out as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-007",
+        "kind": "anti",
+        "text": "hardcoded values instead of parameterized states",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document models parameterized states (given(\"user exists\", { id: 123 })) and explicitly contrasts them with value-baked state names as the worse option.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-008",
+        "kind": "anti",
+        "text": "schema validation without error handling",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The validateAgainstSpec helper throws on missing operation, missing schema, and on validation failure with validate.errors included.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-010",
+        "kind": "anti",
+        "text": "hardcoded response data without matchers",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Response data in the consumer tests is wrapped in matchers throughout; no raw hardcoded response bodies are modeled.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "ct-010",
+        "kind": "anti",
+        "text": "not using eachLike for array responses",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The paginated list example uses eachLike for the data array.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.35131249999999997,
+    "duration_ms": 16938
+  }
+]

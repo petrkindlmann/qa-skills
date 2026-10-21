@@ -1,0 +1,234 @@
+[
+  {
+    "skill": "qa-project-context",
+    "scope": "skill_content",
+    "document_chars": 25242,
+    "calls": 1,
+    "items": [
+      {
+        "case": "qac-001",
+        "kind": "expected",
+        "text": "Product section with name and URLs",
+        "verdict": "yes",
+        "evidence": "What are the production, staging, and development URLs?",
+        "reason": "Discovery questions and examples require the Product section to capture the product name and production/staging/dev URLs.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qac-001",
+        "kind": "expected",
+        "text": "Risk Areas table with at least 3 entries",
+        "verdict": "yes",
+        "evidence": "At least 3 entries, never vague",
+        "reason": "The Risk Areas guidance mandates a table with columns and a minimum of three entries.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qac-001",
+        "kind": "anti",
+        "text": "asking all 40 questions at once",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document lists asking all questions at once as an anti-pattern and instructs walking section by section.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-001",
+        "kind": "anti",
+        "text": "generic template without project specifics",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document warns against leaving placeholders and inventing information, requiring evidenced project-specific values.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-001",
+        "kind": "anti",
+        "text": "Risk Areas section empty or missing",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Skipping Risk Areas is listed as an anti-pattern; the section must be kept even without evidence.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-002",
+        "kind": "expected",
+        "text": "Test Stack section populated with Playwright and Jest",
+        "verdict": "yes",
+        "evidence": "`jest.config.*` | Unit test framework \u2192 populate Test Stack Unit",
+        "reason": "Detection table instructs populating Test Stack E2E from playwright.config and Test Stack Unit from jest.config.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qac-003",
+        "kind": "expected",
+        "text": "ask only about the unfilled sections",
+        "verdict": "yes",
+        "evidence": "only about the unfilled sections, then update \u2014 preserve completed sections untouched.",
+        "reason": "Workflow step 3 explicitly says to ask only about unfilled sections when placeholders remain.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qac-003",
+        "kind": "anti",
+        "text": "re-ask questions about already-completed sections",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document instructs preserving completed sections and asking only about gaps, the opposite of re-asking.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-004",
+        "kind": "expected",
+        "text": "Which parts cause the most production incidents",
+        "verdict": "yes",
+        "evidence": "Which parts cause the most production incidents?",
+        "reason": "This question appears verbatim in the Risk Areas discovery questions.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qac-004",
+        "kind": "anti",
+        "text": "Risk table with fewer than 3 entries",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document requires at least three risk entries, so it does not model fewer.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-005",
+        "kind": "anti",
+        "text": "recommending a comprehensive regression suite to the solo developer",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "For solo/zero QA the document says no manual regression suite and to lean on low-barrier automation.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-006",
+        "kind": "anti",
+        "text": "flat Tech Stack without distinguishing components",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document instructs recording frontend, backend, database, and hosting separately.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-006",
+        "kind": "anti",
+        "text": "unclear which tests run for which app",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Monorepo guidance requires noting which path filters gate which app's suite.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-007",
+        "kind": "anti",
+        "text": "recommending tools beyond the zero-infra defaults",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Recommending tools beyond the Playwright + Vitest zero-infra default is listed as an anti-pattern.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-007",
+        "kind": "anti",
+        "text": "no guidance on what to do next",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The workflow ends by suggesting the next skill based on the context gaps.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-008",
+        "kind": "expected",
+        "text": "80% line coverage measured by Istanbul",
+        "verdict": "yes",
+        "evidence": "80% line coverage measured by Istanbul",
+        "reason": "The document models this exact phrasing as how to write a measurable quality goal.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qac-008",
+        "kind": "anti",
+        "text": "90%+ coverage for early-stage startup",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The maturity table assigns 60% to early-stage startups and reserves 90%+ for enterprise.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-009",
+        "kind": "anti",
+        "text": "recommending data-testid as only option",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document defaults to data-testid but explicitly supports recording semantic/ARIA selectors with tradeoffs.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-010",
+        "kind": "expected",
+        "text": "Risk Areas table has at least 3 entries",
+        "verdict": "yes",
+        "evidence": "At least 3 entries, never vague",
+        "reason": "Risk Areas guidance requires the table to contain a minimum of three entries.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qac-010",
+        "kind": "expected",
+        "text": "at least 5 specific, testable key user flows",
+        "verdict": "yes",
+        "evidence": "What are the 5\u201310 most critical user journeys?",
+        "reason": "The document asks for 5\u201310 critical journeys and states key flows must be specific and testable.",
+        "evidence_verified": true,
+        "status": "taught"
+      },
+      {
+        "case": "qac-010",
+        "kind": "anti",
+        "text": "generic template text still present",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "Leaving template brackets in the final file is listed as an anti-pattern and checked in Verification.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      },
+      {
+        "case": "qac-010",
+        "kind": "anti",
+        "text": "missing URLs or environment names",
+        "verdict": "no",
+        "evidence": "",
+        "reason": "The document requires URLs and named environments in both Product and Environments sections.",
+        "evidence_verified": false,
+        "status": "not_recommended"
+      }
+    ],
+    "error": null,
+    "model": "claude-fable-5-1",
+    "cost_usd": 0.44842250000000006,
+    "duration_ms": 49845
+  }
+]

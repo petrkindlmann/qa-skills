@@ -1,0 +1,6 @@
+[PASS] chaos-engineering (skill_content): 14 criteria, taught 1/1, anti recommended 0/13, unverified 0, errors 0, calls 1, cost $0.354
+exit 0 for chaos-engineering
+[PASS] contract-testing (skill_content): 11 criteria, taught 0/0, anti recommended 0/11, unverified 0, errors 0, calls 1, cost $0.351
+exit 0 for contract-testing
+[PASS] qa-project-context (skill_content): 22 criteria, taught 8/8, anti recommended 0/14, unverified 0, errors 0, calls 1, cost $0.448
+exit 0 for qa-project-context
