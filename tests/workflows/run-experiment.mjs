@@ -5,8 +5,14 @@
 // designated oracle: the takes were authored blind, so any genuine assertion failure counts and
 // the failing titles are recorded for review.
 //
+// Flakiness must not pass for detection, so the healthy control runs twice and both must pass,
+// and a fault counts as detected only when a second run under the same fault also fails
+// cleanly with at least one failing title in common with the first; otherwise it is
+// recorded as unstable.
+//
 // Usage: node tests/workflows/run-experiment.mjs <take>[,<take>...]   (folders under generated/experiment)
 // Env:   QA_EXPERIMENT_OUTPUT (default tests/workflows/artifacts/experiment)
+//        QA_EXPERIMENT_FAULTS comma-separated subset of SHOP_FAULTS, for a smoke check only
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import path from 'node:path';
@@ -49,18 +55,34 @@ async function runSuite(take, fault, directory) {
     clean: !result.signal && !assessment.timedOut && !assessment.infrastructureError && !parseError && tests.length > 0 };
 }
 
+const faults = process.env.QA_EXPERIMENT_FAULTS ? process.env.QA_EXPERIMENT_FAULTS.split(',').filter(Boolean) : [...SHOP_FAULTS];
+if (faults.some(fault => !SHOP_FAULTS.includes(fault))) throw new Error('QA_EXPERIMENT_FAULTS names an unknown fault');
+const cleanFail = run => run.clean && run.failed.length > 0 && run.code === 1;
+const cleanPass = run => run.clean && run.failed.length === 0 && run.code === 0;
+
 await mkdir(output, { recursive: true });
-const manifest = { startedAt: new Date().toISOString(), node: process.version, faults: SHOP_FAULTS, takes: {} };
+const manifest = { startedAt: new Date().toISOString(), node: process.version, faults, takes: {} };
 for (const take of takes) {
-  const healthy = await runSuite(take, null, path.join(output, take, 'healthy'));
-  console.log(`${take} healthy: ${healthy.executed} tests, ${healthy.failed.length} failed, clean=${healthy.clean}`);
-  const record = { healthy, faults: {}, detected: [], missed: [], invalid: [] };
-  const healthyPass = healthy.clean && healthy.failed.length === 0 && healthy.code === 0;
-  for (const fault of SHOP_FAULTS) {
+  const controls = [];
+  for (const attempt of [1, 2]) {
+    const healthy = await runSuite(take, null, path.join(output, take, `healthy-${attempt}`));
+    controls.push(healthy);
+    console.log(`${take} healthy ${attempt}: ${healthy.executed} tests, ${healthy.failed.length} failed, clean=${healthy.clean}`);
+  }
+  const healthyPass = controls.every(cleanPass) && controls[0].executed === controls[1].executed;
+  const record = { healthy: controls[0], controls, faults: {}, detected: [], missed: [], unstable: [], invalid: [] };
+  for (const fault of faults) {
     const run = await runSuite(take, fault, path.join(output, take, fault));
-    record.faults[fault] = run;
-    const verdict = !healthyPass ? 'invalid' : run.clean && run.failed.length > 0 && run.code === 1 ? 'detected'
-      : run.clean && run.failed.length === 0 && run.code === 0 ? 'missed' : 'invalid';
+    const entry = { first: run };
+    let verdict = !healthyPass ? 'invalid' : cleanPass(run) ? 'missed' : cleanFail(run) ? 'confirm' : 'invalid';
+    if (verdict === 'confirm') {
+      const again = await runSuite(take, fault, path.join(output, take, `${fault}-confirm`));
+      entry.confirm = again;
+      const firstTitles = new Set(run.failed.map(test => test.title));
+      entry.sharedTitles = again.failed.map(test => test.title).filter(title => firstTitles.has(title));
+      verdict = cleanFail(again) && entry.sharedTitles.length > 0 ? 'detected' : 'unstable';
+    }
+    record.faults[fault] = { ...run, ...entry, verdict };
     record[verdict].push(fault);
     console.log(`${take} ${fault}: ${verdict}; ${run.executed} tests; ${run.failed.length} failed; ${run.wallMs}ms`);
   }
@@ -69,7 +91,7 @@ for (const take of takes) {
 }
 manifest.finishedAt = new Date().toISOString();
 await writeFile(path.join(output, 'experiment.json'), JSON.stringify(manifest, null, 2) + '\n');
-console.log('\nTake | healthy | detected | missed | invalid');
+console.log('\nTake | healthy x2 | detected | missed | unstable | invalid');
 for (const [take, record] of Object.entries(manifest.takes)) {
-  console.log(`${take} | ${record.healthy.failed.length === 0 && record.healthy.clean ? 'pass' : 'FAIL'} | ${record.detected.length}/${SHOP_FAULTS.length} | ${record.missed.join(', ') || '-'} | ${record.invalid.join(', ') || '-'}`);
+  console.log(`${take} | ${record.controls.every(cleanPass) ? 'pass' : 'FAIL'} | ${record.detected.length}/${faults.length} | ${record.missed.join(', ') || '-'} | ${record.unstable.join(', ') || '-'} | ${record.invalid.join(', ') || '-'}`);
 }
