@@ -9,7 +9,7 @@ import { acquireMatrixLock } from './support/matrix-lock.mjs';
 const root = fileURLToPath(new URL('../../', import.meta.url));
 const output = path.resolve(process.env.QA_MATRIX_OUTPUT ?? path.join(root, 'tests/workflows/artifacts/matrix'));
 const phase = process.argv[2] ?? 'final';
-if (!['initial', 'review-baseline', 'final'].includes(phase)) throw new Error('Phase must be initial, review-baseline or final');
+if (!['initial', 'review-baseline', 'final', 'campaign3'].includes(phase)) throw new Error('Phase must be initial, review-baseline, final or campaign3');
 const originalCases = [
   { id: 'shop-healthy', suite: 'baseline-shop', healthy: true, count: 10 },
   { id: 'todo-healthy', suite: 'baseline-todo', healthy: true, count: 9 },
@@ -42,7 +42,24 @@ const addonCases = [
   { id: 'todo-delayed-render', env: { QA_TODO_FAULT: 'delayed-render' }, title: 'largest content within the lab budget' },
   { id: 'todo-layout-shift', env: { QA_TODO_FAULT: 'layout-shift' }, title: 'layout stays stable' },
 ].map(scenario => ({ ...scenario, suite: 'addons', count: 11 }));
+// 2026-10-21 campaign 3: blind-authored suites per skill, each run healthy and under the
+// fault its skill is meant to catch. Each suite runs alone against its own fault.
+const campaign3Cases = [
+  { id: 'c3-visual-healthy', suite: 'campaign3/visual-testing', healthy: true, count: 10, env: { VISUAL_DETECTOR_CHECK: '1' } },
+  { id: 'c3-visual-style', suite: 'campaign3/visual-testing', count: 10, env: { VISUAL_DETECTOR_CHECK: '1', QA_TODO_FAULT: 'style-regression' }, title: 'all items completed through mark-all' },
+  { id: 'c3-bugrepro-healthy', suite: 'campaign3/bug-reproduction', healthy: true, count: 5 },
+  { id: 'c3-bugrepro-logout', suite: 'campaign3/bug-reproduction', count: 5, env: { QA_SHOP_FAULT: 'logout_cookie_only' }, title: 'browser Sign out revokes' },
+  { id: 'c3-bugrepro-idempotency', suite: 'campaign3/bug-reproduction', count: 5, env: { QA_SHOP_FAULT: 'idempotency_payload_conflict' }, title: 'different quantity returns 409' },
+  // The regenerated TodoMVC suite kept the original oracle ids, so the original case ids and
+  // titles apply; faults stack on the redesigned build.
+  { id: 'c3-sdr-healthy', suite: 'campaign3/selector-drift-recovery', healthy: true, count: 9, env: { QA_TODO_FAULT: 'redesign-classes' } },
+  { id: 'todo-persistence', suite: 'campaign3/selector-drift-recovery', count: 9, env: { QA_TODO_FAULT: 'redesign-classes+persistence-lost' }, title: 'persist through reload' },
+  { id: 'todo-duplicates', suite: 'campaign3/selector-drift-recovery', count: 9, env: { QA_TODO_FAULT: 'redesign-classes+delete-wrong-duplicate' }, title: 'duplicate titles remain independent' },
+  { id: 'todo-filter', suite: 'campaign3/selector-drift-recovery', count: 9, env: { QA_TODO_FAULT: 'redesign-classes+filter-state-error' }, title: 'filters visibly select' },
+  { id: 'todo-cancel', suite: 'campaign3/selector-drift-recovery', count: 9, env: { QA_TODO_FAULT: 'redesign-classes+escape-commits-edit' }, title: 'Escape preserves' },
+];
 const oracleMatchers = {
+  'c3-visual-style': 'toHaveScreenshot', 'c3-bugrepro-logout': 'toBe', 'c3-bugrepro-idempotency': 'toBe',
   'shop-ownership': 'toBe', 'shop-pricing': 'toBe', 'shop-deduplication': 'toMatchObject',
   'shop-transaction': 'toHaveLength', 'shop-key-conflict': 'toBe', 'shop-reset-reuse': 'toBe',
   'todo-persistence': 'toHaveText', 'todo-duplicates': 'toHaveText', 'todo-filter': 'toHaveText',
@@ -53,7 +70,7 @@ const oracleMatchers = {
   'shop-open-test-support': 'toBe', 'shop-smtp-failure': 'toBe',
   'todo-delayed-render': 'toBeLessThan', 'todo-layout-shift': 'toEqual',
 };
-let cases = phase === 'initial' ? originalCases : phase === 'review-baseline'
+let cases = phase === 'campaign3' ? campaign3Cases : phase === 'initial' ? originalCases : phase === 'review-baseline'
   ? [...originalCases.filter(scenario => scenario.healthy), ...reviewCases.map(scenario => ({ ...scenario,
     expectedGap: !scenario.baselineTitle, title: scenario.baselineTitle ?? scenario.title }))]
   : [{ id: 'combined-healthy', suite: '.', healthy: true, count: 36 },
@@ -97,6 +114,7 @@ const manifest = { startedAt: new Date().toISOString(), phase, node: process.ver
     ...await hashes(path.join(root, 'tests/workflows/upstream-todomvc')) }, runs: [] };
 if (phase === 'final') Object.assign(manifest.sourceHashes, await hashes(path.join(root, 'tests/workflows/generated/review-followup')),
   await hashes(path.join(root, 'tests/workflows/generated/addons')));
+if (phase === 'campaign3') Object.assign(manifest.sourceHashes, await hashes(path.join(root, 'tests/workflows/generated/campaign3')));
 
 for (const scenario of cases) {
   // Even a killed parent can leave descendants briefly alive. Never let a new

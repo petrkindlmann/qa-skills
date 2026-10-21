@@ -1,0 +1,189 @@
+{
+  "attempts": [
+    {
+      "attemptId": "suites[0].specs[0].tests[0].results[0]",
+      "testTitle": "creates trimmed nonblank titles in order and clears the entry field",
+      "status": "failed",
+      "retry": 0,
+      "reporterLocation": {
+        "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+        "column": 27,
+        "line": 16
+      },
+      "renderedLocatorInError": "locator('.todo-list').locator('label')",
+      "triage": "confirmed-selector-drift",
+      "recoveryTarget": "../todo-ui.mjs:4",
+      "triageEvidence": "Reporter location is the failing spec/POM line, not the locator definition; the rendered locator in the error is the POM list locator defined at todo-ui.mjs:4. Application state at failure (error-context.md) shows the expected rows present."
+    },
+    {
+      "attemptId": "suites[0].specs[1].tests[0].results[0]",
+      "testTitle": "duplicate titles remain independent through complete edit and delete",
+      "status": "failed",
+      "retry": 0,
+      "reporterLocation": {
+        "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+        "column": 27,
+        "line": 33
+      },
+      "renderedLocatorInError": "locator('.todo-list').locator('label')",
+      "triage": "confirmed-selector-drift",
+      "recoveryTarget": "../todo-ui.mjs:4",
+      "triageEvidence": "Reporter location is the failing spec/POM line, not the locator definition; the rendered locator in the error is the POM list locator defined at todo-ui.mjs:4. Application state at failure (error-context.md) shows the expected rows present."
+    },
+    {
+      "attemptId": "suites[0].specs[2].tests[0].results[0]",
+      "testTitle": "individual completion and restoration keep the active count global under filters",
+      "status": "failed",
+      "retry": 0,
+      "reporterLocation": {
+        "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+        "column": 46,
+        "line": 54
+      },
+      "renderedLocatorInError": "locator('.todo-list').getByRole('listitem').nth(1).getByRole('checkbox')\u001b[22m",
+      "triage": "confirmed-selector-drift",
+      "recoveryTarget": "../todo-ui.mjs:4",
+      "triageEvidence": "Reporter location is the failing spec/POM line, not the locator definition; the rendered locator in the error is the POM list locator defined at todo-ui.mjs:4. Application state at failure (error-context.md) shows the expected rows present."
+    },
+    {
+      "attemptId": "suites[0].specs[3].tests[0].results[0]",
+      "testTitle": "bulk toggle affects hidden records and works from an empty filtered view",
+      "status": "failed",
+      "retry": 0,
+      "reporterLocation": {
+        "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+        "column": 46,
+        "line": 82
+      },
+      "renderedLocatorInError": "locator('.todo-list').getByRole('listitem').first().getByRole('checkbox')\u001b[22m",
+      "triage": "confirmed-selector-drift",
+      "recoveryTarget": "../todo-ui.mjs:4",
+      "triageEvidence": "Reporter location is the failing spec/POM line, not the locator definition; the rendered locator in the error is the POM list locator defined at todo-ui.mjs:4. Application state at failure (error-context.md) shows the expected rows present."
+    },
+    {
+      "attemptId": "suites[0].specs[4].tests[0].results[0]",
+      "testTitle": "filters visibly select the correct subset without losing or duplicating records",
+      "status": "failed",
+      "retry": 0,
+      "reporterLocation": {
+        "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+        "column": 46,
+        "line": 111
+      },
+      "renderedLocatorInError": "locator('.todo-list').getByRole('listitem').nth(1).getByRole('checkbox')\u001b[22m",
+      "triage": "confirmed-selector-drift",
+      "recoveryTarget": "../todo-ui.mjs:4",
+      "triageEvidence": "Reporter location is the failing spec/POM line, not the locator definition; the rendered locator in the error is the POM list locator defined at todo-ui.mjs:4. Application state at failure (error-context.md) shows the expected rows present."
+    },
+    {
+      "attemptId": "suites[0].specs[5].tests[0].results[0]",
+      "testTitle": "Enter and blur save edits while Escape preserves the saved title on reload",
+      "status": "failed",
+      "retry": 0,
+      "reporterLocation": {
+        "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+        "column": 46,
+        "line": 138
+      },
+      "renderedLocatorInError": "locator('.todo-list').getByRole('listitem').first().getByRole('checkbox')\u001b[22m",
+      "triage": "confirmed-selector-drift",
+      "recoveryTarget": "../todo-ui.mjs:4",
+      "triageEvidence": "Reporter location is the failing spec/POM line, not the locator definition; the rendered locator in the error is the POM list locator defined at todo-ui.mjs:4. Application state at failure (error-context.md) shows the expected rows present."
+    },
+    {
+      "attemptId": "suites[0].specs[6].tests[0].results[0]",
+      "testTitle": "whitespace Enter and empty blur edits remove only their targeted records",
+      "status": "failed",
+      "retry": 0,
+      "reporterLocation": {
+        "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+        "column": 46,
+        "line": 159
+      },
+      "renderedLocatorInError": "locator('.todo-list').getByRole('listitem').nth(2).getByRole('checkbox')\u001b[22m",
+      "triage": "confirmed-selector-drift",
+      "recoveryTarget": "../todo-ui.mjs:4",
+      "triageEvidence": "Reporter location is the failing spec/POM line, not the locator definition; the rendered locator in the error is the POM list locator defined at todo-ui.mjs:4. Application state at failure (error-context.md) shows the expected rows present."
+    },
+    {
+      "attemptId": "suites[0].specs[7].tests[0].results[0]",
+      "testTitle": "delete and clear completed preserve active rows and empty controls recover",
+      "status": "failed",
+      "retry": 0,
+      "reporterLocation": {
+        "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+        "column": 46,
+        "line": 177
+      },
+      "renderedLocatorInError": "locator('.todo-list').getByRole('listitem').nth(2).getByRole('checkbox')\u001b[22m",
+      "triage": "confirmed-selector-drift",
+      "recoveryTarget": "../todo-ui.mjs:4",
+      "triageEvidence": "Reporter location is the failing spec/POM line, not the locator definition; the rendered locator in the error is the POM list locator defined at todo-ui.mjs:4. Application state at failure (error-context.md) shows the expected rows present."
+    },
+    {
+      "attemptId": "suites[0].specs[8].tests[0].results[0]",
+      "testTitle": "saved edits completion order and removals persist through reload and further keyboard input",
+      "status": "failed",
+      "retry": 0,
+      "reporterLocation": {
+        "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs",
+        "column": 34,
+        "line": 26
+      },
+      "renderedLocatorInError": "locator('.todo-list').getByRole('listitem').nth(1).locator('label')\u001b[22m",
+      "triage": "confirmed-selector-drift",
+      "recoveryTarget": "../todo-ui.mjs:4",
+      "triageEvidence": "Reporter location is the failing spec/POM line, not the locator definition; the rendered locator in the error is the POM list locator defined at todo-ui.mjs:4. Application state at failure (error-context.md) shows the expected rows present."
+    }
+  ],
+  "targets": [
+    {
+      "attemptId": "suites[0].specs[0].tests[0].results[0],suites[0].specs[1].tests[0].results[0],suites[0].specs[2].tests[0].results[0],suites[0].specs[3].tests[0].results[0],suites[0].specs[4].tests[0].results[0],suites[0].specs[5].tests[0].results[0],suites[0].specs[6].tests[0].results[0],suites[0].specs[7].tests[0].results[0],suites[0].specs[8].tests[0].results[0]",
+      "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs",
+      "line": 4,
+      "column": 16,
+      "oldLocator": "page.locator('.todo-list')",
+      "intent": "the todo list container (<ul>) whose list items are the todo rows; rows and titles derive from it",
+      "pageRoute": "/",
+      "triage": "confirmed-selector-drift",
+      "triageEvidence": "All 9 retained attempts render this locator (\"waiting for locator('.todo-list')…\", 0 elements); error-context aria snapshot shows the list with the expected rows present under a renamed class ul.task-list. verify-locators.mjs on QA_TODO_FAULT=redesign-classes: count=0 in empty, items and filtered states; same expression count=1 on the default (old) build; outline diff old/items.outline.txt vs new/items.outline.txt shows the class rename",
+      "foundBy": "failure report + source"
+    },
+    {
+      "attemptId": "suites[0].specs[0].tests[0].results[0],suites[0].specs[1].tests[0].results[0],suites[0].specs[2].tests[0].results[0],suites[0].specs[3].tests[0].results[0],suites[0].specs[4].tests[0].results[0],suites[0].specs[5].tests[0].results[0],suites[0].specs[6].tests[0].results[0],suites[0].specs[7].tests[0].results[0],suites[0].specs[8].tests[0].results[0]",
+      "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs",
+      "line": 10,
+      "column": 12,
+      "oldLocator": "page.locator('.todo-count')",
+      "intent": "the remaining-active counter element whose text is \"N item(s) left\"",
+      "pageRoute": "/",
+      "triage": "confirmed-selector-drift",
+      "triageEvidence": "Latent: not in the failure report because every test aborted earlier on the list. Found by inspecting the helper source; new build renders <span class=\"task-count\">. verify-locators.mjs on QA_TODO_FAULT=redesign-classes: count=0 in empty, items and filtered states; same expression count=1 on the default (old) build; outline diff old/items.outline.txt vs new/items.outline.txt shows the class rename",
+      "foundBy": "source inspection + live check (latent, not in report)"
+    },
+    {
+      "attemptId": "suites[0].specs[0].tests[0].results[0],suites[0].specs[1].tests[0].results[0],suites[0].specs[2].tests[0].results[0],suites[0].specs[3].tests[0].results[0],suites[0].specs[4].tests[0].results[0],suites[0].specs[5].tests[0].results[0],suites[0].specs[6].tests[0].results[0],suites[0].specs[7].tests[0].results[0],suites[0].specs[8].tests[0].results[0]",
+      "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs",
+      "line": 11,
+      "column": 11,
+      "oldLocator": "page.locator('.todoapp .main')",
+      "intent": "the main section (toggle-all control + list) that is hidden when no todos exist and visible otherwise",
+      "pageRoute": "/",
+      "triage": "confirmed-selector-drift",
+      "triageEvidence": "Latent: toBeHidden() passed vacuously on 0 elements (SC-001 line 10) and no test reached toBeVisible(). Root section renamed .todoapp -> .taskapp; inner .main unchanged. verify-locators.mjs on QA_TODO_FAULT=redesign-classes: count=0 in empty, items and filtered states; same expression count=1 on the default (old) build; outline diff old/items.outline.txt vs new/items.outline.txt shows the class rename",
+      "foundBy": "source inspection + live check (latent, not in report)"
+    },
+    {
+      "attemptId": "suites[0].specs[0].tests[0].results[0],suites[0].specs[1].tests[0].results[0],suites[0].specs[2].tests[0].results[0],suites[0].specs[3].tests[0].results[0],suites[0].specs[4].tests[0].results[0],suites[0].specs[5].tests[0].results[0],suites[0].specs[6].tests[0].results[0],suites[0].specs[7].tests[0].results[0],suites[0].specs[8].tests[0].results[0]",
+      "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs",
+      "line": 12,
+      "column": 13,
+      "oldLocator": "page.locator('.todoapp .footer')",
+      "intent": "the app footer (count, filter links, Clear completed) that is hidden when no todos exist and visible otherwise",
+      "pageRoute": "/",
+      "triage": "confirmed-selector-drift",
+      "triageEvidence": "Latent, same mechanism as line 11. Root section renamed .todoapp -> .taskapp; inner .footer unchanged. verify-locators.mjs on QA_TODO_FAULT=redesign-classes: count=0 in empty, items and filtered states; same expression count=1 on the default (old) build; outline diff old/items.outline.txt vs new/items.outline.txt shows the class rename",
+      "foundBy": "source inspection + live check (latent, not in report)"
+    }
+  ]
+}

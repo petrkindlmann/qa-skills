@@ -56,3 +56,7 @@ Linux CI job does not fail on missing `-linux.png` baselines. No assertion or ba
 
 Linux baselines, any browser other than bundled Chromium, and the behaviour of the suite
 under a real UI change (the campaign's fault matrix covers that separately).
+
+## Post-authoring edit for the fault matrix
+
+After authoring, the mark-all `toHaveScreenshot` was wrapped in the lab's `oracle()` helper so the controls matrix can verify a designated assertion failure under a fault. The wrapper rethrows the same error and changes nothing on a passing run.

@@ -1,0 +1,945 @@
+{
+  "startedAt": "2026-10-21T17:42:25.067Z",
+  "phase": "campaign3",
+  "node": "v26.0.0",
+  "artifactLayout": "Each run uses <case-id>/<run-id>; artifactDirectory is relative to the matrix output root.",
+  "playwright": "1.62.1",
+  "browserExecutable": "Playwright-installed Chromium",
+  "method": "Fresh-agent acceptance assertions with explicit oracle wrappers; full suite per variant; retries disabled. Detection requires a designated matcher failure, a structured oracle record, and a matching per-run token. Broader causal interpretation still requires review.",
+  "sourceHashes": {
+    "tests/workflows/generated/baseline-shop/final-response.md": "16d07616c3644fd6245c9aa2416a88148fa2c2413c54304feff8266529cb0984",
+    "tests/workflows/generated/baseline-shop/helpers.mjs": "80964eab222c8777a92b703faa8715cf2fffe8f6e634994594459e6ce6cf477a",
+    "tests/workflows/generated/baseline-shop/probe.mjs": "1b15812046ca4debc16231201d89cd4117e42f8d6c7784a0bbb9937375f6bd0c",
+    "tests/workflows/generated/baseline-shop/shop.spec.mjs": "36bca2fa255500003c3cc4fa4e80ef6cc2ad16b13597f29bd783ae9c9dce578e",
+    "tests/workflows/generated/baseline-todo/design.md": "7e5fb62ccaec5f1ef372140184fc0f66088112c37defdf67b95795750a2e6f0e",
+    "tests/workflows/generated/baseline-todo/execution-summary.json": "d8c61e56a9108313f3912279e36d4409dc30b9ef4d0bd327a98cfe37920fd166",
+    "tests/workflows/generated/baseline-todo/final-response.md": "bbdf100d8a2dafcd821cd7d6dc150563304797c2913503bc0b294607a426145f",
+    "tests/workflows/generated/baseline-todo/initial-failure-evidence/error-context.md": "a7cfd96e0e9b74bf152e151ac39c5b8b4eda6984fc85db7de949314becd566d7",
+    "tests/workflows/generated/baseline-todo/review.md": "7b16997ab8bb66b0fa6f0ee7cf9a4690c72f5106811b863c8bad7d4ed4e83eb9",
+    "tests/workflows/generated/baseline-todo/todo-ui.mjs": "bfcd542ab26419f6eb064e95f7934d4b5a67e163346596825e98cf7b6b547d6c",
+    "tests/workflows/generated/baseline-todo/todomvc.spec.mjs": "075cebb0719c7cc24d74b6d7a03572f6e36706573313b0f0f57ec29866b59f95",
+    "tests/workflows/fixture-app/faults.py": "30c30a4cd0485e1de9334abbeef7fa4912d736c6f77b538940cc8b16a4b34cb7",
+    "tests/workflows/fixture-app/index.html": "53d9691494eeb750e92f4bf38469d30e2174c47340ddf8bec5e79c634af640a4",
+    "tests/workflows/fixture-app/server.py": "ec7badff541e836e2c1e8ef0079a21523004b2286d4ac9aa35b7d4eaf45a725f",
+    "tests/workflows/support/fixtures.mjs": "a07e6cfb9908ac0b35a060f88464f55062c37d86a4d93d7e7661d945a79fe489",
+    "tests/workflows/support/matrix-lock.mjs": "3b0f2482e6d30aefdab5ede9002a62e50aa3fa71c31ad56b6852282921e1bb56",
+    "tests/workflows/support/oracle.mjs": "d9f3e6f6bee36023c4bfc9be24119b64a692356716a0e434ec4f6d4b780371c1",
+    "tests/workflows/support/outcome.mjs": "30fd478c812b3709dde1c733c2f3d8edfcbba38bf662d25fe5ab6146989dfbd2",
+    "tests/workflows/support/process.mjs": "0c34b2b6b3fe053fbb345936c05cf84cdbdd50c468768b589c5fed33a980202c",
+    "tests/workflows/support/runtime.mjs": "30deab42ac0a9e2d319e2fddf4267e6048b1b8c077308d8ce5bfcf532b45f0af",
+    "tests/workflows/upstream-todomvc/README.md": "8c9765c9928f243978ce28e0c8523645565b20a777dca173590dd67b330e6d99",
+    "tests/workflows/upstream-todomvc/faults/delete-persistence-lost.mjs": "ba59d1a4180f7dcd5bf6288b6db030c1275f8e95de9279515caab952eb11838e",
+    "tests/workflows/upstream-todomvc/faults/mutations.mjs": "58280e82ebd21d6e08fa5b80cfd237cbffec945b8e720ab06101f66b297ef31b",
+    "tests/workflows/upstream-todomvc/faults/probe-delete-persistence.mjs": "a9e7a85b39de44621b68b86b9062d99770106515fc4b5575bf46000d9da19847",
+    "tests/workflows/upstream-todomvc/faults/probe.mjs": "c56486e6a2271f31b3fbe4dfce94e89e54636bbec6804e0f75f07b600c2bc739",
+    "tests/workflows/upstream-todomvc/observations/current-es5/examples/javascript-es5/dist/index.html": "fa135782c7bd9bca4eac3a665759c0698d3829b2f97b99fdc26761ee7084ecd5",
+    "tests/workflows/upstream-todomvc/observations/current-es5/license.md": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d",
+    "tests/workflows/upstream-todomvc/observations/current-es5-provenance.json": "0cefa7eaf4964d98fb833f47f7737d500aeb7f6fb8df3d61f782baa69a1ab923",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-preservation.json": "c8a066965ac5dadfe23b797587bdb4fd442596a625b84987158dec754453455a",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-results.json": "a08b63be16a231ee3b06719bf3bff97725d1847e317283792c74a04aa7491ce8",
+    "tests/workflows/upstream-todomvc/observations/delete-persistence-summary.md": "12b49af28de21c8f58396fb7c5159711c8cb27e70b1eecc77aaf1076e72dc154",
+    "tests/workflows/upstream-todomvc/observations/probe-results.json": "c232f16bbe22f06e5ad07d5193373e0ade085d6bbe73b11bdc4c0b9069c937e0",
+    "tests/workflows/upstream-todomvc/provenance.json": "3f8b0c9ee6462f43967f4563b989bb9bc689302b26496ffcdfda1777dd1a9d20",
+    "tests/workflows/upstream-todomvc/server.mjs": "bd47d4c6d7946e60d6eab066f56b69bbf683fff3f312cf4198dbe13f55f99b88",
+    "tests/workflows/upstream-todomvc/upstream/examples/vanillajs/index.html": "ab1b9ae3f795f918de1e2ae277f641e126a787b13b30e6460a60df666ec7821e",
+    "tests/workflows/upstream-todomvc/upstream/examples/vanillajs/package.json": "861dd4872b19132c99161161ff032f3e52368dfec39ad18680ce4c620543efdd",
+    "tests/workflows/upstream-todomvc/upstream/license.md": "32238c5c6759b589ea768661b6eb0fcb42449b74d57cdf09928743f2e1eb748d",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-app-css/2.4.1/package.json": "95b2dc61769730bf06ad0d0abc1a611ab417b13c14ee979920b1d5c61f491a0f",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-app-css/2.4.1/readme.md": "bcfd25e122c41039722b4e4bdf4b122ae240ad2f95bd1823d5358bdee316cbe0",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-common/1.0.5/package.json": "b58875806d8f06f234edf0b5d1bff8b20a4e8e84582d19057a62320267073e93",
+    "tests/workflows/upstream-todomvc/vendor/todomvc-common/1.0.5/readme.md": "5dafddbb1d858af4a2528d7c620d5b7848e9987623012757c3d022e9802796bc",
+    "tests/workflows/generated/campaign3/bug-reproduction/final-response.md": "b96789934d989ac90007b94c5340ea7364ba3053b6717bee9a7787dc82f00804",
+    "tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs": "c8b75fd911492fad7eb81bd38f1179ce69bc9c5e63c64cec0dfa82fe1a4166c3",
+    "tests/workflows/generated/campaign3/bug-reproduction/oracle-sensitivity.mjs": "68d3ba513eff48cdddbc52c681312ff78cf25b7ed6af012ccd2329e48a9cc388",
+    "tests/workflows/generated/campaign3/bug-reproduction/report-1-session-revocation.spec.mjs": "0308f068cbb40a200481728c19f931f53fb5177cc557789eda55d8646cc5f08b",
+    "tests/workflows/generated/campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs": "656467efd91abfbbb30f7627abfeb151fcbc4f48f3f74c947b77cedc0e3d47f6",
+    "tests/workflows/generated/campaign3/bug-reproduction/reproduction-notes.md": "4a6101e4bae72395f60038aa9a23532e1d44caabefd74afe6a43966e382ddecd",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/candidates.json": "c40ab1469b946a897848338be609b7152691e1b15a65e43ecd3ddceb5e458ef7",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/failure-inventory.json": "d0b7a32f064cd68495fc1afd1017a81efb891d811029d5789a637939f50c5b27",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/editing.html": "2b77c2780cbe9acc88151eded595dd4770315a17fb01f5b82191e700beff56ae",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/empty.html": "2da73dcab33811aeffbae574a31c97809e72aeda87293db6124305ab452fed48",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/filter-active.html": "f0536fe3f8b6d9560ebe3f1d567968d5a8187afd2ba4e999ea55d4f78d3c62ab",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/filter-completed.html": "1a06d1e8146109c4b19ad4d5f72bb811306f7e45133de53503c77b70d9ea9c61",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/hover.html": "0a1774877d87009de95519fc489df2b3b59fd896a7e892367c524c4bf15f81e7",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/new/items.html": "8d9c259ff2f3c7ff71eb02a21219fb15ec4a8f1ddbb7268704026cc95c823302",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/editing.html": "9cdc914c8b39e4b1b6ec0a7162627f4424cf1fe2a5609970d64f52a918e4d09c",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/empty.html": "d56081f77da5f14a7029bb6cd32eba562e17a6a500328853ebae01bbab3f152d",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/filter-active.html": "24c5ebfcd3a319da7c14d63748f82fa6e7728befd2dd0e9dce7617b8862a5aa8",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/filter-completed.html": "9af1d1f895a7e1fe23e36cbf94f76d0b92d023855566950ea2261a07476c3fce",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/hover.html": "d3abd100eecea09ff2792181bec7d17f8e649aead67d69f2f0672bebf834f343",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/old/items.html": "edbdee4120436bf87ac02bb8019b33709517c23ec73560141b21e227152417b4",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/post-recovery-new-run1.json": "e9ae07d2c16833e9a6ed327cc3faed425c30ef81920e1b48bf77243fb4c47c29",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/post-recovery-new-run2.json": "210f9376b6d66a27f7245b17dee290056da66310daff15918bea1440cdbfac02",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/post-recovery-old-build.json": "f199ec6105812639f43bdda2be56ea9da73c449c4c3251efe601de863180935b",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/pr-body.md": "ea09bcc93fdd866e8313a2c423d866399216e651a4e3a0c445467b8fa0f7a8b6",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/results.json": "d2a46175487d4351217a4811adbd57bf0a51c7665a8d833a8b5efe5877144b2d",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/reviewed-targets.json": "2f4e2180553e2f0e836bbc3c304b99691f15c84f15b541a066baaa3141c73ac1",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/apply-candidates.mjs": "61aabdf3d5452798f1ecaaa421abb90388c994e49707617af4663e3913945e46",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/build-pr-body.mjs": "9581d431f0283fac33e112e40888e3464923d862bed42434d66eda69528019b5",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/failure-inventory.mjs": "94913fd4648065050052809f33e679b8b724c15ca3edef33a0ee17cc203b3699",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/generate-candidates.mjs": "4d5b19c2f5d5f2ab597928b2de690a68a69923a9e03e020977e548ef60db3107",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/identify-drift.mjs": "caf8b1fee1d2eba4e466ee9ee64b3a37970ad171b4b2c2a7ac1e6e65f7d237a4",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/recovery-candidates.mjs": "d5878d6095b5fabb0e3cc6312a5fcd53f13208c8f9f324ad770c5efc2d2cce97",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/recovery-summary.mjs": "1892c6f35107029d80eb876b232cb22b8db350c6a9db825ebb535a5143291296",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/snapshot-dom.mjs": "22a3948c47e6645fb8825a05054b537579331feb034b6f62e69d42d743c9f971",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/triage.mjs": "9b15ec051c60e131729330725e1c79122e23bd2337461596e113324dedc64ac9",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/.drift-recovery/scripts/verify-locators.mjs": "ba72a9f5c04251efaaddce212b6d7955c7d3e7fcfb30b4e8405d148a10959761",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/drift-report.md": "884a5be640a147f99e78d7593b6a5ef3242e5589eb8b7770812b114bba3da625",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/final-response.md": "75b4b927f88cbbb0e1cb675c464cef3f58fe7bbcb308b773bef2c5660b0f5e64",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs": "c9972a52e778189dfda2bb717909a4252123be586a97c7aa672481263b94ce60",
+    "tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs": "0f03f09dc4b41e5197a8047a62a7381922a5236d91eb5c1b7b7ed991d16f2d66",
+    "tests/workflows/generated/campaign3/visual-testing/final-response.md": "c74ca8b1e1cd75ca26ffa798f258ea12f58f22a899f9fdae4fbb4eb8fbe24a9b",
+    "tests/workflows/generated/campaign3/visual-testing/todomvc-visual.spec.mjs": "5ccc7fc8227bab7eee4bb9441b90ca72c31b886311fa7f62593d2338ef6d8e77",
+    "tests/workflows/generated/campaign3/visual-testing/visual-helpers.mjs": "de947be2916deeb03f6266792fedec3d4e9fda2c463352fc9953f74bc8243bac"
+  },
+  "runs": [
+    {
+      "id": "c3-visual-healthy",
+      "suite": "campaign3/visual-testing",
+      "healthy": true,
+      "count": 10,
+      "env": {
+        "VISUAL_DETECTOR_CHECK": "1"
+      },
+      "runId": "c2637869-5a02-4977-ba2b-6037b04233ed",
+      "artifactDirectory": "c3-visual-healthy/c2637869-5a02-4977-ba2b-6037b04233ed",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 0,
+      "signal": null,
+      "wallMs": 26203,
+      "stats": {
+        "startTime": "2026-10-21T17:42:29.236Z",
+        "duration": 22944.519999999997,
+        "expected": 10,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "executed": 10,
+      "failed": [],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "healthy_pass",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": false
+    },
+    {
+      "id": "c3-visual-style",
+      "suite": "campaign3/visual-testing",
+      "count": 10,
+      "env": {
+        "VISUAL_DETECTOR_CHECK": "1",
+        "QA_TODO_FAULT": "style-regression"
+      },
+      "title": "all items completed through mark-all",
+      "runId": "669b023f-04ed-4a05-a61f-cd40ddcc2125",
+      "oracle": {
+        "id": "c3-visual-style",
+        "matcher": "toHaveScreenshot"
+      },
+      "artifactDirectory": "c3-visual-style/669b023f-04ed-4a05-a61f-cd40ddcc2125",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 51483,
+      "stats": {
+        "startTime": "2026-10-21T17:42:56.451Z",
+        "duration": 46916.899,
+        "expected": 4,
+        "skipped": 0,
+        "unexpected": 6,
+        "flaky": 0
+      },
+      "executed": 10,
+      "failed": [
+        {
+          "title": "filter view: all",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4463,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todoapp')\n  154 pixels (ratio 0.01 of all image pixels) are different.\n\n  Snapshot: filter-all.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(filter-all.png)\" with timeout 4000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('.todoapp')\u001b[22m\n\u001b[2m    - locator resolved to <section class=\"todoapp\">…</section>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - 154 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('.todoapp')\u001b[22m\n\u001b[2m    - locator resolved to <section class=\"todoapp\">…</section>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 154 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\n\n  56 |       await expect(page.locator('.todo-count')).toHaveText(filter.count);\n  57 |       await settle(page);\n> 58 |       await expect(app(page)).toHaveScreenshot(`filter-${filter.name}.png`, VISUAL);\n     |                               ^\n  59 |     });\n  60 |   }\n  61 |\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/visual-testing/todomvc-visual.spec.mjs:58:31"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "filter view: completed",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 2868,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todoapp')\n  154 pixels (ratio 0.01 of all image pixels) are different.\n\n  Snapshot: filter-completed.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(filter-completed.png)\" with timeout 4000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('.todoapp')\u001b[22m\n\u001b[2m    - locator resolved to <section class=\"todoapp\">…</section>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - 154 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('.todoapp')\u001b[22m\n\u001b[2m    - locator resolved to <section class=\"todoapp\">…</section>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 154 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\n\n  56 |       await expect(page.locator('.todo-count')).toHaveText(filter.count);\n  57 |       await settle(page);\n> 58 |       await expect(app(page)).toHaveScreenshot(`filter-${filter.name}.png`, VISUAL);\n     |                               ^\n  59 |     });\n  60 |   }\n  61 |\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/visual-testing/todomvc-visual.spec.mjs:58:31"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "all items completed through mark-all",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"c3-visual-style\",\"matcher\":\"toHaveScreenshot\",\"token\":\"356f5bad-5817-4536-b82d-a7f0cbe6fd43\",\"runId\":\"669b023f-04ed-4a05-a61f-cd40ddcc2125\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 3469,
+              "errors": [
+                "Error: QA_ORACLE:c3-visual-style:356f5bad-5817-4536-b82d-a7f0cbe6fd43\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todoapp')\n  387 pixels (ratio 0.01 of all image pixels) are different.\n\n  Snapshot: all-completed.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(all-completed.png)\" with timeout 4000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('.todoapp')\u001b[22m\n\u001b[2m    - locator resolved to <section class=\"todoapp\">…</section>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - 387 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('.todoapp')\u001b[22m\n\u001b[2m    - locator resolved to <section class=\"todoapp\">…</section>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 387 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\n\n  69 |     await settle(page);\n  70 |     // Matrix oracle (added after authoring): the designated comparator for the style-regression fault run.\n> 71 |     await oracle('c3-visual-style', 'toHaveScreenshot', () => expect(app(page)).toHaveScreenshot('all-completed.png', VISUAL));\n     |                                                                                 ^\n  72 |   });\n  73 |\n  74 |   test('editing in progress', async ({ page, todo }) => {\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/visual-testing/todomvc-visual.spec.mjs:71:81)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/visual-testing/todomvc-visual.spec.mjs:71:11"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "editing in progress",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 3862,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todoapp')\n  154 pixels (ratio 0.01 of all image pixels) are different.\n\n  Snapshot: editing-in-progress.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(editing-in-progress.png)\" with timeout 4000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('.todoapp')\u001b[22m\n\u001b[2m    - locator resolved to <section class=\"todoapp\">…</section>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - 154 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('.todoapp')\u001b[22m\n\u001b[2m    - locator resolved to <section class=\"todoapp\">…</section>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 154 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\n\n  82 |     // Focus must stay on the edit field: blurring it saves the edit and ends the state.\n  83 |     await settle(page, { keepFocus: true });\n> 84 |     await expect(app(page)).toHaveScreenshot('editing-in-progress.png', VISUAL);\n     |                             ^\n  85 |   });\n  86 |\n  87 |   test('hovering a row reveals its delete control', async ({ page, todo }) => {\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/visual-testing/todomvc-visual.spec.mjs:84:29"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "hovering a row reveals its delete control",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4934,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todoapp')\n  154 pixels (ratio 0.01 of all image pixels) are different.\n\n  Snapshot: row-hover.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(row-hover.png)\" with timeout 4000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - waiting for locator('.todoapp')\u001b[22m\n\u001b[2m    - locator resolved to <section class=\"todoapp\">…</section>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - 154 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - waiting for locator('.todoapp')\u001b[22m\n\u001b[2m    - locator resolved to <section class=\"todoapp\">…</section>\u001b[22m\n\u001b[2m  - taking element screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - attempting scroll into view action\u001b[22m\n\u001b[2m    - waiting for element to be stable\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 154 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\n\n  92 |     await expect(row.locator('.destroy')).toBeVisible();\n  93 |     await settle(page, { keepPointer: true });\n> 94 |     await expect(app(page)).toHaveScreenshot('row-hover.png', VISUAL);\n     |                             ^\n  95 |   });\n  96 |\n  97 |   test.describe('mobile viewport', () => {\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/visual-testing/todomvc-visual.spec.mjs:94:29"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "mixed list at phone width",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 6462,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mpage\u001b[39m\u001b[2m).\u001b[22mtoHaveScreenshot\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\n  154 pixels (ratio 0.01 of all image pixels) are different.\n\n  Snapshot: mixed-mobile.png\n\nCall log:\n\u001b[2m  - Expect \"toHaveScreenshot(mixed-mobile.png)\" with timeout 4000ms\u001b[22m\n\u001b[2m    - verifying given screenshot expectation\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - 154 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\u001b[2m  - waiting 100ms before taking screenshot\u001b[22m\n\u001b[2m  - taking page screenshot\u001b[22m\n\u001b[2m    - disabled all CSS animations\u001b[22m\n\u001b[2m  - waiting for fonts to load...\u001b[22m\n\u001b[2m  - fonts loaded\u001b[22m\n\u001b[2m  - captured a stable screenshot\u001b[22m\n\u001b[2m  - 154 pixels (ratio 0.01 of all image pixels) are different.\u001b[22m\n\n\n  101 |       await seedMixed(page, todo);\n  102 |       await settle(page);\n> 103 |       await expect(page).toHaveScreenshot('mixed-mobile.png', { ...VISUAL, fullPage: true });\n      |                          ^\n  104 |     });\n  105 |   });\n  106 | });\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/visual-testing/todomvc-visual.spec.mjs:103:26"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_verified",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": true,
+      "review": "designated assertion verified"
+    },
+    {
+      "id": "c3-bugrepro-healthy",
+      "suite": "campaign3/bug-reproduction",
+      "healthy": true,
+      "count": 5,
+      "runId": "24dddf4b-66fa-4906-aac0-3eb73e62166a",
+      "artifactDirectory": "c3-bugrepro-healthy/24dddf4b-66fa-4906-aac0-3eb73e62166a",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 0,
+      "signal": null,
+      "wallMs": 26672,
+      "stats": {
+        "startTime": "2026-10-21T17:43:47.349Z",
+        "duration": 22952.139,
+        "expected": 5,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "executed": 5,
+      "failed": [],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "healthy_pass",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": false
+    },
+    {
+      "id": "c3-bugrepro-logout",
+      "suite": "campaign3/bug-reproduction",
+      "count": 5,
+      "env": {
+        "QA_SHOP_FAULT": "logout_cookie_only"
+      },
+      "title": "browser Sign out revokes",
+      "runId": "61361bb9-bcbd-4743-bad3-efa7661b558c",
+      "oracle": {
+        "id": "c3-bugrepro-logout",
+        "matcher": "toBe"
+      },
+      "artifactDirectory": "c3-bugrepro-logout/61361bb9-bcbd-4743-bad3-efa7661b558c",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 27850,
+      "stats": {
+        "startTime": "2026-10-21T17:44:13.941Z",
+        "duration": 24335.492000000002,
+        "expected": 3,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      "executed": 5,
+      "failed": [
+        {
+          "title": "browser Sign out revokes a session cookie copied by someone else",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"c3-bugrepro-logout\",\"matcher\":\"toBe\",\"token\":\"b250e1c8-2a50-4ea2-bdd6-75f63e39ee9b\",\"runId\":\"61361bb9-bcbd-4743-bad3-efa7661b558c\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 4765,
+              "errors": [
+                "Error: QA_ORACLE:c3-bugrepro-logout:b250e1c8-2a50-4ea2-bdd6-75f63e39ee9b\ncopied cookie must not load /api/me after sign-out\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n   at helpers.mjs:60\n\n  58 |   const me = await copied.get('/api/me');\n  59 |   // Matrix oracle (added after authoring): the designated assertion for the logout fault run.\n> 60 |   await oracle('c3-bugrepro-logout', 'toBe', () => expect(me.status(), 'copied cookie must not load /api/me after sign-out').toBe(401));\n     |                                                                                                                              ^\n  61 |   expect(await me.json()).toEqual({ error: 'unauthenticated' });\n  62 |   const orders = await copied.get('/api/orders');\n  63 |   expect(orders.status(), 'copied cookie must not list orders after sign-out').toBe(401);\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs:60:126)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at expectSessionRevoked (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs:60:9)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/report-1-session-revocation.spec.mjs:46:5"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "POST /api/logout invalidates the session for every holder of the cookie",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"c3-bugrepro-logout\",\"matcher\":\"toBe\",\"token\":\"d639626b-73ce-49fc-a8dc-692b4484c96f\",\"runId\":\"61361bb9-bcbd-4743-bad3-efa7661b558c\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 3792,
+              "errors": [
+                "Error: QA_ORACLE:c3-bugrepro-logout:d639626b-73ce-49fc-a8dc-692b4484c96f\ncopied cookie must not load /api/me after sign-out\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m401\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n   at helpers.mjs:60\n\n  58 |   const me = await copied.get('/api/me');\n  59 |   // Matrix oracle (added after authoring): the designated assertion for the logout fault run.\n> 60 |   await oracle('c3-bugrepro-logout', 'toBe', () => expect(me.status(), 'copied cookie must not load /api/me after sign-out').toBe(401));\n     |                                                                                                                              ^\n  61 |   expect(await me.json()).toEqual({ error: 'unauthenticated' });\n  62 |   const orders = await copied.get('/api/orders');\n  63 |   expect(orders.status(), 'copied cookie must not list orders after sign-out').toBe(401);\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs:60:126)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at expectSessionRevoked (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs:60:9)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/report-1-session-revocation.spec.mjs:78:5"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_verified",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": true,
+      "review": "designated assertion verified"
+    },
+    {
+      "id": "c3-bugrepro-idempotency",
+      "suite": "campaign3/bug-reproduction",
+      "count": 5,
+      "env": {
+        "QA_SHOP_FAULT": "idempotency_payload_conflict"
+      },
+      "title": "different quantity returns 409",
+      "runId": "db23a5d5-c8c2-4db5-a1d6-d5639e4ca553",
+      "oracle": {
+        "id": "c3-bugrepro-idempotency",
+        "matcher": "toBe"
+      },
+      "artifactDirectory": "c3-bugrepro-idempotency/db23a5d5-c8c2-4db5-a1d6-d5639e4ca553",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 21784,
+      "stats": {
+        "startTime": "2026-10-21T17:44:41.844Z",
+        "duration": 18148.233,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 3,
+        "flaky": 0
+      },
+      "executed": 5,
+      "failed": [
+        {
+          "title": "reusing an Idempotency-Key with a different quantity returns 409 and creates no order",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"c3-bugrepro-idempotency\",\"matcher\":\"toBe\",\"token\":\"83873fa6-1ad4-4847-8dd7-651b5c011b10\",\"runId\":\"db23a5d5-c8c2-4db5-a1d6-d5639e4ca553\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1488,
+              "errors": [
+                "Error: QA_ORACLE:c3-bugrepro-idempotency:83873fa6-1ad4-4847-8dd7-651b5c011b10\nquantity changed: reuse with a different basket must be refused\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m409\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n   at helpers.mjs:74\n\n  72 |   const response = await postOrder(ctx, key, basket);\n  73 |   // Matrix oracle (added after authoring): the designated assertion for the idempotency fault run.\n> 74 |   await oracle('c3-bugrepro-idempotency', 'toBe', () => expect(response.status(), `${label}: reuse with a different basket must be refused`).toBe(409));\n     |                                                                                                                                              ^\n  75 |   expect(await response.json()).toEqual({ error: 'idempotency_conflict' });\n  76 | }\n  77 |\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs:74:142)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at expectIdempotencyConflict (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs:74:9)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:23:5"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "a changed SKU set or currency under a used key also conflicts",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"c3-bugrepro-idempotency\",\"matcher\":\"toBe\",\"token\":\"177a4591-d700-4a28-98b2-94b5c5c7acd6\",\"runId\":\"db23a5d5-c8c2-4db5-a1d6-d5639e4ca553\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 1474,
+              "errors": [
+                "Error: QA_ORACLE:c3-bugrepro-idempotency:177a4591-d700-4a28-98b2-94b5c5c7acd6\nSKU dropped: reuse with a different basket must be refused\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m409\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n   at helpers.mjs:74\n\n  72 |   const response = await postOrder(ctx, key, basket);\n  73 |   // Matrix oracle (added after authoring): the designated assertion for the idempotency fault run.\n> 74 |   await oracle('c3-bugrepro-idempotency', 'toBe', () => expect(response.status(), `${label}: reuse with a different basket must be refused`).toBe(409));\n     |                                                                                                                                              ^\n  75 |   expect(await response.json()).toEqual({ error: 'idempotency_conflict' });\n  76 | }\n  77 |\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs:74:142)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at expectIdempotencyConflict (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs:74:9)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:47:5"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "keys are scoped to the signed-in user, so a conflict is not a global lock on the key",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"c3-bugrepro-idempotency\",\"matcher\":\"toBe\",\"token\":\"ec47a44b-a61f-4a8e-9e8d-56ba3b1ffaf8\",\"runId\":\"db23a5d5-c8c2-4db5-a1d6-d5639e4ca553\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 2069,
+              "errors": [
+                "Error: QA_ORACLE:c3-bugrepro-idempotency:ec47a44b-a61f-4a8e-9e8d-56ba3b1ffaf8\nalice, quantity changed: reuse with a different basket must be refused\n\n\u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m\n\nExpected: \u001b[32m409\u001b[39m\nReceived: \u001b[31m200\u001b[39m\n\n   at helpers.mjs:74\n\n  72 |   const response = await postOrder(ctx, key, basket);\n  73 |   // Matrix oracle (added after authoring): the designated assertion for the idempotency fault run.\n> 74 |   await oracle('c3-bugrepro-idempotency', 'toBe', () => expect(response.status(), `${label}: reuse with a different basket must be refused`).toBe(409));\n     |                                                                                                                                              ^\n  75 |   expect(await response.json()).toEqual({ error: 'idempotency_conflict' });\n  76 | }\n  77 |\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs:74:142)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at expectIdempotencyConflict (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/helpers.mjs:74:9)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/bug-reproduction/report-2-idempotency-conflict.spec.mjs:65:5"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_verified",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": true,
+      "review": "designated assertion verified"
+    },
+    {
+      "id": "c3-sdr-healthy",
+      "suite": "campaign3/selector-drift-recovery",
+      "healthy": true,
+      "count": 9,
+      "env": {
+        "QA_TODO_FAULT": "redesign-classes"
+      },
+      "runId": "45971b0e-2398-4c39-a634-20e8637d1670",
+      "artifactDirectory": "c3-sdr-healthy/45971b0e-2398-4c39-a634-20e8637d1670",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 0,
+      "signal": null,
+      "wallMs": 22946,
+      "stats": {
+        "startTime": "2026-10-21T17:45:04.433Z",
+        "duration": 18640.912,
+        "expected": 9,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "executed": 9,
+      "failed": [],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "healthy_pass",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": false
+    },
+    {
+      "id": "todo-persistence",
+      "suite": "campaign3/selector-drift-recovery",
+      "count": 9,
+      "env": {
+        "QA_TODO_FAULT": "redesign-classes+persistence-lost"
+      },
+      "title": "persist through reload",
+      "runId": "10ff2da7-076e-4f9b-8810-e3e68b9227c3",
+      "oracle": {
+        "id": "todo-persistence",
+        "matcher": "toHaveText"
+      },
+      "artifactDirectory": "todo-persistence/10ff2da7-076e-4f9b-8810-e3e68b9227c3",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 40370,
+      "stats": {
+        "startTime": "2026-10-21T17:45:27.079Z",
+        "duration": 35142.201,
+        "expected": 6,
+        "skipped": 0,
+        "unexpected": 3,
+        "flaky": 0
+      },
+      "executed": 9,
+      "failed": [
+        {
+          "title": "Enter and blur save edits while Escape preserves the saved title on reload",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 7233,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 4\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Book evening train\",\u001b[39m\n\u001b[32m-   \"Pack overnight bag\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n\n  146 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n  147 |   await page.reload();\n> 148 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n      |                           ^\n  149 |   await expect(ui.rows.nth(0).getByRole('checkbox')).toBeChecked();\n  150 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n  151 |   await expect(ui.count).toHaveText('1 item left');\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:148:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "whitespace Enter and empty blur edits remove only their targeted records",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"todo-removal-persistence\",\"matcher\":\"toHaveText\",\"token\":\"37b1cce8-665d-4a7b-9f6a-68cdd8ebd8bd\",\"runId\":\"10ff2da7-076e-4f9b-8810-e3e68b9227c3\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 6553,
+              "errors": [
+                "Error: QA_ORACLE:todo-removal-persistence:37b1cce8-665d-4a7b-9f6a-68cdd8ebd8bd\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 3\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Keep stamped letter\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\u001b[22m\n\u001b[2m    11 × locator resolved to 0 elements\u001b[22m\n\n\n  167 |   await expect(ui.count).toHaveText('0 items left');\n  168 |   await page.reload();\n> 169 |   await oracle('todo-removal-persistence', 'toHaveText', () => expect(ui.titles).toHaveText(['Keep stamped letter']));\n      |                                                                                  ^\n  170 | });\n  171 |\n  172 | // Scenario: SC-008; Requirements: REQ-6, REQ-8.\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:169:82)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:169:9"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "saved edits completion order and removals persist through reload and further keyboard input",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"todo-persistence\",\"matcher\":\"toHaveText\",\"token\":\"283128ab-a78d-42fd-aaaf-5043019d9680\",\"runId\":\"10ff2da7-076e-4f9b-8810-e3e68b9227c3\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 7429,
+              "errors": [
+                "Error: QA_ORACLE:todo-persistence:283128ab-a78d-42fd-aaaf-5043019d9680\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 5\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Water balcony plants\",\u001b[39m\n\u001b[32m-   \"Walk dog\",\u001b[39m\n\u001b[32m-   \"Call family\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\u001b[22m\n\u001b[2m    11 × locator resolved to 0 elements\u001b[22m\n\n\n  216 |   await expect(ui.titles).toHaveText(['Water balcony plants', 'Walk dog', 'Call family']);\n  217 |   await page.reload();\n> 218 |   await oracle('todo-persistence', 'toHaveText', () => expect(ui.titles).toHaveText(['Water balcony plants', 'Walk dog', 'Call family']));\n      |                                                                          ^\n  219 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  220 |   await expect(ui.rows.nth(1).getByRole('checkbox')).toBeChecked();\n  221 |   await expect(ui.rows.nth(2).getByRole('checkbox')).not.toBeChecked();\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:218:74)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:218:9"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_verified",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": true,
+      "review": "designated assertion verified"
+    },
+    {
+      "id": "todo-duplicates",
+      "suite": "campaign3/selector-drift-recovery",
+      "count": 9,
+      "env": {
+        "QA_TODO_FAULT": "redesign-classes+delete-wrong-duplicate"
+      },
+      "title": "duplicate titles remain independent",
+      "runId": "a58229d9-8eeb-4c45-b285-591770d92674",
+      "oracle": {
+        "id": "todo-duplicates",
+        "matcher": "toHaveText"
+      },
+      "artifactDirectory": "todo-duplicates/a58229d9-8eeb-4c45-b285-591770d92674",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 44884,
+      "stats": {
+        "startTime": "2026-10-21T17:46:07.450Z",
+        "duration": 40414.238,
+        "expected": 7,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      "executed": 9,
+      "failed": [
+        {
+          "title": "duplicate titles remain independent through complete edit and delete",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"todo-duplicates\",\"matcher\":\"toHaveText\",\"token\":\"8b0fd32f-8702-4f7d-9273-b7beee2e1637\",\"runId\":\"a58229d9-8eeb-4c45-b285-591770d92674\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 6550,
+              "errors": [
+                "Error: QA_ORACLE:todo-duplicates:8b0fd32f-8702-4f7d-9273-b7beee2e1637\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator:  getByText(/^\\d+ items? left$/)\nExpected: \u001b[32m\"\u001b[7m2\u001b[27m item\u001b[7ms\u001b[27m left\"\u001b[39m\nReceived: \u001b[31m\"\u001b[7m1\u001b[27m item left\"\u001b[39m\nTimeout:  4000ms\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for getByText(/^\\d+ items? left$/)\u001b[22m\n\u001b[2m    11 × locator resolved to <span class=\"task-count\">…</span>\u001b[22m\n\u001b[2m       - unexpected value \"1 item left\"\u001b[22m\n\n\n  44 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  45 |   await expect(ui.rows.nth(1).getByRole('checkbox')).not.toBeChecked();\n> 46 |   await oracle('todo-duplicates', 'toHaveText', () => expect(ui.count).toHaveText('2 items left'));\n     |                                                                        ^\n  47 | });\n  48 |\n  49 | // Scenario: SC-003; Requirements: REQ-3, REQ-4.\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:46:72)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:46:9"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "whitespace Enter and empty blur edits remove only their targeted records",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 10681,
+              "errors": [
+                "TimeoutError: locator.fill: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for getByRole('list').filter({ hasNot: getByRole('link') }).getByRole('listitem').first().getByRole('textbox')\u001b[22m\n\n\n   at todo-ui.mjs:29\n\n  27 |       await row.locator('label').dblclick();\n  28 |       const input = row.getByRole('textbox');\n> 29 |       await input.fill(value);\n     |                   ^\n  30 |       if (key === 'blur') await this.input.click();\n  31 |       else await input.press(key);\n  32 |     },\n    at Object.edit (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs:29:19)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:164:3"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_verified",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": true,
+      "review": "designated assertion verified"
+    },
+    {
+      "id": "todo-filter",
+      "suite": "campaign3/selector-drift-recovery",
+      "count": 9,
+      "env": {
+        "QA_TODO_FAULT": "redesign-classes+filter-state-error"
+      },
+      "title": "filters visibly select",
+      "runId": "13e42a91-407c-406f-86a7-72aea785c2c1",
+      "oracle": {
+        "id": "todo-filter",
+        "matcher": "toHaveText"
+      },
+      "artifactDirectory": "todo-filter/13e42a91-407c-406f-86a7-72aea785c2c1",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 49970,
+      "stats": {
+        "startTime": "2026-10-21T17:46:53.108Z",
+        "duration": 44887.478,
+        "expected": 5,
+        "skipped": 0,
+        "unexpected": 4,
+        "flaky": 0
+      },
+      "executed": 9,
+      "failed": [
+        {
+          "title": "individual completion and restoration keep the active count global under filters",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 6783,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 5\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Call dentist\",\u001b[39m\n\u001b[32m-   \"Pick up parcel\",\u001b[39m\n\u001b[32m-   \"Water plants\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\u001b[22m\n\u001b[2m    11 × locator resolved to 0 elements\u001b[22m\n\n\n  63 |   await expect(ui.footer).toBeVisible();\n  64 |   await ui.filter('Active').click();\n> 65 |   await expect(ui.titles).toHaveText(['Call dentist', 'Pick up parcel', 'Water plants']);\n     |                           ^\n  66 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  67 |   await ui.rows.nth(0).getByRole('checkbox').click();\n  68 |   await expect(ui.titles).toHaveText(['Pick up parcel', 'Water plants']);\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:65:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "bulk toggle affects hidden records and works from an empty filtered view",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 6118,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 2\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"Buy groceries\",\u001b[39m\n\u001b[32m-   \"Cook dinner\",\u001b[39m\n\u001b[31m+   \"Plan meals\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 1 element\u001b[22m\n\n\n  82 |   await ui.rows.nth(0).getByRole('checkbox').check();\n  83 |   await ui.filter('Active').click();\n> 84 |   await expect(ui.titles).toHaveText(['Buy groceries', 'Cook dinner']);\n     |                           ^\n  85 |   await ui.allLabel.click();\n  86 |   await expect(ui.rows).toHaveCount(0);\n  87 |   await expect(ui.count).toHaveText('0 items left');\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:84:27"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "filters visibly select the correct subset without losing or duplicating records",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"todo-filter\",\"matcher\":\"toHaveText\",\"token\":\"aaa52e12-9a9d-4e17-b91c-4870a89ba7d8\",\"runId\":\"13e42a91-407c-406f-86a7-72aea785c2c1\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 8135,
+              "errors": [
+                "Error: QA_ORACLE:todo-filter:aaa52e12-9a9d-4e17-b91c-4870a89ba7d8\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 2\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"Read chapter\",\u001b[39m\n\u001b[32m-   \"Reserve sequel\",\u001b[39m\n\u001b[31m+   \"Return book\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 1 element\u001b[22m\n\n\n  116 |   ]) {\n  117 |     await ui.filter(name).click();\n> 118 |     await oracle('todo-filter', 'toHaveText', () => expect(ui.titles).toHaveText(titles));\n      |                                                                       ^\n  119 |     // Observed legacy UI uses selected class, not aria-current, for its visible border.\n  120 |     await expect(ui.filter(name)).toHaveClass(/selected/);\n  121 |     for (const other of ['All', 'Active', 'Completed'].filter(x => x !== name))\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:118:71)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:118:11"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "delete and clear completed preserve active rows and empty controls recover",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 8498,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 3\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Keep active\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n\n  180 |   await ui.filter('Active').click();\n  181 |   await ui.clear.click();\n> 182 |   await expect(ui.titles).toHaveText(['Keep active']);\n      |                           ^\n  183 |   await expect(ui.count).toHaveText('1 item left');\n  184 |   await expect(ui.clear).toBeHidden();\n  185 |   await ui.filter('All').click();\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:182:27"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_verified",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": true,
+      "review": "designated assertion verified"
+    },
+    {
+      "id": "todo-cancel",
+      "suite": "campaign3/selector-drift-recovery",
+      "count": 9,
+      "env": {
+        "QA_TODO_FAULT": "redesign-classes+escape-commits-edit"
+      },
+      "title": "Escape preserves",
+      "runId": "fc38cd30-09bf-41e3-9356-0004b7fbde19",
+      "oracle": {
+        "id": "todo-cancel",
+        "matcher": "toHaveText"
+      },
+      "artifactDirectory": "todo-cancel/fc38cd30-09bf-41e3-9356-0004b7fbde19",
+      "command": [
+        "/opt/homebrew/Cellar/node/26.0.0/bin/node",
+        "node_modules/playwright/cli.js",
+        "test",
+        "--config",
+        "tests/workflows/playwright.config.mjs",
+        "--workers=2",
+        "--retries=0",
+        "--global-timeout=90000"
+      ],
+      "code": 1,
+      "signal": null,
+      "wallMs": 22819,
+      "stats": {
+        "startTime": "2026-10-21T17:47:41.506Z",
+        "duration": 19947.407,
+        "expected": 7,
+        "skipped": 0,
+        "unexpected": 2,
+        "flaky": 0
+      },
+      "executed": 9,
+      "failed": [
+        {
+          "title": "Enter and blur save edits while Escape preserves the saved title on reload",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [
+            {
+              "type": "qa-oracle-failure",
+              "description": "{\"schemaVersion\":1,\"id\":\"todo-cancel\",\"matcher\":\"toHaveText\",\"token\":\"876f91bf-8a36-49ae-a4eb-f060ab9661ae\",\"runId\":\"fc38cd30-09bf-41e3-9356-0004b7fbde19\"}"
+            }
+          ],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 5674,
+              "errors": [
+                "Error: QA_ORACLE:todo-cancel:876f91bf-8a36-49ae-a4eb-f060ab9661ae\n\u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[2m    \"Book evening train\",\u001b[22m\n\u001b[32m-   \"Pack overnight bag\",\u001b[39m\n\u001b[31m+   \"Discard this draft\",\u001b[39m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 2 elements\u001b[22m\n\n\n  142 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n  143 |   await ui.edit(1, 'Discard this draft', 'Escape');\n> 144 |   await oracle('todo-cancel', 'toHaveText', () => expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']));\n      |                                                                     ^\n  145 |   await ui.edit(0, '', 'Escape');\n  146 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack overnight bag']);\n  147 |   await page.reload();\n    at assertion (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:144:69)\n    at oracle (/Users/petr/projects/qa-skills/tests/workflows/support/oracle.mjs:8:18)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:144:9"
+              ]
+            }
+          ]
+        },
+        {
+          "title": "saved edits completion order and removals persist through reload and further keyboard input",
+          "outcome": "unexpected",
+          "expectedStatus": "passed",
+          "annotations": [],
+          "results": [
+            {
+              "status": "failed",
+              "retry": 0,
+              "duration": 6675,
+              "errors": [
+                "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 1\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[2m  Array [\u001b[22m\n\u001b[32m-   \"Water balcony plants\",\u001b[39m\n\u001b[31m+   \"Canceled after reload\",\u001b[39m\n\u001b[2m    \"Walk dog\",\u001b[22m\n\u001b[2m    \"Call parents\",\u001b[22m\n\u001b[2m    \"Set alarm\",\u001b[22m\n\u001b[2m  ]\u001b[22m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for getByRole('list').filter({ hasNot: getByRole('link') }).locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 4 elements\u001b[22m\n\n\n  224 |   await ui.edit(0, 'Canceled after reload', 'Escape');\n  225 |   await ui.add('Set alarm');\n> 226 |   await expect(ui.titles).toHaveText(['Water balcony plants', 'Walk dog', 'Call parents', 'Set alarm']);\n      |                           ^\n  227 |   await expect(ui.count).toHaveText('3 items left');\n  228 |   await expect(ui.input).toHaveValue('');\n  229 | });\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:226:27"
+              ]
+            }
+          ]
+        }
+      ],
+      "infrastructureError": false,
+      "timedOut": false,
+      "outcome": "assertion_detection_verified",
+      "aborted": false,
+      "outputTruncated": false,
+      "oracleVerified": true,
+      "review": "designated assertion verified"
+    }
+  ],
+  "finishedAt": "2026-10-21T17:48:01.712Z"
+}

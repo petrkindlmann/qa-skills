@@ -1,0 +1,726 @@
+{
+  "observedResults": 9,
+  "runErrors": [],
+  "attempts": [
+    {
+      "attemptId": "suites[0].specs[0].tests[0].results[0]",
+      "testId": "9131754c24c844b7c361-f06aafe085ae70e922de",
+      "testTitle": "creates trimmed nonblank titles in order and clears the entry field",
+      "suiteTitles": [
+        "todomvc.spec.mjs"
+      ],
+      "projectName": "",
+      "projectId": "",
+      "expectedStatus": "passed",
+      "testOutcome": "unexpected",
+      "status": "failed",
+      "retry": 0,
+      "reportedTestLocation": {
+        "file": "todomvc.spec.mjs",
+        "line": 6,
+        "column": 1
+      },
+      "reporterResult": {
+        "workerIndex": 0,
+        "parallelIndex": 0,
+        "status": "failed",
+        "duration": 6354,
+        "error": {
+          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 3\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Buy café beans\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n",
+          "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 3\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Buy café beans\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:16:27",
+          "location": {
+            "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+            "column": 27,
+            "line": 16
+          },
+          "snippet": "  14 |   await ui.add('  Buy café beans  ');\n  15 |   await expect(ui.input).toHaveValue('');\n> 16 |   await expect(ui.titles).toHaveText(['Buy café beans']);\n     |                           ^\n  17 |   await expect(ui.count).toHaveText('1 item left');\n  18 |   await ui.add('Call Mei & book <tickets>', 'Walk the dog 🐕');\n  19 |   await expect(ui.input).toHaveValue('');"
+        },
+        "errors": [
+          {
+            "location": {
+              "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+              "column": 27,
+              "line": 16
+            },
+            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 3\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Buy café beans\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n\n  14 |   await ui.add('  Buy café beans  ');\n  15 |   await expect(ui.input).toHaveValue('');\n> 16 |   await expect(ui.titles).toHaveText(['Buy café beans']);\n     |                           ^\n  17 |   await expect(ui.count).toHaveText('1 item left');\n  18 |   await ui.add('Call Mei & book <tickets>', 'Walk the dog 🐕');\n  19 |   await expect(ui.input).toHaveValue('');\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:16:27"
+          }
+        ],
+        "stdout": [],
+        "stderr": [],
+        "retry": 0,
+        "startTime": "2026-10-21T17:19:41.108Z",
+        "annotations": [],
+        "attachments": [
+          {
+            "name": "screenshot",
+            "contentType": "image/png",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-creates-trimmed-no-67778--and-clears-the-entry-field/test-failed-1.png"
+          },
+          {
+            "name": "error-context",
+            "contentType": "text/markdown",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-creates-trimmed-no-67778--and-clears-the-entry-field/error-context.md"
+          },
+          {
+            "name": "trace",
+            "contentType": "application/zip",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-creates-trimmed-no-67778--and-clears-the-entry-field/trace.zip"
+          }
+        ],
+        "errorLocation": {
+          "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+          "column": 27,
+          "line": 16
+        }
+      },
+      "triage": "unreviewed",
+      "triageEvidence": null,
+      "file": null,
+      "line": null,
+      "column": null,
+      "oldLocator": null,
+      "intent": null,
+      "pageRoute": null
+    },
+    {
+      "attemptId": "suites[0].specs[1].tests[0].results[0]",
+      "testId": "9131754c24c844b7c361-40b1a35f4c3b03137c36",
+      "testTitle": "duplicate titles remain independent through complete edit and delete",
+      "suiteTitles": [
+        "todomvc.spec.mjs"
+      ],
+      "projectName": "",
+      "projectId": "",
+      "expectedStatus": "passed",
+      "testOutcome": "unexpected",
+      "status": "failed",
+      "retry": 0,
+      "reportedTestLocation": {
+        "file": "todomvc.spec.mjs",
+        "line": 29,
+        "column": 1
+      },
+      "reporterResult": {
+        "workerIndex": 1,
+        "parallelIndex": 1,
+        "status": "failed",
+        "duration": 6351,
+        "error": {
+          "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 5\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Buy milk\",\u001b[39m\n\u001b[32m-   \"Buy milk\",\u001b[39m\n\u001b[32m-   \"Keep receipt\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n",
+          "stack": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 5\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Buy milk\",\u001b[39m\n\u001b[32m-   \"Buy milk\",\u001b[39m\n\u001b[32m-   \"Keep receipt\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:33:27",
+          "location": {
+            "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+            "column": 27,
+            "line": 33
+          },
+          "snippet": "  31 |   const ui = todoUI(page);\n  32 |   await ui.add('Buy milk', 'Buy milk', 'Keep receipt');\n> 33 |   await expect(ui.titles).toHaveText(['Buy milk', 'Buy milk', 'Keep receipt']);\n     |                           ^\n  34 |   await ui.rows.nth(1).getByRole('checkbox').check();\n  35 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  36 |   await expect(ui.rows.nth(1).getByRole('checkbox')).toBeChecked();"
+        },
+        "errors": [
+          {
+            "location": {
+              "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+              "column": 27,
+              "line": 33
+            },
+            "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed\n\nLocator: locator('.todo-list').locator('label')\nTimeout: 4000ms\n\u001b[32m- Expected  - 5\u001b[39m\n\u001b[31m+ Received  + 1\u001b[39m\n\n\u001b[32m- Array [\u001b[39m\n\u001b[32m-   \"Buy milk\",\u001b[39m\n\u001b[32m-   \"Buy milk\",\u001b[39m\n\u001b[32m-   \"Keep receipt\",\u001b[39m\n\u001b[32m- ]\u001b[39m\n\u001b[31m+ Array []\u001b[39m\n\nCall log:\n\u001b[2m  - Expect \"toHaveText\" with timeout 4000ms\u001b[22m\n\u001b[2m  - waiting for locator('.todo-list').locator('label')\u001b[22m\n\u001b[2m    12 × locator resolved to 0 elements\u001b[22m\n\n\n  31 |   const ui = todoUI(page);\n  32 |   await ui.add('Buy milk', 'Buy milk', 'Keep receipt');\n> 33 |   await expect(ui.titles).toHaveText(['Buy milk', 'Buy milk', 'Keep receipt']);\n     |                           ^\n  34 |   await ui.rows.nth(1).getByRole('checkbox').check();\n  35 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n  36 |   await expect(ui.rows.nth(1).getByRole('checkbox')).toBeChecked();\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:33:27"
+          }
+        ],
+        "stdout": [],
+        "stderr": [],
+        "retry": 0,
+        "startTime": "2026-10-21T17:19:41.152Z",
+        "annotations": [],
+        "attachments": [
+          {
+            "name": "screenshot",
+            "contentType": "image/png",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-duplicate-titles-r-1a562-gh-complete-edit-and-delete/test-failed-1.png"
+          },
+          {
+            "name": "error-context",
+            "contentType": "text/markdown",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-duplicate-titles-r-1a562-gh-complete-edit-and-delete/error-context.md"
+          },
+          {
+            "name": "trace",
+            "contentType": "application/zip",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-duplicate-titles-r-1a562-gh-complete-edit-and-delete/trace.zip"
+          }
+        ],
+        "errorLocation": {
+          "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+          "column": 27,
+          "line": 33
+        }
+      },
+      "triage": "unreviewed",
+      "triageEvidence": null,
+      "file": null,
+      "line": null,
+      "column": null,
+      "oldLocator": null,
+      "intent": null,
+      "pageRoute": null
+    },
+    {
+      "attemptId": "suites[0].specs[2].tests[0].results[0]",
+      "testId": "9131754c24c844b7c361-00f4b006ff7fa7c0bbcf",
+      "testTitle": "individual completion and restoration keep the active count global under filters",
+      "suiteTitles": [
+        "todomvc.spec.mjs"
+      ],
+      "projectName": "",
+      "projectId": "",
+      "expectedStatus": "passed",
+      "testOutcome": "unexpected",
+      "status": "failed",
+      "retry": 0,
+      "reportedTestLocation": {
+        "file": "todomvc.spec.mjs",
+        "line": 50,
+        "column": 1
+      },
+      "reporterResult": {
+        "workerIndex": 3,
+        "parallelIndex": 1,
+        "status": "failed",
+        "duration": 9454,
+        "error": {
+          "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(1).getByRole('checkbox')\u001b[22m\n",
+          "stack": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(1).getByRole('checkbox')\u001b[22m\n\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:54:46",
+          "location": {
+            "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+            "column": 46,
+            "line": 54
+          },
+          "snippet": "  52 |   const ui = todoUI(page);\n  53 |   await ui.add('Call dentist', 'Pick up parcel', 'Water plants');\n> 54 |   await ui.rows.nth(1).getByRole('checkbox').check();\n     |                                              ^\n  55 |   await ui.filter('Completed').click();\n  56 |   await expect(ui.titles).toHaveText(['Pick up parcel']);\n  57 |   await expect(ui.count).toHaveText('2 items left');"
+        },
+        "errors": [
+          {
+            "location": {
+              "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+              "column": 46,
+              "line": 54
+            },
+            "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(1).getByRole('checkbox')\u001b[22m\n\n\n  52 |   const ui = todoUI(page);\n  53 |   await ui.add('Call dentist', 'Pick up parcel', 'Water plants');\n> 54 |   await ui.rows.nth(1).getByRole('checkbox').check();\n     |                                              ^\n  55 |   await ui.filter('Completed').click();\n  56 |   await expect(ui.titles).toHaveText(['Pick up parcel']);\n  57 |   await expect(ui.count).toHaveText('2 items left');\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:54:46"
+          }
+        ],
+        "stdout": [],
+        "stderr": [],
+        "retry": 0,
+        "startTime": "2026-10-21T17:19:52.472Z",
+        "annotations": [],
+        "attachments": [
+          {
+            "name": "screenshot",
+            "contentType": "image/png",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-individual-complet-db73e--count-global-under-filters/test-failed-1.png"
+          },
+          {
+            "name": "error-context",
+            "contentType": "text/markdown",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-individual-complet-db73e--count-global-under-filters/error-context.md"
+          },
+          {
+            "name": "trace",
+            "contentType": "application/zip",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-individual-complet-db73e--count-global-under-filters/trace.zip"
+          }
+        ],
+        "errorLocation": {
+          "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+          "column": 46,
+          "line": 54
+        }
+      },
+      "triage": "unreviewed",
+      "triageEvidence": null,
+      "file": null,
+      "line": null,
+      "column": null,
+      "oldLocator": null,
+      "intent": null,
+      "pageRoute": null
+    },
+    {
+      "attemptId": "suites[0].specs[3].tests[0].results[0]",
+      "testId": "9131754c24c844b7c361-3a04733bb193d86b1fcc",
+      "testTitle": "bulk toggle affects hidden records and works from an empty filtered view",
+      "suiteTitles": [
+        "todomvc.spec.mjs"
+      ],
+      "projectName": "",
+      "projectId": "",
+      "expectedStatus": "passed",
+      "testOutcome": "unexpected",
+      "status": "failed",
+      "retry": 0,
+      "reportedTestLocation": {
+        "file": "todomvc.spec.mjs",
+        "line": 78,
+        "column": 1
+      },
+      "reporterResult": {
+        "workerIndex": 2,
+        "parallelIndex": 0,
+        "status": "failed",
+        "duration": 9021,
+        "error": {
+          "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('checkbox')\u001b[22m\n",
+          "stack": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('checkbox')\u001b[22m\n\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:82:46",
+          "location": {
+            "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+            "column": 46,
+            "line": 82
+          },
+          "snippet": "  80 |   const ui = todoUI(page);\n  81 |   await ui.add('Plan meals', 'Buy groceries', 'Cook dinner');\n> 82 |   await ui.rows.nth(0).getByRole('checkbox').check();\n     |                                              ^\n  83 |   await ui.filter('Active').click();\n  84 |   await expect(ui.titles).toHaveText(['Buy groceries', 'Cook dinner']);\n  85 |   await ui.allLabel.click();"
+        },
+        "errors": [
+          {
+            "location": {
+              "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+              "column": 46,
+              "line": 82
+            },
+            "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('checkbox')\u001b[22m\n\n\n  80 |   const ui = todoUI(page);\n  81 |   await ui.add('Plan meals', 'Buy groceries', 'Cook dinner');\n> 82 |   await ui.rows.nth(0).getByRole('checkbox').check();\n     |                                              ^\n  83 |   await ui.filter('Active').click();\n  84 |   await expect(ui.titles).toHaveText(['Buy groceries', 'Cook dinner']);\n  85 |   await ui.allLabel.click();\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:82:46"
+          }
+        ],
+        "stdout": [],
+        "stderr": [],
+        "retry": 0,
+        "startTime": "2026-10-21T17:19:52.470Z",
+        "annotations": [],
+        "attachments": [
+          {
+            "name": "screenshot",
+            "contentType": "image/png",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-bulk-toggle-affect-67567-from-an-empty-filtered-view/test-failed-1.png"
+          },
+          {
+            "name": "error-context",
+            "contentType": "text/markdown",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-bulk-toggle-affect-67567-from-an-empty-filtered-view/error-context.md"
+          },
+          {
+            "name": "trace",
+            "contentType": "application/zip",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-bulk-toggle-affect-67567-from-an-empty-filtered-view/trace.zip"
+          }
+        ],
+        "errorLocation": {
+          "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+          "column": 46,
+          "line": 82
+        }
+      },
+      "triage": "unreviewed",
+      "triageEvidence": null,
+      "file": null,
+      "line": null,
+      "column": null,
+      "oldLocator": null,
+      "intent": null,
+      "pageRoute": null
+    },
+    {
+      "attemptId": "suites[0].specs[4].tests[0].results[0]",
+      "testId": "9131754c24c844b7c361-c03435a1e4af1f4bce67",
+      "testTitle": "filters visibly select the correct subset without losing or duplicating records",
+      "suiteTitles": [
+        "todomvc.spec.mjs"
+      ],
+      "projectName": "",
+      "projectId": "",
+      "expectedStatus": "passed",
+      "testOutcome": "unexpected",
+      "status": "failed",
+      "retry": 0,
+      "reportedTestLocation": {
+        "file": "todomvc.spec.mjs",
+        "line": 107,
+        "column": 1
+      },
+      "reporterResult": {
+        "workerIndex": 4,
+        "parallelIndex": 0,
+        "status": "failed",
+        "duration": 10173,
+        "error": {
+          "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(1).getByRole('checkbox')\u001b[22m\n",
+          "stack": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(1).getByRole('checkbox')\u001b[22m\n\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:111:46",
+          "location": {
+            "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+            "column": 46,
+            "line": 111
+          },
+          "snippet": "  109 |   const ui = todoUI(page);\n  110 |   await ui.add('Read chapter', 'Return book', 'Reserve sequel');\n> 111 |   await ui.rows.nth(1).getByRole('checkbox').check();\n      |                                              ^\n  112 |   for (const [name, titles] of [\n  113 |     ['Active', ['Read chapter', 'Reserve sequel']],\n  114 |     ['Completed', ['Return book']],"
+        },
+        "errors": [
+          {
+            "location": {
+              "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+              "column": 46,
+              "line": 111
+            },
+            "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(1).getByRole('checkbox')\u001b[22m\n\n\n  109 |   const ui = todoUI(page);\n  110 |   await ui.add('Read chapter', 'Return book', 'Reserve sequel');\n> 111 |   await ui.rows.nth(1).getByRole('checkbox').check();\n      |                                              ^\n  112 |   for (const [name, titles] of [\n  113 |     ['Active', ['Read chapter', 'Reserve sequel']],\n  114 |     ['Completed', ['Return book']],\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:111:46"
+          }
+        ],
+        "stdout": [],
+        "stderr": [],
+        "retry": 0,
+        "startTime": "2026-10-21T17:20:06.236Z",
+        "annotations": [],
+        "attachments": [
+          {
+            "name": "screenshot",
+            "contentType": "image/png",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-filters-visibly-se-cb47a-sing-or-duplicating-records/test-failed-1.png"
+          },
+          {
+            "name": "error-context",
+            "contentType": "text/markdown",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-filters-visibly-se-cb47a-sing-or-duplicating-records/error-context.md"
+          },
+          {
+            "name": "trace",
+            "contentType": "application/zip",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-filters-visibly-se-cb47a-sing-or-duplicating-records/trace.zip"
+          }
+        ],
+        "errorLocation": {
+          "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+          "column": 46,
+          "line": 111
+        }
+      },
+      "triage": "unreviewed",
+      "triageEvidence": null,
+      "file": null,
+      "line": null,
+      "column": null,
+      "oldLocator": null,
+      "intent": null,
+      "pageRoute": null
+    },
+    {
+      "attemptId": "suites[0].specs[5].tests[0].results[0]",
+      "testId": "9131754c24c844b7c361-14b344040278ca81d220",
+      "testTitle": "Enter and blur save edits while Escape preserves the saved title on reload",
+      "suiteTitles": [
+        "todomvc.spec.mjs"
+      ],
+      "projectName": "",
+      "projectId": "",
+      "expectedStatus": "passed",
+      "testOutcome": "unexpected",
+      "status": "failed",
+      "retry": 0,
+      "reportedTestLocation": {
+        "file": "todomvc.spec.mjs",
+        "line": 134,
+        "column": 1
+      },
+      "reporterResult": {
+        "workerIndex": 5,
+        "parallelIndex": 1,
+        "status": "failed",
+        "duration": 9870,
+        "error": {
+          "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('checkbox')\u001b[22m\n",
+          "stack": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('checkbox')\u001b[22m\n\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:138:46",
+          "location": {
+            "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+            "column": 46,
+            "line": 138
+          },
+          "snippet": "  136 |   const ui = todoUI(page);\n  137 |   await ui.add('Book train', 'Pack bag');\n> 138 |   await ui.rows.nth(0).getByRole('checkbox').check();\n      |                                              ^\n  139 |   await ui.edit(0, '  Book evening train  ');\n  140 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack bag']);\n  141 |   await ui.edit(1, 'Pack overnight bag', 'blur');"
+        },
+        "errors": [
+          {
+            "location": {
+              "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+              "column": 46,
+              "line": 138
+            },
+            "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').first().getByRole('checkbox')\u001b[22m\n\n\n  136 |   const ui = todoUI(page);\n  137 |   await ui.add('Book train', 'Pack bag');\n> 138 |   await ui.rows.nth(0).getByRole('checkbox').check();\n      |                                              ^\n  139 |   await ui.edit(0, '  Book evening train  ');\n  140 |   await expect(ui.titles).toHaveText(['Book evening train', 'Pack bag']);\n  141 |   await ui.edit(1, 'Pack overnight bag', 'blur');\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:138:46"
+          }
+        ],
+        "stdout": [],
+        "stderr": [],
+        "retry": 0,
+        "startTime": "2026-10-21T17:20:07.159Z",
+        "annotations": [],
+        "attachments": [
+          {
+            "name": "screenshot",
+            "contentType": "image/png",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-Enter-and-blur-sav-3783c-s-the-saved-title-on-reload/test-failed-1.png"
+          },
+          {
+            "name": "error-context",
+            "contentType": "text/markdown",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-Enter-and-blur-sav-3783c-s-the-saved-title-on-reload/error-context.md"
+          },
+          {
+            "name": "trace",
+            "contentType": "application/zip",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-Enter-and-blur-sav-3783c-s-the-saved-title-on-reload/trace.zip"
+          }
+        ],
+        "errorLocation": {
+          "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+          "column": 46,
+          "line": 138
+        }
+      },
+      "triage": "unreviewed",
+      "triageEvidence": null,
+      "file": null,
+      "line": null,
+      "column": null,
+      "oldLocator": null,
+      "intent": null,
+      "pageRoute": null
+    },
+    {
+      "attemptId": "suites[0].specs[6].tests[0].results[0]",
+      "testId": "9131754c24c844b7c361-5b2d1eb1af1363f77c7a",
+      "testTitle": "whitespace Enter and empty blur edits remove only their targeted records",
+      "suiteTitles": [
+        "todomvc.spec.mjs"
+      ],
+      "projectName": "",
+      "projectId": "",
+      "expectedStatus": "passed",
+      "testOutcome": "unexpected",
+      "status": "failed",
+      "retry": 0,
+      "reportedTestLocation": {
+        "file": "todomvc.spec.mjs",
+        "line": 155,
+        "column": 1
+      },
+      "reporterResult": {
+        "workerIndex": 6,
+        "parallelIndex": 1,
+        "status": "failed",
+        "duration": 11999,
+        "error": {
+          "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(2).getByRole('checkbox')\u001b[22m\n",
+          "stack": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(2).getByRole('checkbox')\u001b[22m\n\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:159:46",
+          "location": {
+            "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+            "column": 46,
+            "line": 159
+          },
+          "snippet": "  157 |   const ui = todoUI(page);\n  158 |   await ui.add('Check mailbox', 'Check mailbox', 'Keep stamped letter');\n> 159 |   await ui.rows.nth(2).getByRole('checkbox').check();\n      |                                              ^\n  160 |   await ui.edit(1, '   ');\n  161 |   await expect(ui.titles).toHaveText(['Check mailbox', 'Keep stamped letter']);\n  162 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();"
+        },
+        "errors": [
+          {
+            "location": {
+              "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+              "column": 46,
+              "line": 159
+            },
+            "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(2).getByRole('checkbox')\u001b[22m\n\n\n  157 |   const ui = todoUI(page);\n  158 |   await ui.add('Check mailbox', 'Check mailbox', 'Keep stamped letter');\n> 159 |   await ui.rows.nth(2).getByRole('checkbox').check();\n      |                                              ^\n  160 |   await ui.edit(1, '   ');\n  161 |   await expect(ui.titles).toHaveText(['Check mailbox', 'Keep stamped letter']);\n  162 |   await expect(ui.rows.nth(0).getByRole('checkbox')).not.toBeChecked();\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:159:46"
+          }
+        ],
+        "stdout": [],
+        "stderr": [],
+        "retry": 0,
+        "startTime": "2026-10-21T17:20:20.817Z",
+        "annotations": [],
+        "attachments": [
+          {
+            "name": "screenshot",
+            "contentType": "image/png",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-whitespace-Enter-a-9ffa6-only-their-targeted-records/test-failed-1.png"
+          },
+          {
+            "name": "error-context",
+            "contentType": "text/markdown",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-whitespace-Enter-a-9ffa6-only-their-targeted-records/error-context.md"
+          },
+          {
+            "name": "trace",
+            "contentType": "application/zip",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-whitespace-Enter-a-9ffa6-only-their-targeted-records/trace.zip"
+          }
+        ],
+        "errorLocation": {
+          "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+          "column": 46,
+          "line": 159
+        }
+      },
+      "triage": "unreviewed",
+      "triageEvidence": null,
+      "file": null,
+      "line": null,
+      "column": null,
+      "oldLocator": null,
+      "intent": null,
+      "pageRoute": null
+    },
+    {
+      "attemptId": "suites[0].specs[7].tests[0].results[0]",
+      "testId": "9131754c24c844b7c361-1826dc7ae3e33b02fff6",
+      "testTitle": "delete and clear completed preserve active rows and empty controls recover",
+      "suiteTitles": [
+        "todomvc.spec.mjs"
+      ],
+      "projectName": "",
+      "projectId": "",
+      "expectedStatus": "passed",
+      "testOutcome": "unexpected",
+      "status": "failed",
+      "retry": 0,
+      "reportedTestLocation": {
+        "file": "todomvc.spec.mjs",
+        "line": 173,
+        "column": 1
+      },
+      "reporterResult": {
+        "workerIndex": 7,
+        "parallelIndex": 0,
+        "status": "failed",
+        "duration": 12276,
+        "error": {
+          "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(2).getByRole('checkbox')\u001b[22m\n",
+          "stack": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(2).getByRole('checkbox')\u001b[22m\n\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:177:46",
+          "location": {
+            "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+            "column": 46,
+            "line": 177
+          },
+          "snippet": "  175 |   const ui = todoUI(page);\n  176 |   await ui.add('Keep active', 'Remove row', 'Finish report');\n> 177 |   await ui.rows.nth(2).getByRole('checkbox').check();\n      |                                              ^\n  178 |   await ui.remove(1);\n  179 |   await expect(ui.titles).toHaveText(['Keep active', 'Finish report']);\n  180 |   await ui.filter('Active').click();"
+        },
+        "errors": [
+          {
+            "location": {
+              "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+              "column": 46,
+              "line": 177
+            },
+            "message": "TimeoutError: locator.check: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(2).getByRole('checkbox')\u001b[22m\n\n\n  175 |   const ui = todoUI(page);\n  176 |   await ui.add('Keep active', 'Remove row', 'Finish report');\n> 177 |   await ui.rows.nth(2).getByRole('checkbox').check();\n      |                                              ^\n  178 |   await ui.remove(1);\n  179 |   await expect(ui.titles).toHaveText(['Keep active', 'Finish report']);\n  180 |   await ui.filter('Active').click();\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:177:46"
+          }
+        ],
+        "stdout": [],
+        "stderr": [],
+        "retry": 0,
+        "startTime": "2026-10-21T17:20:20.824Z",
+        "annotations": [],
+        "attachments": [
+          {
+            "name": "screenshot",
+            "contentType": "image/png",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-delete-and-clear-c-13ae2--and-empty-controls-recover/test-failed-1.png"
+          },
+          {
+            "name": "error-context",
+            "contentType": "text/markdown",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-delete-and-clear-c-13ae2--and-empty-controls-recover/error-context.md"
+          },
+          {
+            "name": "trace",
+            "contentType": "application/zip",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-delete-and-clear-c-13ae2--and-empty-controls-recover/trace.zip"
+          }
+        ],
+        "errorLocation": {
+          "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs",
+          "column": 46,
+          "line": 177
+        }
+      },
+      "triage": "unreviewed",
+      "triageEvidence": null,
+      "file": null,
+      "line": null,
+      "column": null,
+      "oldLocator": null,
+      "intent": null,
+      "pageRoute": null
+    },
+    {
+      "attemptId": "suites[0].specs[8].tests[0].results[0]",
+      "testId": "9131754c24c844b7c361-e94fcaa5bcc6b6afcf09",
+      "testTitle": "saved edits completion order and removals persist through reload and further keyboard input",
+      "suiteTitles": [
+        "todomvc.spec.mjs"
+      ],
+      "projectName": "",
+      "projectId": "",
+      "expectedStatus": "passed",
+      "testOutcome": "unexpected",
+      "status": "failed",
+      "retry": 0,
+      "reportedTestLocation": {
+        "file": "todomvc.spec.mjs",
+        "line": 205,
+        "column": 1
+      },
+      "reporterResult": {
+        "workerIndex": 8,
+        "parallelIndex": 1,
+        "status": "failed",
+        "duration": 14904,
+        "error": {
+          "message": "TimeoutError: locator.dblclick: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(1).locator('label')\u001b[22m\n",
+          "stack": "TimeoutError: locator.dblclick: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(1).locator('label')\u001b[22m\n\n    at Object.edit (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs:26:34)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:209:12",
+          "location": {
+            "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs",
+            "column": 34,
+            "line": 26
+          },
+          "snippet": "\u001b[90m   at \u001b[39mtodo-ui.mjs:26\n\n  24 |     async edit(index, value, key = 'Enter') {\n  25 |       const row = rows.nth(index); // Position deliberately identifies equal-title records.\n> 26 |       await row.locator('label').dblclick();\n     |                                  ^\n  27 |       const input = row.getByRole('textbox');\n  28 |       await input.fill(value);\n  29 |       if (key === 'blur') await this.input.click();"
+        },
+        "errors": [
+          {
+            "location": {
+              "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs",
+              "column": 34,
+              "line": 26
+            },
+            "message": "TimeoutError: locator.dblclick: Timeout 8000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.todo-list').getByRole('listitem').nth(1).locator('label')\u001b[22m\n\n\n   at todo-ui.mjs:26\n\n  24 |     async edit(index, value, key = 'Enter') {\n  25 |       const row = rows.nth(index); // Position deliberately identifies equal-title records.\n> 26 |       await row.locator('label').dblclick();\n     |                                  ^\n  27 |       const input = row.getByRole('textbox');\n  28 |       await input.fill(value);\n  29 |       if (key === 'blur') await this.input.click();\n    at Object.edit (/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs:26:34)\n    at /Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todomvc.spec.mjs:209:12"
+          }
+        ],
+        "stdout": [],
+        "stderr": [],
+        "retry": 0,
+        "startTime": "2026-10-21T17:20:37.950Z",
+        "annotations": [],
+        "attachments": [
+          {
+            "name": "screenshot",
+            "contentType": "image/png",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-saved-edits-comple-f3a5a--and-further-keyboard-input/test-failed-1.png"
+          },
+          {
+            "name": "error-context",
+            "contentType": "text/markdown",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-saved-edits-comple-f3a5a--and-further-keyboard-input/error-context.md"
+          },
+          {
+            "name": "trace",
+            "contentType": "application/zip",
+            "path": "/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/campaign3-selector-drift-recovery/test-results/todomvc-saved-edits-comple-f3a5a--and-further-keyboard-input/trace.zip"
+          }
+        ],
+        "errorLocation": {
+          "file": "/Users/petr/projects/qa-skills/tests/workflows/generated/campaign3/selector-drift-recovery/todo-ui.mjs",
+          "column": 34,
+          "line": 26
+        }
+      },
+      "triage": "unreviewed",
+      "triageEvidence": null,
+      "file": null,
+      "line": null,
+      "column": null,
+      "oldLocator": null,
+      "intent": null,
+      "pageRoute": null
+    }
+  ]
+}

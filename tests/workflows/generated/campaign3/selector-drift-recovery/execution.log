@@ -1,0 +1,156 @@
+# execution.log — selector-drift-recovery, campaign 3
+# Every shell command run for this task, with trimmed output. Repo root: /Users/petr/projects/qa-skills
+# Candidate commit: 736b88e (branch main, working tree had unrelated uncommitted changes in scripts/judge_evals.py, tests/test_judge_evals.py, tests/workflows/upstream-todomvc/server.mjs)
+# Node v26.0.0, @playwright/test 1.62.1, Chromium bundled, macOS (Darwin 27.0.0)
+
+## 0. Setup and discovery
+
+$ cat skills/selector-drift-recovery/SKILL.md
+$ cat skills/selector-drift-recovery/references/recovery-scripts.md
+$ cat skills/selector-drift-recovery/references/score-candidates.mjs
+  (read in full; see final-response.md for which recipes were applied)
+
+$ cat -n tests/workflows/generated/baseline-todo/todomvc.spec.mjs ; cat -n tests/workflows/generated/baseline-todo/todo-ui.mjs
+  9 tests, helper exposes input/rows/titles/count/main/footer/allCheckbox/allLabel/filter/clear + add/edit/remove.
+
+$ cat tests/workflows/todomvc-contract.md tests/workflows/playwright.config.mjs tests/workflows/support/fixtures.mjs tests/workflows/support/runtime.mjs tests/workflows/support/oracle.mjs
+  Config: testMatch '**/*.spec.mjs', retries 0, timeout 30 s, expect 4 s, reporters minimal + json (verbose.json) + html, trace retain-on-failure.
+
+$ ls -la .agents/ && head -60 .agents/qa-project-context.md
+  File exists but is the unfilled template ([bracketed placeholders]) — supplies no E2E/selector context. Discovery questions answered from the task brief instead.
+
+$ mkdir -p tests/workflows/generated/campaign3/selector-drift-recovery/{before,.drift-recovery/{old,new,screenshots,scripts}}
+$ cp tests/workflows/generated/baseline-todo/todomvc.spec.mjs .../before/todomvc.spec.mjs.orig
+$ cp tests/workflows/generated/baseline-todo/todo-ui.mjs .../before/todo-ui.mjs.orig
+$ node --version ; node -e "console.log(require('.../@playwright/test/package.json').version)"
+  v26.0.0 / 1.62.1
+$ git status --short tests/workflows/generated/campaign3/selector-drift-recovery
+  ?? tests/workflows/generated/campaign3/selector-drift-recovery/
+
+## Phase 1 + 2 — snapshot old and new DOM (recipe §1 scripts/snapshot-dom.ts, ported to .drift-recovery/scripts/snapshot-dom.mjs)
+
+$ ls node_modules/.bin | grep -E '^(tsx|ts-node)$'      -> nothing (exit 1): no tsx, recipe's `npx tsx` unusable; ported to ESM .mjs
+$ node .drift-recovery/scripts/snapshot-dom.mjs .drift-recovery/old
+  build=(default/old) baseURL=http://127.0.0.1:60596
+  wrote empty: aria 16 lines / items: 42 / hover: 42 / editing: 40 / filter-active: 38 / filter-completed: 35   exit=0
+$ QA_TODO_FAULT=redesign-classes node .drift-recovery/scripts/snapshot-dom.mjs .drift-recovery/new
+  build=redesign-classes baseURL=http://127.0.0.1:60604
+  wrote empty: aria 16 lines / items: 42 / hover: 42 / editing: 40 / filter-active: 38 / filter-completed: 35   exit=0
+  (each state: <state>.aria.yml, <state>.html, <state>.outline.txt, <state>.png)
+
+$ for s in empty items hover editing filter-active filter-completed; do diff old/$s.aria.yml new/$s.aria.yml; done
+  (identical) x6 — the aria-snapshot diff shows NO drift for any state.
+$ diff old/items.outline.txt new/items.outline.txt   (structural outline: tag/id/class/data-*/aria-*)
+  .todoapp->.taskapp, .new-todo->.task-entry, #toggle-all/.toggle-all->#check-all/.check-all, .todo-list->.task-list,
+  .toggle->.check-done, .destroy->.remove-task, .edit->.task-edit, .todo-count->.task-count, .filters->.filter-tabs,
+  .clear-completed->.purge-done; unchanged: .header .main .footer .view .selected .completed .editing, placeholder, label text, hrefs.
+  No data-testid anywhere in either build.
+
+## Phase 3 — inventory failed attempts (recipe §3)
+
+$ sed -e "s#'../../support/#'../../../support/#g" before/todomvc.spec.mjs.orig > todomvc.spec.mjs ; cp before/todo-ui.mjs.orig todo-ui.mjs
+  (only the two support import paths differ: the suite now lives one directory deeper)
+$ QA_TODO_FAULT=redesign-classes QA_WORKFLOW_SUITE=.../campaign3/selector-drift-recovery QA_WORKFLOW_OUTPUT=$SCRATCH/campaign3-selector-drift-recovery \
+    node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2 > $SCRATCH/campaign3-selector-drift-recovery.phase3.stdout 2>&1 ; echo $?
+  EXIT STATUS=1   (first attempt of this command aborted: zsh refuses `status=` — read-only variable; re-run with `rc=`)
+  WORKFLOW RESULT: failed; attempts=9; {"failed":9}
+  stats {"expected":0,"skipped":0,"unexpected":9,"flaky":0}  duration 77.3 s
+  Every failure waits on locator('.todo-list')…  (2x expect toHaveText on .locator('label'), 6x locator.check timeout, 1x locator.dblclick timeout)
+$ echo 1 > .drift-recovery/test-exit-code.txt ; cp $OUT/verbose.json .drift-recovery/results.json
+
+$ node .drift-recovery/scripts/identify-drift.mjs      (recipe failure-inventory.ts + identify-drift.ts ported to .mjs, logic unchanged)
+  Observed 9 results; retained 9 failed/incomplete attempts and 0 run-level errors. Manual triage is still required.   exit=0
+  errorLocation per attempt: todomvc.spec.mjs:16,33,54,82,111,138,159,177 and todo-ui.mjs:26 — none point at the definition todo-ui.mjs:4
+
+$ cat $OUT/test-results/todomvc-creates-trimmed-no-67778--and-clears-the-entry-field/error-context.md
+  Page snapshot at failure shows: list > listitem > checkbox + "Buy café beans"; strong "1" + "item left"; filters list. The rows exist; the locator does not.
+$ grep -nE "locator\(|getBy[A-Za-z]+\(|toHaveClass" todo-ui.mjs todomvc.spec.mjs
+  CSS locators in helper: lines 4 (.todo-list), 10 (.todo-count), 11 (.todoapp .main), 12 (.todoapp .footer), 9/26 (label tag under list). Spec: toHaveClass(/selected/) x2 (class unchanged).
+
+$ QA_TODO_FAULT=redesign-classes node .drift-recovery/scripts/verify-locators.mjs      (live counts on the new build, 3 states)
+  OLD .todo-list / .todo-count / .todoapp .main / .todoapp .footer : count=0 in empty, items, filter-active-after-complete-all
+  OLD placeholder / allCheckbox / allLabel / filter link / clear button : count=1 where the element is rendered
+  getByRole('list') bare: count=2 [ul.task-list, ul.filter-tabs] (items) -> ambiguous
+  getByRole('list').filter({ hasNot: getByRole('link') }): count=1 [ul.task-list] in items AND in the empty filtered view (hidden)
+  getByRole('list').filter({ has: getByRole('checkbox') }): count=1 in items, count=0 in the empty filtered view -> rejected
+  getByText(/^\d+ items? left$/): count=1 [span.task-count];  section.main: 1;  footer.footer: 1;  .task-list/.task-count: 1
+
+$ node .drift-recovery/scripts/triage.mjs
+  gate OK todo-ui.mjs:4 / :10 / :11 / :12 ; gate REJECTS triage unreviewed / intent null / line 0 (negative controls)
+  wrote reviewed-targets.json: 9 attempts -> 4 targets
+
+## Phase 4 — generate candidates (recipe §4 recovery-candidates.ts ported verbatim to .drift-recovery/scripts/recovery-candidates.mjs; driver generate-candidates.mjs)
+
+$ QA_TODO_FAULT=redesign-classes node .drift-recovery/scripts/generate-candidates.mjs
+  build=redesign-classes http://127.0.0.1:61089
+  ## recipe generate()/proposeRecovery() as written
+    todo-ui.mjs:4  generate() -> 0 candidate(s); proposeRecovery -> score 0 "No unique candidate meets the score-three floor"
+    todo-ui.mjs:10 generate() -> 0 candidate(s); proposeRecovery -> score 0 (same)
+    todo-ui.mjs:11 generate() -> 0 candidate(s); proposeRecovery -> score 0 (same)
+    todo-ui.mjs:12 generate() -> 0 candidate(s); proposeRecovery -> score 0 (same)
+  ## inspected adapter
+    :4  page.getByRole('list')                                              count=2 score=0
+    :4  page.getByRole('list').filter({ hasNot: page.getByRole('link') })   count=1 score=3 shot=screenshots/target-4-1.png
+    :4  page.getByRole('list').filter({ has: page.getByRole('checkbox') })  count=1 score=3 shot=screenshots/target-4-2.png (rejected later: 0 in empty filtered view)
+    :4  page.locator('.task-list')                                          count=1 score=1
+    :10 page.getByText(/^\d+ items? left$/)                                 count=1 score=2 shot=screenshots/target-10-0.png
+    :10 page.locator('.task-count')                                         count=1 score=1
+    :11 page.locator('section.main')                                        count=1 score=1 shot=screenshots/target-11-0.png
+    :11 page.locator('.taskapp .main')                                      count=1 score=1
+    :12 page.locator('footer.footer')                                       count=1 score=1 shot=screenshots/target-12-0.png
+    :12 page.locator('.taskapp .footer')                                    count=1 score=1
+  wrote candidates.json: 14 rows (2 at or above the score-3 floor)   exit=0
+$ (viewed target-4-1.png, target-10-0.png, target-11-0.png, target-12-0.png: rows Alpha/Beta/Gamma; "2 items left"; list block; footer with count+filters+Clear completed)
+
+## Phase 5 — apply (line-anchored) and validate
+
+$ node .drift-recovery/scripts/apply-candidates.mjs
+  applied todo-ui.mjs:4  [score 3] page.locator('.todo-list')      -> page.getByRole('list').filter({ hasNot: page.getByRole('link') })   auto (score 3)
+  applied todo-ui.mjs:10 [score 2] page.locator('.todo-count')     -> page.getByText(/^\d+ items? left$/)   reviewer-accepted manual update
+  applied todo-ui.mjs:11 [score 1] page.locator('.todoapp .main')  -> page.locator('section.main')          reviewer-accepted manual update
+  applied todo-ui.mjs:12 [score 1] page.locator('.todoapp .footer')-> page.locator('footer.footer')         reviewer-accepted manual update
+  candidates.json: 4 applied of 14   exit=0
+$ diff before/todo-ui.mjs.orig todo-ui.mjs      -> lines 4, 10, 11, 12 changed (then header comment lines 1-2 -> 3 lines, via node -e; node --check todo-ui.mjs: syntax ok)
+
+$ node skills/selector-drift-recovery/references/score-candidates.mjs .drift-recovery/candidates.json      (SKILL.md Verification step 1)
+  applied candidates: 4 / average applied score: 1.75 / applied with score < 3: 3 / unapplied: 10
+  Low-confidence selectors were applied — revert these: todo-ui.mjs:10 score 2, :11 score 1, :12 score 1
+  scorer exit=1   (kept as-is; see final-response.md)
+
+$ QA_TODO_FAULT=redesign-classes QA_WORKFLOW_SUITE=... QA_WORKFLOW_OUTPUT=$OUT node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2   (run 1)
+  EXIT STATUS=0  WORKFLOW RUN: 9 scheduled cases  WORKFLOW RESULT: passed; attempts=9; {"passed":9}
+  stats {"expected":9,"skipped":0,"unexpected":0,"flaky":0}  duration 15544.657 ms   -> .drift-recovery/post-recovery-new-run1.json
+$ jq -e '.stats.expected > 0 and .stats.unexpected == 0 and .stats.flaky == 0' .drift-recovery/post-recovery-new-run1.json   -> true, exit 0   (SKILL.md Verification step 2)
+
+$ (same command, run 2)
+  EXIT STATUS=0  WORKFLOW RESULT: passed; attempts=9; {"passed":9}
+  stats {"expected":9,"skipped":0,"unexpected":0,"flaky":0}  duration 12158.27 ms   -> .drift-recovery/post-recovery-new-run2.json
+$ jq -e '...' .drift-recovery/post-recovery-new-run2.json   -> true, exit 0
+
+$ env | grep -c QA_TODO_FAULT   -> 0 (unset)
+$ QA_WORKFLOW_SUITE=... QA_WORKFLOW_OUTPUT=$OUT node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2   (OLD build control)
+  EXIT STATUS=0  WORKFLOW RESULT: passed; attempts=9; {"passed":9}   all 9 specs status=passed
+  stats {"expected":9,"skipped":0,"unexpected":0,"flaky":0}  duration 13357.937 ms   -> .drift-recovery/post-recovery-old-build.json
+  Expected to fail on the old build; it passed. Explained by the next two commands.
+
+$ node .drift-recovery/scripts/verify-locators.mjs      (OLD build, QA_TODO_FAULT unset)
+  OLD .todo-list/.todo-count/.todoapp .main/.todoapp .footer: count=1 (items state) — the old locators are valid on the old build (control for the triage claim)
+  NEW getByRole('list').filter({hasNot: link}) -> ul.todo-list; getByText(/^\d+ items? left$/) -> span.todo-count; section.main; footer.footer: count=1 each
+$ diff <(grep -oE '(class|id)="[^"]*"' old/items.html | sort -u) <(grep -oE '(class|id)="[^"]*"' new/items.html | sort -u)
+  10 class renames + id toggle-all->check-all; diff exit=1 — the lab served two different builds.
+
+## Phase 6 — PR body (recipe §6 recovery-summary.ts + build-pr-body.ts ported to .mjs)
+
+$ node .drift-recovery/scripts/build-pr-body.mjs
+  recovered=4 flagged=0   -> .drift-recovery/pr-body.md   (the recipe summary counts the three sub-floor applied rows as "recovered" and flags nothing)
+$ git checkout -b / gh pr create: NOT RUN (no commits permitted). drift-report.md is the PR body.
+
+## Final checks
+
+$ git status --short | grep -v campaign3/selector-drift-recovery/
+  M scripts/judge_evals.py, tests/test_judge_evals.py, tests/workflows/upstream-todomvc/server.mjs (pre-existing at session start)
+  M tests/workflows/generated/campaign3/visual-testing/{final-response.md,todomvc-visual.spec.mjs}, tests/workflows/run-matrix.mjs,
+    tests/workflows/upstream-todomvc/faults/mutations.mjs, ?? tests/workflows/run-experiment.mjs — NOT in the opening snapshot and NOT touched by this task;
+    concurrent work in the same checkout. Not inspected (forbidden paths).
+$ diff before/todomvc.spec.mjs.orig todomvc.spec.mjs   -> only lines 1-2 (support import depth)
+$ grep -c "^test(" todomvc.spec.mjs   -> 9

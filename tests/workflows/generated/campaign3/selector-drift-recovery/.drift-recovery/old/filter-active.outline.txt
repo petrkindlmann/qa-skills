@@ -1,0 +1,38 @@
+<body>
+  <section class="todoapp">
+    <header class="header">
+      <h1> "todos"
+      <input class="new-todo" placeholder="What needs to be done?" autofocus="">
+    <section class="main">
+      <input id="toggle-all" class="toggle-all" type="checkbox">
+      <label for="toggle-all"> "Mark all as complete"
+      <ul class="todo-list">
+        <li data-id="1792603008864" class="">
+          <div class="view">
+            <input class="toggle" type="checkbox">
+            <label> "Alpha"
+            <button class="destroy"> [hidden]
+        <li data-id="1792603008948" class="">
+          <div class="view">
+            <input class="toggle" type="checkbox">
+            <label> "Gamma"
+            <button class="destroy"> [hidden]
+    <footer class="footer">
+      <span class="todo-count"> "items left"
+        <strong> "2"
+      <ul class="filters">
+        <li>
+          <a href="#/" class=""> "All"
+        <li>
+          <a href="#/active" class="selected"> "Active"
+        <li>
+          <a href="#/completed"> "Completed"
+      <button class="clear-completed"> "Clear completed"
+  <footer class="info">
+    <p> "Double-click to edit a todo"
+    <p> "Created by"
+      <a href="http://twitter.com/oscargodson"> "Oscar Godson"
+    <p> "Refactored by"
+      <a href="https://github.com/cburgmer"> "Christoph Burgmer"
+    <p> "Part of"
+      <a href="http://todomvc.com"> "TodoMVC"

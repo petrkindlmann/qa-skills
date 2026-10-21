@@ -1,0 +1,38 @@
+<body>
+  <section class="taskapp">
+    <header class="header">
+      <h1> "todos"
+      <input class="task-entry" placeholder="What needs to be done?" autofocus="">
+    <section class="main">
+      <input id="check-all" class="check-all" type="checkbox">
+      <label for="check-all"> "Mark all as complete"
+      <ul class="task-list">
+        <li data-id="1792603014248" class="">
+          <div class="view">
+            <input class="check-done" type="checkbox">
+            <label> "Alpha"
+            <button class="remove-task"> [hidden]
+        <li data-id="1792603014362" class="">
+          <div class="view">
+            <input class="check-done" type="checkbox">
+            <label> "Gamma"
+            <button class="remove-task"> [hidden]
+    <footer class="footer">
+      <span class="task-count"> "items left"
+        <strong> "2"
+      <ul class="filter-tabs">
+        <li>
+          <a href="#/" class=""> "All"
+        <li>
+          <a href="#/active" class="selected"> "Active"
+        <li>
+          <a href="#/completed"> "Completed"
+      <button class="purge-done"> "Clear completed"
+  <footer class="info">
+    <p> "Double-click to edit a todo"
+    <p> "Created by"
+      <a href="http://twitter.com/oscargodson"> "Oscar Godson"
+    <p> "Refactored by"
+      <a href="https://github.com/cburgmer"> "Christoph Burgmer"
+    <p> "Part of"
+      <a href="http://todomvc.com"> "TodoMVC"

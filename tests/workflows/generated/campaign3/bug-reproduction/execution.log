@@ -1,0 +1,109 @@
+# execution.log — bug-reproduction skill exercise (campaign3)
+# Repo: /Users/petr/projects/qa-skills @ 201d1d41d17d7229c84e94319d1c83ce3bac20bc (main). The earlier,
+# cut-off attempt logged 37a94c2; one commit landed in between, so every observation below was redone on 201d1d4.
+# Working tree was NOT clean at start (scripts/run_evals.py modified, untracked scripts/judge_evals.py etc.) and
+# gained further modifications outside my folder during the session (evals/*.json, scripts/eval_patterns.py,
+# skills/compliance-testing/*). None of those are mine; nothing below depends on them.
+# Host: macOS Darwin 27.0.0, Node v26.0.0, Python 3.14.6, @playwright/test 1.62.1 (bundled Chromium)
+# SCRATCH = /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad
+# Output trimmed to what matters. All paths absolute.
+
+## 1. Orientation (reads only)
+$ cat skills/bug-reproduction/SKILL.md tests/workflows/fixture-app-contract.md
+$ cat tests/workflows/support/fixtures.mjs tests/workflows/playwright.config.mjs; sed -n 1,200p tests/workflows/support/runtime.mjs
+  -> config sets no use.baseURL (each test owns a Shop); fixtures: app (per test), mailpit (per worker)
+  -> runtime.mjs:91 env APP_FAULT: process.env.QA_SHOP_FAULT — fault names undocumented in any path I may read; not used
+$ cat skills/bug-reproduction/references/intake.md references/ticket-writeback.md; grep -n "" references/determinism.md references/bisect.md
+$ head -40 .agents/qa-project-context.md; grep -c "\[" .agents/qa-project-context.md
+  -> exists, unfilled template (78 bracketed placeholders); answers none of the Discovery Questions
+$ head AGENTS.md ... (identical in substance to the CLAUDE.md shown in the brief)
+$ ls tests/workflows/generated/campaign3/   -> bug-reproduction, visual-testing (not read)
+$ git rev-parse HEAD                          -> 201d1d41d17d7229c84e94319d1c83ce3bac20bc
+
+## 2. Discovery of the live app (foreground Node scripts via support/runtime.mjs; '&' is denied by the shell)
+$ node $SCRATCH/discover/discover.mjs $SCRATCH/discover/run1        (~6 s)
+  ready http://127.0.0.1:59183 users alice+b44e4fe4...@example.test / bob+b44e4fe4...@example.test
+  health {status:'ok', build:'shop-lab-v1'}
+  GET / -> labels "Email", "Password" (form "Sign in"), section Account: #identity "Signed in as <email>", button#logout "Sign out",
+          Catalogue form with button#checkout-button "Place order", "Your orders" ul#orders, "Account email" reset form,
+          #notice[role=status]; html[data-ready=true] after start()
+  Report 1 probe over HTTP:
+    POST /api/login -> 200, set-cookie: shop_session=<token>; HttpOnly; SameSite=Lax; Path=/
+    GET /api/me (copied cookie)              -> 200
+    POST /api/logout (copied cookie)         -> 204, set-cookie: shop_session=; ...; Max-Age=0
+    GET /api/me (copied cookie, after)       -> 401
+    GET /api/orders (copied cookie, after)   -> 401
+    POST /api/logout (no cookie)             -> 204
+  Report 2 probe over HTTP (new login, key disc-key-1):
+    POST /api/orders TEA-50x2+CUP-01x1       -> 201 {order:{id:d273fc68-..., amount:4200, status:pending, fulfillment_count:0, items sorted by sku}, replayed:false}
+    same key, TEA-50x3+CUP-01x1              -> 409 {"error":"idempotency_conflict"}
+    same key, items reordered                -> 200 same order id, replayed:true
+    same key, currency USD                   -> 409 {"error":"idempotency_conflict"}
+    GET /api/orders                          -> exactly 1 order
+    GET /test-support/state                  -> sessions {alice:1}, orders 1, receipts [], smtp_errors 0
+  => Neither report reproduces on 201d1d4 at the HTTP layer.
+$ node $SCRATCH/discover/page-script.mjs $SCRATCH/discover/run2 | grep -n ... (page's inline script, filtered)
+  line 44: #logout click -> api('/api/logout',{method:'POST'}); account(null); pendingKey=undefined; say('Signed out.')
+  line 50-52: checkout uses pendingKey ||= crypto.randomUUID(); cleared after success; line 73: any quantity input clears pendingKey
+  => Report 2's "same key, different basket" cannot be produced from the shipped page; it is an API-client path.
+
+## 3. Authoring (files in tests/workflows/generated/campaign3/bug-reproduction/)
+$ cat > task-prompt.txt            (verbatim brief, 4560 bytes)
+$ cat > helpers.mjs                (public-HTTP helpers + the two oracles expectSessionRevoked / expectIdempotencyConflict)
+$ cat > report-1-session-revocation.spec.mjs   (2 tests)
+$ cat > report-2-idempotency-conflict.spec.mjs (3 tests)
+$ cat > oracle-sensitivity.mjs     (defective stub server + runs both oracles, expects both to throw)
+
+## 4. Suite run 1 (after deleting a stray destructuring line I had left in the API test)
+$ sed -i '' '/globalThis.__k = undefined/d' report-1-session-revocation.spec.mjs
+$ QA_WORKFLOW_SUITE=.../campaign3/bug-reproduction QA_WORKFLOW_OUTPUT=$SCRATCH/campaign3-bug-reproduction \
+    node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+  WORKFLOW RUN: 5 scheduled cases
+  FAILED: report-1-session-revocation.spec.mjs / browser Sign out revokes a session cookie copied by someone else
+    TypeError: apiRequestContext.get: Invalid URL        <- my bug: page.request.get('/api/me') with no use.baseURL in config
+  WORKFLOW RESULT: failed; attempts=5; {"passed":4,"failed":1}
+
+## 5. Sensitivity run 1
+$ node tests/workflows/generated/campaign3/bug-reproduction/oracle-sensitivity.mjs
+  crashed: createOrder(owner,'sens-2') Expected 201 Received 401
+    <- my bug: the stub's logout answers Set-Cookie Max-Age=0, which emptied the owner's jar before the report-2 part
+
+## 6. Fixes and suite run 2
+$ sed -i '' "s|page.request.get('/api/me')|page.request.get(app.baseURL + '/api/me')|" report-1-session-revocation.spec.mjs
+$ (same playwright command as step 4)
+  WORKFLOW RUN: 5 scheduled cases
+  WORKFLOW RESULT: passed; attempts=5; {"passed":5}
+$ node -e "... walk verbose.json ..."
+  passed  4970ms report-1-session-revocation.spec.mjs :: browser Sign out revokes a session cookie copied by someone else
+  passed  1869ms report-1-session-revocation.spec.mjs :: POST /api/logout invalidates the session for every holder of the cookie
+  passed  2501ms report-2-idempotency-conflict.spec.mjs :: reusing an Idempotency-Key with a different quantity returns 409 and creates no order
+  passed  2547ms report-2-idempotency-conflict.spec.mjs :: a changed SKU set or currency under a used key also conflicts
+  passed  2169ms report-2-idempotency-conflict.spec.mjs :: keys are scoped to the signed-in user, so a conflict is not a global lock on the key
+  stats {"duration":15498.68,"expected":5,"skipped":0,"unexpected":0,"flaky":0}
+  artifacts: $SCRATCH/campaign3-bug-reproduction/{verbose.json,html/,test-results/}
+
+## 7. Sensitivity run 2 (patched to sign in a second context for the report-2 part)
+$ python3 - <<EOF ... (string replace in oracle-sensitivity.mjs) -> patched
+$ node tests/workflows/generated/campaign3/bug-reproduction/oracle-sensitivity.mjs > $SCRATCH/sensitivity.out 2>&1; echo exit=$?
+  exit=0
+  SENSITIVE      report 1 (session not revoked server side): copied cookie must not load /api/me after sign-out
+  SENSITIVE      report 2 (changed basket accepted under used key): stub: reuse with a different basket must be refused
+  RESULT: both oracles fail against the defective stub
+
+## 8. Determinism check (SKILL.md Verification: run 10x)
+$ QA_WORKFLOW_SUITE=... QA_WORKFLOW_OUTPUT=$SCRATCH/campaign3-bug-reproduction-repeat \
+    node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2 --repeat-each 10
+  WORKFLOW RUN: 50 scheduled cases
+  WORKFLOW RESULT: passed; attempts=50; {"passed":50}
+  stats {"duration":112605.9,"expected":50,"skipped":0,"unexpected":0,"flaky":0}
+
+## 9. Hygiene
+$ git status --short
+  ?? tests/workflows/generated/campaign3/bug-reproduction/   (mine)
+  M evals/*.json, scripts/eval_patterns.py, scripts/run_evals.py, skills/compliance-testing/* ; ?? tests/workflows/generated/experiment/   (not mine, untouched)
+$ ls tests/workflows/generated/campaign3/bug-reproduction/
+  execution.log helpers.mjs oracle-sensitivity.mjs report-1-session-revocation.spec.mjs report-2-idempotency-conflict.spec.mjs
+  task-prompt.txt reproduction-notes.md final-response.md
+
+# Totals: 1 discovery probe + 2 suite runs (5 + 5 cases) + 1 repeat run (50 cases) + 2 sensitivity runs. Wall time of
+# executed commands about 3 min. No git commits, no background processes, no files outside my folder and $SCRATCH.

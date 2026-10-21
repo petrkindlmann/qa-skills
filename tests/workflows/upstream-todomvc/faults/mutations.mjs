@@ -5,7 +5,7 @@ import { deletePersistenceLost } from './delete-persistence-lost.mjs';
 export const faultNames = Object.freeze([
   'none', 'persistence-lost', 'delete-wrong-duplicate',
   'filter-state-error', 'escape-commits-edit', 'delete-persistence-lost',
-  'delayed-render', 'layout-shift', 'redesign-classes',
+  'delayed-render', 'layout-shift', 'redesign-classes', 'style-regression',
 ]);
 
 // A front-end redesign: the same behavior behind renamed class hooks. Applied to every
@@ -52,6 +52,11 @@ export function mutateSource(path, bytes, fault) {
   } else if (fault === 'redesign-classes' && (path === '/' || /\.(?:html|js|css)$/.test(path))) {
     // Only hooks are renamed: a token after `.`, `#` or a quote. Visible prose such as "Double-click to edit" stays.
     for (const [from, to] of redesign) text = text.replace(new RegExp(`(?<=[.#"'])${from}(?![\\w-])`, 'g'), to);
+  } else if (fault === 'style-regression' && path.endsWith('/index.css')) {
+    // Completed items lose their strike-through: the class is still set, so functional
+    // assertions pass, and only a visual comparison notices.
+    text = replaceOnce(text, '.todo-list li.completed label {\n\tcolor: #949494;\n\ttext-decoration: line-through;\n}',
+      '.todo-list li.completed label {\n\tcolor: #949494;\n\ttext-decoration: none;\n}', fault);
   } else if (fault === 'layout-shift' && path === '/js/app.js') {
     // A late banner inserted above the app pushes the whole list down without user input.
     text = replaceOnce(text, "\t$on(window, 'hashchange', setView);\n})();",

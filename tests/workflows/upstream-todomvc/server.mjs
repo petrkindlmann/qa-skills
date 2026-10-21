@@ -20,7 +20,11 @@ const types = { '.js': 'text/javascript', '.css': 'text/css', '.html': 'text/htm
 
 export async function startTodoServer({ port = 0, fault = 'none', readyFile } = {}) {
   if (!Number.isInteger(port) || port < 0 || port > 65535) throw new Error('Invalid port');
-  if (!faultNames.includes(fault)) throw new Error(`Unknown TodoMVC fault: ${fault}`);
+  // Faults stack with '+': 'redesign-classes+persistence-lost' serves the redesigned
+  // build with a behaviour defect, so a regenerated suite can be checked for detection.
+  // The rename is always applied last so that code a behaviour fault injects follows it.
+  const faults = fault.split('+').sort((a, b) => Number(a === 'redesign-classes') - Number(b === 'redesign-classes'));
+  for (const name of faults) if (!faultNames.includes(name)) throw new Error(`Unknown TodoMVC fault: ${name}`);
   const provenance = JSON.parse(await readFile(resolve(root, 'provenance.json'), 'utf8'));
   const originals = new Map();
   for (const record of provenance.files) {
@@ -32,7 +36,7 @@ export async function startTodoServer({ port = 0, fault = 'none', readyFile } = 
   const routes = new Map([...assetPaths].map(([url, path]) => {
     const bytes = originals.get(path);
     if (!bytes) throw new Error(`Missing upstream asset: ${path}`);
-    return [url, mutateSource(url, bytes, fault)];
+    return [url, faults.reduce((current, name) => mutateSource(url, current, name), bytes)];
   }));
   const server = http.createServer((request, response) => {
     response.setHeader('Cache-Control', 'no-store');

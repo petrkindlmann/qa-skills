@@ -1,0 +1,16 @@
+- heading "todos" [level=1]
+- textbox "What needs to be done?"
+- contentinfo:
+  - paragraph: Double-click to edit a todo
+  - paragraph:
+    - text: Created by
+    - link "Oscar Godson":
+      - /url: http://twitter.com/oscargodson
+  - paragraph:
+    - text: Refactored by
+    - link "Christoph Burgmer":
+      - /url: https://github.com/cburgmer
+  - paragraph:
+    - text: Part of
+    - link "TodoMVC":
+      - /url: http://todomvc.com

@@ -13,6 +13,7 @@
 // Baselines are platform-tagged; these were captured on darwin and will not match a Linux CI image.
 import fs from 'node:fs';
 import { test, expect } from '../../../support/fixtures.mjs';
+import { oracle } from '../../../support/oracle.mjs';
 import { VISUAL, MIXED, openTodo, addTodos, seedMixed, settle } from './visual-helpers.mjs';
 
 const app = (page) => page.locator('.todoapp');
@@ -66,7 +67,8 @@ test.describe('TodoMVC visual baselines', () => {
     await expect(page.locator('.todo-count')).toHaveText('0 items left');
     await expect(page.locator('.clear-completed')).toBeVisible();
     await settle(page);
-    await expect(app(page)).toHaveScreenshot('all-completed.png', VISUAL);
+    // Matrix oracle (added after authoring): the designated comparator for the style-regression fault run.
+    await oracle('c3-visual-style', 'toHaveScreenshot', () => expect(app(page)).toHaveScreenshot('all-completed.png', VISUAL));
   });
 
   test('editing in progress', async ({ page, todo }) => {
