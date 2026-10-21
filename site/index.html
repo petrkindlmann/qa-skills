@@ -167,6 +167,8 @@ code,pre,.mono{font-family:'IBM Plex Mono',monospace}
 @media(min-width:640px){.why-section{padding:56px 0}}
 .why-section h2{font-size:20px;font-weight:700;letter-spacing:-0.02em;margin-bottom:10px}
 .why-text{font-size:15px;color:#57534e;line-height:1.75;max-width:600px}
+.why-text+.why-text{margin-top:14px}
+.why-text a{text-decoration:underline;text-underline-offset:3px}
 
 /* ─── FOOTER ─── */
 footer{border-top:1px solid #e7e5e4;padding:40px 0 48px;text-align:center}
@@ -349,6 +351,7 @@ footer{border-top:1px solid #e7e5e4;padding:40px 0 48px;text-align:center}
   <div class="container">
     <h2>Built from real QA review work</h2>
     <p class="why-text">Based on repeated Playwright and QA review problems: brittle selectors, boilerplate setup, weak assertions, and poor risk-based coverage.</p>
+    <p class="why-text">Checked against running software, not just review notes. Every push loads the helpers straight from the Markdown code fences and runs them, then drives a pinned TodoMVC, a local SQLite shop and a real Mailpit inbox through Playwright, with deliberately broken variants the suites have to catch. The <a href="https://github.com/petrkindlmann/qa-skills/blob/main/docs/STRESS-TEST-2026-10-20.md">stress-test report</a> and the <a href="https://github.com/petrkindlmann/qa-skills/blob/main/docs/REAL-WORKFLOWS-2026-10-21.md">workflow report</a> say what was exercised and what was not.</p>
   </div>
 </section>
 
