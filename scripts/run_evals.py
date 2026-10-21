@@ -155,13 +155,16 @@ def _decoded(value: str | bytes | None) -> str:
     return value.decode("utf-8", errors="replace") if isinstance(value, bytes) else value or ""
 
 
-def run_claude(prompt: str, system: str | None) -> str:
+def run_claude(prompt: str, system: str | None, output_format: str = "text") -> str:
     # Current CLI contract: https://code.claude.com/docs/en/cli-reference
     # Keep skill content as the only difference between live and baseline.
     # --tools disables built-ins; the separate deny rule covers MCP tools.
+    # judge_evals.py asks for the "json" envelope to record model and cost.
+    if output_format not in {"text", "json"}:
+        raise ValueError(f"unsupported output format {output_format!r}")
     cmd = ["claude", "-p", prompt, "--safe-mode", "--tools", "",
            "--disallowedTools", "mcp__*", "--no-session-persistence",
-           "--output-format", "text"]
+           "--output-format", output_format]
     if system:
         cmd += ["--append-system-prompt", system]
     try:
