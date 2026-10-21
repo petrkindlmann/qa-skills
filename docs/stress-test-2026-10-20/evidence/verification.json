@@ -458,5 +458,20 @@
     "structure-before.txt": "71999a16107fff455ad93634d48d6eb6a40ccf88f3b7bad9109111411c301bda",
     "trace-status-before.json": "5664c5263751d36e383f6f44dd814b4c3781fcf403514dfa2201f218450a4c7a",
     "verification-summary.txt": "b5253634070360d5bd7a106876723109c626bd0e6f26c307b8dc0df8e12de92f"
+  },
+  "publication": {
+    "status": "not_completed",
+    "local_branch": "codex/skills-stress-test-2026-10-20",
+    "terminal_push": "credentials unavailable",
+    "connector_tree_write_deadlines_seconds": [
+      45,
+      25,
+      150
+    ],
+    "final_expected_tree_lookup": "GitHub404 NOT_FOUND",
+    "final_intended_branch_lookup": "GitHub404 NOT_FOUND",
+    "pull_request_created": false,
+    "remote_ci_run": false,
+    "timeout_cause": "unknown"
   }
 }

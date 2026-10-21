@@ -182,7 +182,7 @@ such as broader AI Act/cookie-attribute guidance were not certified by these fix
 
 ## Keeping these failures from returning
 
-The CI workflow runs Python regressions, skill structure/index checks, scanner
+The CI workflow is configured to run Python regressions, skill structure/index checks, scanner
 selftests, static content checks and the documented JavaScript/browser helpers.
 Dependencies are pinned in requirements-dev.txt and package-lock.json. CI triggers
 include version changes so an out-of-date generated index is checked.
@@ -191,6 +191,21 @@ When a new defect appears, preserve the source/build and a reproducing case. Run
 healthy counterpart to rule out a test that always fails. Keep response review separate
 from executing generated code. Preserve failed, retried, skipped, blocked and unknown
 results rather than hiding them to achieve green output.
+
+## Delivery status
+
+The implementation and evidence are committed on local branch
+`codex/skills-stress-test-2026-10-20`. A self-contained Git bundle accompanies this
+report so the complete history and files can be recovered without the temporary
+execution environment. A prepared pull-request body is in
+[STRESS-TEST-2026-10-20-PR.md](STRESS-TEST-2026-10-20-PR.md).
+
+GitHub publishing did not complete. The terminal lacks GitHub credentials; connected
+GitHub writes timed out, including a final request limited to 150 seconds. Read-only
+checks confirm the expected account and repository access but do not establish the
+cause of the write timeout. The intended remote branch was not found at the final
+check. No pull request was created, and GitHub Actions has not run this revision.
+The test results in this report are local results.
 
 ## Primary references consulted
 
