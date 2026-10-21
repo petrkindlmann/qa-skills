@@ -1,0 +1,133 @@
+(node:1185) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ original capture observes a healthy GET (382.168154ms)
+✖ original capture must preserve each POST batch event (105.633978ms)
+✖ original capture must reject lookalike collector hosts (121.961494ms)
+✖ original fixture must remove its listener (81.813226ms)
+✖ original observer must leave missing application initialization absent (121.383196ms)
+✖ original observer must observe first direct assignment and replacement pushes (102.230727ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 1
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1303.255534
+
+✖ failing tests:
+
+test at ../../../../tmp/qa-skill-scenarios/analytics-before.mjs:44:1
+✖ original capture must preserve each POST batch event (105.633978ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   ''
+  -   'view_item',
+  -   'add_to_cart'
+    ]
+  
+      at file:///tmp/qa-skill-scenarios/analytics-before.mjs:51:12
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processImmediate (node:internal/timers:502:9)
+      at async Object.beacons (eval at loadFunctions (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/snippets.mjs:25:10), <anonymous>:37:5)
+      at async TestContext.<anonymous> (file:///tmp/qa-skill-scenarios/analytics-before.mjs:46:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at ../../../../tmp/qa-skill-scenarios/analytics-before.mjs:54:1
+✖ original capture must reject lookalike collector hosts (121.961494ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   {
+  +     destination: 'ga4',
+  +     eventName: 'purchase',
+  +     params: {
+  +       en: 'purchase'
+  +     }
+  +   }
+  + ]
+  - []
+  
+      at file:///tmp/qa-skill-scenarios/analytics-before.mjs:59:12
+      at runNextTicks (node:internal/process/task_queues:65:5)
+      at process.processImmediate (node:internal/timers:502:9)
+      at async Object.beacons (eval at loadFunctions (file:///workspace/scratch/db79cfa7c2bc/qa-skills/tests/examples/snippets.mjs:25:10), <anonymous>:37:5)
+      at async TestContext.<anonymous> (file:///tmp/qa-skill-scenarios/analytics-before.mjs:56:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [Array],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at ../../../../tmp/qa-skill-scenarios/analytics-before.mjs:62:1
+✖ original fixture must remove its listener (81.813226ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  1 !== 0
+  
+      at TestContext.<anonymous> (file:///tmp/qa-skill-scenarios/analytics-before.mjs:66:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 1,
+    expected: 0,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../../../tmp/qa-skill-scenarios/analytics-before.mjs:68:1
+✖ original observer must leave missing application initialization absent (121.383196ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'object'
+  - 'undefined'
+  
+      at TestContext.<anonymous> (file:///tmp/qa-skill-scenarios/analytics-before.mjs:72:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'object',
+    expected: 'undefined',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at ../../../../tmp/qa-skill-scenarios/analytics-before.mjs:74:1
+✖ original observer must observe first direct assignment and replacement pushes (102.230727ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'view_item',
+  -   'add_to_cart'
+  - ]
+  
+      at TestContext.<anonymous> (file:///tmp/qa-skill-scenarios/analytics-before.mjs:83:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [Array],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

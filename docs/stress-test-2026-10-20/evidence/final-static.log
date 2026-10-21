@@ -1,0 +1,91 @@
+Running 50 skill(s) in static mode
+
+Scope: skill content coverage only; prompts are not executed.
+Semantic criteria require a judge and are excluded from pattern scores.
+
+  OK   accessibility-testing: 10/10 checkable cases pass, 21 semantic→judge
+  FAIL agentic-browser-testing: 8/10 checkable cases pass
+        abt-001 ANTI-PATTERN present: ['page.goto', 'await expect(page', 'data-testid']
+        abt-004 ANTI-PATTERN present: ['pixel coordinates OR x,y coordinate OR mouse_click_xy (as default)']
+  OK   ai-bug-triage: 10/10 checkable cases pass, 19 semantic→judge
+  OK   ai-qa-review: 10/10 checkable cases pass, 32 semantic→judge
+  OK   ai-system-testing: 12/12 checkable cases pass, 7 semantic→judge
+  OK   ai-test-generation: 8/8 checkable cases pass, 1 semantic→judge
+  FAIL analytics-tracking-testing: 7/9 checkable cases pass, 12 semantic→judge
+        ana-001 ANTI-PATTERN present: ['toBeVisible']
+        ana-005 ANTI-PATTERN present: ['toBeVisible OR getByRole']
+  OK   api-testing: 10/10 checkable cases pass, 11 semantic→judge
+  FAIL bug-reproduction: 9/10 checkable cases pass, 28 semantic→judge
+        rep-007 ANTI-PATTERN present: ['skip.* OR test.skip OR it.skip the failing test']
+  OK   chaos-engineering: 10/10 checkable cases pass, 14 semantic→judge
+  OK   ci-cd-integration: 10/10 checkable cases pass, 11 semantic→judge
+  FAIL compliance-testing: 9/10 checkable cases pass, 16 semantic→judge
+        ct-004 missing: ['ad_storage', 'analytics_storage', 'ad_user_data', 'ad_personalization']
+  OK   contract-testing: 10/10 checkable cases pass, 11 semantic→judge
+  OK   coverage-analysis: 10/10 checkable cases pass, 25 semantic→judge
+  OK   cross-browser-testing: 10/10 checkable cases pass, 19 semantic→judge
+  OK   cypress-automation: 10/10 checkable cases pass, 15 semantic→judge
+  OK   database-testing: 10/10 checkable cases pass, 11 semantic→judge
+  FAIL email-testing: 9/10 checkable cases pass, 12 semantic→judge
+        eml-009 ANTI-PATTERN present: ['Mailosaur', 'MailSlurp']
+  FAIL exploratory-testing: 9/10 checkable cases pass, 22 semantic→judge
+        etst-003 missing: ['at least 4 of: H, I, C, C, U, P, S']
+  OK   mobile-testing: 10/10 checkable cases pass, 14 semantic→judge
+  OK   observability-driven-testing: 10/10 checkable cases pass, 15 semantic→judge
+  FAIL payment-testing: 8/10 checkable cases pass, 7 semantic→judge
+        pay-003 ANTI-PATTERN present: ['fake timers OR sinon OR jest.useFakeTimers']
+        pay-004 ANTI-PATTERN present: ['ngrok required OR expose.*public', 'poll the api OR polling for status']
+  FAIL performance-testing: 8/10 checkable cases pass, 13 semantic→judge
+        perf-002 missing: ['p\\(95\\)']
+        perf-008 missing: ['per-endpoint Trend metrics']
+  OK   playwright-automation: 10/10 checkable cases pass
+  FAIL qa-dashboard: 9/10 checkable cases pass, 1 semantic→judge
+        qad-001 missing: ['reporter: ["allure-playwright"']
+  OK   qa-do: 16/16 checkable cases pass, 18 semantic→judge
+  OK   qa-metrics: 11/11 checkable cases pass, 22 semantic→judge
+  OK   qa-project-bootstrap: 10/10 checkable cases pass, 27 semantic→judge
+  FAIL qa-project-context: 9/10 checkable cases pass, 22 semantic→judge
+        qac-010 missing: ['[bracketed placeholder]', 'actual headcount and the dev:QA ratio (or "solo")', 'Quality Goals are concrete numbers (coverage %, flake %, durations)']
+  FAIL qa-report-humanizer: 8/13 checkable cases pass, 29 semantic→judge
+        qah-002 ANTI-PATTERN present: ['plus-sign']
+        qah-005 ANTI-PATTERN present: ['SSO']
+        qah-009 ANTI-PATTERN present: ['200 OK', '401 Unauthorized', 'DELETE /api/users', 'API tokens']
+        qah-012 missing: ['https://ci.example.com/run/4821']
+        qah-013 missing: ['b46c02a', 'a19de70', '217', '219', '14:35', '390px', 'tax-total.spec.ts', 'member-export.spec.ts']
+  OK   qa-start: 10/10 checkable cases pass, 7 semantic→judge
+  OK   quality-postmortem: 10/10 checkable cases pass, 15 semantic→judge
+  OK   release-readiness: 10/10 checkable cases pass, 1 semantic→judge
+  OK   risk-based-testing: 10/10 checkable cases pass, 5 semantic→judge
+  OK   security-testing: 13/13 checkable cases pass, 29 semantic→judge
+  FAIL selector-drift-recovery: 8/10 checkable cases pass, 25 semantic→judge
+        sdr-001 missing: ['Phase 3 — Identify broken selectors OR capture failures']
+        sdr-002 missing: ['inferred intent OR what assertion follows', 'Group the results by test file OR group by file']
+  FAIL service-virtualization: 9/10 checkable cases pass, 17 semantic→judge
+        sv-008 missing: ['onUnhandledRequest: error']
+  OK   shift-left-testing: 10/10 checkable cases pass, 32 semantic→judge
+  OK   synthetic-monitoring: 10/10 checkable cases pass, 9 semantic→judge
+  FAIL test-case-management: 6/10 checkable cases pass, 17 semantic→judge
+        tcm-001 ANTI-PATTERN present: ['verify it works']
+        tcm-002 missing: ['already.used OR already redeemed']
+        tcm-006 missing: ['Token (Qase auth header)', 'cases (array)']
+        tcm-009 ANTI-PATTERN present: ['automate everything']
+  FAIL test-data-management: 9/10 checkable cases pass, 11 semantic→judge
+        tdm-001 ANTI-PATTERN present: ['Date.now()']
+  OK   test-environments: 10/10 checkable cases pass, 30 semantic→judge
+  OK   test-migration: 10/10 checkable cases pass, 2 semantic→judge
+  OK   test-planning: 10/10 checkable cases pass, 7 semantic→judge
+  OK   test-reliability: 10/10 checkable cases pass, 42 semantic→judge
+  OK   test-strategy: 10/10 checkable cases pass, 31 semantic→judge
+  FAIL test-suite-curation: 6/9 checkable cases pass, 27 semantic→judge
+        tsc-005 missing: ['low.?value.*(never failed|trivial|getter|no assertion)']
+        tsc-006 missing: ['defect.?detection history OR tests that (caught|found) (real )?bugs OR fault-finding']
+        tsc-009 missing: ['never failed (because|may mean) (low (risk|change)|stable code) not (worthless|redundant)']
+  FAIL testing-in-production: 8/10 checkable cases pass, 14 semantic→judge
+        tip-001 missing: ['test both paths OR dual path testing']
+        tip-007 missing: ['duplicate requests']
+  OK   unit-testing: 12/12 checkable cases pass, 20 semantic→judge
+  OK   visual-testing: 10/10 checkable cases pass, 15 semantic→judge
+
+Skills: 50  Cases: 513  Pass: 481  Fail: 32  Errors: 0  Uncheckable: 0  Semantic→judge: 811
+Wrote docs/stress-test-2026-10-20/evidence/static-final.json
+Checkable case pass rate: 93.8% (threshold 90%) -> PASS

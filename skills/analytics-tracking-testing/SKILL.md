@@ -356,7 +356,7 @@ Smallest check first — prove the suite actually catches a regression, don't ju
 ## Reference Files (in `references/`)
 
 - **ga4-interception.md** — Full GA4 `/g/collect` interception helper, batched-event POST-body parsing, region-endpoint handling.
-- **tracking-plan.md** — JSON and YAML plan forms, a Zod-typed contract, and the reusable `assertAgainstPlan` matcher.
+- **tracking-plan.md** — A JSON ecommerce contract, the reusable `validateEvent` helper, and separate assertions for schema and scenario values.
 - **datalayer-capture.md** — `addInitScript` dataLayer.push wrapper and ecommerce `items[]` shape assertions.
 - **pixels-and-dedup.md** — Meta/TikTok/LinkedIn payload parsing and client-vs-server CAPI `event_id` dedup capture.
 - **consent-mode.md** — Passive four-signal observation, basic/advanced recipes, action

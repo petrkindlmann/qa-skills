@@ -1,0 +1,33 @@
+(node:1555) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Analytics fixture browser: 156.0.8078.47
+✔ capture recipe observes a healthy GET and Meta action after initialization (321.946385ms)
+✔ capture recipe preserves each POST batch row and common measurement ID (208.366272ms)
+✔ capture recipe rejects missing GA4 (198.958842ms)
+✔ capture recipe rejects stale GA4 without a new action event (200.79213ms)
+✔ capture recipe rejects delayed duplicate GA4 (251.858145ms)
+✔ capture recipe rejects missing Meta (213.046576ms)
+✔ collector applies exact pixel origin/path/method and approved GA4 hosts (142.63394ms)
+✔ matched pixel decoder errors fail the actual fixture and still release its listener (141.697523ms)
+✔ fixture teardown also runs when the consuming test throws and stops collection (161.556751ms)
+✔ dataLayer recipe observes healthy direct first assignment without seeding (156.789591ms)
+✔ dataLayer recipe observes healthy default assignment without seeding (154.650131ms)
+✔ missing application initialization remains absent and cannot pass the event gate (296.796275ms)
+✔ dataLayer recipe rejects initialized but empty queue (140.956288ms)
+✔ dataLayer recipe rejects same object in separate pushes (166.751719ms)
+✔ dataLayer recipe rejects same object twice in one push (131.459666ms)
+✔ dataLayer recipe rejects wrong nested quantity type (135.813404ms)
+✔ dataLayer recipe rejects removed layer descriptor (133.589636ms)
+✔ dataLayer recipe rejects removed push descriptor (131.153203ms)
+✔ replacement events remain observable without restoring the discarded queue (261.56692ms)
+✔ custom push chain preserves receiver, arguments, return identity and one snapshot (127.89819ms)
+✔ custom push exceptions propagate unchanged and snapshot failure does not alter the delegate (122.383249ms)
+✔ reading before observer installation fails explicitly (107.012625ms)
+ℹ tests 22
+ℹ suites 0
+ℹ pass 22
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4324.376189

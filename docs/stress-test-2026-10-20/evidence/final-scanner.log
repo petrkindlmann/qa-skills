@@ -1,0 +1,3 @@
+SELFTEST
+  payload fired rules: ['dns-exfil', 'fake-authority', 'hidden-instruction', 'home-dir-harvest', 'instruction-override', 'role-override', 'run-script-instruction', 'secret-exfil-request', 'self-propagation', 'verbal-fallback']
+  RESULT: PASS

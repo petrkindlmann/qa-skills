@@ -1,0 +1,135 @@
+QA_SKILLS_ROOT=/tmp/qa-env-evidence/before
+COMMAND: python3 -m unittest discover -s tests -p test_environment_examples.py -v
+EXIT: 1
+test_successful_health_response_passes (test_environment_examples.AppHealthcheckTests.test_successful_health_response_passes) ... FAIL
+test_unhealthy_http_response_fails (test_environment_examples.AppHealthcheckTests.test_unhealthy_http_response_fails) ... FAIL
+test_postgres_18_mount_targets_image_volume_parent (test_environment_examples.ComposeTests.test_postgres_18_mount_targets_image_volume_parent) ... FAIL
+test_published_ports_bind_loopback (test_environment_examples.ComposeTests.test_published_ports_bind_loopback) ... FAIL
+test_cleanup_failure_does_not_replace_startup_failure (test_environment_examples.RunnerTests.test_cleanup_failure_does_not_replace_startup_failure) ... FAIL
+test_cleanup_failure_does_not_replace_test_failure (test_environment_examples.RunnerTests.test_cleanup_failure_does_not_replace_test_failure) ... FAIL
+test_cleanup_is_best_effort_after_success (test_environment_examples.RunnerTests.test_cleanup_is_best_effort_after_success) ... FAIL
+test_failed_tests_keep_their_exit_status_and_clean_up (test_environment_examples.RunnerTests.test_failed_tests_keep_their_exit_status_and_clean_up) ... ok
+test_host_urls_match_published_database_ports_for_defaults_and_overrides (test_environment_examples.RunnerTests.test_host_urls_match_published_database_ports_for_defaults_and_overrides) ... 
+  test_host_urls_match_published_database_ports_for_defaults_and_overrides (test_environment_examples.RunnerTests.test_host_urls_match_published_database_ports_for_defaults_and_overrides) (overrides={}) ... FAIL
+  test_host_urls_match_published_database_ports_for_defaults_and_overrides (test_environment_examples.RunnerTests.test_host_urls_match_published_database_ports_for_defaults_and_overrides) (overrides={'TEST_POSTGRES_PORT': '15432', 'TEST_REDIS_PORT': '16379'}) ... FAIL
+test_startup_failure_skips_tests_and_still_cleans_up (test_environment_examples.RunnerTests.test_startup_failure_skips_tests_and_still_cleans_up) ... ok
+test_success_starts_tests_and_cleans_up_once (test_environment_examples.RunnerTests.test_success_starts_tests_and_cleans_up_once) ... ok
+
+======================================================================
+FAIL: test_successful_health_response_passes (test_environment_examples.AppHealthcheckTests.test_successful_health_response_passes)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_environment_examples.py", line 202, in test_successful_health_response_passes
+    result = self.run_check(200)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_environment_examples.py", line 172, in run_check
+    self.assertEqual(check[:3], ["CMD", "node", "-e"])
+AssertionError: Lists differ: ['CMD', 'curl', '-f'] != ['CMD', 'node', '-e']
+
+First differing element 1:
+'curl'
+'node'
+
+- ['CMD', 'curl', '-f']
+?          ^^^^     ^
+
++ ['CMD', 'node', '-e']
+?          ^^^^     ^
+
+
+======================================================================
+FAIL: test_unhealthy_http_response_fails (test_environment_examples.AppHealthcheckTests.test_unhealthy_http_response_fails)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_environment_examples.py", line 206, in test_unhealthy_http_response_fails
+    result = self.run_check(503)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_environment_examples.py", line 172, in run_check
+    self.assertEqual(check[:3], ["CMD", "node", "-e"])
+AssertionError: Lists differ: ['CMD', 'curl', '-f'] != ['CMD', 'node', '-e']
+
+First differing element 1:
+'curl'
+'node'
+
+- ['CMD', 'curl', '-f']
+?          ^^^^     ^
+
++ ['CMD', 'node', '-e']
+?          ^^^^     ^
+
+
+======================================================================
+FAIL: test_postgres_18_mount_targets_image_volume_parent (test_environment_examples.ComposeTests.test_postgres_18_mount_targets_image_volume_parent)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_environment_examples.py", line 156, in test_postgres_18_mount_targets_image_volume_parent
+    self.assertEqual(postgres["volumes"], ["postgres-test-data:/var/lib/postgresql"])
+AssertionError: Lists differ: ['postgres-test-data:/var/lib/postgresql/data'] != ['postgres-test-data:/var/lib/postgresql']
+
+First differing element 0:
+'postgres-test-data:/var/lib/postgresql/data'
+'postgres-test-data:/var/lib/postgresql'
+
+- ['postgres-test-data:/var/lib/postgresql/data']
+?                                         -----
+
++ ['postgres-test-data:/var/lib/postgresql']
+
+======================================================================
+FAIL: test_published_ports_bind_loopback (test_environment_examples.ComposeTests.test_published_ports_bind_loopback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_environment_examples.py", line 160, in test_published_ports_bind_loopback
+    self.assertTrue(services["postgres"].get("ports"), "The host runner needs a published Postgres port")
+AssertionError: None is not true : The host runner needs a published Postgres port
+
+======================================================================
+FAIL: test_cleanup_failure_does_not_replace_startup_failure (test_environment_examples.RunnerTests.test_cleanup_failure_does_not_replace_startup_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_environment_examples.py", line 131, in test_cleanup_failure_does_not_replace_startup_failure
+    self.assertEqual(result.returncode, 19, result.stderr)
+AssertionError: 23 != 19 : 
+
+======================================================================
+FAIL: test_cleanup_failure_does_not_replace_test_failure (test_environment_examples.RunnerTests.test_cleanup_failure_does_not_replace_test_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_environment_examples.py", line 119, in test_cleanup_failure_does_not_replace_test_failure
+    self.assertEqual(result.returncode, 17, result.stderr)
+AssertionError: 23 != 17 : 
+
+======================================================================
+FAIL: test_cleanup_is_best_effort_after_success (test_environment_examples.RunnerTests.test_cleanup_is_best_effort_after_success)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_environment_examples.py", line 125, in test_cleanup_is_best_effort_after_success
+    self.assertEqual(result.returncode, 0, result.stderr)
+AssertionError: 23 != 0 : 
+
+======================================================================
+FAIL: test_host_urls_match_published_database_ports_for_defaults_and_overrides (test_environment_examples.RunnerTests.test_host_urls_match_published_database_ports_for_defaults_and_overrides) (overrides={})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_environment_examples.py", line 147, in test_host_urls_match_published_database_ports_for_defaults_and_overrides
+    self.assertEqual(events[0]["environment"][variable], expected_port)
+AssertionError: None != '5432'
+
+======================================================================
+FAIL: test_host_urls_match_published_database_ports_for_defaults_and_overrides (test_environment_examples.RunnerTests.test_host_urls_match_published_database_ports_for_defaults_and_overrides) (overrides={'TEST_POSTGRES_PORT': '15432', 'TEST_REDIS_PORT': '16379'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_environment_examples.py", line 148, in test_host_urls_match_published_database_ports_for_defaults_and_overrides
+    self.assertEqual(events[1]["environment"][url_variable], template.format(expected_port))
+AssertionError: 'postgres://test:test@localhost:5432/testdb' != 'postgres://test:test@127.0.0.1:15432/testdb'
+- postgres://test:test@localhost:5432/testdb
+?                      ^^^^^^^^^
++ postgres://test:test@127.0.0.1:15432/testdb
+?                      ^^^^^^^^^ +
+
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.531s
+
+FAILED (failures=9)

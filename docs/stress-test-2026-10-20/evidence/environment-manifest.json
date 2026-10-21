@@ -1,0 +1,51 @@
+{
+  "captured_at_utc": "2026-10-21T00:02:27.966706+00:00",
+  "repository": "/workspace/scratch/db79cfa7c2bc/qa-skills",
+  "head": "b3bb61bd268b147476252c6ed5a0440c87b97441",
+  "python": "3.12.14",
+  "node": "v24.19.0",
+  "bash": "GNU bash, version 5.2.21(1)-release (x86_64-pc-linux-gnu)",
+  "docker_available": false,
+  "coverage_available": false,
+  "pytest_available": false,
+  "before_sha256": {
+    "skills/test-environments/SKILL.md": "6559533f36de02d17e19ea29e7de5db2ca80e7c86fe1f4970f8245e29e216e9d",
+    "skills/test-environments/references/docker-compose.md": "bf7fb78d45a6dedc6a28b73d73a7e66a9963475120616efc13a894f6e7861071",
+    "skills/test-suite-curation/SKILL.md": "6b0ae132ad2baeca6a0c8aa68c99d9a6a51da5982b54089800bda62a8ae3c8d9",
+    "skills/test-suite-curation/references/coverage-fingerprinting.md": "5156d0a43c88a5d9ce870c930420c3dcd6d7426345d1a73a82325b7a8f9eaf4e"
+  },
+  "recovery_note": "Prior /tmp evidence was absent after environment recovery; before snapshots recreated from unchanged owned files on 2026-10-21.",
+  "sources": [
+    "https://github.com/docker-library/docs/blob/master/postgres/README.md#pgdata",
+    "https://github.com/docker-library/postgres/pull/1259",
+    "https://docs.docker.com/reference/compose-file/services/#ports",
+    "https://docs.docker.com/compose/how-tos/project-name/",
+    "https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/",
+    "https://nodejs.org/api/globals.html#fetch",
+    "https://pytest-cov.readthedocs.io/en/latest/contexts.html",
+    "https://coverage.readthedocs.io/en/latest/contexts.html",
+    "https://coverage.readthedocs.io/en/latest/api_coveragedata.html"
+  ],
+  "limits": [
+    "Compose checks parse the actual YAML fence; they are not docker compose config or container execution.",
+    "Bash runner checks execute the actual fence with controlled docker/npx command stubs.",
+    "Node health-check tests use a local HTTP fixture outside a container.",
+    "Coverage extractor checks use synthetic CoverageData API records, not pytest instrumentation."
+  ],
+  "after_captured_at_utc": "2026-10-21T00:04:31.152071+00:00",
+  "after_sha256": {
+    "skills/test-environments/SKILL.md": "abfb7eb69632a89a3bd4d7d2c9f5e0ab91ba9482a18ae47a218e3803aed4d49b",
+    "skills/test-environments/references/docker-compose.md": "5bce47e84800d0bcc7e600bb7d768026ecbbe2bb66568fbaffc45890c9c3c487",
+    "skills/test-suite-curation/SKILL.md": "3f4b8145163e8fd2d3c88cb04dfdfe800cd35d921a897a479a35ecb34a7691f2",
+    "skills/test-suite-curation/references/coverage-fingerprinting.md": "87677413fa3db889a550d62ef567f2f80c035322f362061bc6b239a2559dfa6a",
+    "tests/test_environment_examples.py": "e2c93a663df49ee08295d463b83b76ce02054ef17ca88158bc9699c6e30f0919",
+    "tests/test_coverage_fingerprinting_examples.py": "b40c8c26db582533e070d843e11df641950a244ce06c9b0411dd07321bc0c69b"
+  },
+  "candidate": "Uncommitted working-tree patch based on recorded HEAD; after_sha256 identifies the checked files.",
+  "socket_permission_note": "Default sandbox denied socket creation for the two healthcheck HTTP fixtures. Approved require_escalated rerun passed all 11 environment tests; both default and approved results are retained.",
+  "skill_versions": {
+    "test-environments": "2.1",
+    "test-suite-curation": "1.1"
+  },
+  "patch_sha256": "e2262493e4e8cf536cf7853d5181f5c5edca2c6539f672bbadfc57a098f24429"
+}

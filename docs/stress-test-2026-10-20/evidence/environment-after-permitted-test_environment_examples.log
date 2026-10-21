@@ -1,0 +1,22 @@
+COMMAND: python3 -m unittest discover -s tests -p test_environment_examples.py -v
+WORKDIR: /workspace/scratch/db79cfa7c2bc/qa-skills
+PERMISSION: require_escalated; local loopback HTTP fixture permitted
+EXIT: 0
+OUTPUT: copied from the successful execution tool result
+
+test_successful_health_response_passes (test_environment_examples.AppHealthcheckTests.test_successful_health_response_passes) ... ok
+test_unhealthy_http_response_fails (test_environment_examples.AppHealthcheckTests.test_unhealthy_http_response_fails) ... ok
+test_postgres_18_mount_targets_image_volume_parent (test_environment_examples.ComposeTests.test_postgres_18_mount_targets_image_volume_parent) ... ok
+test_published_ports_bind_loopback (test_environment_examples.ComposeTests.test_published_ports_bind_loopback) ... ok
+test_cleanup_failure_does_not_replace_startup_failure (test_environment_examples.RunnerTests.test_cleanup_failure_does_not_replace_startup_failure) ... ok
+test_cleanup_failure_does_not_replace_test_failure (test_environment_examples.RunnerTests.test_cleanup_failure_does_not_replace_test_failure) ... ok
+test_cleanup_is_best_effort_after_success (test_environment_examples.RunnerTests.test_cleanup_is_best_effort_after_success) ... ok
+test_failed_tests_keep_their_exit_status_and_clean_up (test_environment_examples.RunnerTests.test_failed_tests_keep_their_exit_status_and_clean_up) ... ok
+test_host_urls_match_published_database_ports_for_defaults_and_overrides (test_environment_examples.RunnerTests.test_host_urls_match_published_database_ports_for_defaults_and_overrides) ... ok
+test_startup_failure_skips_tests_and_still_cleans_up (test_environment_examples.RunnerTests.test_startup_failure_skips_tests_and_still_cleans_up) ... ok
+test_success_starts_tests_and_cleans_up_once (test_environment_examples.RunnerTests.test_success_starts_tests_and_cleans_up_once) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.697s
+
+OK

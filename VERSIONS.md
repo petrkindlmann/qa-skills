@@ -1,6 +1,6 @@
 # Versions
 
-## v3.1.0 (2026-10-20)
+## v3.1.0 (2026-10-21)
 
 ### Stress tests and evidence-aware skill recipes
 

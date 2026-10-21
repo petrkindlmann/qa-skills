@@ -12,6 +12,7 @@ on:
       - 'package-lock.json'
       - 'skills_index.json'
       - 'README.md'
+      - 'VERSIONS.md'
       - '.github/workflows/validate-skills.yml'
   pull_request:
     paths:
@@ -24,6 +25,7 @@ on:
       - 'package-lock.json'
       - 'skills_index.json'
       - 'README.md'
+      - 'VERSIONS.md'
       - '.github/workflows/validate-skills.yml'
   workflow_dispatch: {}
 

@@ -1,0 +1,61 @@
+QA_SKILLS_ROOT=/tmp/qa-env-evidence/before
+COMMAND: python3 -m unittest discover -s tests -p test_coverage_fingerprinting_examples.py -v
+EXIT: 1
+test_parameter_ids_stay_distinct_and_embedded_pipes_survive (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_parameter_ids_stay_distinct_and_embedded_pipes_survive) ... FAIL
+test_query_filter_is_cleared_after_extraction (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_query_filter_is_cleared_after_extraction) ... FAIL
+test_unattributed_and_non_pytest_contexts_are_excluded (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_unattributed_and_non_pytest_contexts_are_excluded) ... FAIL
+test_unions_setup_run_and_teardown_under_the_test_id (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_unions_setup_run_and_teardown_under_the_test_id) ... FAIL
+test_unique_coverage_counts_tests_instead_of_phases (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_unique_coverage_counts_tests_instead_of_phases) ... FAIL
+
+======================================================================
+FAIL: test_parameter_ids_stay_distinct_and_embedded_pipes_survive (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_parameter_ids_stay_distinct_and_embedded_pipes_survive)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_coverage_fingerprinting_examples.py", line 91, in test_parameter_ids_stay_distinct_and_embedded_pipes_survive
+    self.assertEqual(set(self.namespace["line_sets"]), {USD, JPY})
+AssertionError: Items in the first set but not the second:
+'tests/test_pricing.py::test_price[usd|alternate]|teardown'
+'tests/test_pricing.py::test_price[usd|alternate]|run'
+'tests/test_pricing.py::test_price[jpy]|run'
+'tests/test_pricing.py::test_price[usd|alternate]|setup'
+'legacy.test_price'
+Items in the second set but not the first:
+'tests/test_pricing.py::test_price[jpy]'
+'tests/test_pricing.py::test_price[usd|alternate]'
+
+======================================================================
+FAIL: test_query_filter_is_cleared_after_extraction (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_query_filter_is_cleared_after_extraction)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_coverage_fingerprinting_examples.py", line 101, in test_query_filter_is_cleared_after_extraction
+    self.assertIsNone(self.data.query_context)
+AssertionError: 'legacy.test_price' is not None
+
+======================================================================
+FAIL: test_unattributed_and_non_pytest_contexts_are_excluded (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_unattributed_and_non_pytest_contexts_are_excluded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_coverage_fingerprinting_examples.py", line 98, in test_unattributed_and_non_pytest_contexts_are_excluded
+    self.assertNotIn((SOURCE, 98), all_lines)
+AssertionError: ('/src/pricing.py', 98) unexpectedly found in {('/src/pricing.py', 2), ('/src/pricing.py', 98), ('/src/pricing.py', 5), ('/src/pricing.py', 1), ('/src/pricing.py', 3), ('/src/pricing.py', 4)}
+
+======================================================================
+FAIL: test_unions_setup_run_and_teardown_under_the_test_id (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_unions_setup_run_and_teardown_under_the_test_id)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_coverage_fingerprinting_examples.py", line 87, in test_unions_setup_run_and_teardown_under_the_test_id
+    self.assertEqual(self.namespace["line_sets"].get(USD), {(SOURCE, line) for line in (1, 2, 3, 4)})
+AssertionError: None != {('/src/pricing.py', 2), ('/src/pricing.p[50 chars], 1)}
+
+======================================================================
+FAIL: test_unique_coverage_counts_tests_instead_of_phases (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_unique_coverage_counts_tests_instead_of_phases)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/scratch/db79cfa7c2bc/qa-skills/tests/test_coverage_fingerprinting_examples.py", line 105, in test_unique_coverage_counts_tests_instead_of_phases
+    self.assertEqual(self.namespace["uniquely_covered"].get(USD), {(SOURCE, line) for line in (1, 3, 4)})
+AssertionError: None != {('/src/pricing.py', 3), ('/src/pricing.py', 4), ('/src/pricing.py', 1)}
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.003s
+
+FAILED (failures=5)

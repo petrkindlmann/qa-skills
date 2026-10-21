@@ -1,0 +1,13 @@
+Final local verification, 21 October 2026
+
+Python: 127 passed, 0 failed, 0 skipped
+JavaScript: 71 passed, 0 failed, 0 skipped
+Browser: 79 passed, 0 failed, 0 skipped
+Total executable regressions: 277 passed
+Structure: 50 skills, 0 errors
+Index: in sync
+Scanner selftest: passed; all 10 expected rules fired
+Static: 481/513 lexical matches; 32 flags; 811 semantic criteria deferred
+Whitespace: clean
+
+See verification.json for commands, versions, exit codes and hashes.

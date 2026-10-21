@@ -1,0 +1,67 @@
+{
+  "executed_at_utc": "2026-10-21T00:03:26.049102+00:00",
+  "results": [
+    {
+      "phase": "before",
+      "test": "test_environment_examples.py",
+      "exit_code": 1,
+      "log": "/tmp/qa-env-evidence/before-test_environment_examples.log",
+      "tail": [
+        "----------------------------------------------------------------------",
+        "Ran 11 tests in 0.531s",
+        "",
+        "FAILED (failures=9)"
+      ]
+    },
+    {
+      "phase": "before",
+      "test": "test_coverage_fingerprinting_examples.py",
+      "exit_code": 1,
+      "log": "/tmp/qa-env-evidence/before-test_coverage_fingerprinting_examples.log",
+      "tail": [
+        "----------------------------------------------------------------------",
+        "Ran 5 tests in 0.003s",
+        "",
+        "FAILED (failures=5)"
+      ]
+    },
+    {
+      "phase": "after",
+      "test": "test_environment_examples.py",
+      "exit_code": 1,
+      "log": "/tmp/qa-env-evidence/after-test_environment_examples.log",
+      "tail": [
+        "----------------------------------------------------------------------",
+        "Ran 11 tests in 0.561s",
+        "",
+        "FAILED (errors=2)"
+      ]
+    },
+    {
+      "phase": "after",
+      "test": "test_coverage_fingerprinting_examples.py",
+      "exit_code": 0,
+      "log": "/tmp/qa-env-evidence/after-test_coverage_fingerprinting_examples.log",
+      "tail": [
+        "----------------------------------------------------------------------",
+        "Ran 5 tests in 0.003s",
+        "",
+        "OK"
+      ]
+    },
+    {
+      "phase": "after-permitted",
+      "test": "test_environment_examples.py",
+      "exit_code": 0,
+      "log": "/tmp/qa-env-evidence/after-permitted-test_environment_examples.log",
+      "tests_run": 11,
+      "permission": "require_escalated for loopback HTTP fixture"
+    }
+  ],
+  "final_focused_result": {
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "scope": "11 environment example checks plus 5 synthetic coverage extraction checks; no Docker or pytest instrumentation runtime."
+  }
+}

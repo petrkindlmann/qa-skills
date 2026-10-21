@@ -1,0 +1,46 @@
+{
+  "head_observed_after_validation": "b99ea46b540f10a04944b6519de415ecabb1eb99",
+  "node": "v24.19.0",
+  "playwright": "1.62.1",
+  "browser": "Google Chrome 156.0.8078.47",
+  "browser_executable": "/tmp/qa-skills-chrome/opt/google/chrome/chrome",
+  "before": {
+    "command": "QA_SKILLS_ROOT=/ QA_BROWSER_EXECUTABLE=/tmp/qa-skills-chrome/opt/google/chrome/chrome timeout 25s node --test --test-isolation=none /tmp/qa-skill-scenarios/analytics-before.mjs",
+    "exit_code": 1,
+    "tests": 6,
+    "pass": 1,
+    "fail": 5,
+    "skipped": 0,
+    "log": "/tmp/qa-skill-scenarios/analytics-before.log",
+    "scope": "Original code fences from the two saved pre-edit references; fixture registration adapted to Node. The old dataLayer initializer is installed by stopping its documented recipe at navigation."
+  },
+  "after": {
+    "command": "QA_BROWSER_EXECUTABLE=/tmp/qa-skills-chrome/opt/google/chrome/chrome timeout 25s node --test --test-isolation=none tests/browser/analytics-capture.test.mjs",
+    "exit_code": 0,
+    "tests": 22,
+    "pass": 22,
+    "fail": 0,
+    "skipped": 0,
+    "log": "/tmp/qa-skill-scenarios/analytics-after.log",
+    "scope": "Actual documented helpers, fixture lifecycle and example assertions loaded through snippets.mjs; test/fixture registration adapted to Node; real Playwright browser pages and expect assertions. All fixture-page requests are locally fulfilled. Does not establish live vendor ingestion, full Playwright Test runner behavior, TypeScript type-checking, or other browser engines."
+  },
+  "sha256_after": {
+    "skills/analytics-tracking-testing/references/capture-fixture.md": "ce90221498b547381296d950ecf77616af63c0e440c198e9a4002bb366f2ad68",
+    "skills/analytics-tracking-testing/references/datalayer-capture.md": "e0e6557bed65db7ad309d89323ed55576436ee258c173d811332cb397a664653",
+    "skills/analytics-tracking-testing/references/ga4-interception.md": "44c7d1f5e96041ae27ff90be4f472e44b4f664d73c26376ef416d8325260a702",
+    "tests/examples/snippets.mjs": "5ff79ade8fc8411af184bd66f99857610854ef8a517399b8b8b4c4e9885aac4b",
+    "tests/browser/analytics-capture.test.mjs": "6d2eea4abd5fc4910df5809744d7434f924b4aad497672053c1ba544556f7459"
+  },
+  "sha256_evidence": {
+    "analytics-before.mjs": "1d13b5243753cb1006c14496a4c02744b4205e0f202fe9029e9c93c037e25043",
+    "analytics-before.log": "40662b7fcf8055c269d540b154374e40ae7abca0585b2dfb608de8f3942c8dd4",
+    "analytics-after.log": "a4c0e945e170310426011aa5183008a19fef18afd7150067c4c5149382a88f3a",
+    "analytics-before/capture-fixture.md": "0602efb90830d1adb2476396771c166c11fc37dbcbfe146f4fd97df01af82671",
+    "analytics-before/datalayer-capture.md": "9dcd1ad4138b561915df66e1b87abedcafec2c37ae2a69ee1f9e482a94c7caea"
+  },
+  "changed_by_this_resume": [
+    "skills/analytics-tracking-testing/references/capture-fixture.md",
+    "skills/analytics-tracking-testing/references/datalayer-capture.md",
+    "tests/browser/analytics-capture.test.mjs"
+  ]
+}

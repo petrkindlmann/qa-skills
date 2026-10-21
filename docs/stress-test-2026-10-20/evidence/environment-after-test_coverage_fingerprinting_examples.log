@@ -1,0 +1,13 @@
+QA_SKILLS_ROOT=/workspace/scratch/db79cfa7c2bc/qa-skills
+COMMAND: python3 -m unittest discover -s tests -p test_coverage_fingerprinting_examples.py -v
+EXIT: 0
+test_parameter_ids_stay_distinct_and_embedded_pipes_survive (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_parameter_ids_stay_distinct_and_embedded_pipes_survive) ... ok
+test_query_filter_is_cleared_after_extraction (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_query_filter_is_cleared_after_extraction) ... ok
+test_unattributed_and_non_pytest_contexts_are_excluded (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_unattributed_and_non_pytest_contexts_are_excluded) ... ok
+test_unions_setup_run_and_teardown_under_the_test_id (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_unions_setup_run_and_teardown_under_the_test_id) ... ok
+test_unique_coverage_counts_tests_instead_of_phases (test_coverage_fingerprinting_examples.CoverageFingerprintTests.test_unique_coverage_counts_tests_instead_of_phases) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.003s
+
+OK

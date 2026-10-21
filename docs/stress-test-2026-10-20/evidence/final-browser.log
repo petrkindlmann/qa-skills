@@ -1,0 +1,100 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> test:browser
+> node --test --test-isolation=none tests/browser/*.test.mjs
+
+(node:3021) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+Analytics fixture browser: 156.0.8078.47
+✔ capture recipe observes a healthy GET and Meta action after initialization (420.319948ms)
+✔ capture recipe preserves each POST batch row and common measurement ID (212.007051ms)
+✔ capture recipe rejects missing GA4 (206.095408ms)
+✔ capture recipe rejects stale GA4 without a new action event (182.058401ms)
+✔ capture recipe rejects delayed duplicate GA4 (246.425823ms)
+✔ capture recipe rejects missing Meta (204.367867ms)
+✔ collector applies exact pixel origin/path/method and approved GA4 hosts (145.820348ms)
+✔ matched pixel decoder errors fail the actual fixture and still release its listener (129.600702ms)
+✔ fixture teardown also runs when the consuming test throws and stops collection (145.817173ms)
+✔ dataLayer recipe observes healthy direct first assignment without seeding (140.473875ms)
+✔ dataLayer recipe observes healthy default assignment without seeding (134.765605ms)
+✔ missing application initialization remains absent and cannot pass the event gate (266.90599ms)
+✔ dataLayer recipe rejects initialized but empty queue (136.651224ms)
+✔ dataLayer recipe rejects same object in separate pushes (162.313014ms)
+✔ dataLayer recipe rejects same object twice in one push (139.177479ms)
+✔ dataLayer recipe rejects wrong nested quantity type (131.092378ms)
+✔ dataLayer recipe rejects removed layer descriptor (132.701531ms)
+✔ dataLayer recipe rejects removed push descriptor (138.432331ms)
+✔ replacement events remain observable without restoring the discarded queue (295.883084ms)
+✔ custom push chain preserves receiver, arguments, return identity and one snapshot (136.280315ms)
+✔ custom push exceptions propagate unchanged and snapshot failure does not alter the delegate (144.753696ms)
+✔ reading before observer installation fails explicitly (113.64306ms)
+✔ consent observer stays passive and preserves a custom push chain (150.614777ms)
+✔ application default gate rejects missing default (152.420481ms)
+✔ application default gate rejects granted default (150.07251ms)
+✔ application default gate rejects two-signal default (149.469743ms)
+✔ application default gate rejects object event masquerading as consent (136.477307ms)
+✔ application default gate rejects measurement before default (143.512297ms)
+✔ application default gate rejects temporary grant before interaction (149.459129ms)
+✔ application default gate rejects overwritten layer descriptor (148.387404ms)
+✔ application default gate rejects overwritten push descriptor (141.417201ms)
+✔ late acceptance works as an independent documented test with its own observer (2031.182972ms)
+✔ a fresh rejection produces a new denied update (287.130608ms)
+✔ partial consent is observed from the actual button interaction (269.003849ms)
+✔ a layer replacement is observed but never repaired or silently approved (237.353704ms)
+✔ an earlier update cannot satisfy a new action with no update (447.082038ms)
+✔ documented withdrawal survives navigation and verifies storage and update (495.459219ms)
+✔ latest denied state after an apparent acceptance is rejected (258.965344ms)
+✔ basic mode accepts clean and substring-decoy traffic but catches deferred tracking (1224.905033ms)
+✔ basic acceptance requires newly emitted configured traffic (487.724659ms)
+✔ basic-mode defaults initialized only on acceptance are valid and remain required (770.883776ms)
+✔ advanced-mode recipes parse real GET requests before and after acceptance (455.569105ms)
+✔ advanced-mode recipes parse real POST batch requests before and after acceptance (466.849722ms)
+✔ advanced pre-consent gate rejects missing app default (157.061356ms)
+✔ advanced pre-consent gate rejects empty collector (135.984284ms)
+✔ advanced pre-consent gate rejects incorrect storage transport (184.868819ms)
+✔ advanced pre-consent gate rejects missing encoded diagnostic (158.838177ms)
+✔ a pre-consent ping cannot satisfy the post-acceptance beacon expectation (299.842629ms)
+✔ HTTP GPC recipe validates transport and opt-out without assuming a DOM property (260.356027ms)
+✔ explicit DOM GPC simulation exercises the client opt-out path (147.207081ms)
+✔ GPC gate rejects an ignored header even when no marketing cookie happens to exist (841.801348ms)
+✔ GPC gate rejects storage leakage despite a checked opt-out indicator (259.461211ms)
+✔ TCF reader waits through incomplete data, observes the real action, and unregisters (358.567177ms)
+✔ TCF never response is bounded and does not leave a registered listener (344.441477ms)
+✔ TCF failure response is bounded and does not leave a registered listener (159.950708ms)
+✔ TCF absent response is bounded and does not leave a registered listener (323.872165ms)
+✔ TCF policy number cannot substitute for TC string and actual purpose/vendor consent (436.789ms)
+✔ cookie recipe sees deferred inventory leaks and does not exempt similar names (871.115556ms)
+✔ cookie acceptance and persisted navigation run against real storage and DOM (579.579574ms)
+✔ banner threshold accepts usable controls and rejects a two-pixel reject button (372.536209ms)
+✔ HTML href is parsed without closing markup and with entity decoding (102.199313ms)
+✔ valid token punctuation is preserved instead of trimmed (87.684243ms)
+✔ wrong origins, suffix lookalikes, credentials and schemes cannot become navigation (96.052692ms)
+✔ two distinct matching links fail rather than choosing an account/token (86.014895ms)
+✔ repeated display of the same exact link remains unambiguous (87.560487ms)
+✔ plain text URL with explicit delimiters is accepted (94.114173ms)
+✔ wrong path and missing token are rejected (96.587526ms)
+✔ reading an email does not execute its script in the test page (89.495672ms)
+✔ a generated role locator produces real screenshot evidence (219.662414ms)
+✔ duplicate test IDs cannot receive a unique score-five candidate (141.927574ms)
+✔ ambiguous names become distinct region-scoped proposals without choosing first (141.177485ms)
+✔ duplicate region names do not disguise an ambiguous scoped selector (120.877513ms)
+✔ regex metacharacters in intent are literal accessible-name data (126.175883ms)
+✔ quotes and code-like text in a test ID are safely quoted, never executed (139.008819ms)
+✔ empty or missing intent is an input failure (84.037361ms)
+✔ a candidate that became ambiguous cannot create screenshot evidence (131.707233ms)
+✔ screenshot failures propagate instead of recording a nonexistent artifact (436.062334ms)
+✔ missing, ambiguous and text-only candidates retain an unresolved failure row (164.970659ms)
+✔ generation and screenshot errors remain visible in the recovery record (227.631685ms)
+ℹ tests 79
+ℹ suites 0
+ℹ pass 79
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 21877.08751
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
