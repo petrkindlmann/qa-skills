@@ -12,7 +12,7 @@ node scripts/qa.mjs run --project /path/to/app --goal 'Check the account changes
 
 With no config, the runner discovers `package.json`'s `test` script and invokes the project's package manager. It recognizes npm, pnpm, Yarn, and Bun from the declared package manager or lockfile. Extra arguments such as `--reporter=json` are separated with `--` for npm only; pnpm forwards that token to the script. It does not install missing dependencies, start servers, run builds, or deploy. A declared test script remains executable project code, including any package-manager lifecycle scripts it invokes. Use a project you are authorized to test.
 
-For Node's test runner, discovery requests TAP through `NODE_OPTIONS` when no reporter is already declared in the script, argv, or existing options. For a Playwright test script, discovery appends `--reporter=json`. A script with multiple test processes must be split into separate configured checks. A custom reporter, shell chain, or other framework can require an explicit command.
+For Node's test runner, discovery requests TAP through `NODE_OPTIONS` when no reporter is already declared in the script, argv, or existing options. For a Playwright test script, discovery appends `--reporter=json`. For a Vitest script that declares no reporter, discovery appends `--reporter=junit --outputFile=.vitest/qa-junit.xml` and reads that file back (Vitest 5 writes the reporter to a file; older versions print it). A script with multiple test processes must be split into separate configured checks. A custom reporter, shell chain, or other framework can require an explicit command.
 
 Browser checks use the dependencies installed in this QA Skills checkout. An application-owned readiness state and an exact final URL prevent a blank page or login redirect from becoming a passing accessibility scan:
 
@@ -71,7 +71,8 @@ Example config:
 | Setting | Meaning |
 |---|---|
 | `version` | Required literal `1`. |
-| `checks[].reporter` | `tap`, `playwright-json`, or `exit-code`. |
+| `checks[].reporter` | `tap`, `playwright-json`, `junit-xml`, or `exit-code`. |
+| `checks[].resultFile` | Optional, `junit-xml` only: the relative path the command writes its JUnit XML to (pytest `--junitxml`, jest-junit, gotestsum `--junitfile`). The file counts only when this command produced or rewrote it. |
 | `checks[].timeoutMs` | 100 to 900000 ms; default 90000. |
 | `budgetMs` | Total execution budget, 100 to 3600000 ms; default 180000. |
 | `browser.timeoutMs` | 100 to 90000 ms; default 15000, with bounded worker setup/cleanup allowance. |
@@ -82,7 +83,7 @@ Example config:
 
 ## Results that do not hide missing work
 
-The Node TAP adapter requires a header, root plan, observed test records, and reconciling counters from one run. The Playwright adapter reads an entire fresh JSON report from the running process's output. No earlier report file is reused. It requires actual result attempts with typed retry and error records. Neither adapter treats skips, cancellation, TODO tests, retries, expected failures, or an empty suite as a clean run.
+The Node TAP adapter requires a header, root plan, observed test records, and reconciling counters from one run. The Playwright adapter reads an entire fresh JSON report from the running process's output. No earlier report file is reused. It requires actual result attempts with typed retry and error records. The JUnit XML adapter accepts the shape pytest, Vitest, jest-junit, mocha-junit-reporter, gotestsum and Surefire write: one root, one `<testcase>` per test, and suite counters that must reconcile with the recorded cases. It reads the command output, or the declared `resultFile` when the command produced or rewrote it during the run; a stale, missing, symlinked or oversized file is reported as incomplete, and Surefire's flaky and rerun records count as retries. No adapter treats skips, cancellation, TODO tests, retries, expected failures, or an empty suite as a clean run.
 
 | Outcome | Meaning | CLI exit |
 |---|---|---:|

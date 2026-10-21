@@ -104,6 +104,102 @@ export function parsePlaywright(text) {
   return { status: 'passed', reason: 'Every browser test passed on its first attempt.', counts };
 }
 
+const xmlEntities = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'" };
+function decodeXml(value) {
+  return value.replace(/&(#x[0-9a-fA-F]+|#\d+|[a-z]+);/g, (match, entity) => {
+    if (entity[0] !== '#') return xmlEntities[entity] ?? match;
+    const code = entity[1] === 'x' ? parseInt(entity.slice(2), 16) : Number(entity.slice(1));
+    return Number.isInteger(code) && code >= 0 && code <= 0x10ffff ? String.fromCodePoint(code) : match;
+  });
+}
+
+// The element tree of an XML document. CDATA sections, comments, processing
+// instructions and a DOCTYPE are removed first, so a stack trace inside a failure
+// body cannot open or close an element. Only the five predefined entities and
+// numeric references are decoded; nothing external is fetched or expanded.
+function xmlElements(text) {
+  const cleaned = text.replace(/<!\[CDATA\[[\s\S]*?\]\]>/g, '').replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<\?[\s\S]*?\?>/g, '').replace(/<!DOCTYPE[^>[]*(?:\[[\s\S]*?\])?[^>]*>/gi, '');
+  const roots = [], stack = [];
+  const tags = /<(\/?)([A-Za-z_][\w.:-]*)((?:\s+[A-Za-z_][\w.:-]*\s*=\s*(?:"[^"]*"|'[^']*'))*)\s*(\/?)>/g;
+  for (const [, closing, name, attributeText, selfClosing] of cleaned.matchAll(tags)) {
+    if (closing) {
+      if (stack.pop()?.name !== name) throw new Error(`Unbalanced element ${name}`);
+      continue;
+    }
+    const attributes = {};
+    for (const match of attributeText.matchAll(/([A-Za-z_][\w.:-]*)\s*=\s*(?:"([^"]*)"|'([^']*)')/g)) attributes[match[1]] = decodeXml(match[2] ?? match[3]);
+    const element = { name, attributes, children: [] };
+    (stack.at(-1)?.children ?? roots).push(element);
+    if (!selfClosing) stack.push(element);
+  }
+  if (stack.length) throw new Error(`Unterminated element ${stack.at(-1).name}`);
+  return roots;
+}
+
+// JUnit XML as pytest, Vitest, jest-junit, mocha-junit-reporter, gotestsum and
+// Surefire write it: a <testsuites> or <testsuite> root, one <testcase> per test,
+// <failure>/<error>/<skipped> children for the outcome and Surefire's flaky/rerun
+// children for retries. Every suite counter that is present must reconcile with
+// the test cases recorded under it.
+export function parseJunit(text) {
+  text = text.replaceAll('\r\n', '\n');
+  const start = text.search(/<testsuites?(?=[\s/>])/);
+  const end = Math.max(text.lastIndexOf('</testsuites>'), text.lastIndexOf('</testsuite>'));
+  if (start < 0 || end < start) return incomplete('No complete JUnit XML report was emitted.');
+  let roots;
+  try { roots = xmlElements(text.slice(start, text.indexOf('>', end) + 1)).filter(element => ['testsuites', 'testsuite'].includes(element.name)); }
+  catch { return incomplete('The JUnit XML report is not well formed.'); }
+  if (roots.length !== 1) return incomplete(roots.length ? 'More than one JUnit report was found. Use a single test process per check.' : 'No JUnit XML report was found.');
+  const counts = { total: 0, passed: 0, failed: 0, skipped: 0, cancelled: 0, todo: 0, retried: 0, observed: 0 };
+  let unsupported = 0, mismatch = false;
+  const declared = (element, name) => {
+    if (!(name in element.attributes)) return null;
+    const value = Number(element.attributes[name]);
+    return Number.isSafeInteger(value) && value >= 0 ? value : NaN;
+  };
+  const walk = (element, inSuite) => {
+    if (element.name === 'testcase') {
+      if (!inSuite) { unsupported++; return null; }
+      const kinds = new Set(element.children.map(child => child.name));
+      const subtotal = { tests: 1, failed: 0, skipped: 0 };
+      if (['flakyFailure', 'flakyError', 'rerunFailure', 'rerunError'].some(kind => kinds.has(kind))) counts.retried++;
+      if (kinds.has('failure') || kinds.has('error')) { counts.failed++; subtotal.failed = 1; }
+      else if (kinds.has('skipped')) { counts.skipped++; subtotal.skipped = 1; }
+      else counts.passed++;
+      counts.total++;
+      return subtotal;
+    }
+    if (element.name !== 'testsuite' && element.name !== 'testsuites') return null;
+    const subtotal = { tests: 0, failed: 0, skipped: 0 };
+    for (const child of element.children) {
+      const result = walk(child, element.name === 'testsuite');
+      if (result) for (const key of Object.keys(subtotal)) subtotal[key] += result[key];
+    }
+    const tests = declared(element, 'tests'), failures = declared(element, 'failures'), errors = declared(element, 'errors'), skipped = declared(element, 'skipped');
+    if ([tests, failures, errors, skipped].some(Number.isNaN)) mismatch = true;
+    if (tests !== null && tests !== subtotal.tests) mismatch = true;
+    if ((failures !== null || errors !== null) && (failures ?? 0) + (errors ?? 0) !== subtotal.failed) mismatch = true;
+    if (skipped !== null && skipped !== subtotal.skipped) mismatch = true;
+    return subtotal;
+  };
+  walk(roots[0], false);
+  counts.observed = counts.passed + counts.failed;
+  if (counts.failed) return { status: 'failed', reason: `${counts.failed} test${counts.failed === 1 ? '' : 's'} failed.`, counts };
+  if (mismatch) return { status: 'incomplete', reason: 'JUnit suite counters do not reconcile with the recorded test cases.', counts };
+  if (unsupported || counts.skipped || counts.retried || !counts.observed) return { status: 'incomplete', reason: 'The report contains skipped, rerun, misplaced, or no test cases.', counts };
+  return { status: 'passed', reason: 'Every recorded test case passed with no skips or reruns.', counts };
+}
+
+// A check that names a resultFile is judged by that file, never by its output,
+// so a report written by an earlier run cannot stand in for this one.
+function assessJunit(check, processResult) {
+  if (!check.resultFile) return parseJunit(processResult.log);
+  if (!processResult.resultFile) return incomplete('The declared result file was not read after the command.');
+  if (processResult.resultFile.error) return incomplete(processResult.resultFile.error);
+  return parseJunit(processResult.resultFile.text);
+}
+
 export function assessCommand(check, processResult) {
   if (processResult.launchError) return { status: 'blocked', reason: `Could not start the declared command: ${processResult.launchError}`, counts: null };
   if (processResult.timedOut || processResult.forcedSettlement) return { status: 'blocked', reason: 'The command exceeded its execution budget and was terminated.', counts: null };
@@ -111,6 +207,7 @@ export function assessCommand(check, processResult) {
   if (processResult.outputTruncated) return { status: 'incomplete', reason: 'Command output exceeded the evidence size limit. Narrow the check or use a smaller reporter.', counts: null };
   const assessment = check.reporter === 'tap' ? parseTap(processResult.log) :
     check.reporter === 'playwright-json' ? parsePlaywright(processResult.log) :
+    check.reporter === 'junit-xml' ? assessJunit(check, processResult) :
       { status: 'unverified', reason: 'The command completed, but exit status alone does not establish a test result. Configure a supported reporter.', counts: null };
   if (processResult.code !== 0 && assessment.status !== 'blocked') {
     return { ...assessment, status: 'failed', reason: `${assessment.counts?.failed ? assessment.reason : 'The declared command failed without a complete test verdict.'} Exit code ${processResult.code}.` };

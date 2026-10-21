@@ -37,7 +37,7 @@ export function discoverChecks(manifest = {}, packageManager = 'npm') {
   // npm strips a leading `--` before forwarding; pnpm hands it to the script verbatim,
   // where test runners read it as end-of-options (checked with npm 11, pnpm 10, bun 1.3).
   const separator = packageManager === 'npm' ? ['--'] : [];
-  let reporter = 'exit-code';
+  let reporter = 'exit-code', resultFile;
   if (isNodeTestScript(script)) {
     // The TAP reporter is injected only when the script declares none. A declared
     // non-TAP reporter cannot be overridden, so only its exit code can be observed.
@@ -45,9 +45,16 @@ export function discoverChecks(manifest = {}, packageManager = 'npm') {
     reporter = declared === null || declared === 'tap' ? 'tap' : 'exit-code';
   }
   else if (/\bplaywright\s+test\b/.test(script)) { command.push(...separator, '--reporter=json'); reporter = 'playwright-json'; }
-  else if (/\bvitest\b/.test(script) && !/\b(?:run|--run)\b/.test(script)) command.push(...separator, '--run');
+  else if (/\bvitest\b/.test(script)) {
+    // Vitest 5 writes the JUnit reporter to .vitest/junit/output.xml and older versions
+    // print it, so the output file is named explicitly and read back as the result.
+    // A script that already declares a reporter is observed by exit code only.
+    const extra = /\b(?:run|--run)\b/.test(script) ? [] : ['--run'];
+    if (!/--reporter\b/.test(script)) { resultFile = '.vitest/qa-junit.xml'; extra.push('--reporter=junit', `--outputFile=${resultFile}`); reporter = 'junit-xml'; }
+    if (extra.length) command.push(...separator, ...extra);
+  }
   else if (/\bjest\b/.test(script)) command.push(...separator, '--runInBand', '--watch=false');
-  return [{ id: 'project-tests', command, reporter, timeoutMs: 90_000, source: 'package.json scripts.test', declaredScript: script }];
+  return [{ id: 'project-tests', command, reporter, ...(resultFile ? { resultFile } : {}), timeoutMs: 90_000, source: 'package.json scripts.test', declaredScript: script }];
 }
 
 export async function discoverProject(project) {

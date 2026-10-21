@@ -115,13 +115,24 @@ Check IDs `browser` and `browser-*` are reserved for the native browser phase.
       "command": ["node", "node_modules/playwright/cli.js", "test", "--reporter=json"],
       "reporter": "playwright-json",
       "timeoutMs": 90000
+    },
+    {
+      "id": "python-tests",
+      "command": ["python3", "-m", "pytest", "-q", "--junitxml=reports/junit.xml"],
+      "reporter": "junit-xml",
+      "resultFile": "reports/junit.xml",
+      "timeoutMs": 60000
     }
   ]
 }
 ```
 
-Supported evidence formats are Node TAP and Playwright JSON. Other declared test commands
-can execute with `reporter: "exit-code"`; an uninterpreted successful exit stays incomplete.
+Supported evidence formats are Node TAP, Playwright JSON and JUnit XML as pytest, Vitest,
+jest-junit, Mocha, gotestsum and Surefire write it. A `junit-xml` check reads the command
+output, or the file named by `resultFile` when the command produced or rewrote it during
+this run; a report left by an earlier run is reported as incomplete, never reused. Other
+declared test commands can execute with `reporter: "exit-code"`; an uninterpreted
+successful exit stays incomplete.
 Use a structured adapter before promoting another runner's exit code to a test verdict.
 An explicit empty `checks` array is useful for a browser-only run, and does not silently
 add an unrelated package test command.

@@ -3,7 +3,7 @@ import { escapeHtml as e } from './privacy.mjs';
 const labels = { passed: 'Passed', failed: 'Failed', blocked: 'Blocked', incomplete: 'Incomplete', unverified: 'Unverified' };
 function duration(ms) { return `${(ms / 1000).toFixed(1)}s`; }
 function details(value) { return `<pre>${e(JSON.stringify(value, null, 2))}</pre>`; }
-function artifactLink(value) { return typeof value === 'string' && /^evidence\/[a-z][a-z0-9-]{0,63}\.log$/.test(value) ? value : null; }
+function artifactLink(value) { return typeof value === 'string' && /^evidence\/[a-z][a-z0-9-]{0,63}\.(?:log|result\.xml)$/.test(value) ? value : null; }
 
 export function renderReport(result) {
   const { summary, plan } = result;
@@ -15,7 +15,7 @@ export function renderReport(result) {
     ${check.counts ? `<div class="test-counts"><strong>${check.counts.passed}</strong> passed <span>/</span> <strong>${check.counts.failed}</strong> failed <span>/</span> <strong>${check.counts.skipped}</strong> skipped${check.counts.retried ? ` <span>/</span> ${check.counts.retried} retried` : ''}</div>` : ''}
     ${check.command ? `<details><summary>Command and execution</summary>${details({ command: check.command, source: check.source, reporter: check.reporter, exitCode: check.exitCode, timedOut: check.timedOut, durationMs: check.durationMs })}</details>` : ''}
     ${check.observed ? `<details><summary>Observed evidence</summary>${details(check.observed)}</details>` : ''}
-    ${artifactLink(check.evidence) ? `<a class="evidence" href="${e(check.evidence)}">Read command evidence</a>` : ''}
+    ${artifactLink(check.evidence) ? `<a class="evidence" href="${e(check.evidence)}">Read command evidence</a>` : ''}${artifactLink(check.resultEvidence) ? ` <a class="evidence" href="${e(check.resultEvidence)}">Read result file</a>` : ''}
   </article>`).join('');
   return `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>QA report · ${e(plan.project.name)}</title>

@@ -3,7 +3,7 @@ import path from 'node:path';
 
 export const defaultBudgetMs = 180_000;
 const idPattern = /^[a-z][a-z0-9-]{0,63}$/;
-const reporters = new Set(['tap', 'playwright-json', 'exit-code']);
+const reporters = new Set(['tap', 'playwright-json', 'junit-xml', 'exit-code']);
 
 function assert(condition, message) { if (!condition) throw new Error(message); }
 function object(value) { return value !== null && typeof value === 'object' && !Array.isArray(value); }
@@ -34,14 +34,20 @@ export function validateConfig(input) {
     const ids = new Set();
     config.checks = input.checks.map((check, i) => {
       assert(object(check), `checks[${i}] must be an object`);
-      keys(check, ['id', 'command', 'reporter', 'timeoutMs'], `checks[${i}]`);
+      keys(check, ['id', 'command', 'reporter', 'timeoutMs', 'resultFile'], `checks[${i}]`);
       assert(typeof check.id === 'string' && idPattern.test(check.id), `checks[${i}].id must be a lowercase identifier`);
       assert(!/^browser(?:-|$)/.test(check.id), `checks[${i}].id uses the reserved browser namespace`);
       assert(!ids.has(check.id), `Duplicate check id: ${check.id}`); ids.add(check.id);
       assert(Array.isArray(check.command) && check.command.length > 0 && check.command.length <= 100 &&
         check.command.every(arg => typeof arg === 'string' && arg.length > 0 && arg.length <= 32_768 && !arg.includes('\0')),
       `checks[${i}].command must be a nonempty argv array`);
-      assert(reporters.has(check.reporter), `checks[${i}].reporter must be tap, playwright-json, or exit-code`);
+      assert(reporters.has(check.reporter), `checks[${i}].reporter must be tap, playwright-json, junit-xml, or exit-code`);
+      if (check.resultFile !== undefined) {
+        assert(check.reporter === 'junit-xml', `checks[${i}].resultFile is read only by the junit-xml reporter`);
+        assert(typeof check.resultFile === 'string' && check.resultFile.length > 0 && check.resultFile.length <= 1024 && !check.resultFile.includes('\0') &&
+          !path.isAbsolute(check.resultFile) && !/^[A-Za-z]:/.test(check.resultFile) && !check.resultFile.split(/[\\/]/).includes('..'),
+        `checks[${i}].resultFile must be a relative path inside the project`);
+      }
       if (check.timeoutMs !== undefined) duration(check.timeoutMs, `checks[${i}].timeoutMs`);
       return { ...check, timeoutMs: check.timeoutMs ?? 90_000 };
     });

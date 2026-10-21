@@ -40,6 +40,17 @@ export async function makePlan(options) {
       'No command result is accepted as test evidence without a supported nonempty reporter.'] };
 }
 
+// The result file a check declares counts only when this command produced it. A file
+// left by an earlier run, a symlink, or an oversized file is reported, not parsed.
+async function readResultFile(filename, before) {
+  let after;
+  try { after = await fs.lstat(filename); } catch { return { error: 'The declared result file was not produced by the command.' }; }
+  if (!after.isFile()) return { error: 'The declared result file is not a regular file.' };
+  if (before && before.mtimeMs === after.mtimeMs && before.size === after.size) return { error: 'The declared result file was not rewritten by this command; a stale report is not evidence.' };
+  if (after.size > 4 * 1024 * 1024) return { error: 'The declared result file exceeds the evidence size limit.' };
+  return { text: await fs.readFile(filename, 'utf8') };
+}
+
 export async function runPlan(plan, options = {}) {
   const started = Date.now();
   const runId = `${new Date(started).toISOString().replace(/[:.]/g, '-')}-${randomUUID().slice(0, 8)}`;
@@ -70,18 +81,23 @@ export async function runPlan(plan, options = {}) {
       const nodeRunner = isNodeTestScript(script) ||
         /^node(?:\.exe)?$/.test(path.basename(check.command[0])) && check.command.includes('--test');
       const existingReporter = declaredReporter([script, ...check.command, executionEnv.NODE_OPTIONS ?? ''].join(' ')) !== null;
+      const resultFile = check.resultFile ? path.resolve(plan.project.root, check.resultFile) : null;
+      const resultBefore = resultFile ? await fs.lstat(resultFile).catch(() => null) : null;
       const execution = await runBounded({ command: check.command[0], args: check.command.slice(1), cwd: plan.project.root,
         env: { ...executionEnv, CI: '1', FORCE_COLOR: '0',
           ...(check.reporter === 'tap' && nodeRunner && !existingReporter ? { NODE_OPTIONS: `${executionEnv.NODE_OPTIONS ?? ''} --test-reporter=tap`.trim() } : {}),
           ...(plan.url ? { BASE_URL: plan.url } : {}) },
         timeoutMs: Math.min(check.timeoutMs, remaining() - 400), killGraceMs: 200, settlementGraceMs: 200,
         maxOutputBytes: 4 * 1024 * 1024 });
+      if (resultFile) execution.resultFile = await readResultFile(resultFile, resultBefore);
       const evidence = `evidence/${check.id}.log`;
       await fs.writeFile(path.join(directory, evidence), redactText(execution.log, secrets));
-      verbose.push(`\nCHECK ${check.id}\nARGV ${JSON.stringify(check.command)}\n${execution.log}`);
+      const resultEvidence = execution.resultFile?.text !== undefined ? `evidence/${check.id}.result.xml` : null;
+      if (resultEvidence) await fs.writeFile(path.join(directory, resultEvidence), redactText(execution.resultFile.text, secrets));
+      verbose.push(`\nCHECK ${check.id}\nARGV ${JSON.stringify(check.command)}\n${execution.log}${resultEvidence ? `\nRESULT FILE ${check.resultFile}\n${execution.resultFile.text}` : ''}`);
       const outcome = assessCommand(check, execution);
-      checks.push({ id: check.id, command: check.command, reporter: check.reporter, source: check.source,
-        ...outcome, exitCode: execution.code, timedOut: execution.timedOut, durationMs: Date.now() - checkStarted, evidence });
+      checks.push({ id: check.id, command: check.command, reporter: check.reporter, ...(check.resultFile ? { resultFile: check.resultFile } : {}), source: check.source,
+        ...outcome, exitCode: execution.code, timedOut: execution.timedOut, durationMs: Date.now() - checkStarted, evidence, ...(resultEvidence ? { resultEvidence } : {}) });
       log(`${outcome.status.toUpperCase()} ${check.id}: ${outcome.reason}`);
     }
     if (plan.url) {
@@ -161,7 +177,7 @@ export async function initialize(options) {
   const project = await discoverProject(path.resolve(options.project ?? process.cwd()));
   const filename = path.join(project.root, 'qa.config.json');
   const config = { version: 1, goal: options.goal ?? 'Check the core application behavior.', budgetMs: defaultBudgetMs,
-    checks: project.checks.map(({ id, command, reporter, timeoutMs }) => ({ id, command, reporter, timeoutMs })),
+    checks: project.checks.map(({ id, command, reporter, resultFile, timeoutMs }) => ({ id, command, reporter, ...(resultFile ? { resultFile } : {}), timeoutMs })),
     ...(options.url ? { url: options.url, browser: { expectedUrl: options.expectedUrl ?? options.url, ...(options.readySelector ? { readySelector: options.readySelector } : {}), accessibility: true } } : {}) };
   validateConfig(config);
   let created = true;

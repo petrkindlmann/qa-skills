@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { runBounded } from '../../tests/workflows/support/process.mjs';
 import { routeSkills } from '../../tools/qa/route.mjs';
 import { validateConfig } from '../../tools/qa/config.mjs';
-import { parseTap, parsePlaywright, assessCommand } from '../../tools/qa/results.mjs';
+import { parseTap, parsePlaywright, parseJunit, assessCommand } from '../../tools/qa/results.mjs';
 import { initialize, makePlan, runPlan } from '../../tools/qa/run.mjs';
 import { redactText, secretValues } from '../../tools/qa/privacy.mjs';
 import { discoverChecks } from '../../tools/qa/discover.mjs';
@@ -64,6 +64,12 @@ test('discovery separates extra arguments per package manager and respects a dec
   assert.equal(discoverChecks({ scripts: { test: 'node --test' } })[0].reporter, 'tap');
   assert.equal(discoverChecks({ scripts: { test: 'node --test --test-reporter=tap' } })[0].reporter, 'tap');
   assert.equal(discoverChecks({ scripts: { test: 'node --test --test-reporter=spec' } })[0].reporter, 'exit-code');
+  assert.deepEqual(discoverChecks({ scripts: { test: 'vitest' } }, 'npm')[0].command, ['npm', 'run', 'test', '--', '--run', '--reporter=junit', '--outputFile=.vitest/qa-junit.xml']);
+  assert.equal(discoverChecks({ scripts: { test: 'vitest run' } }, 'npm')[0].reporter, 'junit-xml');
+  assert.equal(discoverChecks({ scripts: { test: 'vitest run' } }, 'npm')[0].resultFile, '.vitest/qa-junit.xml');
+  assert.equal(discoverChecks({ scripts: { test: 'vitest run --reporter=verbose' } }, 'npm')[0].resultFile, undefined);
+  assert.deepEqual(discoverChecks({ scripts: { test: 'vitest run --reporter=verbose' } }, 'npm')[0].command, ['npm', 'run', 'test']);
+  assert.equal(discoverChecks({ scripts: { test: 'vitest run --reporter=verbose' } }, 'npm')[0].reporter, 'exit-code');
 });
 
 test('environment values are treated as secrets only when they look like one', () => {
@@ -79,7 +85,12 @@ test('config rejects shell strings, duplicate ids, unknown fields, credentials a
     { version: 1, checks: [{ id: 'test', command: ['node'] }] },
     { version: 1, checks: [{ id: 'browser', command: ['node'], reporter: 'tap' }] },
     { version: 1, checks: [{ id: 'browser-http-response', command: ['node'], reporter: 'tap' }] },
+    { version: 1, checks: [{ id: 'py', command: ['pytest'], reporter: 'junit-xml', resultFile: '/tmp/junit.xml' }] },
+    { version: 1, checks: [{ id: 'py', command: ['pytest'], reporter: 'junit-xml', resultFile: '../junit.xml' }] },
+    { version: 1, checks: [{ id: 'py', command: ['pytest'], reporter: 'junit-xml', resultFile: '' }] },
+    { version: 1, checks: [{ id: 'py', command: ['pytest'], reporter: 'tap', resultFile: 'junit.xml' }] },
   ]) assert.throws(() => validateConfig(config));
+  assert.doesNotThrow(() => validateConfig({ version: 1, checks: [{ id: 'py', command: ['pytest'], reporter: 'junit-xml', resultFile: 'reports/junit.xml' }] }));
   assert.doesNotThrow(() => validateConfig({ version: 1, checks: [], browser: { readySelector: '[data-ready="true"]' }, budgetMs: 5000 }));
 });
 
@@ -121,6 +132,48 @@ test('Playwright gate rejects missing results, empty suites, flaky retries and e
   const skipped = { expectedStatus: 'passed', status: 'skipped', results: [{ status: 'skipped', retry: 0, errors: [] }] };
   assert.equal(parsePlaywright(`${playwright([skipped])}\n${playwright([passed])}`).status, 'incomplete');
   assert.equal(parsePlaywright(`${playwright([{ ...passed, status: 'unexpected', results: [{ status: 'failed', retry: 0, errors: [{ message: 'defect' }] }] }])}\n${playwright([passed])}`).status, 'incomplete');
+});
+
+// JUnit XML as pytest writes it; `root: 'testsuite'` drops the wrapper, `attributes: false`
+// the suite counters, which older producers omit.
+const junit = (cases, { root = 'testsuites', attributes = true } = {}) => {
+  const failed = cases.filter(item => /<(?:failure|error)\b/.test(item.body ?? '')).length;
+  const skipped = cases.filter(item => /<skipped\b/.test(item.body ?? '')).length;
+  const body = cases.map(item => `<testcase classname="tests.test_prices" name="${item.name}" time="0.002">${item.body ?? ''}</testcase>`).join('\n');
+  const suite = `<testsuite name="pytest"${attributes ? ` tests="${cases.length}" failures="${failed}" errors="0" skipped="${skipped}"` : ''} time="0.041">\n${body}\n</testsuite>`;
+  return `<?xml version="1.0" encoding="utf-8"?>\n${root === 'testsuites' ? `<testsuites${attributes ? ` tests="${cases.length}" failures="${failed}" errors="0"` : ''}>\n${suite}\n</testsuites>` : suite}\n`;
+};
+const junitPassed = { name: 'test_total' };
+const junitFailing = { name: 'test_discount', body: '<failure message="assert 9 == 10">tests/test_prices.py:12: AssertionError</failure>' };
+const junitSkipped = { name: 'test_vat', body: '<skipped type="pytest.skip" message="needs fixture"/>' };
+
+test('JUnit gate reads pytest and Vitest shapes and rejects skips, reruns, stale counters and double reports', () => {
+  assert.equal(parseJunit(junit([junitPassed])).status, 'passed');
+  assert.equal(parseJunit(junit([junitPassed], { root: 'testsuite' })).status, 'passed');
+  assert.equal(parseJunit(junit([junitPassed], { attributes: false })).status, 'passed');
+  assert.equal(parseJunit(`\n> app@1.0.0 test\n> vitest run --reporter=junit\n\n RUN  v2.1.0 /app\n${junit([junitPassed])}`).status, 'passed');
+  assert.equal(parseJunit(junit([junitPassed]).replaceAll('\n', '\r\n')).status, 'passed');
+  const red = parseJunit(junit([junitPassed, junitFailing]));
+  assert.equal(red.status, 'failed');
+  assert.deepEqual([red.counts.total, red.counts.failed, red.counts.observed], [2, 1, 2]);
+  assert.equal(parseJunit(junit([junitPassed, junitSkipped])).status, 'incomplete');
+  assert.equal(parseJunit(junit([])).status, 'incomplete');
+  assert.equal(parseJunit(junit([junitPassed]).replace('tests="1" failures="0" errors="0" skipped', 'tests="2" failures="0" errors="0" skipped')).status, 'incomplete');
+  assert.equal(parseJunit(junit([junitPassed]).replace('failures="0" errors="0" skipped', 'failures="1" errors="0" skipped')).status, 'incomplete');
+  assert.equal(parseJunit(junit([junitPassed]).replace('tests="1"', 'tests="one"')).status, 'incomplete');
+  assert.equal(parseJunit(junit([junitPassed]) + junit([junitPassed])).status, 'incomplete');
+  assert.equal(parseJunit(junit([junitPassed]).slice(0, -15)).status, 'incomplete');
+  assert.equal(parseJunit(junit([{ name: 'flaky', body: '<flakyFailure message="first attempt failed"/>' }])).status, 'incomplete');
+  assert.equal(parseJunit(junit([{ name: 'cdata', body: '<failure><![CDATA[Error: expected <div> at <anonymous>]]></failure>' }])).status, 'failed');
+  assert.equal(parseJunit(junit([{ name: 'escaped', body: '<failure message="expected &lt;a&gt; &amp; b > c" type=\'AssertionError\'>x</failure>' }])).status, 'failed');
+  assert.equal(parseJunit(`<!DOCTYPE testsuites [<!ENTITY x "y">]>\n<!-- generated -->\n${junit([junitPassed])}`).status, 'passed');
+  assert.equal(parseJunit('<testsuites>\n<testcase name="misplaced"/>\n</testsuites>').status, 'incomplete');
+  assert.equal(parseJunit('No tests ran in 0.01s').status, 'incomplete');
+  assert.equal(assessCommand({ reporter: 'junit-xml' }, { code: 1, log: junit([junitPassed]) }).status, 'failed');
+  assert.equal(assessCommand({ reporter: 'junit-xml' }, { code: 0, log: junit([junitFailing]) }).status, 'failed');
+  assert.equal(assessCommand({ reporter: 'junit-xml', resultFile: 'junit.xml' }, { code: 0, log: '', resultFile: { error: 'The declared result file was not produced by the command.' } }).status, 'incomplete');
+  assert.equal(assessCommand({ reporter: 'junit-xml', resultFile: 'junit.xml' }, { code: 0, log: '', resultFile: { text: junit([junitPassed]) } }).status, 'passed');
+  assert.equal(assessCommand({ reporter: 'junit-xml', resultFile: 'junit.xml' }, { code: 0, log: junit([junitPassed]) }).status, 'incomplete');
 });
 
 async function fixture(t, files = {}) {
@@ -175,6 +228,27 @@ test('real CLI keeps a defect red and does not turn skipped tests green', async 
     const { result } = await resultOf(project);
     assert.equal(result.summary.status, expected);
     assert.equal(result.summary.tests.failed, failed);
+  }
+});
+
+test('real CLI reads a JUnit result file only when the command produced or rewrote it', async t => {
+  const write = "const fs=require('fs');fs.mkdirSync('reports',{recursive:true});fs.copyFileSync('expected.xml','reports/junit.xml')";
+  for (const [files, command, expected, observed] of [
+    [{ 'expected.xml': junit([junitPassed]), 'reports/junit.xml': junit([junitPassed, junitFailing]) }, write, 'passed', 1],
+    [{ 'reports/junit.xml': junit([junitPassed]) }, 'process.exitCode = 0', 'incomplete', 0],
+    [{}, 'process.exitCode = 0', 'incomplete', 0],
+  ]) {
+    const project = await fixture(t, { ...files, 'qa.config.json': JSON.stringify({ version: 1, checks: [{ id: 'py', command: [process.execPath, '-e', command], reporter: 'junit-xml', resultFile: 'reports/junit.xml' }] }) });
+    const execution = await execute(project);
+    assert.equal(execution.code, expected === 'passed' ? 0 : 2, execution.log);
+    const { result, directory } = await resultOf(project);
+    assert.equal(result.summary.status, expected);
+    assert.equal(result.summary.tests.observed, observed);
+    if (expected === 'passed') {
+      assert.equal(result.checks[0].resultEvidence, 'evidence/py.result.xml');
+      assert.ok((await fs.stat(path.join(directory, 'evidence/py.result.xml'))).size > 0);
+      assert.match(await fs.readFile(path.join(directory, 'report.html'), 'utf8'), /evidence\/py\.result\.xml/);
+    } else assert.match(result.checks[0].reason, /not (?:rewritten|produced)/);
   }
 });
 
