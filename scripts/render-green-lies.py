@@ -90,7 +90,9 @@ def font(size, bold=False, mono=False):
     ])
     for candidate in candidates:
         if Path(candidate).is_file():
-            return ImageFont.truetype(candidate, round(size))
+            # Helvetica.ttc holds every weight; face 1 is Bold.
+            index = 1 if bold and candidate.endswith('Helvetica.ttc') else 0
+            return ImageFont.truetype(candidate, round(size), index=index)
     raise RuntimeError('Install DejaVu Sans / Sans Mono, Nimbus Sans, or the macOS fonts listed in font().')
 
 

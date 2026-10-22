@@ -112,3 +112,24 @@ Regenerate with Pillow and ffmpeg installed:
 ```bash
 python3 scripts/render-green-lies.py --out /absolute/path/to/video-exports
 ```
+
+### Five-second vertical cuts
+
+Two 1080×1920 cuts reuse the cards above. `scripts/render-green-lies-shorts.py` draws
+them with the parent script's fonts and palette and writes provenance and verification
+files next to the videos. Every frame carries "Controlled fixture illustration."
+
+| Cut | Beats: caption, then subline |
+|---|---|
+| layout | **Passed.** Layout shift is under budget. → **Missed.** The entry field moved 240 px. → **Caught.** Once a test pinned the field. → **Tests need tests.** |
+| session | **Signed out.** The browser test passed. → **Still signed in.** A copied cookie still works. → **Tests need tests.** |
+
+The **Caught.** card quotes the `todo-layout-shift` failure in the v3.4.0
+[final matrix](workflow-addons-2026-10-21/evidence/final-matrix/matrix.json): the CLS
+budget assertion passed and `entry field moved after first render` failed, y 130 → 370.
+That field check was added after the first matrix pass let the shift through, so the
+card says a test caught it, not a skill.
+
+```bash
+python3 scripts/render-green-lies-shorts.py --out /absolute/path/to/video-exports
+```

@@ -1,5 +1,12 @@
 # Versions
 
+## Unreleased
+
+- Add `scripts/render-green-lies-shorts.py`: two 5-second vertical cuts of "Green isn't
+  correct" (the layout shift and the copied session), drawn with the parent renderer's
+  fonts and palette. `render-green-lies.py` now takes Helvetica's bold face on macOS,
+  where it had been drawing bold text in the regular face.
+
 ## v3.5.0 (2026-10-22)
 
 ### Semantic judge, two more result adapters, ten more skills against software, a with-and-without comparison
