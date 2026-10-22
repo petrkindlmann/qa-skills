@@ -37,6 +37,9 @@ Outstanding work, roughly in priority order. Reviewed 2026-10-22, at v3.5.0.
   average is very high. They pass on CI and quiet re-runs; investigate before loosening them.
 - [ ] `c3-tdm-idempotency-index` cannot hit the dropped-constraint race with a three-request
   burst; the case stays as a recorded limit.
+- [ ] At a local load average around 40, two Mailpit instances never started listening within
+  the wrapper's 15-second readiness bound (empty Mailpit log, connection refused). CI is not
+  affected; raise the bound toward the runtime's 30 seconds only if it recurs at normal load.
 
 ## Distribution
 

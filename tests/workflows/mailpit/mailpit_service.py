@@ -172,8 +172,21 @@ def load_state(name):
     return json.loads(path.read_text())
 
 
+class PortTaken(RuntimeError):
+    """Mailpit could not bind a port that was free when free_ports reserved it."""
+
+
+def log_tail(path, limit=1500):
+    try:
+        text = Path(path).read_text(errors='replace').strip()
+    except OSError:
+        return '(unreadable)'
+    return text[-limit:] if text else '(empty)'
+
+
 def free_ports(http_port, smtp_port):
-    # Keep reservations open together so the two selected ephemeral ports differ.
+    # Keep reservations open together so the two selected ephemeral ports differ. They are
+    # released before Mailpit binds them, so another process can take one in between.
     sockets = []
     try:
         for port in (http_port, smtp_port):
@@ -249,6 +262,20 @@ def start(args):
         if live(previous):
             probe(previous)
             return previous
+    # Ports chosen here are chosen again when Mailpit finds one taken; a port the caller
+    # named is never swapped for another, so that start still fails.
+    attempts = 3 if args.http_port == 0 and args.smtp_port == 0 else 1
+    for attempt in range(1, attempts + 1):
+        try:
+            return launch(args, directory)
+        except PortTaken as error:
+            if attempt == attempts:
+                raise
+            print(f'mailpit_service: {error}; choosing new ports, attempt {attempt + 1} of {attempts}',
+                  file=sys.stderr, flush=True)
+
+
+def launch(args, directory):
     http_port, smtp_port = free_ports(args.http_port, args.smtp_port)
     run_id = uuid.uuid4().hex
     run = directory / run_id
@@ -271,7 +298,12 @@ def start(args):
     last_error = 'no state file'
     while time.monotonic() < deadline:
         if child.poll() is not None:
-            raise RuntimeError('Mailpit supervisor exited; see ' + config['supervisor_log'])
+            # Mailpit writes its errors to the server log; the supervisor log holds only the
+            # supervisor's own crash output. CI keeps neither file, so the message carries both.
+            server_log = log_tail(config['server_log'])
+            failure = PortTaken if 'address already in use' in server_log else RuntimeError
+            raise failure('Mailpit supervisor exited; ' + config['server_log'] + ': ' + server_log
+                          + '; supervisor log: ' + log_tail(config['supervisor_log']))
         try:
             state = load_state(args.instance)
             if state.get('run_id') == run_id:
@@ -282,7 +314,8 @@ def start(args):
         threading.Event().wait(0.1)
     child.terminate()
     child.wait(timeout=7)
-    raise RuntimeError('Mailpit readiness timed out: ' + last_error)
+    raise RuntimeError('Mailpit readiness timed out: ' + last_error + '; ' + config['server_log']
+                       + ': ' + log_tail(config['server_log']))
 
 
 def stop(args):

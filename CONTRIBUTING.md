@@ -142,7 +142,9 @@ Run the `final` phase before pushing anything under `tests/workflows/`. On a hea
 machine cases slow down several times and can end `not_established` with `timedOut: true`;
 compare with the case's line in the last green CI log and re-run that id alone. A
 `not_established` case with no failed test is different: the detector missed the fault, so
-read its attachments. That is how a timing race in the layout-shift addon was found.
+read its attachments. That is how a timing race in the layout-shift addon was found. A case
+with `infrastructureError: true` could not observe the fault at all, usually because a service
+did not start; the `service.log` in its run folder, also kept in CI evidence, says why.
 
 ### Comparing with and without skills
 

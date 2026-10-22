@@ -53,6 +53,12 @@
   read the entry field's first position after page load, and on a loaded host the injected
   banner landed before that read, so the fault passed unseen. The check now catches the
   fault whether the read comes early or late.
+- The Mailpit service chooses new ports when Mailpit cannot bind the ones it reserved. It
+  releases its reservations before Mailpit binds, and in CI a Mailpit start failed within
+  seconds, which voided `shop-plaintext-sessions` although its oracle had fired. Holding a
+  chosen port reproduces an exit of that shape; CI kept no log that could prove it was the
+  cause. The service now retries up to three times, never for a port the caller named, and
+  its errors quote Mailpit's own log. CI keeps every `service.log` with the evidence.
 
 Usage: [QA runner](docs/QA-RUNNER.md).
 

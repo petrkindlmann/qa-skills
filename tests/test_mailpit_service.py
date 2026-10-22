@@ -1,7 +1,10 @@
-"""The Mailpit installer must select a pinned asset per platform and refuse anything else."""
+"""The Mailpit installer must select a pinned asset per platform and refuse anything else, and
+the service must choose new ports only when it chose the taken one itself."""
 
+import argparse
 import importlib.util
 import io
+import json
 import pathlib
 import tempfile
 import unittest
@@ -79,6 +82,69 @@ class PlatformPinTests(unittest.TestCase):
 
     def test_process_identity_is_none_for_a_pid_that_cannot_exist(self):
         self.assertIsNone(self.service.proc_identity(2 ** 22 + 7))
+
+
+class StartPortRetryTests(unittest.TestCase):
+    """free_ports releases its reservations before Mailpit binds, so a port can be taken in between."""
+
+    def setUp(self):
+        self.service = load_service()
+        runtime = tempfile.TemporaryDirectory()
+        self.addCleanup(runtime.cleanup)
+        install = pathlib.Path(runtime.name) / "install"
+        install.mkdir()
+        (install / "installed.json").write_text(json.dumps({"version": self.service.RELEASE["version"]}))
+        (install / "mailpit").write_bytes(b"")
+        pinned = self.service.pinned_asset(self.service.PLATFORM)["binary_sha256"]
+        for name, value in (("RUNTIME", pathlib.Path(runtime.name)), ("INSTALL", install),
+                            ("BINARY", install / "mailpit")):
+            patcher = mock.patch.object(self.service, name, value)
+            patcher.start()
+            self.addCleanup(patcher.stop)
+        patcher = mock.patch.object(self.service, "digest", return_value=pinned)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def start(self, launch, http_port=0, smtp_port=0):
+        args = argparse.Namespace(instance="retry", http_port=http_port, smtp_port=smtp_port, ttl=60, verbose=False)
+        with mock.patch.object(self.service, "launch", launch), mock.patch("sys.stderr", io.StringIO()):
+            return self.service.start(args)
+
+    def test_automatic_ports_are_chosen_again_after_a_bind_conflict(self):
+        taken = self.service.PortTaken("bind: address already in use")
+        launch = mock.Mock(side_effect=[taken, taken, {"run_id": "third"}])
+        self.assertEqual(self.start(launch), {"run_id": "third"})
+        self.assertEqual(launch.call_count, 3)
+
+    def test_a_conflict_on_every_attempt_still_fails(self):
+        launch = mock.Mock(side_effect=self.service.PortTaken("bind: address already in use"))
+        with self.assertRaises(self.service.PortTaken):
+            self.start(launch)
+        self.assertEqual(launch.call_count, 3)
+
+    def test_a_named_port_is_never_swapped_for_another(self):
+        for ports in ((8025, 0), (0, 1025)):
+            with self.subTest(ports=ports):
+                launch = mock.Mock(side_effect=self.service.PortTaken("bind: address already in use"))
+                with self.assertRaises(self.service.PortTaken):
+                    self.start(launch, *ports)
+                self.assertEqual(launch.call_count, 1)
+
+    def test_other_failures_are_not_retried(self):
+        launch = mock.Mock(side_effect=RuntimeError("Mailpit supervisor exited; panic"))
+        with self.assertRaisesRegex(RuntimeError, "panic"):
+            self.start(launch)
+        self.assertEqual(launch.call_count, 1)
+
+    def test_log_tail_reports_empty_and_missing_logs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            log = pathlib.Path(directory) / "mailpit.log"
+            log.write_text("")
+            self.assertEqual(self.service.log_tail(log), "(empty)")
+            log.write_text("x" * 2000 + "bind: address already in use\n")
+            self.assertTrue(self.service.log_tail(log).endswith("address already in use"))
+            self.assertEqual(len(self.service.log_tail(log)), 1500)
+            self.assertEqual(self.service.log_tail(pathlib.Path(directory) / "absent.log"), "(unreadable)")
 
 
 if __name__ == "__main__":

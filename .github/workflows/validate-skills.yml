@@ -141,6 +141,7 @@ jobs:
             tests/workflows/artifacts/**/minimal.txt
             tests/workflows/artifacts/**/trace.zip
             tests/workflows/artifacts/**/test-failed-*.png
+            tests/workflows/artifacts/**/service.log
             tests/workflows/mailpit/artifacts/**/evidence.json
             tests/workflows/mailpit/artifacts/**/playwright.log
             tests/workflows/mailpit/artifacts/**/results.json
