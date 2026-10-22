@@ -46,6 +46,10 @@
   project's language and harness and uses exact labels where they share words.
 - The lab Shop's listen backlog is 128, so concurrent bursts are no longer reset on macOS.
 - Landing page proof strip replaced with measured GitHub figures and their date.
+- A second motion graphic, "Green isn't correct" (`docs/media/qa-skills-green-lies.gif`):
+  three passing suites over a shipping threshold, a copied-session logout and a layout shift
+  under the CLS budget. The storyboard in `docs/VIDEO-SCENARIOS.md` marks its cards as
+  illustrations of controlled local fixtures, and `scripts/render-green-lies.py` renders it.
 - The workflow config keeps `campaign3/` and `experiment/` out of the released set when it
   runs the whole `generated/` tree. They had grown the CI gate's healthy count from 36 to
   286 and failed it; they are scored by `run-matrix.mjs campaign3` and `run-experiment.mjs`.
