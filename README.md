@@ -294,6 +294,11 @@ npm run test:mailpit
 npm run test:workflow-controls
 ```
 
+`npm run test:workflows` and the controls matrix cover the released suites under
+`tests/workflows/generated/`. The campaign-3 suites and the with-and-without takes are scored
+separately: `node tests/workflows/run-matrix.mjs campaign3` and
+`node tests/workflows/run-experiment.mjs <take>`.
+
 The example tests load functions from the actual Markdown code blocks, so changes to
 the instructions are tested. Browser cases use controlled local fixtures. CI runs
 these separately from static evaluation, which checks lexical content coverage and

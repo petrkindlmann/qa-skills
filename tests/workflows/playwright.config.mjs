@@ -5,10 +5,17 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const output = process.env.QA_WORKFLOW_OUTPUT ?? path.join(here, 'artifacts', 'current');
 const executablePath = process.env.QA_BROWSER_EXECUTABLE;
+const generated = path.join(here, 'generated');
+const testDir = path.resolve(here, process.env.QA_WORKFLOW_SUITE ?? generated);
+// The whole generated tree is the released suite set that the final controls matrix counts.
+// Campaign-3 suites and the with-versus-without takes are scored by their own matrix phase
+// and by run-experiment.mjs; run them by pointing QA_WORKFLOW_SUITE at their folder.
+const separatelyScored = ['campaign3/**', 'experiment/**'];
 
 export default defineConfig({
-  testDir: process.env.QA_WORKFLOW_SUITE ?? path.join(here, 'generated'),
+  testDir,
   testMatch: '**/*.spec.mjs',
+  testIgnore: testDir === generated ? separatelyScored : [],
   outputDir: path.join(output, 'test-results'),
   fullyParallel: true,
   forbidOnly: true,
