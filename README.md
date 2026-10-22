@@ -63,9 +63,11 @@ Download individual skill folders from `skills/` and place them in your project'
 
 ![Eight-second illustration of the healthy control and 22 deliberately broken local variants](docs/media/qa-skills-proof.gif)
 
-The controlled application suite checks a healthy fixture and 22 deliberate faults.
-This motion graphic illustrates that experiment. See the [application evidence](docs/REAL-WORKFLOWS-2026-10-21.md)
-and [current workflow report](docs/QA-ORCHESTRATION-2026-10-21.md) for observations and limits.
+The lab now holds 28 deliberate faults: 19 in the local Shop and 9 in pinned TodoMVC.
+The motion graphic illustrates the first run of that experiment, with 22 of them. See the
+[application evidence](docs/REAL-WORKFLOWS-2026-10-21.md), the
+[current workflow report](docs/QA-ORCHESTRATION-2026-10-21.md) and the
+[campaign-3 report](docs/WORKFLOW-CAMPAIGN3-2026-10-21.md) for observations and limits.
 
 ### Run checks and produce an evidence report
 
@@ -259,6 +261,18 @@ separates bounded evidence from claims about future projects or external provide
 The [2026-10-21 addon report](docs/WORKFLOW-ADDONS-2026-10-21.md) extends the same
 fixtures to accessibility, database, security and performance checks, with eight more
 deliberate defects, and makes the whole suite run on macOS arm64 as well as Linux.
+The [2026-10-21 judge report](docs/EVAL-JUDGE-2026-10-21.md) records the first check of
+the 808 semantic eval criteria that lexical matching defers. `scripts/judge_evals.py` asks
+a model whether each skill teaches each criterion, and it accepts a "yes" only with a quote
+the skill actually contains. The [campaign-3 report](docs/WORKFLOW-CAMPAIGN3-2026-10-21.md)
+runs ten more skills against the same applications and fault matrix; 34 of its 36 cases
+were established, and the two that were not are recorded as limits.
+The [with-and-without report](docs/WITH-WITHOUT-2026-10-22.md) gives one Shop task to nine
+blind agents: three with four skills, three with only the agent rules, three with neither.
+All nine suites caught eight of the nine pre-registered faults; only the skills arm caught
+the ninth in every take. On ten further faults it caught slightly fewer than the others,
+apparently because the named skills pulled attention away from contract clauses outside their subjects,
+and the report records the repair and its limits.
 
 Run the local gates with Python 3.12+ and Node 24+ (Linux AMD64 or macOS arm64 for the
 application workflows):
@@ -271,6 +285,7 @@ python3 scripts/build_index.py --check
 python3 scripts/run_evals.py --static --all --min-pass-rate 90
 npm ci
 npm test
+npm run test:qa
 npx playwright install --with-deps chromium
 npm run test:browser
 npm run workflow:setup

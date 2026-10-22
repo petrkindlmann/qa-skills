@@ -1,5 +1,54 @@
 # Versions
 
+## v3.5.0 (2026-10-22)
+
+### Semantic judge, two more result adapters, ten more skills against software, a with-and-without comparison
+
+- Add `scripts/judge_evals.py`: a model judge for the 808 semantic eval criteria the
+  static checker defers, one call per skill, every "yes" verdict tied to a verbatim quote
+  found in the document or recorded as unverified. Three passes: 1,109 verdicts, none
+  unverified, 15 findings, which became 8 skill repairs and 7 re-phrased criteria; the
+  method, cost and findings are in [the judge report](docs/EVAL-JUDGE-2026-10-21.md).
+- Triage the 32 failing static eval cases to zero without loosening the gate: 511 of 511
+  checkable cases pass, 5 cases are live-only.
+- Add JUnit XML and CTRF JSON result adapters to the QA runner (`reporter: junit-xml |
+  ctrf-json` with `resultFile`), with a fresh-file rule, suite-counter reconciliation,
+  Surefire rerun and CTRF retry handling, evidence copies and report links; Vitest
+  discovery writes a JUnit file. Verified against real pytest 9.1.1 and Vitest 5.0.5
+  output. An odiff recipe joins visual-testing; the registry lists both adapters and odiff.
+- Campaign 3: ten skills that had never been run against software (visual-testing,
+  bug-reproduction, selector-drift-recovery, synthetic-monitoring,
+  analytics-tracking-testing, service-virtualization, test-migration,
+  test-suite-curation, test-data-management, chaos-engineering) each authored a suite
+  blind against the lab's Shop or TodoMVC. The controls matrix established 34 of 36 cases
+  (10 healthy controls, 24 designated-assertion detections); the two others are recorded as
+  suite limits. Six faults joined the lab (`redesign-classes`, `style-regression`,
+  `slow_health`, `wrong_currency_event`, `reset_email_dropped`, `catalog_currency_missing`),
+  TodoMVC faults stack, and the matrix accepts declared quarantines, re-designated oracles
+  and a per-case worker count. 93 recorded recipe difficulties became repairs in those ten
+  skills; `AGENTS.md` now treats an unfilled context template as absent. Report:
+  [campaign 3](docs/WORKFLOW-CAMPAIGN3-2026-10-21.md).
+- With-and-without comparison: one Shop task given to nine blind agents, three with four
+  skills, three with only the agent rules, three with neither, scored on nine pre-registered
+  faults and ten exploratory ones. All nine suites caught eight of the nine; only the skills
+  arm caught the ninth (a signature verified over re-serialized JSON) in every take, while on
+  the exploratory set it caught 15 of 30 against 16 and 18, missing two contract clauses
+  outside its skills' subjects. The scorer needs two healthy controls and a confirmed repeat
+  per detection, records wall-clock bounds, and runs a secondary set apart from the score.
+  Findings, the circularity of the primary set and other limits:
+  [with and without](docs/WITH-WITHOUT-2026-10-22.md).
+- Repairs from that comparison: `api-testing` asserts a 429 and its `retry-after`
+  unconditionally, falls back to an exact key-set check when no schema library may be
+  installed, and requires every contract clause to have a test or a "not covered" line;
+  `payment-testing` takes the bad-signature status from the provider or contract instead of
+  Stripe's 400; `email-testing` warns that a Mailpit delete with an empty ID list empties the
+  inbox and ships an executed per-ID cleanup helper; `playwright-automation` follows the
+  project's language and harness and uses exact labels where they share words.
+- The lab Shop's listen backlog is 128, so concurrent bursts are no longer reset on macOS.
+- Landing page proof strip replaced with measured GitHub figures and their date.
+
+Usage: [QA runner](docs/QA-RUNNER.md).
+
 ## v3.4.0 (2026-10-21)
 
 ### Executable QA routing and evidence reports
