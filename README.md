@@ -156,6 +156,8 @@ the intended routing.
 | Skill | Description | Category |
 |-------|-------------|----------|
 | [`qa-project-context`](skills/qa-project-context) | Project context template covering tech stack, test frameworks, CI/CD, environments, quality goals. Every other skill reads this first. | Foundation |
+| [`qa-start`](skills/qa-start) | Bootstrap QA on a project that has none: chains qa-project-context, test-strategy and test-planning in one guided run, then executes the available checks and records evidence. | Foundation |
+| [`qa-do`](skills/qa-do) | Last-resort router: maps a plain-language QA situation to the next one or two skills and carries out the workflow with evidence. Used only when no other skill's triggers match. | Foundation |
 | [`test-strategy`](skills/test-strategy) | QA strategy creation with risk-based prioritization, test pyramid design, entry/exit criteria, and tool selection rationale. | Strategy |
 | [`test-planning`](skills/test-planning) | Sprint and release test plans. Feature decomposition, requirements-to-test mapping, effort estimation, resource allocation. | Strategy |
 | [`risk-based-testing`](skills/risk-based-testing) | Risk assessment matrices, priority-based test selection, impact/likelihood analysis, regression risk scoring. | Strategy |
@@ -163,19 +165,19 @@ the intended routing.
 | [`playwright-automation`](skills/playwright-automation) | Playwright E2E testing. Page Object Model, fixtures, parallel execution, API mocking, visual comparisons, CI integration. | Automation |
 | [`cypress-automation`](skills/cypress-automation) | Cypress test suites with component testing, E2E testing, custom commands, cy.intercept, Cypress Cloud, and TypeScript support. | Automation |
 | [`selector-drift-recovery`](skills/selector-drift-recovery) | Bulk-regenerate broken test selectors after a UI refactor. Snapshot old vs new DOM, map locators with confidence scores, ship a single PR. | Automation |
-| [`api-testing`](skills/api-testing) | REST and GraphQL testing with schema validation, contract testing patterns, auth flows, and response assertions. | Automation |
+| [`api-testing`](skills/api-testing) | REST and GraphQL testing with Playwright APIRequestContext or Supertest: Zod 4/AJV schemas (exact key sets when no schema library is installed), auth flows, CRUD, errors and headers, pagination. Every contract clause gets a test or a "not covered" line. | Automation |
 | [`unit-testing`](skills/unit-testing) | Jest, Vitest, and pytest patterns. Mocking strategies, coverage thresholds, snapshot testing, test doubles taxonomy. | Automation |
-| [`mobile-testing`](skills/mobile-testing) | Mobile testing with Appium 2.0 and Detox for React Native. Device farms, gesture simulation, deep link testing, push notifications. | Automation |
+| [`mobile-testing`](skills/mobile-testing) | Native, React Native, hybrid and Flutter apps with Appium 3.x, Detox, Maestro and Patrol. Device farms, gestures, deep links and cold starts, push notifications, biometrics, poor-network simulation. | Automation |
 | [`visual-testing`](skills/visual-testing) | Visual regression testing with Playwright screenshots, Chromatic, Percy, and Argos CI. Baseline management, diff thresholds, dynamic content masking. | Automation |
 | [`performance-testing`](skills/performance-testing) | k6 load/stress/soak scripts, Lighthouse CI for Web Vitals, performance budgets as CI gates. | Automation |
-| [`accessibility-testing`](skills/accessibility-testing) | WCAG 2.1 compliance testing, axe-core integration, screen reader testing, keyboard navigation, color contrast validation. | Specialized |
-| [`security-testing`](skills/security-testing) | OWASP Top 10 vulnerability testing. ZAP integration, dependency scanning (Snyk/Dependabot), SAST with ESLint security plugins. | Specialized |
+| [`accessibility-testing`](skills/accessibility-testing) | WCAG 2.2 AA testing with axe-core and Playwright, keyboard and screen-reader audits, ARIA pattern checks, and legal mapping (ADA, EAA, Section 508). Automated and manual testing together. | Specialized |
+| [`security-testing`](skills/security-testing) | OWASP Top 10 (2025) in CI: ZAP DAST, OSV-Scanner and SBOM supply-chain checks, Semgrep SAST, auth and session tests (JWT, OAuth, RBAC), XSS/CSRF/SQLi/SSRF Playwright patterns. | Specialized |
 | [`cross-browser-testing`](skills/cross-browser-testing) | Analytics-driven browser test matrices, BrowserStack/Sauce Labs configuration, Playwright browser channels, common rendering issues. | Specialized |
 | [`database-testing`](skills/database-testing) | Database integrity validation, migration testing (forward/backward), schema constraints, seed data management, query performance. | Specialized |
 | [`ai-test-generation`](skills/ai-test-generation) | Generate tests from specs, PRDs, and user stories using a staged pipeline with guardrails. Coverage matrix before code. | AI-QA |
 | [`ai-bug-triage`](skills/ai-bug-triage) | Classify bugs by severity/component/root cause. Deduplicate issues, analyze CI failures, generate tickets. | AI-QA |
 | [`test-reliability`](skills/test-reliability) | Locator resilience, flaky test classification by root cause, quarantine management, confidence-scored auto-repair. | AI-QA |
-| [`ai-qa-review`](skills/ai-qa-review) | Test quality review across five smell dimensions. Coverage gap detection, testability analysis, anti-pattern detection. | AI-QA |
+| [`ai-qa-review`](skills/ai-qa-review) | Review existing test code across six smell dimensions (readability, reliability, diagnostic value, design, AI-generated, coverage), testability analysis, and mutation testing to back the findings. | AI-QA |
 | [`ci-cd-integration`](skills/ci-cd-integration) | GitHub Actions and GitLab CI pipeline templates. Parallelism, artifact management, flaky test quarantine, test result publishing. | Infrastructure |
 | [`test-environments`](skills/test-environments) | Environment strategy for dev, staging, preview, and production. Docker Compose, seed data, environment parity, cleanup. | Infrastructure |
 | [`test-data-management`](skills/test-data-management) | Test data with factories, fixtures, synthetic data generation, database seeding, data cleanup, environment isolation. | Infrastructure |
@@ -188,14 +190,14 @@ the intended routing.
 | [`qa-project-bootstrap`](skills/qa-project-bootstrap) | Onboard a QA engineer to an existing codebase. First 30 days checklist, test architecture audit, framework walkthrough, mentorship patterns. | Process |
 | [`release-readiness`](skills/release-readiness) | Go/no-go checklists, smoke test suite design, rollback criteria, staged rollout validation, release sign-off. | Process |
 | [`quality-postmortem`](skills/quality-postmortem) | Blameless postmortems for escaped defects. Bug pattern analysis, 5 Whys root cause analysis, test gap identification. | Process |
-| [`compliance-testing`](skills/compliance-testing) | Regulatory compliance testing. GDPR/CMP consent verification, Better Ads Standards, cookie auditing, privacy policy validation. | Process |
+| [`compliance-testing`](skills/compliance-testing) | Regulatory compliance testing. GDPR/CMP consent flows, Google Consent Mode v2, Global Privacy Control and US state opt-outs, EU AI Act Article 50 transparency, Better Ads Standards, cookie inventories. | Process |
 | [`qa-report-humanizer`](skills/qa-report-humanizer) | Remove AI patterns from QA reports, bug reports, test summaries, and status updates. Makes QA writing sound like a real engineer wrote it. | Process |
 | [`testing-in-production`](skills/testing-in-production) | Production validation with feature flags, progressive rollouts, canary analysis, guardrail metrics, production smoke tests. | Production |
 | [`synthetic-monitoring`](skills/synthetic-monitoring) | Post-deploy validation via scheduled synthetic tests. Probe design for critical user journeys, alert thresholds, SLA tracking. | Production |
 | [`observability-driven-testing`](skills/observability-driven-testing) | Use traces, logs, and telemetry as test evidence. OpenTelemetry integration, trace-based assertions, log-informed test design. | Production |
-| [`ai-system-testing`](skills/ai-system-testing) | Test AI features. LLM prompt regression, tool call validation, nondeterministic output evaluation, hallucination risk assessment. | Knowledge |
+| [`ai-system-testing`](skills/ai-system-testing) | Test AI features in your product. Prompt regression, tool-call validation, hallucination and RAG grounding checks, nondeterministic output, red-team scans, indirect prompt injection. | Knowledge |
 | [`chaos-engineering`](skills/chaos-engineering) | Controlled fault injection. Hypothesis-driven chaos experiments, network/service/infrastructure failure injection, blast radius control. | Knowledge |
-| [`test-migration`](skills/test-migration) | Incremental test suite migration. Selenium to Playwright, Cypress to Playwright, Jest to Vitest, Mocha to Jest, Protractor to Playwright. | Knowledge |
+| [`test-migration`](skills/test-migration) | Incremental test suite migration. Selenium to Playwright, Cypress to Playwright, Jest to Vitest, Mocha to Vitest, Protractor to Playwright, with a coverage-parity track. | Knowledge |
 | [`test-case-management`](skills/test-case-management) | Author and maintain manual/hybrid test cases in TestRail, Xray, Zephyr, Qase. Case anatomy, bulk authoring from stories, ambiguous-step linting, CSV/API import-export, traceability. | Process |
 | [`test-suite-curation`](skills/test-suite-curation) | Audit and prune a regression suite with evidence: coverage fingerprinting, AST duplicate clustering, CI-history mining, smoke/core/extended tiering, quarantine-before-delete. | Process |
 | [`bug-reproduction`](skills/bug-reproduction) | Turn a vague bug report into a verified minimal reproduction and a failing regression test. Reproduce-minimize-isolate-capture, git bisect, deterministic repro, red-before-fix. | AI-QA |
@@ -217,6 +219,8 @@ Most QA skills repos stop at framework tutorials. This one also covers how AI ag
 | `test-reliability` | Per-test runtime healing: detect broken locators, score selector stability, quarantine flaky tests, classify root causes |
 | `selector-drift-recovery` | Bulk offline regeneration: snapshot old vs new DOM after a UI refactor, ship one PR with per-change evidence |
 | `ai-qa-review` | Test quality review. Coverage gap detection, test smell identification, testability analysis |
+| `bug-reproduction` | Turn a vague bug report into a verified minimal reproduction and a failing regression test, with git bisect for the introducing commit |
+| `agentic-browser-testing` | Goal-driven E2E: a browser agent explores through the accessibility tree within pinned, bounded runs, then graduates stable paths to scripted tests |
 
 ---
 
@@ -247,32 +251,43 @@ Covered: test frameworks, reporting, visual testing, CI/CD, project management, 
 
 ## Reliability checks
 
-The [2026-10-20 stress-test report](docs/STRESS-TEST-2026-10-20.md) records representative
-requests for all 50 skills, reproduced defects, executable regressions, and the limits
-of the evidence. The tests include healthy controls as well as malformed input,
-missing evidence, duplicate events, retries, delayed tracking, ambiguous selectors,
-and deceptive prompt-injection text.
+Each report is dated and records what was run, what was observed and where the evidence
+stops. Later changes are listed in [VERSIONS.md](VERSIONS.md), not written back into the reports.
 
-The [2026-10-21 workflow report](docs/REAL-WORKFLOWS-2026-10-21.md) adds real application
-workflows: pinned official TodoMVC, a local HTTP/SQLite Shop, and actual Mailpit SMTP.
-It retains fresh-agent test authoring, independent review, reproduced coverage gaps,
-review-driven follow-up, and healthy/deliberately broken application runs. The report
-separates bounded evidence from claims about future projects or external providers.
-The [2026-10-21 addon report](docs/WORKFLOW-ADDONS-2026-10-21.md) extends the same
-fixtures to accessibility, database, security and performance checks, with eight more
-deliberate defects, and makes the whole suite run on macOS arm64 as well as Linux.
-The [2026-10-21 judge report](docs/EVAL-JUDGE-2026-10-21.md) records the first check of
-the 808 semantic eval criteria that lexical matching defers. `scripts/judge_evals.py` asks
-a model whether each skill teaches each criterion, and it accepts a "yes" only with a quote
-the skill actually contains. The [campaign-3 report](docs/WORKFLOW-CAMPAIGN3-2026-10-21.md)
-runs ten more skills against the same applications and fault matrix; 34 of its 36 cases
-were established, and the two that were not are recorded as limits.
-The [with-and-without report](docs/WITH-WITHOUT-2026-10-22.md) gives one Shop task to nine
-blind agents: three with four skills, three with only the agent rules, three with neither.
-All nine suites caught eight of the nine pre-registered faults; only the skills arm caught
-the ninth in every take. On ten further faults it caught slightly fewer than the others,
-apparently because the named skills pulled attention away from contract clauses outside their subjects,
-and the report records the repair and its limits.
+- [Stress test, 2026-10-20](docs/STRESS-TEST-2026-10-20.md): representative requests for
+  all 50 skills, reproduced defects and executable regressions. Healthy controls sit next to
+  malformed input, missing evidence, duplicate events, retries, delayed tracking, ambiguous
+  selectors and deceptive prompt-injection text.
+- [Real application workflows, 2026-10-21](docs/REAL-WORKFLOWS-2026-10-21.md): pinned
+  official TodoMVC, a local HTTP/SQLite Shop and a real Mailpit SMTP server. Fresh agents
+  author the suites, an independent review finds coverage gaps, and every suite runs healthy
+  and against deliberately broken builds.
+- [Addons, 2026-10-21](docs/WORKFLOW-ADDONS-2026-10-21.md): accessibility, database,
+  security and performance checks on the same applications, eight more faults, and macOS
+  arm64 next to Linux.
+- [QA runner, 2026-10-21](docs/QA-ORCHESTRATION-2026-10-21.md): the `qa plan | run | init`
+  CLI, and one fresh agent task that wrote the missing check and repaired a shipping-threshold
+  bug in a controlled fixture.
+- [Semantic judge, 2026-10-21](docs/EVAL-JUDGE-2026-10-21.md): `scripts/judge_evals.py` asks
+  a model whether each skill teaches each of the 808 semantic criteria that lexical matching
+  defers, and accepts a "yes" only with a quote the skill actually contains. Its 15 findings
+  became 8 skill repairs and 7 re-phrased criteria.
+- [Campaign 3, 2026-10-21](docs/WORKFLOW-CAMPAIGN3-2026-10-21.md): ten more skills, each
+  authoring a suite blind against the same applications. 34 of 36 matrix cases were
+  established; the other two are recorded as limits.
+- [With and without, 2026-10-22](docs/WITH-WITHOUT-2026-10-22.md): one Shop task given to
+  nine blind agents, three with four skills, three with only the agent rules, three with
+  neither. Every suite caught eight of the nine pre-registered faults. The ninth separated
+  the arms (three skills takes, one rules take, two bare takes), but its guidance entered
+  `api-testing` in the same commit that built the fault, so it is not evidence for the
+  skills. On ten further faults the skills arm caught 15 of 30 against 16 and 18: its takes
+  never tested two contract clauses outside their skills' subjects. On this task the skills
+  made the suites more uniform and took longer; they did not raise detection. `api-testing`
+  now asks for a test or a "not covered" line for every contract clause.
+
+The lab holds 28 deliberate faults, 19 in the Shop and 9 in TodoMVC. The CI gate,
+`npm run test:workflow-controls`, runs the released suites healthy (36 tests) and under 22
+of those faults, each of which must fail its designated assertion.
 
 Run the local gates with Python 3.12+ and Node 24+ (Linux AMD64 or macOS arm64 for the
 application workflows):
@@ -297,7 +312,9 @@ npm run test:workflow-controls
 `npm run test:workflows` and the controls matrix cover the released suites under
 `tests/workflows/generated/`. The campaign-3 suites and the with-and-without takes are scored
 separately: `node tests/workflows/run-matrix.mjs campaign3` and
-`node tests/workflows/run-experiment.mjs <take>`.
+`node tests/workflows/run-experiment.mjs <take>`. The semantic judge
+(`python3 scripts/judge_evals.py --static --all`) calls the `claude` CLI and costs tokens, so
+it is not part of CI.
 
 The example tests load functions from the actual Markdown code blocks, so changes to
 the instructions are tested. Browser cases use controlled local fixtures. CI runs

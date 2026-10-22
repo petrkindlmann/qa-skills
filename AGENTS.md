@@ -87,6 +87,28 @@ When two skills could plausibly match a request, use these disambiguation rules.
 - Tool recipes live in each skill's `references/` directory.
 - The executable QA runner lives in `tools/qa/`; see `docs/QA-RUNNER.md`.
 
+## Working on this repository
+
+These rules apply when the task changes this repository rather than a user's project.
+`CONTRIBUTING.md` has the commands.
+
+- Run the gates that cover the change and report their counts. A static eval pass is lexical
+  coverage and a judge pass is a reading of the skill's text; neither is an agent success rate.
+- Before pushing anything under `tests/workflows/`, run `npm run test:workflow-controls`, the
+  CI gate. On a loaded host a case can end `not_established` with `timedOut: true`; compare it
+  with the same case in the last green CI log and re-run that id alone. A `not_established`
+  case with no failed test means the detector missed: read its attachments.
+- The root of `tests/workflows/generated/` is the released set (36 healthy tests).
+  `campaign3/` and `experiment/` are scored separately; a new top-level folder there changes
+  the gate's count. `run-matrix.mjs` and `run-experiment.mjs` start a run when imported.
+- Dated reports (`docs/*-2026-*.md`) and `docs/evidence/` record what was run at the time.
+  Record later changes in `VERSIONS.md` instead of rewriting them.
+- Subagents started inside this repository inherit this file and the session's memory. A
+  take that must run without the skills or these rules runs as `claude -p` from a directory
+  outside the repository, and its transcript must show which instruction files it received.
+- `main` is the only branch. A push touching the CI paths costs about 10 runner minutes, so
+  batch commits before pushing. Tags and releases are the owner's decision.
+
 ## Available Skills — 50 skills across 10 categories
 
 ### Foundation

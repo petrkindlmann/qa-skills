@@ -1,26 +1,64 @@
 # TODO
 
-Outstanding work, roughly in priority order. Reviewed 2026-10-21.
+Outstanding work, roughly in priority order. Reviewed 2026-10-22, at v3.5.0.
 
-## Near-term
+## Decisions waiting on the owner
 
-- [x] **Eval runner.** ✅ Built in v3.0.0: `scripts/run_evals.py` (`--static` / `--baseline` / `--live`) with the shared grammar in `scripts/eval_patterns.py`, plus the extended `scripts/validate_skills.py` and generated `scripts/build_index.py`.
-- [ ] **Full live eval (deferred follow-up).** Decision 2026-06-10: shipped v3.0.0 on the green `--static` pass (471/512 checkable cases, rest correctly deferred to a judge) plus a proven `--live` harness (smoke-tested on api-testing). The full `--live --all` run (~500 `claude -p` sessions, multi-hour, heavy token cost) is a documented follow-up, not a release blocker. Run it before any major external promotion push, ideally wired into `.github/workflows/` as a gated/nightly job (static evals already CI-ready).
-- [x] **CI workflow.** `.github/workflows/validate-skills.yml` runs structural checks, executable documentation recipes, QA runner controls, and real application fault controls on relevant pull requests and pushes to main.
-- [ ] **Distribution.** Repo is live at [qa-skills.com](https://qa-skills.com) and filed to `awesome-claude-code` (issue #1774). Post a before/after demo (agent writing Playwright tests with vs. without these skills). Track GitHub stars as the real adoption signal.
+- [ ] **Tag and release v3.5.0.** `main` carries it, CI is green and the site is deployed; no
+  tag or GitHub release exists yet.
+- [ ] **MCP server and Claude Code plugin.** Proposed, not built: a stdio server exposing the
+  runner (`qa_plan`, `qa_run`, `qa_init`, `skill_route`) and `skill://` resources, plus a plugin
+  with the 50 skills and a `/qa` command that lists every contract clause before loading skills.
+  Open questions: SDK dependency or none, this repo or a separate package, and whether `qa_run`
+  may execute project commands from an MCP host without a confirmation step.
+- [ ] **Contract sweep beyond `api-testing`.** The with-and-without run showed loaded skills
+  narrowing a suite to their own subjects. `api-testing` now requires a test or a "not covered"
+  line per contract clause; decide whether `AGENTS.md` should ask the same of every acceptance
+  task.
 
-## Validation (before investing further)
+## Evidence still missing
 
-- [ ] Confirm adoption (stars / installs) before adding an 8th-wave of skills — `i18n-testing`, `mcp-server-testing`, `seo-testing` are the researched wave-two candidates if demand warrants.
-- [ ] If pursuing revenue, validate a productized "set up senior-grade QA conventions in your repo" service offer before any paid product. Per-skill willingness-to-pay is low; service-first is the realistic path.
+- [ ] **Full live eval.** `--static` passes 511 of 511 checkable cases (5 are live-only) and the
+  semantic judge has read all 808 deferred criteria against the skills' text. Neither shows
+  that an agent produces the pattern. The `--live --all` run (~500 `claude -p` sessions,
+  hours, heavy token cost) is still a follow-up; run it before any major promotion.
+- [ ] **A comparison where skills could help.** The with-and-without Shop task did not show
+  higher detection with skills (primary set circular, secondary 15 vs 16 and 18 of 30). A
+  fairer test would use a task whose failure modes the skills cover and the base model is
+  known to miss, with fault design kept apart from skill authoring.
+
+## Lab follow-ups
+
+- [ ] The curated copy of the layout-shift spec under
+  `tests/workflows/generated/campaign3/test-suite-curation/curated/` keeps the old timing-bound
+  anchor as that take's output. Its matrix phase does not run the fault; repair it if the
+  curated suite is ever promoted.
+- [ ] Two process-cleanup example tests use 700 ms budgets and fail when the host's load
+  average is very high. They pass on CI and quiet re-runs; investigate before loosening them.
+- [ ] `c3-tdm-idempotency-index` cannot hit the dropped-constraint race with a three-request
+  burst; the case stays as a recorded limit.
+
+## Distribution
+
+- [ ] Live at [qa-skills.com](https://qa-skills.com) and filed to `awesome-claude-code`
+  (issue #1774). In October 2026: 199 stars, 34 forks, 1,100+ unique clones in 14 days.
+  Track stars as the adoption signal.
+- [ ] Confirm adoption before adding more skills: `i18n-testing`, `mcp-server-testing` and
+  `seo-testing` are the researched candidates.
+- [ ] If pursuing revenue, validate a productized "set up senior-grade QA conventions in your
+  repo" service before any paid product. Per-skill willingness to pay is low.
 
 ## Deferred / not now
 
-- [ ] Do **not** build billing, subscriptions, accounts, or a hosted SaaS until adoption is proven.
-- [ ] Optional: scrub the old Cloudflare account ID/email from git history (`git filter-repo`). Low priority — they're non-secret identifiers already public, and a history rewrite breaks existing clones/forks.
+- [ ] Do **not** build billing, subscriptions, accounts or a hosted SaaS until adoption is proven.
+- [ ] Optional: scrub the old Cloudflare account ID/email from git history (`git filter-repo`).
+  Low priority: they are non-secret identifiers already public, and a history rewrite breaks
+  existing clones and forks.
 
 ## Known accepted trade-offs
 
-- `SKILL.md` line cap is 650 (target ≤450); largest is `playwright-automation` at 460 post-re-template.
-- `--static` eval mode is a content proxy: it checks the skill *teaches* a pattern, not that a live agent *produces* it. The handful of remaining static fails are 1-case eval-precision items deferred to the (not-yet-run) live judge, not skill defects.
-- Independent Codex review of `docs/PROJECT_SURVEY.md` is pending Codex quota reset — survey was self-audited in the interim.
+- `SKILL.md` line cap is 650 (target ≤450); the largest is `playwright-automation` at 478.
+- `--static` checks that a skill *teaches* a pattern, and the judge checks the same for prose
+  criteria. Neither is an agent success rate.
+- The 2026-05-30 project survey and its Codex review are local planning documents
+  (gitignored), not part of the published repo.

@@ -16,7 +16,7 @@ the designated regressions; they do not measure fresh-agent authoring.
 | `accessibility.spec.mjs` | axe scan of every reachable state, keyboard-only journey, documented upstream gaps | `unlabeled_controls` (`shop-unlabeled-controls`) |
 | `database.spec.mjs` | hashed credentials at rest, constraint test with rollback, orphan and integrity checks via `node:sqlite` | `plaintext_session_tokens`, `missing_idempotency_index` |
 | `security.spec.mjs` | failed-login throttle with clock control, locked support routes, uniform reset under mail outage | `no_login_throttle`, `open_test_support`, `smtp_failure_503` |
-| `performance.spec.mjs` | LCP and CLS lab budgets through `PerformanceObserver`, input-anchored layout | `delayed-render`, `layout-shift` |
+| `performance.spec.mjs` | LCP and CLS lab budgets through `PerformanceObserver`, and an entry-field anchor checked against the buffered layout-shift record, so a shift before the test's first read still counts | `delayed-render`, `layout-shift` |
 
 Run healthy: `QA_WORKFLOW_SUITE=$PWD/tests/workflows/generated/addons npx playwright test --config tests/workflows/playwright.config.mjs`
 (the suite path must be absolute; a relative one resolves against the config directory).

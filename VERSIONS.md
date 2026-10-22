@@ -46,6 +46,13 @@
   project's language and harness and uses exact labels where they share words.
 - The lab Shop's listen backlog is 128, so concurrent bursts are no longer reset on macOS.
 - Landing page proof strip replaced with measured GitHub figures and their date.
+- The workflow config keeps `campaign3/` and `experiment/` out of the released set when it
+  runs the whole `generated/` tree. They had grown the CI gate's healthy count from 36 to
+  286 and failed it; they are scored by `run-matrix.mjs campaign3` and `run-experiment.mjs`.
+- The layout-shift addon reads its anchor from the buffered layout-shift record. It used to
+  read the entry field's first position after page load, and on a loaded host the injected
+  banner landed before that read, so the fault passed unseen. The check now catches the
+  fault whether the read comes early or late.
 
 Usage: [QA runner](docs/QA-RUNNER.md).
 
