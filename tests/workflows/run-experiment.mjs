@@ -48,6 +48,7 @@ async function runSuite(take, fault, directory) {
     '--workers=2', '--retries=0', '--global-timeout=240000'];
   const env = { ...process.env, QA_SHOP_FAULT: fault ?? '', QA_TODO_FAULT: '', QA_MATRIX_RUN_ID: randomUUID(),
     QA_WORKFLOW_SUITE: path.join(root, 'tests/workflows/generated/experiment', take), QA_WORKFLOW_OUTPUT: directory };
+  const startedAt = new Date().toISOString();
   const started = performance.now();
   const result = await runBounded({ command: process.execPath, args, cwd: root, env, timeoutMs: 250000, killGraceMs: 5000 });
   await writeFile(path.join(directory, 'minimal.txt'), result.log);
@@ -60,7 +61,9 @@ async function runSuite(take, fault, directory) {
   const assessment = assessRun({ healthy: true, count: tests.length }, result, report);
   const failed = tests.filter(test => test.outcome === 'unexpected').map(test => ({
     title: test.title, error: test.results[0]?.errors[0]?.split('\n').slice(0, 3).join(' ').slice(0, 300) }));
-  return { take, fault: fault ?? 'healthy', code: result.code, signal: result.signal, parseError,
+  // Wall-clock bounds let a reader check a run against host sleep, which stretches timeouts.
+  return { take, fault: fault ?? 'healthy', startedAt, finishedAt: new Date().toISOString(),
+    code: result.code, signal: result.signal, parseError,
     wallMs: Math.round(performance.now() - started), executed: tests.length, failed,
     timedOut: assessment.timedOut, infrastructureError: assessment.infrastructureError,
     clean: !result.signal && !assessment.timedOut && !assessment.infrastructureError && !parseError && tests.length > 0 };

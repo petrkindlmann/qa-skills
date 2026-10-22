@@ -1,0 +1,4559 @@
+{
+  "startedAt": "2026-10-22T01:27:23.380Z",
+  "node": "v26.0.0",
+  "set": "secondary",
+  "faults": [
+    "unlabeled_controls",
+    "plaintext_session_tokens",
+    "missing_idempotency_index",
+    "no_login_throttle",
+    "open_test_support",
+    "smtp_failure_503",
+    "slow_health",
+    "wrong_currency_event",
+    "reset_email_dropped",
+    "catalog_currency_missing"
+  ],
+  "takes": {
+    "with-1": {
+      "healthy": {
+        "take": "with-1",
+        "fault": "healthy",
+        "code": 0,
+        "signal": null,
+        "wallMs": 19660,
+        "executed": 11,
+        "failed": [],
+        "timedOut": false,
+        "infrastructureError": false,
+        "clean": true
+      },
+      "controls": [
+        {
+          "take": "with-1",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 19660,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        },
+        {
+          "take": "with-1",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 15942,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        }
+      ],
+      "faults": {
+        "unlabeled_controls": {
+          "take": "with-1",
+          "fault": "unlabeled_controls",
+          "code": 1,
+          "signal": null,
+          "wallMs": 24888,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "a shopper signs in, checks out in the browser and sees payment confirmed after the signed event",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+            },
+            {
+              "title": "the emailed reset link sets a new password in the browser and revokes old sessions",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-1",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 24888,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "a shopper signs in, checks out in the browser and sees payment confirmed after the signed event",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "the emailed reset link sets a new password in the browser and revokes old sessions",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-1",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 26679,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "a shopper signs in, checks out in the browser and sees payment confirmed after the signed event",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "the emailed reset link sets a new password in the browser and revokes old sessions",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "a shopper signs in, checks out in the browser and sees payment confirmed after the signed event",
+            "the emailed reset link sets a new password in the browser and revokes old sessions"
+          ],
+          "verdict": "detected"
+        },
+        "plaintext_session_tokens": {
+          "take": "with-1",
+          "fault": "plaintext_session_tokens",
+          "code": 0,
+          "signal": null,
+          "wallMs": 13499,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-1",
+            "fault": "plaintext_session_tokens",
+            "code": 0,
+            "signal": null,
+            "wallMs": 13499,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "missing_idempotency_index": {
+          "take": "with-1",
+          "fault": "missing_idempotency_index",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10977,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-1",
+            "fault": "missing_idempotency_index",
+            "code": 0,
+            "signal": null,
+            "wallMs": 10977,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "no_login_throttle": {
+          "take": "with-1",
+          "fault": "no_login_throttle",
+          "code": 1,
+          "signal": null,
+          "wallMs": 16122,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "failed sign-ins are throttled per address until the window passes",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-1",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 16122,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "failed sign-ins are throttled per address until the window passes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-1",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 15370,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "failed sign-ins are throttled per address until the window passes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "failed sign-ins are throttled per address until the window passes"
+          ],
+          "verdict": "detected"
+        },
+        "open_test_support": {
+          "take": "with-1",
+          "fault": "open_test_support",
+          "code": 0,
+          "signal": null,
+          "wallMs": 14276,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-1",
+            "fault": "open_test_support",
+            "code": 0,
+            "signal": null,
+            "wallMs": 14276,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "smtp_failure_503": {
+          "take": "with-1",
+          "fault": "smtp_failure_503",
+          "code": 0,
+          "signal": null,
+          "wallMs": 16420,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-1",
+            "fault": "smtp_failure_503",
+            "code": 0,
+            "signal": null,
+            "wallMs": 16420,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "slow_health": {
+          "take": "with-1",
+          "fault": "slow_health",
+          "code": 0,
+          "signal": null,
+          "wallMs": 21167,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-1",
+            "fault": "slow_health",
+            "code": 0,
+            "signal": null,
+            "wallMs": 21167,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "wrong_currency_event": {
+          "take": "with-1",
+          "fault": "wrong_currency_event",
+          "code": 1,
+          "signal": null,
+          "wallMs": 18142,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "a shopper signs in, checks out in the browser and sees payment confirmed after the signed event",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-1",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 18142,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "a shopper signs in, checks out in the browser and sees payment confirmed after the signed event",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-1",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 20791,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "a shopper signs in, checks out in the browser and sees payment confirmed after the signed event",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "a shopper signs in, checks out in the browser and sees payment confirmed after the signed event"
+          ],
+          "verdict": "detected"
+        },
+        "reset_email_dropped": {
+          "take": "with-1",
+          "fault": "reset_email_dropped",
+          "code": 1,
+          "signal": null,
+          "wallMs": 36419,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "the emailed reset link sets a new password in the browser and revokes old sessions",
+              "error": "Error: email to alice+510d38a7bc9d471db37f930e1d97b107@example.test  email to alice+510d38a7bc9d471db37f930e1d97b107@example.test"
+            },
+            {
+              "title": "reset requests do not reveal accounts, and expired or invalid tokens are refused",
+              "error": "Error: email to bob+a50f8f21662948f2bcb7ab93c9aee891@example.test  email to bob+a50f8f21662948f2bcb7ab93c9aee891@example.test"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-1",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 36419,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "the emailed reset link sets a new password in the browser and revokes old sessions",
+                "error": "Error: email to alice+510d38a7bc9d471db37f930e1d97b107@example.test  email to alice+510d38a7bc9d471db37f930e1d97b107@example.test"
+              },
+              {
+                "title": "reset requests do not reveal accounts, and expired or invalid tokens are refused",
+                "error": "Error: email to bob+a50f8f21662948f2bcb7ab93c9aee891@example.test  email to bob+a50f8f21662948f2bcb7ab93c9aee891@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-1",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 31066,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "the emailed reset link sets a new password in the browser and revokes old sessions",
+                "error": "Error: email to alice+c57fb30318184572b32c9e67c8347d5b@example.test  email to alice+c57fb30318184572b32c9e67c8347d5b@example.test"
+              },
+              {
+                "title": "reset requests do not reveal accounts, and expired or invalid tokens are refused",
+                "error": "Error: email to bob+384ad22c01b24f40b6c0ab16b159ce23@example.test  email to bob+384ad22c01b24f40b6c0ab16b159ce23@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "the emailed reset link sets a new password in the browser and revokes old sessions",
+            "reset requests do not reveal accounts, and expired or invalid tokens are refused"
+          ],
+          "verdict": "detected"
+        },
+        "catalog_currency_missing": {
+          "take": "with-1",
+          "fault": "catalog_currency_missing",
+          "code": 1,
+          "signal": null,
+          "wallMs": 15406,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "server owns prices and rejects invalid orders without creating one",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-1",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 15406,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "server owns prices and rejects invalid orders without creating one",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-1",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 10508,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "server owns prices and rejects invalid orders without creating one",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "server owns prices and rejects invalid orders without creating one"
+          ],
+          "verdict": "detected"
+        }
+      },
+      "detected": [
+        "unlabeled_controls",
+        "no_login_throttle",
+        "wrong_currency_event",
+        "reset_email_dropped",
+        "catalog_currency_missing"
+      ],
+      "missed": [
+        "plaintext_session_tokens",
+        "missing_idempotency_index",
+        "open_test_support",
+        "smtp_failure_503",
+        "slow_health"
+      ],
+      "unstable": [],
+      "invalid": []
+    },
+    "without-1": {
+      "healthy": {
+        "take": "without-1",
+        "fault": "healthy",
+        "code": 0,
+        "signal": null,
+        "wallMs": 11044,
+        "executed": 12,
+        "failed": [],
+        "timedOut": false,
+        "infrastructureError": false,
+        "clean": true
+      },
+      "controls": [
+        {
+          "take": "without-1",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 11044,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        },
+        {
+          "take": "without-1",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 28339,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        }
+      ],
+      "faults": {
+        "unlabeled_controls": {
+          "take": "without-1",
+          "fault": "unlabeled_controls",
+          "code": 1,
+          "signal": null,
+          "wallMs": 43578,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees payment after reload and signs out",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+            },
+            {
+              "title": "reset link from the inbox opens a working new-password form",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-1",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 43578,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees payment after reload and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "reset link from the inbox opens a working new-password form",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-1",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 40993,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees payment after reload and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "reset link from the inbox opens a working new-password form",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out, sees payment after reload and signs out",
+            "reset link from the inbox opens a working new-password form"
+          ],
+          "verdict": "detected"
+        },
+        "plaintext_session_tokens": {
+          "take": "without-1",
+          "fault": "plaintext_session_tokens",
+          "code": 0,
+          "signal": null,
+          "wallMs": 26452,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-1",
+            "fault": "plaintext_session_tokens",
+            "code": 0,
+            "signal": null,
+            "wallMs": 26452,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "missing_idempotency_index": {
+          "take": "without-1",
+          "fault": "missing_idempotency_index",
+          "code": 0,
+          "signal": null,
+          "wallMs": 19442,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-1",
+            "fault": "missing_idempotency_index",
+            "code": 0,
+            "signal": null,
+            "wallMs": 19442,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "no_login_throttle": {
+          "take": "without-1",
+          "fault": "no_login_throttle",
+          "code": 1,
+          "signal": null,
+          "wallMs": 17991,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "repeated failed sign-ins are throttled per address until the window passes",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-1",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 17991,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "repeated failed sign-ins are throttled per address until the window passes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-1",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 27707,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "repeated failed sign-ins are throttled per address until the window passes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "repeated failed sign-ins are throttled per address until the window passes"
+          ],
+          "verdict": "detected"
+        },
+        "open_test_support": {
+          "take": "without-1",
+          "fault": "open_test_support",
+          "code": 1,
+          "signal": null,
+          "wallMs": 21600,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "sign-in issues a server session that sign-out revokes",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m403\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-1",
+            "fault": "open_test_support",
+            "code": 1,
+            "signal": null,
+            "wallMs": 21600,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "sign-in issues a server session that sign-out revokes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m403\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-1",
+            "fault": "open_test_support",
+            "code": 1,
+            "signal": null,
+            "wallMs": 15279,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "sign-in issues a server session that sign-out revokes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m403\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "sign-in issues a server session that sign-out revokes"
+          ],
+          "verdict": "detected"
+        },
+        "smtp_failure_503": {
+          "take": "without-1",
+          "fault": "smtp_failure_503",
+          "code": 0,
+          "signal": null,
+          "wallMs": 18414,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-1",
+            "fault": "smtp_failure_503",
+            "code": 0,
+            "signal": null,
+            "wallMs": 18414,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "slow_health": {
+          "take": "without-1",
+          "fault": "slow_health",
+          "code": 1,
+          "signal": null,
+          "wallMs": 20099,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "sign-in issues a server session that sign-out revokes",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected: < \u001b[32m500\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-1",
+            "fault": "slow_health",
+            "code": 1,
+            "signal": null,
+            "wallMs": 20099,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "sign-in issues a server session that sign-out revokes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected: < \u001b[32m500\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-1",
+            "fault": "slow_health",
+            "code": 1,
+            "signal": null,
+            "wallMs": 14875,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "sign-in issues a server session that sign-out revokes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected: < \u001b[32m500\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "sign-in issues a server session that sign-out revokes"
+          ],
+          "verdict": "detected"
+        },
+        "wrong_currency_event": {
+          "take": "without-1",
+          "fault": "wrong_currency_event",
+          "code": 1,
+          "signal": null,
+          "wallMs": 16311,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees payment after reload and signs out",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-1",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 16311,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees payment after reload and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-1",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 17853,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees payment after reload and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out, sees payment after reload and signs out"
+          ],
+          "verdict": "detected"
+        },
+        "reset_email_dropped": {
+          "take": "without-1",
+          "fault": "reset_email_dropped",
+          "code": 1,
+          "signal": null,
+          "wallMs": 44129,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "reset link from the inbox opens a working new-password form",
+              "error": "Error: mail \"Reset your Shop password\" to alice+06c6a29d43f047c5bae5bafd77cd5b86@example.test  mail \"Reset your Shop password\" to alice+06c6a29d43f047c5bae5bafd77cd5b86@example.test"
+            },
+            {
+              "title": "a reset link delivered to Mailpit changes the password once and ends old sessions",
+              "error": "Error: mail \"Reset your Shop password\" to alice+3c486c3591cf482db31ae2424d26fa32@example.test  mail \"Reset your Shop password\" to alice+3c486c3591cf482db31ae2424d26fa32@example.test"
+            },
+            {
+              "title": "a reset token expires after 300 seconds on the fixture clock",
+              "error": "Error: mail \"Reset your Shop password\" to bob+305f43921495416c89c99f0050836519@example.test  mail \"Reset your Shop password\" to bob+305f43921495416c89c99f0050836519@example.test"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-1",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 44129,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "reset link from the inbox opens a working new-password form",
+                "error": "Error: mail \"Reset your Shop password\" to alice+06c6a29d43f047c5bae5bafd77cd5b86@example.test  mail \"Reset your Shop password\" to alice+06c6a29d43f047c5bae5bafd77cd5b86@example.test"
+              },
+              {
+                "title": "a reset link delivered to Mailpit changes the password once and ends old sessions",
+                "error": "Error: mail \"Reset your Shop password\" to alice+3c486c3591cf482db31ae2424d26fa32@example.test  mail \"Reset your Shop password\" to alice+3c486c3591cf482db31ae2424d26fa32@example.test"
+              },
+              {
+                "title": "a reset token expires after 300 seconds on the fixture clock",
+                "error": "Error: mail \"Reset your Shop password\" to bob+305f43921495416c89c99f0050836519@example.test  mail \"Reset your Shop password\" to bob+305f43921495416c89c99f0050836519@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-1",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 63466,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "reset link from the inbox opens a working new-password form",
+                "error": "Error: mail \"Reset your Shop password\" to alice+7fceb596644f4059b02bf3a8b10b4993@example.test  mail \"Reset your Shop password\" to alice+7fceb596644f4059b02bf3a8b10b4993@example.test"
+              },
+              {
+                "title": "a reset link delivered to Mailpit changes the password once and ends old sessions",
+                "error": "Error: mail \"Reset your Shop password\" to alice+a0814f95a7bd4b36bd25903f9b5a76a8@example.test  mail \"Reset your Shop password\" to alice+a0814f95a7bd4b36bd25903f9b5a76a8@example.test"
+              },
+              {
+                "title": "a reset token expires after 300 seconds on the fixture clock",
+                "error": "Error: mail \"Reset your Shop password\" to bob+615698288bd14edaa03a9200035cfb43@example.test  mail \"Reset your Shop password\" to bob+615698288bd14edaa03a9200035cfb43@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "reset link from the inbox opens a working new-password form",
+            "a reset link delivered to Mailpit changes the password once and ends old sessions",
+            "a reset token expires after 300 seconds on the fixture clock"
+          ],
+          "verdict": "detected"
+        },
+        "catalog_currency_missing": {
+          "take": "without-1",
+          "fault": "catalog_currency_missing",
+          "code": 1,
+          "signal": null,
+          "wallMs": 56443,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "sign-in issues a server session that sign-out revokes",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-1",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 56443,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "sign-in issues a server session that sign-out revokes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-1",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 51472,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "sign-in issues a server session that sign-out revokes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "sign-in issues a server session that sign-out revokes"
+          ],
+          "verdict": "detected"
+        }
+      },
+      "detected": [
+        "unlabeled_controls",
+        "no_login_throttle",
+        "open_test_support",
+        "slow_health",
+        "wrong_currency_event",
+        "reset_email_dropped",
+        "catalog_currency_missing"
+      ],
+      "missed": [
+        "plaintext_session_tokens",
+        "missing_idempotency_index",
+        "smtp_failure_503"
+      ],
+      "unstable": [],
+      "invalid": []
+    },
+    "bare-1": {
+      "healthy": {
+        "take": "bare-1",
+        "fault": "healthy",
+        "code": 0,
+        "signal": null,
+        "wallMs": 23851,
+        "executed": 11,
+        "failed": [],
+        "timedOut": false,
+        "infrastructureError": false,
+        "clean": true
+      },
+      "controls": [
+        {
+          "take": "bare-1",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 23851,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        },
+        {
+          "take": "bare-1",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 35787,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        }
+      ],
+      "faults": {
+        "unlabeled_controls": {
+          "take": "bare-1",
+          "fault": "unlabeled_controls",
+          "code": 1,
+          "signal": null,
+          "wallMs": 48847,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees the payment land, survives reload and signs out",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+            },
+            {
+              "title": "password reset through a real Mailpit message revokes old sessions and credentials",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-1",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 48847,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the payment land, survives reload and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "password reset through a real Mailpit message revokes old sessions and credentials",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-1",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 36966,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the payment land, survives reload and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "password reset through a real Mailpit message revokes old sessions and credentials",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out, sees the payment land, survives reload and signs out",
+            "password reset through a real Mailpit message revokes old sessions and credentials"
+          ],
+          "verdict": "detected"
+        },
+        "plaintext_session_tokens": {
+          "take": "bare-1",
+          "fault": "plaintext_session_tokens",
+          "code": 1,
+          "signal": null,
+          "wallMs": 31122,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "health, session cookie, logout and unauthenticated access",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected: < \u001b[32m500\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-1",
+            "fault": "plaintext_session_tokens",
+            "code": 1,
+            "signal": null,
+            "wallMs": 31122,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "health, session cookie, logout and unauthenticated access",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected: < \u001b[32m500\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-1",
+            "fault": "plaintext_session_tokens",
+            "code": 0,
+            "signal": null,
+            "wallMs": 33046,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [],
+          "verdict": "unstable"
+        },
+        "missing_idempotency_index": {
+          "take": "bare-1",
+          "fault": "missing_idempotency_index",
+          "code": 0,
+          "signal": null,
+          "wallMs": 26732,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-1",
+            "fault": "missing_idempotency_index",
+            "code": 0,
+            "signal": null,
+            "wallMs": 26732,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "no_login_throttle": {
+          "take": "bare-1",
+          "fault": "no_login_throttle",
+          "code": 1,
+          "signal": null,
+          "wallMs": 44666,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "sign-in throttling locks an address after five failures until the window passes",
+              "error": "Error: correct password is refused while locked  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-1",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 44666,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "sign-in throttling locks an address after five failures until the window passes",
+                "error": "Error: correct password is refused while locked  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-1",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 60945,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "sign-in throttling locks an address after five failures until the window passes",
+                "error": "Error: correct password is refused while locked  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "sign-in throttling locks an address after five failures until the window passes"
+          ],
+          "verdict": "detected"
+        },
+        "open_test_support": {
+          "take": "bare-1",
+          "fault": "open_test_support",
+          "code": 1,
+          "signal": null,
+          "wallMs": 54788,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "health, session cookie, logout and unauthenticated access",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m403\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-1",
+            "fault": "open_test_support",
+            "code": 1,
+            "signal": null,
+            "wallMs": 54788,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "health, session cookie, logout and unauthenticated access",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m403\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-1",
+            "fault": "open_test_support",
+            "code": 1,
+            "signal": null,
+            "wallMs": 52066,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "health, session cookie, logout and unauthenticated access",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m403\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "health, session cookie, logout and unauthenticated access"
+          ],
+          "verdict": "detected"
+        },
+        "smtp_failure_503": {
+          "take": "bare-1",
+          "fault": "smtp_failure_503",
+          "code": null,
+          "signal": "SIGTERM",
+          "parseError": "ENOENT: no such file or directory, open '<scratch>/experiment-secondary/bare-1/smtp_failure_503/verbose.json'",
+          "wallMs": 606593,
+          "executed": 0,
+          "failed": [],
+          "timedOut": true,
+          "infrastructureError": false,
+          "clean": false,
+          "first": {
+            "take": "bare-1",
+            "fault": "smtp_failure_503",
+            "code": null,
+            "signal": "SIGTERM",
+            "parseError": "ENOENT: no such file or directory, open '<scratch>/experiment-secondary/bare-1/smtp_failure_503/verbose.json'",
+            "wallMs": 606593,
+            "executed": 0,
+            "failed": [],
+            "timedOut": true,
+            "infrastructureError": false,
+            "clean": false
+          },
+          "verdict": "invalid"
+        },
+        "slow_health": {
+          "take": "bare-1",
+          "fault": "slow_health",
+          "code": null,
+          "signal": "SIGTERM",
+          "parseError": "Unexpected end of JSON input",
+          "wallMs": 1085372,
+          "executed": 0,
+          "failed": [],
+          "timedOut": true,
+          "infrastructureError": false,
+          "clean": false,
+          "first": {
+            "take": "bare-1",
+            "fault": "slow_health",
+            "code": null,
+            "signal": "SIGTERM",
+            "parseError": "Unexpected end of JSON input",
+            "wallMs": 1085372,
+            "executed": 0,
+            "failed": [],
+            "timedOut": true,
+            "infrastructureError": false,
+            "clean": false
+          },
+          "verdict": "invalid"
+        },
+        "wrong_currency_event": {
+          "take": "bare-1",
+          "fault": "wrong_currency_event",
+          "code": null,
+          "signal": "SIGTERM",
+          "parseError": "ENOENT: no such file or directory, open '<scratch>/experiment-secondary/bare-1/wrong_currency_event/verbose.json'",
+          "wallMs": 251250,
+          "executed": 0,
+          "failed": [],
+          "timedOut": true,
+          "infrastructureError": false,
+          "clean": false,
+          "first": {
+            "take": "bare-1",
+            "fault": "wrong_currency_event",
+            "code": null,
+            "signal": "SIGTERM",
+            "parseError": "ENOENT: no such file or directory, open '<scratch>/experiment-secondary/bare-1/wrong_currency_event/verbose.json'",
+            "wallMs": 251250,
+            "executed": 0,
+            "failed": [],
+            "timedOut": true,
+            "infrastructureError": false,
+            "clean": false
+          },
+          "verdict": "invalid"
+        },
+        "reset_email_dropped": {
+          "take": "bare-1",
+          "fault": "reset_email_dropped",
+          "code": 1,
+          "signal": null,
+          "wallMs": 39396,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "reset tokens reject short passwords, expire after 300 seconds and leave the password intact",
+              "error": "Error: waiting for mail to alice+81df9ae48a134a26b87403c9057686e9@example.test  waiting for mail to alice+81df9ae48a134a26b87403c9057686e9@example.test"
+            },
+            {
+              "title": "password reset through a real Mailpit message revokes old sessions and credentials",
+              "error": "Error: waiting for mail to alice+697cd41b6cad44be8aa60208e388c9f3@example.test  waiting for mail to alice+697cd41b6cad44be8aa60208e388c9f3@example.test"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-1",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 39396,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "reset tokens reject short passwords, expire after 300 seconds and leave the password intact",
+                "error": "Error: waiting for mail to alice+81df9ae48a134a26b87403c9057686e9@example.test  waiting for mail to alice+81df9ae48a134a26b87403c9057686e9@example.test"
+              },
+              {
+                "title": "password reset through a real Mailpit message revokes old sessions and credentials",
+                "error": "Error: waiting for mail to alice+697cd41b6cad44be8aa60208e388c9f3@example.test  waiting for mail to alice+697cd41b6cad44be8aa60208e388c9f3@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-1",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 37391,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "reset tokens reject short passwords, expire after 300 seconds and leave the password intact",
+                "error": "Error: waiting for mail to alice+ec077591985f4501bd0e9cf8bead1cf9@example.test  waiting for mail to alice+ec077591985f4501bd0e9cf8bead1cf9@example.test"
+              },
+              {
+                "title": "password reset through a real Mailpit message revokes old sessions and credentials",
+                "error": "Error: waiting for mail to alice+4837e9959adc440e8cde28b8448cc942@example.test  waiting for mail to alice+4837e9959adc440e8cde28b8448cc942@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "reset tokens reject short passwords, expire after 300 seconds and leave the password intact",
+            "password reset through a real Mailpit message revokes old sessions and credentials"
+          ],
+          "verdict": "detected"
+        },
+        "catalog_currency_missing": {
+          "take": "bare-1",
+          "fault": "catalog_currency_missing",
+          "code": 0,
+          "signal": null,
+          "wallMs": 18268,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-1",
+            "fault": "catalog_currency_missing",
+            "code": 0,
+            "signal": null,
+            "wallMs": 18268,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        }
+      },
+      "detected": [
+        "unlabeled_controls",
+        "no_login_throttle",
+        "open_test_support",
+        "reset_email_dropped"
+      ],
+      "missed": [
+        "missing_idempotency_index",
+        "catalog_currency_missing"
+      ],
+      "unstable": [
+        "plaintext_session_tokens"
+      ],
+      "invalid": [
+        "smtp_failure_503",
+        "slow_health",
+        "wrong_currency_event"
+      ]
+    },
+    "with-2": {
+      "healthy": {
+        "take": "with-2",
+        "fault": "healthy",
+        "code": 0,
+        "signal": null,
+        "wallMs": 24723,
+        "executed": 12,
+        "failed": [],
+        "timedOut": false,
+        "infrastructureError": false,
+        "clean": true
+      },
+      "controls": [
+        {
+          "take": "with-2",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 24723,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        },
+        {
+          "take": "with-2",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 18723,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        }
+      ],
+      "faults": {
+        "unlabeled_controls": {
+          "take": "with-2",
+          "fault": "unlabeled_controls",
+          "code": 1,
+          "signal": null,
+          "wallMs": 26889,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees the verified payment after reload, and signs out",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+            },
+            {
+              "title": "password reset from the emailed link changes the password and revokes sessions",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-2",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 26889,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the verified payment after reload, and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "password reset from the emailed link changes the password and revokes sessions",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-2",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 40688,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the verified payment after reload, and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "password reset from the emailed link changes the password and revokes sessions",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out, sees the verified payment after reload, and signs out",
+            "password reset from the emailed link changes the password and revokes sessions"
+          ],
+          "verdict": "detected"
+        },
+        "plaintext_session_tokens": {
+          "take": "with-2",
+          "fault": "plaintext_session_tokens",
+          "code": 0,
+          "signal": null,
+          "wallMs": 19538,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-2",
+            "fault": "plaintext_session_tokens",
+            "code": 0,
+            "signal": null,
+            "wallMs": 19538,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "missing_idempotency_index": {
+          "take": "with-2",
+          "fault": "missing_idempotency_index",
+          "code": 0,
+          "signal": null,
+          "wallMs": 17063,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-2",
+            "fault": "missing_idempotency_index",
+            "code": 0,
+            "signal": null,
+            "wallMs": 17063,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "no_login_throttle": {
+          "take": "with-2",
+          "fault": "no_login_throttle",
+          "code": 1,
+          "signal": null,
+          "wallMs": 17672,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "sign-in throttling locks an address after five failures until the window passes",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-2",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 17672,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "sign-in throttling locks an address after five failures until the window passes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-2",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 12347,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "sign-in throttling locks an address after five failures until the window passes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "sign-in throttling locks an address after five failures until the window passes"
+          ],
+          "verdict": "detected"
+        },
+        "open_test_support": {
+          "take": "with-2",
+          "fault": "open_test_support",
+          "code": 0,
+          "signal": null,
+          "wallMs": 9161,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-2",
+            "fault": "open_test_support",
+            "code": 0,
+            "signal": null,
+            "wallMs": 9161,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "smtp_failure_503": {
+          "take": "with-2",
+          "fault": "smtp_failure_503",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10859,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-2",
+            "fault": "smtp_failure_503",
+            "code": 0,
+            "signal": null,
+            "wallMs": 10859,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "slow_health": {
+          "take": "with-2",
+          "fault": "slow_health",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10943,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-2",
+            "fault": "slow_health",
+            "code": 0,
+            "signal": null,
+            "wallMs": 10943,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "wrong_currency_event": {
+          "take": "with-2",
+          "fault": "wrong_currency_event",
+          "code": 1,
+          "signal": null,
+          "wallMs": 12825,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees the verified payment after reload, and signs out",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-2",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 12825,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the verified payment after reload, and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-2",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 12786,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the verified payment after reload, and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out, sees the verified payment after reload, and signs out"
+          ],
+          "verdict": "detected"
+        },
+        "reset_email_dropped": {
+          "take": "with-2",
+          "fault": "reset_email_dropped",
+          "code": 1,
+          "signal": null,
+          "wallMs": 30387,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "password reset from the emailed link changes the password and revokes sessions",
+              "error": "Error: no new email for alice+050d029681ff46a7b012b2570baa81d8@example.test  no new email for alice+050d029681ff46a7b012b2570baa81d8@example.test"
+            },
+            {
+              "title": "reset tokens expire after 300 seconds and enforce the password length",
+              "error": "Error: no new email for bob+ca8bb0bd45a04f3293765e3132babbdc@example.test  no new email for bob+ca8bb0bd45a04f3293765e3132babbdc@example.test"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-2",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 30387,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "password reset from the emailed link changes the password and revokes sessions",
+                "error": "Error: no new email for alice+050d029681ff46a7b012b2570baa81d8@example.test  no new email for alice+050d029681ff46a7b012b2570baa81d8@example.test"
+              },
+              {
+                "title": "reset tokens expire after 300 seconds and enforce the password length",
+                "error": "Error: no new email for bob+ca8bb0bd45a04f3293765e3132babbdc@example.test  no new email for bob+ca8bb0bd45a04f3293765e3132babbdc@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-2",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 32112,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "password reset from the emailed link changes the password and revokes sessions",
+                "error": "Error: no new email for alice+bac699d54e4b41a6b3f723b7fbba8d8a@example.test  no new email for alice+bac699d54e4b41a6b3f723b7fbba8d8a@example.test"
+              },
+              {
+                "title": "reset tokens expire after 300 seconds and enforce the password length",
+                "error": "Error: no new email for bob+eb80ae74ceec4c2f974263ab7ce48bec@example.test  no new email for bob+eb80ae74ceec4c2f974263ab7ce48bec@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "password reset from the emailed link changes the password and revokes sessions",
+            "reset tokens expire after 300 seconds and enforce the password length"
+          ],
+          "verdict": "detected"
+        },
+        "catalog_currency_missing": {
+          "take": "with-2",
+          "fault": "catalog_currency_missing",
+          "code": 1,
+          "signal": null,
+          "wallMs": 10925,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "server-owned pricing across compositions and quantity boundaries",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-2",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 10925,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "server-owned pricing across compositions and quantity boundaries",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-2",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 14463,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "server-owned pricing across compositions and quantity boundaries",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "server-owned pricing across compositions and quantity boundaries"
+          ],
+          "verdict": "detected"
+        }
+      },
+      "detected": [
+        "unlabeled_controls",
+        "no_login_throttle",
+        "wrong_currency_event",
+        "reset_email_dropped",
+        "catalog_currency_missing"
+      ],
+      "missed": [
+        "plaintext_session_tokens",
+        "missing_idempotency_index",
+        "open_test_support",
+        "smtp_failure_503",
+        "slow_health"
+      ],
+      "unstable": [],
+      "invalid": []
+    },
+    "without-2": {
+      "healthy": {
+        "take": "without-2",
+        "fault": "healthy",
+        "code": 0,
+        "signal": null,
+        "wallMs": 10641,
+        "executed": 12,
+        "failed": [],
+        "timedOut": false,
+        "infrastructureError": false,
+        "clean": true
+      },
+      "controls": [
+        {
+          "take": "without-2",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10641,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        },
+        {
+          "take": "without-2",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 12433,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        }
+      ],
+      "faults": {
+        "unlabeled_controls": {
+          "take": "without-2",
+          "fault": "unlabeled_controls",
+          "code": 1,
+          "signal": null,
+          "wallMs": 23693,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees the payment land and keeps state until sign-out",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+            },
+            {
+              "title": "a user resets a forgotten password from the emailed link and signs in with it",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-2",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 23693,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the payment land and keeps state until sign-out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "a user resets a forgotten password from the emailed link and signs in with it",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-2",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 26894,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the payment land and keeps state until sign-out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "a user resets a forgotten password from the emailed link and signs in with it",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out, sees the payment land and keeps state until sign-out",
+            "a user resets a forgotten password from the emailed link and signs in with it"
+          ],
+          "verdict": "detected"
+        },
+        "plaintext_session_tokens": {
+          "take": "without-2",
+          "fault": "plaintext_session_tokens",
+          "code": 0,
+          "signal": null,
+          "wallMs": 17507,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-2",
+            "fault": "plaintext_session_tokens",
+            "code": 0,
+            "signal": null,
+            "wallMs": 17507,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "missing_idempotency_index": {
+          "take": "without-2",
+          "fault": "missing_idempotency_index",
+          "code": 0,
+          "signal": null,
+          "wallMs": 12641,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-2",
+            "fault": "missing_idempotency_index",
+            "code": 0,
+            "signal": null,
+            "wallMs": 12641,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "no_login_throttle": {
+          "take": "without-2",
+          "fault": "no_login_throttle",
+          "code": 1,
+          "signal": null,
+          "wallMs": 27043,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "repeated failed sign-ins lock the address, even for the right password, until the window passes",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-2",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 27043,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "repeated failed sign-ins lock the address, even for the right password, until the window passes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-2",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 26765,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "repeated failed sign-ins lock the address, even for the right password, until the window passes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "repeated failed sign-ins lock the address, even for the right password, until the window passes"
+          ],
+          "verdict": "detected"
+        },
+        "open_test_support": {
+          "take": "without-2",
+          "fault": "open_test_support",
+          "code": 0,
+          "signal": null,
+          "wallMs": 22912,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-2",
+            "fault": "open_test_support",
+            "code": 0,
+            "signal": null,
+            "wallMs": 22912,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "smtp_failure_503": {
+          "take": "without-2",
+          "fault": "smtp_failure_503",
+          "code": 0,
+          "signal": null,
+          "wallMs": 11873,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-2",
+            "fault": "smtp_failure_503",
+            "code": 0,
+            "signal": null,
+            "wallMs": 11873,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "slow_health": {
+          "take": "without-2",
+          "fault": "slow_health",
+          "code": 0,
+          "signal": null,
+          "wallMs": 19168,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-2",
+            "fault": "slow_health",
+            "code": 0,
+            "signal": null,
+            "wallMs": 19168,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "wrong_currency_event": {
+          "take": "without-2",
+          "fault": "wrong_currency_event",
+          "code": 1,
+          "signal": null,
+          "wallMs": 31521,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees the payment land and keeps state until sign-out",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-2",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 31521,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the payment land and keeps state until sign-out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-2",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 17313,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the payment land and keeps state until sign-out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out, sees the payment land and keeps state until sign-out"
+          ],
+          "verdict": "detected"
+        },
+        "reset_email_dropped": {
+          "take": "without-2",
+          "fault": "reset_email_dropped",
+          "code": 1,
+          "signal": null,
+          "wallMs": 30158,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "a user resets a forgotten password from the emailed link and signs in with it",
+              "error": "Error: waiting for a new message to bob+54c88de56768483ca7bca78f47459b5e@example.test  waiting for a new message to bob+54c88de56768483ca7bca78f47459b5e@example.test"
+            },
+            {
+              "title": "a reset email from the real inbox changes the password once and ends every session",
+              "error": "Error: waiting for a new message to alice+2c3ace9f173a4748be67020068466caf@example.test  waiting for a new message to alice+2c3ace9f173a4748be67020068466caf@example.test"
+            },
+            {
+              "title": "a reset token stops working after 300 seconds",
+              "error": "Error: waiting for a new message to bob+796b28e1403b46b5ace9068f1f05a934@example.test  waiting for a new message to bob+796b28e1403b46b5ace9068f1f05a934@example.test"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-2",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 30158,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "a user resets a forgotten password from the emailed link and signs in with it",
+                "error": "Error: waiting for a new message to bob+54c88de56768483ca7bca78f47459b5e@example.test  waiting for a new message to bob+54c88de56768483ca7bca78f47459b5e@example.test"
+              },
+              {
+                "title": "a reset email from the real inbox changes the password once and ends every session",
+                "error": "Error: waiting for a new message to alice+2c3ace9f173a4748be67020068466caf@example.test  waiting for a new message to alice+2c3ace9f173a4748be67020068466caf@example.test"
+              },
+              {
+                "title": "a reset token stops working after 300 seconds",
+                "error": "Error: waiting for a new message to bob+796b28e1403b46b5ace9068f1f05a934@example.test  waiting for a new message to bob+796b28e1403b46b5ace9068f1f05a934@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-2",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 38123,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "a user resets a forgotten password from the emailed link and signs in with it",
+                "error": "Error: waiting for a new message to bob+d7cc5a5f1d3548cca8592494dd26c229@example.test  waiting for a new message to bob+d7cc5a5f1d3548cca8592494dd26c229@example.test"
+              },
+              {
+                "title": "a reset email from the real inbox changes the password once and ends every session",
+                "error": "Error: waiting for a new message to alice+dd106d6925d343a4afc7847dd03f1a32@example.test  waiting for a new message to alice+dd106d6925d343a4afc7847dd03f1a32@example.test"
+              },
+              {
+                "title": "a reset token stops working after 300 seconds",
+                "error": "Error: waiting for a new message to bob+e9885ccaebfa4b26b7ccc4ed30949816@example.test  waiting for a new message to bob+e9885ccaebfa4b26b7ccc4ed30949816@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "a user resets a forgotten password from the emailed link and signs in with it",
+            "a reset email from the real inbox changes the password once and ends every session",
+            "a reset token stops working after 300 seconds"
+          ],
+          "verdict": "detected"
+        },
+        "catalog_currency_missing": {
+          "take": "without-2",
+          "fault": "catalog_currency_missing",
+          "code": 0,
+          "signal": null,
+          "wallMs": 16604,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-2",
+            "fault": "catalog_currency_missing",
+            "code": 0,
+            "signal": null,
+            "wallMs": 16604,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        }
+      },
+      "detected": [
+        "unlabeled_controls",
+        "no_login_throttle",
+        "wrong_currency_event",
+        "reset_email_dropped"
+      ],
+      "missed": [
+        "plaintext_session_tokens",
+        "missing_idempotency_index",
+        "open_test_support",
+        "smtp_failure_503",
+        "slow_health",
+        "catalog_currency_missing"
+      ],
+      "unstable": [],
+      "invalid": []
+    },
+    "bare-2": {
+      "healthy": {
+        "take": "bare-2",
+        "fault": "healthy",
+        "code": 0,
+        "signal": null,
+        "wallMs": 13820,
+        "executed": 12,
+        "failed": [],
+        "timedOut": false,
+        "infrastructureError": false,
+        "clean": true
+      },
+      "controls": [
+        {
+          "take": "bare-2",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 13820,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        },
+        {
+          "take": "bare-2",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 14676,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        }
+      ],
+      "faults": {
+        "unlabeled_controls": {
+          "take": "bare-2",
+          "fault": "unlabeled_controls",
+          "code": 1,
+          "signal": null,
+          "wallMs": 31399,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees payment land, survives reload and signs out",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByRole('textbox', { name: 'Email', exact: true })\u001b[22m"
+            },
+            {
+              "title": "shopper resets a forgotten password from the emailed link and signs in with it",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByRole('textbox', { name: 'Account email' })\u001b[22m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-2",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 31399,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees payment land, survives reload and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByRole('textbox', { name: 'Email', exact: true })\u001b[22m"
+              },
+              {
+                "title": "shopper resets a forgotten password from the emailed link and signs in with it",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByRole('textbox', { name: 'Account email' })\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-2",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 24675,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees payment land, survives reload and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByRole('textbox', { name: 'Email', exact: true })\u001b[22m"
+              },
+              {
+                "title": "shopper resets a forgotten password from the emailed link and signs in with it",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByRole('textbox', { name: 'Account email' })\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out, sees payment land, survives reload and signs out",
+            "shopper resets a forgotten password from the emailed link and signs in with it"
+          ],
+          "verdict": "detected"
+        },
+        "plaintext_session_tokens": {
+          "take": "bare-2",
+          "fault": "plaintext_session_tokens",
+          "code": 0,
+          "signal": null,
+          "wallMs": 20012,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-2",
+            "fault": "plaintext_session_tokens",
+            "code": 0,
+            "signal": null,
+            "wallMs": 20012,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "missing_idempotency_index": {
+          "take": "bare-2",
+          "fault": "missing_idempotency_index",
+          "code": 0,
+          "signal": null,
+          "wallMs": 20415,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-2",
+            "fault": "missing_idempotency_index",
+            "code": 0,
+            "signal": null,
+            "wallMs": 20415,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "no_login_throttle": {
+          "take": "bare-2",
+          "fault": "no_login_throttle",
+          "code": 1,
+          "signal": null,
+          "wallMs": 27754,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "five failed sign-ins lock an address, even for the right password, until the window passes",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-2",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 27754,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "five failed sign-ins lock an address, even for the right password, until the window passes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-2",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 25115,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "five failed sign-ins lock an address, even for the right password, until the window passes",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "five failed sign-ins lock an address, even for the right password, until the window passes"
+          ],
+          "verdict": "detected"
+        },
+        "open_test_support": {
+          "take": "bare-2",
+          "fault": "open_test_support",
+          "code": 1,
+          "signal": null,
+          "wallMs": 22757,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "sign-in issues a hardened session cookie and sign-out revokes it on the server",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m403\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-2",
+            "fault": "open_test_support",
+            "code": 1,
+            "signal": null,
+            "wallMs": 22757,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "sign-in issues a hardened session cookie and sign-out revokes it on the server",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m403\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-2",
+            "fault": "open_test_support",
+            "code": 1,
+            "signal": null,
+            "wallMs": 18030,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "sign-in issues a hardened session cookie and sign-out revokes it on the server",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m403\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "sign-in issues a hardened session cookie and sign-out revokes it on the server"
+          ],
+          "verdict": "detected"
+        },
+        "smtp_failure_503": {
+          "take": "bare-2",
+          "fault": "smtp_failure_503",
+          "code": 0,
+          "signal": null,
+          "wallMs": 14704,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-2",
+            "fault": "smtp_failure_503",
+            "code": 0,
+            "signal": null,
+            "wallMs": 14704,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "slow_health": {
+          "take": "bare-2",
+          "fault": "slow_health",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10455,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-2",
+            "fault": "slow_health",
+            "code": 0,
+            "signal": null,
+            "wallMs": 10455,
+            "executed": 12,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "wrong_currency_event": {
+          "take": "bare-2",
+          "fault": "wrong_currency_event",
+          "code": null,
+          "signal": "SIGTERM",
+          "parseError": "ENOENT: no such file or directory, open '<scratch>/experiment-secondary/bare-2/wrong_currency_event/verbose.json'",
+          "wallMs": 337559,
+          "executed": 0,
+          "failed": [],
+          "timedOut": true,
+          "infrastructureError": false,
+          "clean": false,
+          "first": {
+            "take": "bare-2",
+            "fault": "wrong_currency_event",
+            "code": null,
+            "signal": "SIGTERM",
+            "parseError": "ENOENT: no such file or directory, open '<scratch>/experiment-secondary/bare-2/wrong_currency_event/verbose.json'",
+            "wallMs": 337559,
+            "executed": 0,
+            "failed": [],
+            "timedOut": true,
+            "infrastructureError": false,
+            "clean": false
+          },
+          "verdict": "invalid"
+        },
+        "reset_email_dropped": {
+          "take": "bare-2",
+          "fault": "reset_email_dropped",
+          "code": 1,
+          "signal": null,
+          "wallMs": 43525,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "shopper resets a forgotten password from the emailed link and signs in with it",
+              "error": "Error: expected 1 message(s) for bob+d42fa8c9ff4041f98c30f06c539aca0c@example.test in Mailpit  expected 1 message(s) for bob+d42fa8c9ff4041f98c30f06c539aca0c@example.test in Mailpit"
+            },
+            {
+              "title": "a reset link delivered to Mailpit changes the password once and revokes every session",
+              "error": "Error: expected 1 message(s) for alice+8cfa4829707a4d10bee80215561f139f@example.test in Mailpit  expected 1 message(s) for alice+8cfa4829707a4d10bee80215561f139f@example.test in Mailpit"
+            },
+            {
+              "title": "reset tokens expire after 300 seconds and a too-short password does not consume them",
+              "error": "Error: expected 1 message(s) for bob+9a3f389366564d16bbd8baf969d773df@example.test in Mailpit  expected 1 message(s) for bob+9a3f389366564d16bbd8baf969d773df@example.test in Mailpit"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-2",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 43525,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper resets a forgotten password from the emailed link and signs in with it",
+                "error": "Error: expected 1 message(s) for bob+d42fa8c9ff4041f98c30f06c539aca0c@example.test in Mailpit  expected 1 message(s) for bob+d42fa8c9ff4041f98c30f06c539aca0c@example.test in Mailpit"
+              },
+              {
+                "title": "a reset link delivered to Mailpit changes the password once and revokes every session",
+                "error": "Error: expected 1 message(s) for alice+8cfa4829707a4d10bee80215561f139f@example.test in Mailpit  expected 1 message(s) for alice+8cfa4829707a4d10bee80215561f139f@example.test in Mailpit"
+              },
+              {
+                "title": "reset tokens expire after 300 seconds and a too-short password does not consume them",
+                "error": "Error: expected 1 message(s) for bob+9a3f389366564d16bbd8baf969d773df@example.test in Mailpit  expected 1 message(s) for bob+9a3f389366564d16bbd8baf969d773df@example.test in Mailpit"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-2",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 30705,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper resets a forgotten password from the emailed link and signs in with it",
+                "error": "Error: expected 1 message(s) for bob+bd5b4ca80a4545cf89f662fa0ee34b36@example.test in Mailpit  expected 1 message(s) for bob+bd5b4ca80a4545cf89f662fa0ee34b36@example.test in Mailpit"
+              },
+              {
+                "title": "a reset link delivered to Mailpit changes the password once and revokes every session",
+                "error": "Error: expected 1 message(s) for alice+c69f68ec99464b049a2e2fb0f2b30a2c@example.test in Mailpit  expected 1 message(s) for alice+c69f68ec99464b049a2e2fb0f2b30a2c@example.test in Mailpit"
+              },
+              {
+                "title": "reset tokens expire after 300 seconds and a too-short password does not consume them",
+                "error": "Error: expected 1 message(s) for bob+3d4f40f8957145d1ad85384f4c02d1a6@example.test in Mailpit  expected 1 message(s) for bob+3d4f40f8957145d1ad85384f4c02d1a6@example.test in Mailpit"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper resets a forgotten password from the emailed link and signs in with it",
+            "a reset link delivered to Mailpit changes the password once and revokes every session",
+            "reset tokens expire after 300 seconds and a too-short password does not consume them"
+          ],
+          "verdict": "detected"
+        },
+        "catalog_currency_missing": {
+          "take": "bare-2",
+          "fault": "catalog_currency_missing",
+          "code": 1,
+          "signal": null,
+          "wallMs": 11183,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "the server prices orders from its catalogue and rejects invalid baskets without creating orders",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-2",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 11183,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "the server prices orders from its catalogue and rejects invalid baskets without creating orders",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-2",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 8586,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "the server prices orders from its catalogue and rejects invalid baskets without creating orders",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "the server prices orders from its catalogue and rejects invalid baskets without creating orders"
+          ],
+          "verdict": "detected"
+        }
+      },
+      "detected": [
+        "unlabeled_controls",
+        "no_login_throttle",
+        "open_test_support",
+        "reset_email_dropped",
+        "catalog_currency_missing"
+      ],
+      "missed": [
+        "plaintext_session_tokens",
+        "missing_idempotency_index",
+        "smtp_failure_503",
+        "slow_health"
+      ],
+      "unstable": [],
+      "invalid": [
+        "wrong_currency_event"
+      ]
+    },
+    "with-3": {
+      "healthy": {
+        "take": "with-3",
+        "fault": "healthy",
+        "code": 0,
+        "signal": null,
+        "wallMs": 8170,
+        "executed": 11,
+        "failed": [],
+        "timedOut": false,
+        "infrastructureError": false,
+        "clean": true
+      },
+      "controls": [
+        {
+          "take": "with-3",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 8170,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        },
+        {
+          "take": "with-3",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10817,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        }
+      ],
+      "faults": {
+        "unlabeled_controls": {
+          "take": "with-3",
+          "fault": "unlabeled_controls",
+          "code": 1,
+          "signal": null,
+          "wallMs": 22938,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees the paid state after reload and signs out",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+            },
+            {
+              "title": "reset email from Mailpit resets the password in the browser and revokes old sessions",
+              "error": "TimeoutError: page.waitForResponse: Timeout 8000ms exceeded while waiting for event \"response\"    14 |     await page.goto(`${app.baseURL}/`);"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-3",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 22938,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the paid state after reload and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "reset email from Mailpit resets the password in the browser and revokes old sessions",
+                "error": "TimeoutError: page.waitForResponse: Timeout 8000ms exceeded while waiting for event \"response\"    14 |     await page.goto(`${app.baseURL}/`);"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-3",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 17576,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the paid state after reload and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "reset email from Mailpit resets the password in the browser and revokes old sessions",
+                "error": "TimeoutError: page.waitForResponse: Timeout 8000ms exceeded while waiting for event \"response\"    14 |     await page.goto(`${app.baseURL}/`);"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out, sees the paid state after reload and signs out",
+            "reset email from Mailpit resets the password in the browser and revokes old sessions"
+          ],
+          "verdict": "detected"
+        },
+        "plaintext_session_tokens": {
+          "take": "with-3",
+          "fault": "plaintext_session_tokens",
+          "code": 0,
+          "signal": null,
+          "wallMs": 8532,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-3",
+            "fault": "plaintext_session_tokens",
+            "code": 0,
+            "signal": null,
+            "wallMs": 8532,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "missing_idempotency_index": {
+          "take": "with-3",
+          "fault": "missing_idempotency_index",
+          "code": 0,
+          "signal": null,
+          "wallMs": 7826,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-3",
+            "fault": "missing_idempotency_index",
+            "code": 0,
+            "signal": null,
+            "wallMs": 7826,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "no_login_throttle": {
+          "take": "with-3",
+          "fault": "no_login_throttle",
+          "code": 1,
+          "signal": null,
+          "wallMs": 10627,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "five failed sign-ins throttle that address until the window passes",
+              "error": "Error: {\"user\": {\"id\": \"alice\", \"email\": \"alice+bdb6b7a770e5435c936e2f69e515bc14@example.test\"}}  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-3",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 10627,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "five failed sign-ins throttle that address until the window passes",
+                "error": "Error: {\"user\": {\"id\": \"alice\", \"email\": \"alice+bdb6b7a770e5435c936e2f69e515bc14@example.test\"}}  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-3",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 8995,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "five failed sign-ins throttle that address until the window passes",
+                "error": "Error: {\"user\": {\"id\": \"alice\", \"email\": \"alice+fcf4dc5930c2454696a575bc0cad8152@example.test\"}}  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "five failed sign-ins throttle that address until the window passes"
+          ],
+          "verdict": "detected"
+        },
+        "open_test_support": {
+          "take": "with-3",
+          "fault": "open_test_support",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10334,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-3",
+            "fault": "open_test_support",
+            "code": 0,
+            "signal": null,
+            "wallMs": 10334,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "smtp_failure_503": {
+          "take": "with-3",
+          "fault": "smtp_failure_503",
+          "code": 0,
+          "signal": null,
+          "wallMs": 8100,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-3",
+            "fault": "smtp_failure_503",
+            "code": 0,
+            "signal": null,
+            "wallMs": 8100,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "slow_health": {
+          "take": "with-3",
+          "fault": "slow_health",
+          "code": 0,
+          "signal": null,
+          "wallMs": 12398,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-3",
+            "fault": "slow_health",
+            "code": 0,
+            "signal": null,
+            "wallMs": 12398,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "wrong_currency_event": {
+          "take": "with-3",
+          "fault": "wrong_currency_event",
+          "code": 1,
+          "signal": null,
+          "wallMs": 10400,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees the paid state after reload and signs out",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-3",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 10400,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the paid state after reload and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-3",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 9837,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the paid state after reload and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out, sees the paid state after reload and signs out"
+          ],
+          "verdict": "detected"
+        },
+        "reset_email_dropped": {
+          "take": "with-3",
+          "fault": "reset_email_dropped",
+          "code": 1,
+          "signal": null,
+          "wallMs": 25983,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "reset email from Mailpit resets the password in the browser and revokes old sessions",
+              "error": "Error: no new email for alice+08be23704777429b8ef3e090132d99e4@example.test  no new email for alice+08be23704777429b8ef3e090132d99e4@example.test"
+            },
+            {
+              "title": "reset tokens expire after 300 seconds, are single use and need 12 characters",
+              "error": "Error: no new email for bob+bd68671ecbe4489ea7a31f18596e80bc@example.test  no new email for bob+bd68671ecbe4489ea7a31f18596e80bc@example.test"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-3",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 25983,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "reset email from Mailpit resets the password in the browser and revokes old sessions",
+                "error": "Error: no new email for alice+08be23704777429b8ef3e090132d99e4@example.test  no new email for alice+08be23704777429b8ef3e090132d99e4@example.test"
+              },
+              {
+                "title": "reset tokens expire after 300 seconds, are single use and need 12 characters",
+                "error": "Error: no new email for bob+bd68671ecbe4489ea7a31f18596e80bc@example.test  no new email for bob+bd68671ecbe4489ea7a31f18596e80bc@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-3",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 26260,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "reset email from Mailpit resets the password in the browser and revokes old sessions",
+                "error": "Error: no new email for alice+379ab9858a2f426a84932e7decc0e1e8@example.test  no new email for alice+379ab9858a2f426a84932e7decc0e1e8@example.test"
+              },
+              {
+                "title": "reset tokens expire after 300 seconds, are single use and need 12 characters",
+                "error": "Error: no new email for bob+4d378eedcdcc4aaca98d8e848dfc5e87@example.test  no new email for bob+4d378eedcdcc4aaca98d8e848dfc5e87@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "reset email from Mailpit resets the password in the browser and revokes old sessions",
+            "reset tokens expire after 300 seconds, are single use and need 12 characters"
+          ],
+          "verdict": "detected"
+        },
+        "catalog_currency_missing": {
+          "take": "with-3",
+          "fault": "catalog_currency_missing",
+          "code": 1,
+          "signal": null,
+          "wallMs": 10657,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "server owns prices and rejects invalid orders without creating one",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "with-3",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 10657,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "server owns prices and rejects invalid orders without creating one",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "with-3",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 9314,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "server owns prices and rejects invalid orders without creating one",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "server owns prices and rejects invalid orders without creating one"
+          ],
+          "verdict": "detected"
+        }
+      },
+      "detected": [
+        "unlabeled_controls",
+        "no_login_throttle",
+        "wrong_currency_event",
+        "reset_email_dropped",
+        "catalog_currency_missing"
+      ],
+      "missed": [
+        "plaintext_session_tokens",
+        "missing_idempotency_index",
+        "open_test_support",
+        "smtp_failure_503",
+        "slow_health"
+      ],
+      "unstable": [],
+      "invalid": []
+    },
+    "without-3": {
+      "healthy": {
+        "take": "without-3",
+        "fault": "healthy",
+        "code": 0,
+        "signal": null,
+        "wallMs": 12085,
+        "executed": 11,
+        "failed": [],
+        "timedOut": false,
+        "infrastructureError": false,
+        "clean": true
+      },
+      "controls": [
+        {
+          "take": "without-3",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 12085,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        },
+        {
+          "take": "without-3",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10632,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        }
+      ],
+      "faults": {
+        "unlabeled_controls": {
+          "take": "without-3",
+          "fault": "unlabeled_controls",
+          "code": 1,
+          "signal": null,
+          "wallMs": 28090,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "shopper checks out in the browser, sees the payment land, keeps it across reload and loses access on sign-out",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+            },
+            {
+              "title": "rejected sign-in and rejected order are reported in the page with no analytics or stored order",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+            },
+            {
+              "title": "reset link from the real inbox sets a new password and ends every existing session",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-3",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 28090,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper checks out in the browser, sees the payment land, keeps it across reload and loses access on sign-out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "rejected sign-in and rejected order are reported in the page with no analytics or stored order",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "reset link from the real inbox sets a new password and ends every existing session",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-3",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 27043,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper checks out in the browser, sees the payment land, keeps it across reload and loses access on sign-out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "rejected sign-in and rejected order are reported in the page with no analytics or stored order",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "reset link from the real inbox sets a new password and ends every existing session",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper checks out in the browser, sees the payment land, keeps it across reload and loses access on sign-out",
+            "rejected sign-in and rejected order are reported in the page with no analytics or stored order",
+            "reset link from the real inbox sets a new password and ends every existing session"
+          ],
+          "verdict": "detected"
+        },
+        "plaintext_session_tokens": {
+          "take": "without-3",
+          "fault": "plaintext_session_tokens",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10453,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-3",
+            "fault": "plaintext_session_tokens",
+            "code": 0,
+            "signal": null,
+            "wallMs": 10453,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "missing_idempotency_index": {
+          "take": "without-3",
+          "fault": "missing_idempotency_index",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10496,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-3",
+            "fault": "missing_idempotency_index",
+            "code": 0,
+            "signal": null,
+            "wallMs": 10496,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "no_login_throttle": {
+          "take": "without-3",
+          "fault": "no_login_throttle",
+          "code": 1,
+          "signal": null,
+          "wallMs": 11511,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "five failed sign-ins lock the address for 60 seconds, per address, and a success clears the counter",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-3",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 11511,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "five failed sign-ins lock the address for 60 seconds, per address, and a success clears the counter",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-3",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 12509,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "five failed sign-ins lock the address for 60 seconds, per address, and a success clears the counter",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m429\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "five failed sign-ins lock the address for 60 seconds, per address, and a success clears the counter"
+          ],
+          "verdict": "detected"
+        },
+        "open_test_support": {
+          "take": "without-3",
+          "fault": "open_test_support",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10723,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-3",
+            "fault": "open_test_support",
+            "code": 0,
+            "signal": null,
+            "wallMs": 10723,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "smtp_failure_503": {
+          "take": "without-3",
+          "fault": "smtp_failure_503",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10485,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-3",
+            "fault": "smtp_failure_503",
+            "code": 0,
+            "signal": null,
+            "wallMs": 10485,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "slow_health": {
+          "take": "without-3",
+          "fault": "slow_health",
+          "code": 0,
+          "signal": null,
+          "wallMs": 13258,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-3",
+            "fault": "slow_health",
+            "code": 0,
+            "signal": null,
+            "wallMs": 13258,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "wrong_currency_event": {
+          "take": "without-3",
+          "fault": "wrong_currency_event",
+          "code": 1,
+          "signal": null,
+          "wallMs": 12558,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "shopper checks out in the browser, sees the payment land, keeps it across reload and loses access on sign-out",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+            },
+            {
+              "title": "rejected sign-in and rejected order are reported in the page with no analytics or stored order",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-3",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 12558,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper checks out in the browser, sees the payment land, keeps it across reload and loses access on sign-out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              },
+              {
+                "title": "rejected sign-in and rejected order are reported in the page with no analytics or stored order",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-3",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 11509,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper checks out in the browser, sees the payment land, keeps it across reload and loses access on sign-out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              },
+              {
+                "title": "rejected sign-in and rejected order are reported in the page with no analytics or stored order",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper checks out in the browser, sees the payment land, keeps it across reload and loses access on sign-out",
+            "rejected sign-in and rejected order are reported in the page with no analytics or stored order"
+          ],
+          "verdict": "detected"
+        },
+        "reset_email_dropped": {
+          "take": "without-3",
+          "fault": "reset_email_dropped",
+          "code": 1,
+          "signal": null,
+          "wallMs": 20644,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "reset link from the real inbox sets a new password and ends every existing session",
+              "error": "Error: email delivered to alice+64463b1113a74fc58adb7e9fa5b8a0e9@example.test  email delivered to alice+64463b1113a74fc58adb7e9fa5b8a0e9@example.test"
+            },
+            {
+              "title": "expired, unknown and too-short reset submissions leave the password unchanged",
+              "error": "Error: email delivered to bob+2119b7a7f05e470d8bc9daa89c4fd19c@example.test  email delivered to bob+2119b7a7f05e470d8bc9daa89c4fd19c@example.test"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-3",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 20644,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "reset link from the real inbox sets a new password and ends every existing session",
+                "error": "Error: email delivered to alice+64463b1113a74fc58adb7e9fa5b8a0e9@example.test  email delivered to alice+64463b1113a74fc58adb7e9fa5b8a0e9@example.test"
+              },
+              {
+                "title": "expired, unknown and too-short reset submissions leave the password unchanged",
+                "error": "Error: email delivered to bob+2119b7a7f05e470d8bc9daa89c4fd19c@example.test  email delivered to bob+2119b7a7f05e470d8bc9daa89c4fd19c@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-3",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 21932,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "reset link from the real inbox sets a new password and ends every existing session",
+                "error": "Error: email delivered to alice+bc4e30dc9bfb4f3ea30637cf8c1f456f@example.test  email delivered to alice+bc4e30dc9bfb4f3ea30637cf8c1f456f@example.test"
+              },
+              {
+                "title": "expired, unknown and too-short reset submissions leave the password unchanged",
+                "error": "Error: email delivered to bob+75d32cd0d98042059278ea55ab6082fc@example.test  email delivered to bob+75d32cd0d98042059278ea55ab6082fc@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "reset link from the real inbox sets a new password and ends every existing session",
+            "expired, unknown and too-short reset submissions leave the password unchanged"
+          ],
+          "verdict": "detected"
+        },
+        "catalog_currency_missing": {
+          "take": "without-3",
+          "fault": "catalog_currency_missing",
+          "code": 1,
+          "signal": null,
+          "wallMs": 11812,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "server prices the basket, replays an equivalent key, and rejects conflicts and invalid baskets",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "without-3",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 11812,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "server prices the basket, replays an equivalent key, and rejects conflicts and invalid baskets",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "without-3",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 9064,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "server prices the basket, replays an equivalent key, and rejects conflicts and invalid baskets",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "server prices the basket, replays an equivalent key, and rejects conflicts and invalid baskets"
+          ],
+          "verdict": "detected"
+        }
+      },
+      "detected": [
+        "unlabeled_controls",
+        "no_login_throttle",
+        "wrong_currency_event",
+        "reset_email_dropped",
+        "catalog_currency_missing"
+      ],
+      "missed": [
+        "plaintext_session_tokens",
+        "missing_idempotency_index",
+        "open_test_support",
+        "smtp_failure_503",
+        "slow_health"
+      ],
+      "unstable": [],
+      "invalid": []
+    },
+    "bare-3": {
+      "healthy": {
+        "take": "bare-3",
+        "fault": "healthy",
+        "code": 0,
+        "signal": null,
+        "wallMs": 8028,
+        "executed": 11,
+        "failed": [],
+        "timedOut": false,
+        "infrastructureError": false,
+        "clean": true
+      },
+      "controls": [
+        {
+          "take": "bare-3",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 8028,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        },
+        {
+          "take": "bare-3",
+          "fault": "healthy",
+          "code": 0,
+          "signal": null,
+          "wallMs": 8546,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        }
+      ],
+      "faults": {
+        "unlabeled_controls": {
+          "take": "bare-3",
+          "fault": "unlabeled_controls",
+          "code": 1,
+          "signal": null,
+          "wallMs": 24613,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out once, sees payment, survives reload and signs out",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+            },
+            {
+              "title": "password reset from the real inbox replaces the password and ends old sessions",
+              "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-3",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 24613,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out once, sees payment, survives reload and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "password reset from the real inbox replaces the password and ends old sessions",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-3",
+            "fault": "unlabeled_controls",
+            "code": 1,
+            "signal": null,
+            "wallMs": 19777,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out once, sees payment, survives reload and signs out",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Email', { exact: true })\u001b[22m"
+              },
+              {
+                "title": "password reset from the real inbox replaces the password and ends old sessions",
+                "error": "TimeoutError: locator.fill: Timeout 8000ms exceeded. Call log: \u001b[2m  - waiting for getByLabel('Account email')\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out once, sees payment, survives reload and signs out",
+            "password reset from the real inbox replaces the password and ends old sessions"
+          ],
+          "verdict": "detected"
+        },
+        "plaintext_session_tokens": {
+          "take": "bare-3",
+          "fault": "plaintext_session_tokens",
+          "code": 0,
+          "signal": null,
+          "wallMs": 10550,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-3",
+            "fault": "plaintext_session_tokens",
+            "code": 0,
+            "signal": null,
+            "wallMs": 10550,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "missing_idempotency_index": {
+          "take": "bare-3",
+          "fault": "missing_idempotency_index",
+          "code": 0,
+          "signal": null,
+          "wallMs": 11507,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-3",
+            "fault": "missing_idempotency_index",
+            "code": 0,
+            "signal": null,
+            "wallMs": 11507,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "no_login_throttle": {
+          "take": "bare-3",
+          "fault": "no_login_throttle",
+          "code": 1,
+          "signal": null,
+          "wallMs": 12079,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "failed sign-ins lock the address, not the account holder elsewhere, until the window passes",
+              "error": "Error: http://127.0.0.1:52378/api/login -> {\"user\": {\"id\": \"alice\", \"email\": \"alice+9053e1debc304df5a061dd32b1a0161e@example.test\"}}  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-3",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 12079,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "failed sign-ins lock the address, not the account holder elsewhere, until the window passes",
+                "error": "Error: http://127.0.0.1:52378/api/login -> {\"user\": {\"id\": \"alice\", \"email\": \"alice+9053e1debc304df5a061dd32b1a0161e@example.test\"}}  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-3",
+            "fault": "no_login_throttle",
+            "code": 1,
+            "signal": null,
+            "wallMs": 16466,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "failed sign-ins lock the address, not the account holder elsewhere, until the window passes",
+                "error": "Error: http://127.0.0.1:52527/api/login -> {\"user\": {\"id\": \"alice\", \"email\": \"alice+6190da2719014d34a438635f663d2df1@example.test\"}}  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "failed sign-ins lock the address, not the account holder elsewhere, until the window passes"
+          ],
+          "verdict": "detected"
+        },
+        "open_test_support": {
+          "take": "bare-3",
+          "fault": "open_test_support",
+          "code": 1,
+          "signal": null,
+          "wallMs": 20253,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "public surface, session cookie and server-side logout",
+              "error": "Error: http://127.0.0.1:52668/test-support/state -> {\"now\": 1792637738.266023, \"orders\": [], \"receipts\": [], \"reset_tokens\": [], \"sessions\": {}, \"smtp_errors\": 0}  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+            },
+            {
+              "title": "shopper signs in, checks out once, sees payment, survives reload and signs out",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected length: \u001b[32m1\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-3",
+            "fault": "open_test_support",
+            "code": 1,
+            "signal": null,
+            "wallMs": 20253,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "public surface, session cookie and server-side logout",
+                "error": "Error: http://127.0.0.1:52668/test-support/state -> {\"now\": 1792637738.266023, \"orders\": [], \"receipts\": [], \"reset_tokens\": [], \"sessions\": {}, \"smtp_errors\": 0}  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+              },
+              {
+                "title": "shopper signs in, checks out once, sees payment, survives reload and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoHaveLength\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected length: \u001b[32m1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-3",
+            "fault": "open_test_support",
+            "code": 1,
+            "signal": null,
+            "wallMs": 29521,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "public surface, session cookie and server-side logout",
+                "error": "Error: http://127.0.0.1:52829/test-support/state -> {\"now\": 1792637758.8461068, \"orders\": [], \"receipts\": [], \"reset_tokens\": [], \"sessions\": {}, \"smtp_errors\": 0}  \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m"
+              },
+              {
+                "title": "reset requests do not reveal accounts; tokens enforce length, expiry and single use",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m200\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "public surface, session cookie and server-side logout"
+          ],
+          "verdict": "detected"
+        },
+        "smtp_failure_503": {
+          "take": "bare-3",
+          "fault": "smtp_failure_503",
+          "code": 0,
+          "signal": null,
+          "wallMs": 34630,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-3",
+            "fault": "smtp_failure_503",
+            "code": 0,
+            "signal": null,
+            "wallMs": 34630,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "slow_health": {
+          "take": "bare-3",
+          "fault": "slow_health",
+          "code": 1,
+          "signal": null,
+          "wallMs": 28457,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "public surface, session cookie and server-side logout",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected: < \u001b[32m500\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-3",
+            "fault": "slow_health",
+            "code": 1,
+            "signal": null,
+            "wallMs": 28457,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "public surface, session cookie and server-side logout",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected: < \u001b[32m500\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-3",
+            "fault": "slow_health",
+            "code": 1,
+            "signal": null,
+            "wallMs": 47338,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "public surface, session cookie and server-side logout",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected: < \u001b[32m500\u001b[39m"
+              },
+              {
+                "title": "reset requests do not reveal accounts; tokens enforce length, expiry and single use",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m200\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "public surface, session cookie and server-side logout"
+          ],
+          "verdict": "detected"
+        },
+        "wrong_currency_event": {
+          "take": "bare-3",
+          "fault": "wrong_currency_event",
+          "code": 1,
+          "signal": null,
+          "wallMs": 49218,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out once, sees payment, survives reload and signs out",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+            },
+            {
+              "title": "reset requests do not reveal accounts; tokens enforce length, expiry and single use",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m200\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-3",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 49218,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out once, sees payment, survives reload and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              },
+              {
+                "title": "reset requests do not reveal accounts; tokens enforce length, expiry and single use",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m200\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-3",
+            "fault": "wrong_currency_event",
+            "code": 1,
+            "signal": null,
+            "wallMs": 54258,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out once, sees payment, survives reload and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out once, sees payment, survives reload and signs out"
+          ],
+          "verdict": "detected"
+        },
+        "reset_email_dropped": {
+          "take": "bare-3",
+          "fault": "reset_email_dropped",
+          "code": 1,
+          "signal": null,
+          "wallMs": 66775,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "password reset from the real inbox replaces the password and ends old sessions",
+              "error": "Error: mail for alice+a08df647e4e74000a765293337688036@example.test  mail for alice+a08df647e4e74000a765293337688036@example.test"
+            },
+            {
+              "title": "reset requests do not reveal accounts; tokens enforce length, expiry and single use",
+              "error": "Error: mail for bob+0d1ef9b0d13f4833bdef8ba27c74ee5c@example.test  mail for bob+0d1ef9b0d13f4833bdef8ba27c74ee5c@example.test"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-3",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 66775,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "password reset from the real inbox replaces the password and ends old sessions",
+                "error": "Error: mail for alice+a08df647e4e74000a765293337688036@example.test  mail for alice+a08df647e4e74000a765293337688036@example.test"
+              },
+              {
+                "title": "reset requests do not reveal accounts; tokens enforce length, expiry and single use",
+                "error": "Error: mail for bob+0d1ef9b0d13f4833bdef8ba27c74ee5c@example.test  mail for bob+0d1ef9b0d13f4833bdef8ba27c74ee5c@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-3",
+            "fault": "reset_email_dropped",
+            "code": 1,
+            "signal": null,
+            "wallMs": 53804,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "password reset from the real inbox replaces the password and ends old sessions",
+                "error": "Error: mail for alice+4c334c2a232e4b8c88bcc3005eefe885@example.test  mail for alice+4c334c2a232e4b8c88bcc3005eefe885@example.test"
+              },
+              {
+                "title": "reset requests do not reveal accounts; tokens enforce length, expiry and single use",
+                "error": "Error: mail for bob+8137d07118ed4e25a4266dd47fe93282@example.test  mail for bob+8137d07118ed4e25a4266dd47fe93282@example.test"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "password reset from the real inbox replaces the password and ends old sessions",
+            "reset requests do not reveal accounts; tokens enforce length, expiry and single use"
+          ],
+          "verdict": "detected"
+        },
+        "catalog_currency_missing": {
+          "take": "bare-3",
+          "fault": "catalog_currency_missing",
+          "code": 1,
+          "signal": null,
+          "wallMs": 54610,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "public surface, session cookie and server-side logout",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-3",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 54610,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "public surface, session cookie and server-side logout",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-3",
+            "fault": "catalog_currency_missing",
+            "code": 1,
+            "signal": null,
+            "wallMs": 49778,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "public surface, session cookie and server-side logout",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBe\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // Object.is equality\u001b[22m  Expected: \u001b[32m\"EUR\"\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "public surface, session cookie and server-side logout"
+          ],
+          "verdict": "detected"
+        }
+      },
+      "detected": [
+        "unlabeled_controls",
+        "no_login_throttle",
+        "open_test_support",
+        "slow_health",
+        "wrong_currency_event",
+        "reset_email_dropped",
+        "catalog_currency_missing"
+      ],
+      "missed": [
+        "plaintext_session_tokens",
+        "missing_idempotency_index",
+        "smtp_failure_503"
+      ],
+      "unstable": [],
+      "invalid": []
+    }
+  },
+  "finishedAt": "2026-10-22T03:03:41.963Z"
+}

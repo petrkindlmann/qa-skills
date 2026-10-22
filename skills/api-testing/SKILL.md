@@ -171,6 +171,7 @@ PUT and DELETE should preserve the intended state when repeated. Check state and
 ## Done When
 
 - Every target endpoint has at least a happy-path test and at least one error-path test (4xx or 5xx response validated).
+- Every clause the API contract states has a test or an explicit "not covered" line in the report, including the ones no loaded skill is about: access rules on admin, debug and test-only routes, stated latency budgets, and health endpoints. A suite shaped by the skills you loaded otherwise skips the clauses between them.
 - Supported auth flows exercised: successful login, invalid credentials, expiry, logout/revocation and the documented permission boundary; include refresh when implemented.
 - Schema validation assertions on response shape using Zod 4 or AJV (or, where neither may be installed, an exact key-set and field-type check) — not just `toHaveProperty` spot-checks.
 - Header assertions exist for at least `content-type` and any cache/rate-limit headers the API sets, asserted unconditionally.

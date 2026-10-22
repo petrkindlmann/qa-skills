@@ -1,0 +1,221 @@
+{
+  "startedAt": "2026-10-22T03:07:32.844Z",
+  "node": "v26.0.0",
+  "set": "secondary",
+  "faults": [
+    "smtp_failure_503",
+    "slow_health",
+    "wrong_currency_event"
+  ],
+  "takes": {
+    "bare-1": {
+      "healthy": {
+        "take": "bare-1",
+        "fault": "healthy",
+        "startedAt": "2026-10-22T03:07:32.856Z",
+        "finishedAt": "2026-10-22T03:08:21.764Z",
+        "code": 0,
+        "signal": null,
+        "wallMs": 48906,
+        "executed": 11,
+        "failed": [],
+        "timedOut": false,
+        "infrastructureError": false,
+        "clean": true
+      },
+      "controls": [
+        {
+          "take": "bare-1",
+          "fault": "healthy",
+          "startedAt": "2026-10-22T03:07:32.856Z",
+          "finishedAt": "2026-10-22T03:08:21.764Z",
+          "code": 0,
+          "signal": null,
+          "wallMs": 48906,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        },
+        {
+          "take": "bare-1",
+          "fault": "healthy",
+          "startedAt": "2026-10-22T03:08:21.785Z",
+          "finishedAt": "2026-10-22T03:09:09.448Z",
+          "code": 0,
+          "signal": null,
+          "wallMs": 47663,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        }
+      ],
+      "faults": {
+        "smtp_failure_503": {
+          "take": "bare-1",
+          "fault": "smtp_failure_503",
+          "startedAt": "2026-10-22T03:09:09.451Z",
+          "finishedAt": "2026-10-22T03:10:08.163Z",
+          "code": 0,
+          "signal": null,
+          "wallMs": 58712,
+          "executed": 11,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-1",
+            "fault": "smtp_failure_503",
+            "startedAt": "2026-10-22T03:09:09.451Z",
+            "finishedAt": "2026-10-22T03:10:08.163Z",
+            "code": 0,
+            "signal": null,
+            "wallMs": 58712,
+            "executed": 11,
+            "failed": [],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "missed"
+        },
+        "slow_health": {
+          "take": "bare-1",
+          "fault": "slow_health",
+          "startedAt": "2026-10-22T03:10:08.184Z",
+          "finishedAt": "2026-10-22T03:10:54.487Z",
+          "code": 1,
+          "signal": null,
+          "wallMs": 46303,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "health, session cookie, logout and unauthenticated access",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected: < \u001b[32m500\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-1",
+            "fault": "slow_health",
+            "startedAt": "2026-10-22T03:10:08.184Z",
+            "finishedAt": "2026-10-22T03:10:54.487Z",
+            "code": 1,
+            "signal": null,
+            "wallMs": 46303,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "health, session cookie, logout and unauthenticated access",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected: < \u001b[32m500\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-1",
+            "fault": "slow_health",
+            "startedAt": "2026-10-22T03:10:54.493Z",
+            "finishedAt": "2026-10-22T03:11:35.922Z",
+            "code": 1,
+            "signal": null,
+            "wallMs": 41427,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "health, session cookie, logout and unauthenticated access",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoBeLessThan\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  Expected: < \u001b[32m500\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "health, session cookie, logout and unauthenticated access"
+          ],
+          "verdict": "detected"
+        },
+        "wrong_currency_event": {
+          "take": "bare-1",
+          "fault": "wrong_currency_event",
+          "startedAt": "2026-10-22T03:11:35.954Z",
+          "finishedAt": "2026-10-22T03:12:07.232Z",
+          "code": 1,
+          "signal": null,
+          "wallMs": 31279,
+          "executed": 11,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees the payment land, survives reload and signs out",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-1",
+            "fault": "wrong_currency_event",
+            "startedAt": "2026-10-22T03:11:35.954Z",
+            "finishedAt": "2026-10-22T03:12:07.232Z",
+            "code": 1,
+            "signal": null,
+            "wallMs": 31279,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the payment land, survives reload and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "confirm": {
+            "take": "bare-1",
+            "fault": "wrong_currency_event",
+            "startedAt": "2026-10-22T03:12:07.235Z",
+            "finishedAt": "2026-10-22T03:12:44.690Z",
+            "code": 1,
+            "signal": null,
+            "wallMs": 37456,
+            "executed": 11,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees the payment land, survives reload and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "sharedTitles": [
+            "shopper signs in, checks out, sees the payment land, survives reload and signs out"
+          ],
+          "verdict": "detected"
+        }
+      },
+      "detected": [
+        "slow_health",
+        "wrong_currency_event"
+      ],
+      "missed": [
+        "smtp_failure_503"
+      ],
+      "unstable": [],
+      "invalid": []
+    }
+  },
+  "finishedAt": "2026-10-22T03:12:44.709Z"
+}

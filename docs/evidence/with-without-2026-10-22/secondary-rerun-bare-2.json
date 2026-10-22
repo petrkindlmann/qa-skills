@@ -1,0 +1,109 @@
+{
+  "startedAt": "2026-10-22T03:12:45.251Z",
+  "node": "v26.0.0",
+  "set": "secondary",
+  "faults": [
+    "wrong_currency_event"
+  ],
+  "takes": {
+    "bare-2": {
+      "healthy": {
+        "take": "bare-2",
+        "fault": "healthy",
+        "startedAt": "2026-10-22T03:12:45.264Z",
+        "finishedAt": "2026-10-22T03:13:42.785Z",
+        "code": 0,
+        "signal": null,
+        "wallMs": 57525,
+        "executed": 12,
+        "failed": [],
+        "timedOut": false,
+        "infrastructureError": false,
+        "clean": true
+      },
+      "controls": [
+        {
+          "take": "bare-2",
+          "fault": "healthy",
+          "startedAt": "2026-10-22T03:12:45.264Z",
+          "finishedAt": "2026-10-22T03:13:42.785Z",
+          "code": 0,
+          "signal": null,
+          "wallMs": 57525,
+          "executed": 12,
+          "failed": [],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        },
+        {
+          "take": "bare-2",
+          "fault": "healthy",
+          "startedAt": "2026-10-22T03:13:42.807Z",
+          "finishedAt": "2026-10-22T03:14:27.973Z",
+          "code": 1,
+          "signal": null,
+          "wallMs": 45166,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "shopper resets a forgotten password from the emailed link and signs in with it",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mlocator\u001b[39m\u001b[2m).\u001b[22mtoHaveText\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m failed  Locator:  getByRole('status')"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true
+        }
+      ],
+      "faults": {
+        "wrong_currency_event": {
+          "take": "bare-2",
+          "fault": "wrong_currency_event",
+          "startedAt": "2026-10-22T03:14:27.979Z",
+          "finishedAt": "2026-10-22T03:14:59.974Z",
+          "code": 1,
+          "signal": null,
+          "wallMs": 31995,
+          "executed": 12,
+          "failed": [
+            {
+              "title": "shopper signs in, checks out, sees payment land, survives reload and signs out",
+              "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+            }
+          ],
+          "timedOut": false,
+          "infrastructureError": false,
+          "clean": true,
+          "first": {
+            "take": "bare-2",
+            "fault": "wrong_currency_event",
+            "startedAt": "2026-10-22T03:14:27.979Z",
+            "finishedAt": "2026-10-22T03:14:59.974Z",
+            "code": 1,
+            "signal": null,
+            "wallMs": 31995,
+            "executed": 12,
+            "failed": [
+              {
+                "title": "shopper signs in, checks out, sees payment land, survives reload and signs out",
+                "error": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoMatchObject\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m)\u001b[22m  \u001b[32m- Expected  - 1\u001b[39m"
+              }
+            ],
+            "timedOut": false,
+            "infrastructureError": false,
+            "clean": true
+          },
+          "verdict": "invalid"
+        }
+      },
+      "detected": [],
+      "missed": [],
+      "unstable": [],
+      "invalid": [
+        "wrong_currency_event"
+      ]
+    }
+  },
+  "finishedAt": "2026-10-22T03:14:59.975Z"
+}

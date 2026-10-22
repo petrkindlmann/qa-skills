@@ -1,0 +1,13 @@
+# macOS power log, 2026-10-22 local time (+0200), sleep and wake events from 01:00 to 05:59
+# Source: pmset -g log. Secondary runs whose wall-clock span overlapped 03:50:12-04:21:49 or 04:38:52-04:44:23 were re-run awake.
+2026-10-22 01:19:51 +0200 Wake                	Wake from Hibernate [CDNVA] : due to ipd rtc IOPortFeatureLDCM.measuremen
+2026-10-22 03:50:12 +0200 Sleep               	Entering Sleep state due to 'Clamshell Sleep':TCPKeepAlive=active Using B
+2026-10-22 03:59:42 +0200 DarkWake            	DarkWake from Deep Idle [CDNP] : due to NUB.SPMI0.SW3 nub-spmi0.0x02 rtc/
+2026-10-22 04:00:13 +0200 Sleep               	Entering Sleep state due to 'Maintenance Sleep':TCPKeepAlive=active Using
+2026-10-22 04:17:47 +0200 DarkWake            	DarkWake from Deep Idle [CDNP] : due to NUB.SPMI0.SW3 nub-spmi0.0x02 rtc/
+2026-10-22 04:17:52 +0200 Sleep               	Entering Sleep state due to 'Sleep Service Back to Sleep':TCPKeepAlive=ac
+2026-10-22 04:21:49 +0200 Wake                	Wake from Deep Idle [CDNVA] : due to smc.sysState.Wake(0x70070000) lid SM
+2026-10-22 04:38:52 +0200 Sleep               	Entering DarkWake state due to 'Clamshell Sleep':TCPKeepAlive=active Usin
+2026-10-22 04:38:54 +0200 Wake                	DarkWake to FullWake from Deep Idle [CDNVA] : due to HID Activity Using A
+2026-10-22 04:39:25 +0200 Sleep               	Entering Sleep state due to 'Clamshell Sleep':TCPKeepAlive=active Using B
+2026-10-22 04:44:23 +0200 Wake                	Wake from Deep Idle [CDNVA] : due to smc.sysState.Wake(0x70070000) lid SM

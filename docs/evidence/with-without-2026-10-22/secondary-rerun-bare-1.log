@@ -1,0 +1,15 @@
+set: secondary; started 2026-10-22T03:07:32.844Z; finished 2026-10-22T03:12:44.709Z; node v26.0.0
+Cell: D<n> = detected (n tests failed in the first run; the confirm run shared a failing title); missed = clean pass under the fault; invalid = run not clean (timeout or infrastructure error); unstable = first failure not repeated.
+
+fault                         bare-1    
+smtp_failure_503              missed    
+slow_health                   D1        
+wrong_currency_event          D1        
+tests                         11        
+healthy x2                    pass      
+
+Shared failing titles per detection:
+bare-1 slow_health: health, session cookie, logout and unauthenticated access
+bare-1 wrong_currency_event: shopper signs in, checks out, sees the payment land, survives reload and signs out
+
+Runs that were not clean or did not repeat:

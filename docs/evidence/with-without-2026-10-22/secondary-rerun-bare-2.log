@@ -1,0 +1,18 @@
+set: secondary; started 2026-10-22T03:12:45.251Z; finished 2026-10-22T03:14:59.975Z; node v26.0.0
+Cell: D<n> = detected (n tests failed in the first run; the confirm run shared a failing title); missed = clean pass under the fault; invalid = run not clean (timeout or infrastructure error); unstable = first failure not repeated.
+
+fault                         bare-2    
+wrong_currency_event          invalid   
+tests                         12        
+healthy x2                    FAIL      
+
+Shared failing titles per detection:
+
+Runs that were not clean or did not repeat:
+bare-2 wrong_currency_event: invalid; first run code=1 signal=null timedOut=false wallMs=31995
+
+Note: the second healthy control failed one browser test. Its trace shows the server answered
+the new-password sign-in with 200 at 03:14:10.264Z; the page's status line still read
+"invalid_credentials" when the 4-second assertion window closed, and the page's next request
+(GET /api/orders) left 1.9 s after the login response. A timing flake in the suite under load,
+not a Shop defect. Under the fixed rule the fault run stays invalid and is not re-run again.

@@ -1,0 +1,95 @@
+set: primary; started 2026-10-22T01:02:59.300Z; finished 2026-10-22T01:26:57.883Z; node v26.0.0
+Cell: D<n> = detected, n tests failed in the first run and the confirm run shared a failing title; missed = clean pass under the fault.
+
+fault                         with-1    without-1 bare-1    with-2    without-2 bare-2    with-3    without-3 bare-3    
+cross_user_order_read         D1        D1        D1        D1        D1        D1        D1        D1        D1        
+trust_client_amount           D1        D1        D1        D1        D1        D1        D1        D1        D1        
+duplicate_fulfillment         D3        D3        D3        D2        D3        D2        D3        D3        D4        
+receipt_before_commit         D1        D2        D1        D1        D1        D1        D1        D1        D2        
+idempotency_payload_conflict  D1        D1        D1        D2        D1        D1        D1        D1        D1        
+reusable_reset_token          D2        D2        D1        D1        D2        D2        D2        D1        D2        
+logout_cookie_only            D2        D1        D1        D2        D1        D1        D3        D1        D1        
+compensating_prices           D5        D2        D2        D4        D1        D1        D2        D3        D3        
+canonicalized_signature       D1        missed    missed    D1        missed    D1        D1        D1        D1        
+tests                         11        12        11        12        12        12        11        11        11        
+healthy x2                    pass      pass      pass      pass      pass      pass      pass      pass      pass      
+
+Shared failing titles per detection:
+with-1 cross_user_order_read: orders are visible only to their owner and require a session
+with-1 trust_client_amount: server owns prices and rejects invalid orders without creating one
+with-1 duplicate_fulfillment: only a correctly signed, matching event marks an order paid, exactly once || concurrent duplicate and distinct deliveries fulfill an order once || a transient fulfillment failure rolls back, and retry and restart keep one fulfillment
+with-1 receipt_before_commit: a transient fulfillment failure rolls back, and retry and restart keep one fulfillment
+with-1 idempotency_payload_conflict: an idempotency key yields one order across reordering, concurrency and restart
+with-1 reusable_reset_token: the emailed reset link sets a new password in the browser and revokes old sessions || reset requests do not reveal accounts, and expired or invalid tokens are refused
+with-1 logout_cookie_only: sign-in issues a hardened session cookie and sign-out revokes it on the server || a shopper signs in, checks out in the browser and sees payment confirmed after the signed event
+with-1 compensating_prices: server owns prices and rejects invalid orders without creating one || an idempotency key yields one order across reordering, concurrency and restart || only a correctly signed, matching event marks an order paid, exactly once || concurrent duplicate and distinct deliveries fulfill an order once || a transient fulfillment failure rolls back, and retry and restart keep one fulfillment
+with-1 canonicalized_signature: only a correctly signed, matching event marks an order paid, exactly once
+without-1 cross_user_order_read: a user cannot see another user's orders
+without-1 trust_client_amount: orders are priced by the server and invalid carts create nothing
+without-1 duplicate_fulfillment: only a correctly signed, matching payment fulfills an order, and only once || concurrent deliveries fulfill once, including across a transient failure || a failed fulfillment rolls back, and paid state survives restarts
+without-1 receipt_before_commit: concurrent deliveries fulfill once, including across a transient failure || a failed fulfillment rolls back, and paid state survives restarts
+without-1 idempotency_payload_conflict: idempotency keys replay, conflict and stay single under parallel submission
+without-1 reusable_reset_token: reset link from the inbox opens a working new-password form || a reset link delivered to Mailpit changes the password once and ends old sessions
+without-1 logout_cookie_only: sign-in issues a server session that sign-out revokes
+without-1 compensating_prices: sign-in issues a server session that sign-out revokes || orders are priced by the server and invalid carts create nothing
+bare-1 cross_user_order_read: orders are visible only to their owner
+bare-1 trust_client_amount: orders are priced by the server and invalid carts create nothing
+bare-1 duplicate_fulfillment: payment webhook rejects bad deliveries and fulfills a paid order exactly once || concurrent payment deliveries fulfill each order once || transient fulfillment failure rolls back, the retry succeeds, and state survives restart
+bare-1 receipt_before_commit: transient fulfillment failure rolls back, the retry succeeds, and state survives restart
+bare-1 idempotency_payload_conflict: idempotency keys replay, conflict, stay per user and collapse parallel submissions
+bare-1 reusable_reset_token: password reset through a real Mailpit message revokes old sessions and credentials
+bare-1 logout_cookie_only: shopper signs in, checks out, sees the payment land, survives reload and signs out
+bare-1 compensating_prices: orders are priced by the server and invalid carts create nothing || concurrent payment deliveries fulfill each order once
+with-2 cross_user_order_read: idempotency keys replay, conflict and stay scoped to their owner
+with-2 trust_client_amount: server-owned pricing across compositions and quantity boundaries
+with-2 duplicate_fulfillment: duplicate, conflicting and concurrent deliveries fulfill each order once || transient fulfillment failure rolls back, the retry succeeds, and the outcome survives restart
+with-2 receipt_before_commit: transient fulfillment failure rolls back, the retry succeeds, and the outcome survives restart
+with-2 idempotency_payload_conflict: idempotency keys replay, conflict and stay scoped to their owner || parallel duplicate submissions create one order that survives a restart
+with-2 reusable_reset_token: password reset from the emailed link changes the password and revokes sessions
+with-2 logout_cookie_only: session cookie contract, protected endpoints and server-side logout revocation || shopper signs in, checks out, sees the verified payment after reload, and signs out
+with-2 compensating_prices: server-owned pricing across compositions and quantity boundaries || idempotency keys replay, conflict and stay scoped to their owner || parallel duplicate submissions create one order that survives a restart || duplicate, conflicting and concurrent deliveries fulfill each order once
+with-2 canonicalized_signature: rejects unsigned, forged, malformed and mismatched events without side effects
+without-2 cross_user_order_read: idempotency keys replay equivalent intent, reject conflicting reuse and belong to one user
+without-2 trust_client_amount: the server prices orders and rejects invalid ones without creating anything
+without-2 duplicate_fulfillment: rejected payment events change nothing; a valid event pays and fulfills exactly once || concurrent deliveries of payment events fulfill an order once || a transient fulfillment failure rolls back, the retry succeeds, and state survives restarts
+without-2 receipt_before_commit: a transient fulfillment failure rolls back, the retry succeeds, and state survives restarts
+without-2 idempotency_payload_conflict: idempotency keys replay equivalent intent, reject conflicting reuse and belong to one user
+without-2 reusable_reset_token: a user resets a forgotten password from the emailed link and signs in with it || a reset email from the real inbox changes the password once and ends every session
+without-2 logout_cookie_only: sign-in issues a protected session cookie and sign-out revokes it on the server
+without-2 compensating_prices: the server prices orders and rejects invalid ones without creating anything
+bare-2 cross_user_order_read: orders are private: another user's order is indistinguishable from an unknown ID
+bare-2 trust_client_amount: the server prices orders from its catalogue and rejects invalid baskets without creating orders
+bare-2 duplicate_fulfillment: concurrent and repeated payment deliveries fulfil each order exactly once || a transient fulfilment failure commits nothing, the retry succeeds, and state survives restarts
+bare-2 receipt_before_commit: a transient fulfilment failure commits nothing, the retry succeeds, and state survives restarts
+bare-2 idempotency_payload_conflict: idempotency keys replay, conflict and stay per user, and parallel submits create one order
+bare-2 reusable_reset_token: shopper resets a forgotten password from the emailed link and signs in with it || a reset link delivered to Mailpit changes the password once and revokes every session
+bare-2 logout_cookie_only: sign-in issues a hardened session cookie and sign-out revokes it on the server
+bare-2 compensating_prices: the server prices orders from its catalogue and rejects invalid baskets without creating orders
+bare-2 canonicalized_signature: unsigned, malformed or mismatched payment events leave the order unpaid and unreceipted
+with-3 cross_user_order_read: idempotency keys replay, conflict and stay private to each user
+with-3 trust_client_amount: server owns prices and rejects invalid orders without creating one
+with-3 duplicate_fulfillment: signed payment events: rejections change nothing, a valid event fulfils once || concurrent deliveries fulfil each order exactly once || a transient fulfilment failure commits nothing and the retry succeeds after restart
+with-3 receipt_before_commit: a transient fulfilment failure commits nothing and the retry succeeds after restart
+with-3 idempotency_payload_conflict: idempotency keys replay, conflict and stay private to each user
+with-3 reusable_reset_token: reset email from Mailpit resets the password in the browser and revokes old sessions || reset tokens expire after 300 seconds, are single use and need 12 characters
+with-3 logout_cookie_only: sign-in issues an HttpOnly session and logout revokes it on the server || five failed sign-ins throttle that address until the window passes || shopper signs in, checks out, sees the paid state after reload and signs out
+with-3 compensating_prices: server owns prices and rejects invalid orders without creating one || concurrent deliveries fulfil each order exactly once
+with-3 canonicalized_signature: signed payment events: rejections change nothing, a valid event fulfils once
+without-3 cross_user_order_read: orders are private to their owner, keys are per user, and every order endpoint needs a session
+without-3 trust_client_amount: server prices the basket, replays an equivalent key, and rejects conflicts and invalid baskets
+without-3 duplicate_fulfillment: rejected payment events record nothing; a valid event fulfils once and redeliveries stay safe || concurrent duplicate and competing payment deliveries fulfil each order exactly once || a transient fulfilment failure commits nothing, the retry succeeds, and state survives restart
+without-3 receipt_before_commit: a transient fulfilment failure commits nothing, the retry succeeds, and state survives restart
+without-3 idempotency_payload_conflict: server prices the basket, replays an equivalent key, and rejects conflicts and invalid baskets
+without-3 reusable_reset_token: reset link from the real inbox sets a new password and ends every existing session
+without-3 logout_cookie_only: shopper checks out in the browser, sees the payment land, keeps it across reload and loses access on sign-out
+without-3 compensating_prices: rejected sign-in and rejected order are reported in the page with no analytics or stored order || server prices the basket, replays an equivalent key, and rejects conflicts and invalid baskets || orders are private to their owner, keys are per user, and every order endpoint needs a session
+without-3 canonicalized_signature: rejected payment events record nothing; a valid event fulfils once and redeliveries stay safe
+bare-3 cross_user_order_read: idempotency keys replay, conflict, survive parallel submits and stay per user
+bare-3 trust_client_amount: server owns pricing and rejects invalid orders without creating any
+bare-3 duplicate_fulfillment: payment events are authenticated, validated and fulfill an order exactly once || concurrent deliveries never fulfill an order twice || a transient fulfillment failure rolls back, the retry succeeds, and state survives restart || concurrent deliveries during the transient failure converge to one fulfillment
+bare-3 receipt_before_commit: a transient fulfillment failure rolls back, the retry succeeds, and state survives restart || concurrent deliveries during the transient failure converge to one fulfillment
+bare-3 idempotency_payload_conflict: idempotency keys replay, conflict, survive parallel submits and stay per user
+bare-3 reusable_reset_token: password reset from the real inbox replaces the password and ends old sessions || reset requests do not reveal accounts; tokens enforce length, expiry and single use
+bare-3 logout_cookie_only: public surface, session cookie and server-side logout
+bare-3 compensating_prices: public surface, session cookie and server-side logout || server owns pricing and rejects invalid orders without creating any || idempotency keys replay, conflict, survive parallel submits and stay per user
+bare-3 canonicalized_signature: payment events are authenticated, validated and fulfill an order exactly once
