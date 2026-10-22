@@ -9,7 +9,11 @@ Avoid note in `SKILL.md`). The API your tests use:
 - `GET /api/v1/search?query=to:...` — search messages by recipient and other filters.
 - `GET /api/v1/message/{ID}` — full parsed message: `.Text`, `.HTML`, `.Subject`,
   `.From`, `.To`, headers.
-- `DELETE /api/v1/messages` — purge (use in global setup, never as your only isolation).
+- `DELETE /api/v1/messages` with a JSON body `{ "IDs": [...] }` — deletes those messages.
+  With no body or an **empty** `IDs` list it deletes **every** message in the inbox
+  (observed on Mailpit 1.31.6). Per-test cleanup must send only that test's own IDs and
+  must skip the call when it collected none; a whole-inbox purge belongs only in a global
+  setup that owns the inbox, never in a shared or worker-scoped one.
 
 Use the [Mailpit API specification](https://mailpit.axllent.org/docs/api-v1/view.html)
 for the installed version. Adding `query` to the list endpoint does not select the
@@ -100,6 +104,15 @@ Use a fresh UUID recipient for every test attempt, including retries. When one s
 requests a second email for the same account, pass the previously seen IDs in
 `excludeIds`; otherwise the first message can satisfy the second wait. Do not purge an
 inbox used by concurrent workers. The search result still gets an exact recipient check.
+
+```ts
+// Clean up only what this test received. An empty IDs list would empty the shared inbox.
+export async function deleteOwnMessages(api: APIRequestContext, ids: string[]) {
+  if (ids.length === 0) return;
+  const res = await api.delete('/api/v1/messages', { data: { IDs: ids } });
+  expect(res.ok(), `Mailpit delete returned ${res.status()}`).toBe(true);
+}
+```
 
 ## Extracting an OTP and a magic link from the body
 

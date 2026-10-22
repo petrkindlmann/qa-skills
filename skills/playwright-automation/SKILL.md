@@ -27,7 +27,7 @@ How an expert agent writes stable, maintainable, production-grade Playwright tes
 
 Check `.agents/qa-project-context.md` first — if it exists, use it and skip any question answered there. Then ask only what's missing:
 
-1. **TypeScript or JavaScript?** TypeScript is strongly recommended — it catches locator and assertion mistakes at compile time, and every example here assumes it.
+1. **TypeScript or JavaScript?** Match what the project already uses. For a new suite TypeScript is strongly recommended — it catches locator and assertion mistakes at compile time, and the examples here use it. In a JavaScript project or a fixed `.mjs` harness, write plain ESM with the same patterns (drop the type annotations), and check it with `node --check` and `--list` instead of `tsc`.
 2. **Which browsers?** Chromium for local dev; add Firefox and WebKit in CI. Mobile viewports are separate Playwright projects, not separate test files — they change the device descriptor.
 3. **Existing suite or fresh start?** Migrating from Cypress/Selenium, rewrite the flakiest tests first; never big-bang. Changes the sequencing entirely.
 4. **Single site or multi-site?** Multi-site needs shared fixtures and per-site config objects — see `references/multi-site-architecture.md`.
@@ -36,7 +36,7 @@ Check `.agents/qa-project-context.md` first — if it exists, use it and skip an
 
 ## Core Principles
 
-1. **User-facing locators first.** `getByRole` > `getByLabel` > `getByTestId` > CSS (last resort). Locators must reflect what the user sees, not how the DOM is structured. See `references/selector-strategies.md`.
+1. **User-facing locators first.** `getByRole` > `getByLabel` > `getByTestId` > CSS (last resort). Text and label matching is a case-insensitive substring by default, so `getByLabel('Password')` also matches "New password" and "Confirm password", hidden fields included, and fails strict mode; pass `{ exact: true }` when labels share words. Locators must reflect what the user sees, not how the DOM is structured. See `references/selector-strategies.md`.
 2. **Auto-waiting — NEVER use `waitForTimeout`.** Every Playwright action and web-first assertion auto-waits. If you think you need a timeout, you need a better locator or assertion.
 3. **Test isolation.** Each test gets a fresh `BrowserContext`, but this does not isolate server-side accounts, carts, orders or password changes. Allocate independent records/accounts or a fresh database where tests mutate shared state. Tests must not depend on execution order.
 4. **Parallel by default, serial only when necessary.** Use `fullyParallel: true`. Reserve `test.describe.serial` for flows that genuinely cannot be isolated (rare).
@@ -45,6 +45,7 @@ Check `.agents/qa-project-context.md` first — if it exists, use it and skip an
 > **Calibrate to your team maturity** (set `team_maturity` in `.agents/qa-project-context.md`):
 > - **startup** — Chromium only, 5–10 critical-path tests, basic CI run on PR. Skip sharding and visual baselines until the suite is stable.
 > - **growing** — Chromium + Firefox, POM structure, parallel execution, sharding in CI, HTML report artifacts.
+> - A page object pays off when several tests drive the same page. A focused suite of about ten tests with few shared pages reads better with a handful of helper functions and fixtures; add page objects when the duplication appears.
 > - **established** — Full browser matrix, auth fixtures, API mocking layer, visual regression baseline, trace-on-failure, flakiness tracking.
 
 ---
@@ -114,7 +115,7 @@ import { test as setup, expect } from '@playwright/test';
 setup('authenticate as default user', async ({ page }) => {
   await page.goto('/login');
   await page.getByLabel('Email').fill(process.env.TEST_USER_EMAIL!);
-  await page.getByLabel('Password').fill(process.env.TEST_USER_PASSWORD!);
+  await page.getByLabel('Password', { exact: true }).fill(process.env.TEST_USER_PASSWORD!);
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page).toHaveURL(/.*dashboard/);
   await page.context().storageState({ path: '.auth/user.json' });

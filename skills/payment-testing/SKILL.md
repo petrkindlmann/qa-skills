@@ -37,6 +37,7 @@ fulfillment. Never a real PAN, never a live key.
 | A 3DS/SCA challenge that pops a modal | [3DS challenge](#3ds--sca-the-nested-iframe-challenge) | `references/playwright-3ds.md` |
 | A subscription renewal months/years out | [Test clocks](#test-clocks-server-side-time-travel) | `references/webhooks-and-clocks.md` |
 | Webhooks reaching localhost + signatures | [Webhooks](#webhooks-local-delivery-signatures-idempotency) | `references/webhooks-and-clocks.md` |
+| A non-Stripe or in-house webhook protocol | [Webhooks](#webhooks-local-delivery-signatures-idempotency), "Another provider" | the provider's or your contract's docs |
 | A failed renewal then a refund | [Failed payments](#failed-payments-dunning-and-refunds) | `references/webhooks-and-clocks.md` |
 | Fulfillment only after real payment | [Reconciliation](#reconciliation-fulfill-on-the-webhook-not-the-redirect) | `references/webhooks-and-clocks.md` |
 | Adyen / PayPal / Braintree sandboxes | [Multi-PSP](#multi-psp-adyen-paypal-braintree) | `references/multi-psp.md` |
@@ -175,8 +176,18 @@ Copy that `whsec_…` into `STRIPE_WEBHOOK_SECRET`. It is the **signing secret**
 value from `STRIPE_SECRET_KEY` (`sk_test_…`) — do not conflate them.
 
 **Signature verification.** Mount `express.raw` on the webhook route **before** any global
-`express.json()`, so `constructEvent` gets the raw body. A forged or tampered event must be
-rejected with **400**; never hand-roll a `=== signature` string comparison.
+`express.json()`, so `constructEvent` gets the raw body. With Stripe, a forged or tampered
+event is rejected with **400**, the status Stripe's own handlers return; never hand-roll a
+`=== signature` string comparison.
+
+**Another provider or an in-house protocol.** Take the header name, the signed input and the
+rejection status from that provider's or your contract's documentation, not from the Stripe
+examples: many document 401 or 403 for a bad signature. The invariants carry over unchanged
+and are what the tests should pin: a missing, wrong or tampered signature is refused and
+records nothing; the signature covers the exact raw bytes, so the same event re-serialized
+and correctly signed over its new bytes is judged on those bytes; a duplicate or concurrent
+delivery fulfils once; a failure after the dedup marker leaves the order retryable; and the
+result survives a restart.
 
 ```ts
 app.post('/webhooks', express.raw({ type: 'application/json' }), async (req, res, next) => {
@@ -338,7 +349,8 @@ any exposed key. Masking or encrypting it does not make it acceptable.
 - Local webhooks are received via `stripe listen --forward-to` / `stripe trigger`, with the
   `whsec_…` wired into `STRIPE_WEBHOOK_SECRET` (distinct from `STRIPE_SECRET_KEY`).
 - The webhook handler verifies the signature with `constructEvent` on the **raw** body
-  before parsing, returns 400 on a forged event, and a test proves it.
+  before parsing, returns 400 on a forged event (or the status a non-Stripe contract
+  documents), records nothing for it, and a test proves it.
 - Idempotency is enforced by persisting `event.id` with a UNIQUE constraint; a duplicate
   delivery returns 200 and fulfills exactly once, proven by a test.
 - A failed-renewal test drives `invoice.payment_failed` → `past_due` → `refunds.create` via

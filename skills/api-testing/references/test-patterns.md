@@ -114,14 +114,15 @@ test.describe('Error responses', () => {
     );
   });
 
-  test('429 - rate limiting returns retry-after header', async ({ request }) => {
-    const responses = await Promise.all(
-      Array.from({ length: 20 }, () => request.get('/api/status')),
-    );
-    const rateLimited = responses.find(r => r.status() === 429);
-    if (rateLimited) {
-      expect(rateLimited.headers()['retry-after']).toBeDefined();
+  test('429 - the request past the documented limit is refused with retry-after', async ({ request }) => {
+    // Drive the documented limit sequentially so the 429 is certain, not a race a burst may lose.
+    const LIMIT = 5; // from the API contract, not guessed
+    for (let i = 0; i < LIMIT; i++) {
+      expect((await request.post('/api/login', { data: { email: 'a@example.test', password: 'wrong' } })).status()).toBe(401);
     }
+    const refused = await request.post('/api/login', { data: { email: 'a@example.test', password: 'wrong' } });
+    expect(refused.status()).toBe(429);
+    expect(refused.headers()['retry-after']).toBe('60'); // the documented value, asserted unconditionally
   });
 });
 ```

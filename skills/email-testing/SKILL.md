@@ -207,7 +207,8 @@ After capture, assert on content:
 
 - `expect(message.subject).toBe('Welcome to Example')` — catches wrong-template bugs.
 - `expect(message.from?.[0].email).toBe('hello@example.com')` — catches misconfigured
-  sender / reply-to.
+  sender / reply-to. Pin the sender only when the product or its contract names one; if it
+  names none, record the sender as unpinned rather than asserting a guessed address.
 - Headers (`List-Unsubscribe`, custom `X-` headers) when your product sets them.
 - Links point to the right domain:
   `expect(new URL(link.href).origin).toBe('https://staging.example.com')` before navigation.

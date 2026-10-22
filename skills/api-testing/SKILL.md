@@ -69,6 +69,7 @@ Validate response shape against a schema rather than spot-checking individual fi
 
 - **Zod 4** — define a schema, `safeParse` the response, and assert `result.success`. Log `result.error.issues` on failure for a precise diff. Use the Zod 4 native string formats: `z.email()`, `z.uuid()`, `z.iso.datetime()` — the chained `z.string().email()` forms are deprecated and slated for removal.
 - **AJV with JSON Schema** — when you already have JSON Schema (e.g. from an OpenAPI spec), compile and validate with `ajv` + `ajv-formats`.
+- **Neither installed, and the task forbids new dependencies** — check the shape by hand rather than skip it: assert the exact key set (`expect(Object.keys(body).sort()).toEqual([...])`) and the type of every field, in one helper reused by every test. That still fails on an added, missing or retyped field. Say in the report that a schema library was unavailable.
 
 **Schema-as-contract:** have both the API and the tests import the same schema file. If the response shape changes, consumer tests fail immediately. With an OpenAPI spec, auto-generate the schema (`orval` or `openapi-zod-client`). For spec-first teams, add **Schemathesis** as a CI job to fuzz the live API against the spec and catch undocumented shapes and edge-case 500s.
 
@@ -171,7 +172,7 @@ PUT and DELETE should preserve the intended state when repeated. Check state and
 
 - Every target endpoint has at least a happy-path test and at least one error-path test (4xx or 5xx response validated).
 - Supported auth flows exercised: successful login, invalid credentials, expiry, logout/revocation and the documented permission boundary; include refresh when implemented.
-- Schema validation assertions on response shape using Zod 4 or AJV — not just `toHaveProperty` spot-checks.
+- Schema validation assertions on response shape using Zod 4 or AJV (or, where neither may be installed, an exact key-set and field-type check) — not just `toHaveProperty` spot-checks.
 - Header assertions exist for at least `content-type` and any cache/rate-limit headers the API sets, asserted unconditionally.
 - Contract tests in place for any endpoint consumed by a different team or service (shared schema file; for consumer-driven verification use `contract-testing`).
 - Genuine third-party calls (payment gateways, external SaaS) are mocked or virtualized; the API and its database run for real.

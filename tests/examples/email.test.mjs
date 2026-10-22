@@ -71,3 +71,17 @@ test('missing mail times out rather than becoming an empty successful result', a
   await assert.rejects(waitForEmail({ get: async () => response({ messages: [] }) }, recipient,
     { timeout: 20, intervals: [1] }));
 });
+
+const { deleteOwnMessages } = loadFunctions(source, 'function deleteOwnMessages(', ['deleteOwnMessages'], { expect });
+test('per-test cleanup never sends an empty ID list, which would empty the shared inbox', async () => {
+  const calls = [];
+  const api = { delete: async (url, options) => { calls.push({ url, options }); return response({}); } };
+  await deleteOwnMessages(api, []);
+  assert.equal(calls.length, 0);
+  await deleteOwnMessages(api, ['a', 'b']);
+  assert.deepEqual(calls, [{ url: '/api/v1/messages', options: { data: { IDs: ['a', 'b'] } } }]);
+});
+test('a refused cleanup fails instead of passing silently', async () => {
+  const api = { delete: async () => response({}, 500) };
+  await assert.rejects(deleteOwnMessages(api, ['a']), /Mailpit delete returned 500/);
+});
