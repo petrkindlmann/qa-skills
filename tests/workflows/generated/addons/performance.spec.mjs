@@ -17,10 +17,17 @@ const largestContentfulPaint = page => page.evaluate(() => new Promise(resolve =
 }));
 
 // Cumulative Layout Shift: sum of shifts not preceded by recent input, over a bounded window.
-const cumulativeLayoutShift = (page, windowMs) => page.evaluate(ms => new Promise(resolve => {
+// The observer is buffered, so it also reports shifts from before the test looked; each one
+// records whether it moved an element that holds the anchor.
+const cumulativeLayoutShift = (anchor, windowMs) => anchor.evaluate((element, ms) => new Promise(resolve => {
   const shifts = [];
   new PerformanceObserver(list => {
-    for (const entry of list.getEntries()) if (!entry.hadRecentInput) shifts.push({ value: entry.value, startTime: entry.startTime });
+    for (const entry of list.getEntries()) if (!entry.hadRecentInput) shifts.push({
+      value: entry.value,
+      startTime: entry.startTime,
+      movedAnchor: entry.sources.some(source => source.node?.contains(element)
+        && (source.previousRect.x !== source.currentRect.x || source.previousRect.y !== source.currentRect.y)),
+    });
   }).observe({ type: 'layout-shift', buffered: true });
   setTimeout(() => resolve({ score: shifts.reduce((sum, shift) => sum + shift.value, 0), shifts }), ms);
 }), windowMs);
@@ -40,13 +47,18 @@ test('TodoMVC layout stays stable after load and while listing items', async ({ 
   const ui = todoUI(page);
   await expect(ui.input).toBeVisible();
   // CLS weights a shift by the area it moves. A small app on a wide viewport can jump a
-  // long way and still score under 0.1, so the entry field is also anchored to where it
-  // first rendered: no late banner or ad slot may move it without user input.
+  // long way and still score under 0.1, so the entry field is also anchored: no late banner
+  // or ad slot may move it without user input. On a loaded machine the banner can land before
+  // the first box is read, so the buffered shift record carries the anchor; the box pair only
+  // adds a move during the window.
   const firstRendered = await ui.input.boundingBox();
-  const settled = await cumulativeLayoutShift(page, 1500);
+  const settled = await cumulativeLayoutShift(ui.input, 1500);
   await testInfo.attach('cls-after-load', { body: JSON.stringify(settled, null, 2), contentType: 'application/json' });
   expect(settled.score, JSON.stringify(settled.shifts)).toBeLessThan(CLS_BUDGET);
-  await oracle('todo-layout-shift', 'toEqual', async () => expect(await ui.input.boundingBox(), 'entry field moved after first render').toEqual(firstRendered));
+  await oracle('todo-layout-shift', 'toEqual', async () => {
+    expect(settled.shifts.filter(shift => shift.movedAnchor), 'a shift without user input moved the entry field').toEqual([]);
+    expect(await ui.input.boundingBox(), 'entry field moved after first render').toEqual(firstRendered);
+  });
 
   // Adding rows is user-initiated; it must not shift the entry field the user is typing in.
   const before = await ui.input.boundingBox();
