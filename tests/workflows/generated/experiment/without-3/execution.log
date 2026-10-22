@@ -1,0 +1,51 @@
+Execution log: experiment/without-3 Shop acceptance suite
+Environment: macOS (darwin arm64), Node v26.0.0, Playwright 1.62.1, bundled Chromium, Mailpit v1.31.6 (worker-scoped via fixtures), retries 0
+Workspace root: /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/lab-noskills
+Candidate: working files in this folder as of the final run (no commit; lab workspace)
+
+1. Discovery probes (temporary _probe.spec.mjs, deleted afterwards, output dir experiment-without-3-probe removed)
+   - Dumped the app fixture fields, GET / HTML and the page's ARIA snapshot to learn control labels.
+   - Logged in, created an order, delivered one signed payment, requested a reset for bob, read /test-support/state,
+     searched Mailpit, read one message, deleted it by ID, advanced the fixture clock by 10 s.
+   - Both probe runs: 1 passed (2.7 s, 3.0 s).
+
+2. First run of the suite (exact command, --workers 2), 2026-10-22T00:32:08Z
+   WORKFLOW RUN: 11 scheduled cases
+   WORKFLOW RESULT: passed; attempts=11; {"passed":11}   exit=0, 8 s
+
+3. Stability run: same command plus --repeat-each 3 (output experiment-without-3-repeat)
+   WORKFLOW RUN: 33 scheduled cases
+   WORKFLOW RESULT: passed; attempts=33; {"passed":33}   exit=0, 20 s
+   Annotations recorded: a distinct successful event for an already-paid order returned
+   HTTP 200 {"received": true, "duplicate": false, ...} while fulfillment_count stayed 1;
+   6 competing distinct events for one order returned 200,200,200,200,200,200 with fulfillment_count 1.
+
+4. Sensitivity check (deliberately broken helpers.mjs, output experiment-without-3-mutant)
+   Mutations: HMAC key = secret + 'x'; Mailpit recipient match compared against address + 'x'.
+   WORKFLOW RESULT: failed; attempts=11; {"passed":5,"failed":6}   exit=1, 26 s
+   Failed as expected: browser checkout (payment 200 expected, got 401), both reset tests
+   (no email observed to the scenario address), all three payment tests (401 instead of 400/200/503).
+   Unaffected tests (auth throttling, rejected browser order, three order tests) passed.
+   helpers.mjs restored from backup and diffed identical. Follow-up fix: inbox cleanup now always
+   verifies zero remaining messages for the scenario's own addresses, even when it collected no IDs.
+
+5. Final run (exact command from the task), started 2026-10-22T00:33:52Z
+   WORKFLOW RUN: 11 scheduled cases
+   WORKFLOW RESULT: passed; attempts=11; {"passed":11}
+   exit=0 elapsed=7s
+   Per-test results (verbose.json):
+   passed    597ms  account-auth.spec.mjs :: five failed sign-ins lock the address for 60 seconds, per address, and a success clears the counter
+   passed   1138ms  checkout-browser.spec.mjs :: shopper checks out in the browser, sees the payment land, keeps it across reload and loses access on sign-out
+   passed    816ms  checkout-browser.spec.mjs :: rejected sign-in and rejected order are reported in the page with no analytics or stored order
+   passed    390ms  orders.spec.mjs :: server prices the basket, replays an equivalent key, and rejects conflicts and invalid baskets
+   passed    340ms  orders.spec.mjs :: orders are private to their owner, keys are per user, and every order endpoint needs a session
+   passed    322ms  orders.spec.mjs :: parallel equivalent submissions create one order per user even when users share a key
+   passed    788ms  password-reset.spec.mjs :: reset link from the real inbox sets a new password and ends every existing session
+   passed    365ms  password-reset.spec.mjs :: expired, unknown and too-short reset submissions leave the password unchanged
+   passed    331ms  payments.spec.mjs :: rejected payment events record nothing; a valid event fulfils once and redeliveries stay safe
+   passed    289ms  payments.spec.mjs :: concurrent duplicate and competing payment deliveries fulfil each order exactly once
+   passed    779ms  payments.spec.mjs :: a transient fulfilment failure commits nothing, the retry succeeds, and state survives restart
+   stats {"startTime":"2026-10-22T00:33:52.783Z","duration":7141.932,"expected":11,"skipped":0,"unexpected":0,"flaky":0}
+   Reports: /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/experiment-without-3/{verbose.json,html/}
+
+Total test execution across all runs: about 65 s.

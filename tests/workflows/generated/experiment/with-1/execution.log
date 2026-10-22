@@ -1,0 +1,72 @@
+=== Run 1 — 2026-10-21T23:34:49Z — commit 3919d7e (suite files uncommitted)
+Command: QA_WORKFLOW_SUITE=/Users/petr/projects/qa-skills/tests/workflows/generated/experiment/with-1 QA_WORKFLOW_OUTPUT=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/experiment-with-1 node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+Environment: Darwin 27.0.0, node v26.0.0, Playwright 1.62.1 Chromium
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / orders.spec.mjs / an idempotency key yields one order across reordering, concurrency and restart (attempt 1)
+Error: apiRequestContext.post: connect ECONNRESET 127.0.0.1:65256
+Call log:
+[2m  - → POST http://127.0.0.1:65256/api/orders[22m
+[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.7922.34 Safari/537.36[22m
+[2m    - accept: */*[22m
+[2m    - accept-encoding: gzip,deflate,br[22m
+[2m    - Idempotency-Key: checkout:e0bf3ace-ed27-4518-a472-be4656d528d7[22m
+[2m    - content-type: application/json[22m
+[2m    - content-length: 88[22m
+[2m    - cookie: shop_session=-_2NNlLIXo5pTszKQxZg4s5ag7sORCrI3f9CPQEbHNM[22m
+
+WORKFLOW RESULT: failed; attempts=11; {"passed":10,"failed":1}
+exit=1 wall=15s
+
+Run 1 diagnosis: failing step 'eight concurrent equivalent submissions' -> helpers.mjs:112 connect ECONNRESET; shop service.log shows 6 of 8 POST /api/orders handled (1x201, 5x200). Isolated probes (scratchpad, same fixtures): GET /health 4..16 parallel x15 rounds = 0 resets; same-key POST /api/orders 4..10 parallel x10 rounds = 0 resets, exactly 1 created per round.
+Change before run 2: added GET /health assertion to orders.spec.mjs (no change to concurrency or retries).
+
+=== Run 2 — 2026-10-21T23:36:52Z — commit 3919d7e (suite files uncommitted), same command
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / orders.spec.mjs / an idempotency key yields one order across reordering, concurrency and restart (attempt 1)
+Error: apiRequestContext.post: connect ECONNRESET 127.0.0.1:65472
+Call log:
+[2m  - → POST http://127.0.0.1:65472/api/orders[22m
+[2m    - user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.7922.34 Safari/537.36[22m
+[2m    - accept: */*[22m
+[2m    - accept-encoding: gzip,deflate,br[22m
+[2m    - Idempotency-Key: checkout:04e5fd32-285b-4751-bf02-6f2516f6825c[22m
+[2m    - content-type: application/json[22m
+[2m    - content-length: 88[22m
+[2m    - cookie: shop_session=WhEZgHSY8vkIrWRAShRgUKteJh6sTyYm9aMLYkby1M0[22m
+
+WORKFLOW RESULT: failed; attempts=11; {"passed":10,"failed":1}
+exit=1 wall=18s
+
+Isolation after run 2 (scratchpad outputs iso-*): --grep 'idempotency key yields' alone x3 = 3 passed; orders.spec.mjs alone 1 worker x2 = 1 pass, 1 ECONNRESET; account-auth+orders 1 worker x2 = 1 pass, 1 ECONNRESET; checkout-browser+idempotency 2 workers x2 = 1 pass, 1 ECONNRESET. In every failing run the shop service.log shows exactly one 201 and only 200 replays among handled POST /api/orders (6-7 of 8 handled).
+Change before run 3: parallel bursts use Promise.allSettled via helpers.burst(); connection errors fail the test through expect.soft (still red), and the idempotency/fulfillment invariant is asserted on answered requests. Burst sizes unchanged (8 orders, 10 and 6 deliveries). No retries added.
+
+=== Run 3 (final) — 2026-10-21T23:40:58Z — commit 3919d7e (suite files uncommitted), same command
+WORKFLOW RUN: 11 scheduled cases
+FAILED:  /  / orders.spec.mjs / an idempotency key yields one order across reordering, concurrency and restart (attempt 1)
+Error: every parallel submission received an HTTP response
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+[32m- Expected  - 1[39m
+[31m+ Received  + 3[39m
+
+[32m- Array [][39m
+[31m+ Array [[39m
+[31m+   "apiRequestContext.post: connect ECONNRESET 127.0.0.1:49889",[39m
+[31m+ ][39m
+FAILED:  /  / payments.spec.mjs / concurrent duplicate and distinct deliveries fulfill an order once (attempt 1)
+Error: every parallel delivery received an HTTP response
+
+[2mexpect([22m[31mreceived[39m[2m).[22mtoEqual[2m([22m[32mexpected[39m[2m) // deep equality[22m
+
+[32m- Expected  - 1[39m
+[31m+ Received  + 5[39m
+
+[32m- Array [][39m
+[31m+ Array [[39m
+[31m+   "apiRequestContext.post: connect ECONNRESET 127.0.0.1:49943",[39m
+[31m+   "apiRequestContext.post: connect ECONNRESET 127.0.0.1:49943",[39m
+[31m+   "apiRequestContext.post: connect ECONNRESET 127.0.0.1:49943",[39m
+[31m+ ][39m
+WORKFLOW RESULT: failed; attempts=11; {"passed":9,"failed":2}
+exit=1 wall=13s

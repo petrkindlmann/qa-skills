@@ -1,0 +1,12 @@
+# 2026-10-22T00:53:09Z official run (exact command from task prompt, config reporters)
+$ QA_WORKFLOW_SUITE=.../bare-2 QA_WORKFLOW_OUTPUT=.../experiment-bare-2 node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+WORKFLOW RUN: 12 scheduled cases
+WORKFLOW RESULT: passed; attempts=12; {"passed":12}
+exit=0 elapsed=7s
+
+# Earlier runs in this session (same suite, diagnostic reporters)
+# 1. --workers 2 --reporter list                      -> 12 passed (7.1s)
+# 2. browser spec + temporary Mailpit-cleanup probe   -> 4 passed (probe confirmed teardown deletes the test's messages; probe file removed)
+# 3. --workers 2 --repeat-each 3 --reporter dot       -> 36 passed (17.0s), no flakes
+# Before the suite was written, two temporary probe specs read the served page markup, fixture fields,
+# API response shapes and a Mailpit message; they were deleted and are not part of the suite.

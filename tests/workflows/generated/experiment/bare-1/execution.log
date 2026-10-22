@@ -1,0 +1,50 @@
+== Run 1 (official command, ~02:43; console output transcribed)
+WORKFLOW RUN: 11 scheduled cases
+WORKFLOW RESULT: passed; attempts=11; {"passed":11}
+elapsed=5s exit=0
+
+== Run 2 (stability: --repeat-each 3, list reporter, 2026-10-22 02:43:36)
+
+Running 33 tests using 2 workers
+
+  ✓   1 tests/workflows/generated/experiment/bare-1/api-account.spec.mjs:3:1 › health, session cookie, logout and unauthenticated access (415ms)
+  ✓   2 tests/workflows/generated/experiment/bare-1/api-account.spec.mjs:53:1 › sign-in throttling locks an address after five failures until the window passes (535ms)
+  ✓   3 tests/workflows/generated/experiment/bare-1/api-account.spec.mjs:83:1 › reset tokens reject short passwords, expire after 300 seconds and leave the password intact (319ms)
+  ✓   4 tests/workflows/generated/experiment/bare-1/api-orders.spec.mjs:3:1 › orders are priced by the server and invalid carts create nothing (364ms)
+  ✓   5 tests/workflows/generated/experiment/bare-1/api-orders.spec.mjs:47:1 › idempotency keys replay, conflict, stay per user and collapse parallel submissions (320ms)
+  ✓   6 tests/workflows/generated/experiment/bare-1/api-orders.spec.mjs:87:1 › orders are visible only to their owner (285ms)
+  ✓   7 tests/workflows/generated/experiment/bare-1/api-payments.spec.mjs:3:1 › payment webhook rejects bad deliveries and fulfills a paid order exactly once (303ms)
+  ✓   8 tests/workflows/generated/experiment/bare-1/api-payments.spec.mjs:52:1 › concurrent payment deliveries fulfill each order once (282ms)
+  ✓   9 tests/workflows/generated/experiment/bare-1/api-payments.spec.mjs:73:1 › transient fulfillment failure rolls back, the retry succeeds, and state survives restart (810ms)
+  ✓  10 tests/workflows/generated/experiment/bare-1/browser.spec.mjs:6:1 › shopper signs in, checks out, sees the payment land, survives reload and signs out (1.1s)
+  ✓  11 tests/workflows/generated/experiment/bare-1/browser.spec.mjs:71:1 › password reset through a real Mailpit message revokes old sessions and credentials (1.0s)
+  ✓  12 tests/workflows/generated/experiment/bare-1/api-account.spec.mjs:3:1 › health, session cookie, logout and unauthenticated access (423ms)
+  ✓  13 tests/workflows/generated/experiment/bare-1/api-account.spec.mjs:53:1 › sign-in throttling locks an address after five failures until the window passes (613ms)
+  ✓  14 tests/workflows/generated/experiment/bare-1/api-account.spec.mjs:83:1 › reset tokens reject short passwords, expire after 300 seconds and leave the password intact (381ms)
+  ✓  15 tests/workflows/generated/experiment/bare-1/api-orders.spec.mjs:3:1 › orders are priced by the server and invalid carts create nothing (405ms)
+  ✓  16 tests/workflows/generated/experiment/bare-1/api-orders.spec.mjs:47:1 › idempotency keys replay, conflict, stay per user and collapse parallel submissions (410ms)
+  ✓  17 tests/workflows/generated/experiment/bare-1/api-orders.spec.mjs:87:1 › orders are visible only to their owner (346ms)
+  ✓  18 tests/workflows/generated/experiment/bare-1/api-payments.spec.mjs:3:1 › payment webhook rejects bad deliveries and fulfills a paid order exactly once (386ms)
+  ✓  19 tests/workflows/generated/experiment/bare-1/api-payments.spec.mjs:52:1 › concurrent payment deliveries fulfill each order once (328ms)
+  ✓  20 tests/workflows/generated/experiment/bare-1/api-payments.spec.mjs:73:1 › transient fulfillment failure rolls back, the retry succeeds, and state survives restart (915ms)
+  ✓  21 tests/workflows/generated/experiment/bare-1/browser.spec.mjs:6:1 › shopper signs in, checks out, sees the payment land, survives reload and signs out (1.1s)
+  ✓  22 tests/workflows/generated/experiment/bare-1/browser.spec.mjs:71:1 › password reset through a real Mailpit message revokes old sessions and credentials (1.1s)
+  ✓  23 tests/workflows/generated/experiment/bare-1/api-account.spec.mjs:3:1 › health, session cookie, logout and unauthenticated access (375ms)
+  ✓  24 tests/workflows/generated/experiment/bare-1/api-account.spec.mjs:83:1 › reset tokens reject short passwords, expire after 300 seconds and leave the password intact (310ms)
+  ✓  25 tests/workflows/generated/experiment/bare-1/api-orders.spec.mjs:3:1 › orders are priced by the server and invalid carts create nothing (379ms)
+  ✓  26 tests/workflows/generated/experiment/bare-1/api-orders.spec.mjs:47:1 › idempotency keys replay, conflict, stay per user and collapse parallel submissions (321ms)
+  ✓  27 tests/workflows/generated/experiment/bare-1/api-orders.spec.mjs:87:1 › orders are visible only to their owner (311ms)
+  ✓  29 tests/workflows/generated/experiment/bare-1/api-payments.spec.mjs:3:1 › payment webhook rejects bad deliveries and fulfills a paid order exactly once (307ms)
+  ✓  28 tests/workflows/generated/experiment/bare-1/api-account.spec.mjs:53:1 › sign-in throttling locks an address after five failures until the window passes (499ms)
+  ✓  30 tests/workflows/generated/experiment/bare-1/api-payments.spec.mjs:52:1 › concurrent payment deliveries fulfill each order once (295ms)
+  ✓  31 tests/workflows/generated/experiment/bare-1/api-payments.spec.mjs:73:1 › transient fulfillment failure rolls back, the retry succeeds, and state survives restart (796ms)
+  ✓  32 tests/workflows/generated/experiment/bare-1/browser.spec.mjs:6:1 › shopper signs in, checks out, sees the payment land, survives reload and signs out (851ms)
+  ✓  33 tests/workflows/generated/experiment/bare-1/browser.spec.mjs:71:1 › password reset through a real Mailpit message revokes old sessions and credentials (927ms)
+
+  33 passed (16.9s)
+elapsed=18s (exit status not captured; list reporter shows 33 passed)
+
+== Run 3 (final, official command, after adding Mailpit delete check, 2026-10-22 02:44:11)
+WORKFLOW RUN: 11 scheduled cases
+WORKFLOW RESULT: passed; attempts=11; {"passed":11}
+elapsed=5s exit=0

@@ -1,0 +1,74 @@
+Execution log: Shop acceptance suite (experiment/with-2)
+=========================================================
+
+Candidate commit: 8d342e4 (main). The working tree was NOT clean before this task:
+site/index.html, experiment/with-1 and experiment/without-1 already had changes. None of
+them were touched. All new files are in tests/workflows/generated/experiment/with-2/.
+Environment: macOS (darwin), Node v26.0.0, @playwright/test 1.62.1, Chromium only,
+Mailpit v1.31.6 (worker-scoped via support/fixtures.mjs), fresh Shop + SQLite per test.
+Scratchpad: /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad
+
+Inputs read: AGENTS.md, tests/workflows/fixture-app-contract.md, support/fixtures.mjs,
+support/runtime.mjs (only to learn the `app`/`mailpit` fixture shape), playwright.config.mjs,
+skills/{api-testing,playwright-automation,email-testing,payment-testing}/SKILL.md, and these
+references: email-testing/mailpit-playwright.md, payment-testing/webhooks-and-clocks.md
+(sections 1-3), api-testing/test-patterns.md (auth, errors, headers), and
+api-testing/schema-validation.md (Zod section).
+.agents/qa-project-context.md is the unfilled template, so it was treated as absent. The
+contract was used as product context.
+No fixture-app source, other generated folders, run-matrix.mjs, docs/*.md or evals/ were read.
+
+1. Discovery (scratchpad specs, not part of the suite)
+   Three throwaway specs in scratchpad/explore drove the live app to learn the public UI:
+   accessible names (Email / Password / Sign in / quantity spinbuttons / Place order /
+   Account email / Send reset link / New password / Reset password / Sign out), the status
+   region text, the order card text, the Mailpit message JSON shape and the
+   test-support `receipts` row shape ({id, order_id, created}).
+   One discovery run failed with a strict-mode violation on getByLabel('Password'): the hidden
+   "New password" input also matched. All suite locators use exact labels because of this.
+
+2. List
+   QA_WORKFLOW_SUITE=.../with-2 QA_WORKFLOW_OUTPUT=.../scratchpad/experiment-with-2 \
+     node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --list
+   -> 12 scheduled cases
+
+3. Run 1 (2026-10-22T00:01:01Z), command as specified, --workers 2
+   WORKFLOW RUN: 12 scheduled cases
+   FAILED: password-reset.spec.mjs / password reset from the emailed link changes the
+           password and revokes sessions (attempt 1)
+   Error: apiResponse.json: Response has been disposed
+   WORKFLOW RESULT: failed; attempts=12; {"passed":11,"failed":1}
+   Cause: a test-code defect. The spec disposed its API context before reading the response
+   body. Fix: read the body inside try and dispose in finally. No assertion was changed.
+
+4. Run 2 (2026-10-22T00:01:26Z), same command, --workers 2  <- final result for current files
+   WORKFLOW RUN: 12 scheduled cases
+   WORKFLOW RESULT: passed; attempts=12; {"passed":12}
+   verbose.json stats: expected=12 unexpected=0 flaky=0 skipped=0 duration=9.7s
+   Per test (ms): auth-cookie/logout 825, throttling 1126, browser checkout 1278,
+   pricing 528, invalid orders 512, idempotency/ownership 510, parallel+restart 925,
+   reset via email 1388, token expiry 1038, signature/mismatch 462,
+   duplicate/concurrent delivery 524, transient failure+restart 1382
+
+5. Stability run (2026-10-22T00:01:54Z): same command plus --repeat-each 3, output in
+   scratchpad/experiment-with-2-repeat
+   WORKFLOW RUN: 36 scheduled cases
+   WORKFLOW RESULT: passed; attempts=36; {"passed":36}   (flaky=0, 22.4s)
+
+6. Helper controls (scratchpad spec importing helpers.mjs, 1 passed)
+   extractResetLink accepts a good link (and decodes &amp;). It throws for a foreign origin,
+   a missing token, two distinct links, a plaintext/HTML mismatch, a wrong path and an empty
+   message. sign() yields sha256=<64 hex> and differs for whitespace-different bytes.
+
+7. Static checks over with-2/
+   grep -rnE "waitForTimeout|page\.route|routeFromHAR|sleep\(|setTimeout|pk_live|sk_live|4111111111111111|test\.only"
+   -> no matches
+
+Not run / not exercised:
+- The application-fault switch the runtime exposes (QA_SHOP_FAULT) was not used. Its fault
+  names are inside fixture-app, which is out of bounds. Broken-case evidence therefore comes
+  from in-test controls, not from injected product defects.
+- SMTP-unreachable path (202 + smtp_errors increment): no contract-safe way to take the
+  worker's Mailpit down inside a test.
+- /health latency budget and test-support 403 checks: out of the journeys requested.
+- Firefox/WebKit: Chromium only, per the task.

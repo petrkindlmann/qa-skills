@@ -1,0 +1,63 @@
+Execution log: Shop acceptance suite (experiment/with-3)
+
+Candidate commit: 8d342e465703d77a741dd5992a1528aad83ad558 (main; the files in this folder are uncommitted)
+Environment: macOS (darwin), Node v26.0.0, Python 3.14.6, @playwright/test 1.62.1, bundled Chromium,
+Mailpit v1.31.6 (worker-scoped, from tests/workflows/support/fixtures.mjs), fresh Shop process and SQLite per test.
+QA context: .agents/qa-project-context.md is still the unfilled template, so it was treated as absent.
+Product context came from tests/workflows/fixture-app-contract.md and the support fixtures.
+
+Command (from the repo root):
+QA_WORKFLOW_SUITE=/Users/petr/projects/qa-skills/tests/workflows/generated/experiment/with-3 \
+QA_WORKFLOW_OUTPUT=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/experiment-with-3 \
+node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+
+UI discovery (before authoring): four short probe specs in the scratchpad read the page's ARIA
+snapshot, the status texts, the Mailpit message shape and the catalogue JSON. No application
+source was read.
+
+Run A, 2026-10-22T00:22:37Z, first execution of the authored suite:
+WORKFLOW RUN: 11 scheduled cases
+WORKFLOW RESULT: passed; attempts=11; {"passed":11}
+stats: expected=11 unexpected=0 skipped=0 flaky=0, duration 9.8 s
+
+The catalogue assertion and an inbox positive control were then edited, so run A does not count
+as evidence for the final files.
+
+Broken controls, 2026-10-22T00:23Z, on mutated copies in the scratchpad (5 tests failed as intended, 5 skipped, 0 passed):
+  M1 sign the re-serialised JSON instead of the exact noncanonical bytes -> payments step failed: expected 200, got 401
+  M2 send the 8 concurrent orders with distinct keys                     -> orders burst test failed: status list differs
+  M3 never request the known-account reset                               -> reset test failed: "no new email for alice+..."
+  M4 only 4 failed sign-ins before the correct password                  -> throttle test failed: expected 429, got 200
+  M5 skip logout before replaying the captured cookie                    -> revocation step failed: expected 401, got 200
+These were test-side mutations. Server faults were not injected, because their names live in files
+this task excluded.
+
+Static checks on the final files: node --check passes for all six .mjs files. grep finds no
+waitForTimeout, page.pause, setTimeout, sleep(, page.route or test.only. No ESLint or tsc is
+configured for .mjs here.
+
+Final run 1, 2026-10-22T00:24:10Z:
+WORKFLOW RUN: 11 scheduled cases
+WORKFLOW RESULT: passed; attempts=11; {"passed":11}
+exit=0; stats: expected=11 unexpected=0 skipped=0 flaky=0, duration 5.1 s
+
+Final run 2, 2026-10-22T00:24:16Z:
+WORKFLOW RUN: 11 scheduled cases
+WORKFLOW RESULT: passed; attempts=11; {"passed":11}
+exit=0; stats: expected=11 unexpected=0 skipped=0 flaky=0, duration 7.0 s
+
+Per-test results (final run 2, from verbose.json):
+  passed    410ms account-auth.spec.mjs :: sign-in issues an HttpOnly session and logout revokes it on the server
+  passed    543ms account-auth.spec.mjs :: five failed sign-ins throttle that address until the window passes
+  passed    981ms checkout-browser.spec.mjs :: shopper signs in, checks out, sees the paid state after reload and signs out
+  passed    468ms orders.spec.mjs :: server owns prices and rejects invalid orders without creating one
+  passed    411ms orders.spec.mjs :: idempotency keys replay, conflict and stay private to each user
+  passed    572ms orders.spec.mjs :: concurrent duplicate submissions create one durable order across restart
+  passed    870ms password-reset.spec.mjs :: reset email from Mailpit resets the password in the browser and revokes old sessions
+  passed    544ms password-reset.spec.mjs :: reset tokens expire after 300 seconds, are single use and need 12 characters
+  passed    386ms payments.spec.mjs :: signed payment events: rejections change nothing, a valid event fulfils once
+  passed    316ms payments.spec.mjs :: concurrent deliveries fulfil each order exactly once
+  passed   1067ms payments.spec.mjs :: a transient fulfilment failure commits nothing and the retry succeeds after restart
+
+Reports: /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/experiment-with-3/verbose.json and /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/experiment-with-3/html/
+Total execution time, probes and controls included: about 1 minute.

@@ -1,0 +1,56 @@
+# Execution log: tests/workflows/generated/experiment/without-2
+date: 2026-10-22T00:14:47Z
+host: Darwin arm64; node v26.0.0; playwright Version 1.62.1
+git: fatal: not a git repository (or any of the parent directories): .git
+suite sha256:
+92eb77ce68f3fb61f3b1c98bb4ba18b7088ca206e1dcd45d354f6887b310e14e  account-auth.spec.mjs
+84fb82d53ec180cde9996576c32c74041e8cbfe80072e4c8fac7fa073d1c7a49  browser-journeys.spec.mjs
+6345311a6edb06500dc8b017a3ebfe132ae8564fb8e982e5ad2229310a2b1936  helpers.mjs
+eb47076ed489d0b7f7ca5d3c6384a6eae1bd8a829fc2ad821cd2715cafe9c924  orders.spec.mjs
+d84e8ee56dc7b3b20e66e613a89cf6c27ffed6e1c7ed55cf6144b8e57d95d9ce  password-reset.spec.mjs
+be279b890a5c127c94d12ff6c6bf28468562f728c999a1c265de6e22f73be866  payments.spec.mjs
+
+command (workspace root):
+QA_WORKFLOW_SUITE=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/lab-noskills/tests/workflows/generated/experiment/without-2 QA_WORKFLOW_OUTPUT=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/experiment-without-2 node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+
+## Final run output
+WORKFLOW RUN: 12 scheduled cases
+WORKFLOW RESULT: passed; attempts=12; {"passed":12}
+exit code: 0; wall time: 8s
+
+## Per-test results (from /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/experiment-without-2/verbose.json)
+passed    387ms  account-auth.spec.mjs :: sign-in issues a protected session cookie and sign-out revokes it on the server
+passed    442ms  account-auth.spec.mjs :: repeated failed sign-ins lock the address, even for the right password, until the window passes
+passed   1202ms  browser-journeys.spec.mjs :: shopper signs in, checks out, sees the payment land and keeps state until sign-out
+passed   1129ms  browser-journeys.spec.mjs :: a user resets a forgotten password from the emailed link and signs in with it
+passed    374ms  orders.spec.mjs :: the server prices orders and rejects invalid ones without creating anything
+passed    382ms  orders.spec.mjs :: idempotency keys replay equivalent intent, reject conflicting reuse and belong to one user
+passed    349ms  orders.spec.mjs :: parallel equivalent submissions with one key create exactly one order
+passed    527ms  password-reset.spec.mjs :: a reset email from the real inbox changes the password once and ends every session
+passed    433ms  password-reset.spec.mjs :: a reset token stops working after 300 seconds
+passed    435ms  payments.spec.mjs :: rejected payment events change nothing; a valid event pays and fulfills exactly once
+passed    315ms  payments.spec.mjs :: concurrent deliveries of payment events fulfill an order once
+passed    900ms  payments.spec.mjs :: a transient fulfillment failure rolls back, the retry succeeds, and state survives restarts
+
+stats: {"startTime":"2026-10-22T00:14:48.752Z","duration":7301.582,"expected":12,"skipped":0,"unexpected":0,"flaky":0}
+
+## Earlier runs in this session (same command unless noted)
+1. First full run: 12 scheduled, 11 passed, 1 failed (10 s).
+   Failed: browser-journeys "shopper signs in, checks out..." expected the status to show
+   invalid_order after entering 11 cups. Observed: status stayed "Signed in." The quantity input
+   has min=0 max=10, its validity reports rangeOverflow, and no POST /api/orders was sent, so the
+   browser's form validation blocks the submit before the server is reached. The contract does
+   not say which layer rejects an out-of-range cart in the UI, so this was a wrong test assumption,
+   not an app defect. The step now asserts rangeOverflow, no order request, no purchase event and
+   an empty server-side order list; the server's 400 invalid_order for quantity 11 stays covered
+   by orders.spec.mjs.
+   The reset-success wording ("Your password has been reset. Sign in with your new password.")
+   was observed once in a throwaway probe and is now asserted exactly.
+2. Second full run after those edits: 12 scheduled, 12 passed (6 s).
+3. Stability run with --repeat-each 3 (output dir .../scratchpad/experiment-without-2-repeat):
+   36 scheduled, 36 passed, 0 flaky (17 s).
+4. Final run recorded above: 12 passed, 0 failed, 0 skipped, 0 flaky.
+
+Temporary probe specs (zz-probe.spec.mjs) were used to read the fixture shape, the UI's
+accessibility tree, response shapes and the Mailpit message format; they were deleted and are
+not part of the suite.

@@ -1,0 +1,35 @@
+# execution.log — bare-3 Shop acceptance suite
+
+## Discovery (before writing specs)
+Two throwaway probe specs (zz-probe.spec.mjs, since deleted) loaded / and /reset-password in Chromium to read
+the served UI labels, and dumped the app fixture shape, test-support state shape and the Mailpit message JSON.
+No application source, runtime.mjs or other generated folders were read.
+
+## Run 1 (official command, workers 2) (earlier in session)
+WORKFLOW RUN: 11 scheduled cases
+WORKFLOW RESULT: passed; attempts=11; {"passed":11}
+
+## Stability run (--repeat-each 4, workers 2, separate output dir, removed afterwards)
+WORKFLOW RUN: 44 scheduled cases
+WORKFLOW RESULT: passed; attempts=44; {"passed":44}
+stats: {"startTime":"2026-10-22T01:01:02.209Z","duration":29908.916999999998,"expected":44,"skipped":0,"unexpected":0,"flaky":0}
+
+## Final run (official command) — started 2026-10-22T01:01:49Z
+$ QA_WORKFLOW_SUITE=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/lab-noskills/tests/workflows/generated/experiment/bare-3 QA_WORKFLOW_OUTPUT=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/experiment-bare-3 node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+WORKFLOW RUN: 11 scheduled cases
+WORKFLOW RESULT: passed; attempts=11; {"passed":11}
+exit code: 0
+
+## Final run per-test results (from verbose.json)
+passed     380ms auth.spec.mjs › public surface, session cookie and server-side logout
+passed     649ms auth.spec.mjs › failed sign-ins lock the address, not the account holder elsewhere, until the window passes
+passed    1031ms browser.spec.mjs › shopper signs in, checks out once, sees payment, survives reload and signs out
+passed    1047ms browser.spec.mjs › password reset from the real inbox replaces the password and ends old sessions
+passed     383ms orders.spec.mjs › server owns pricing and rejects invalid orders without creating any
+passed     354ms orders.spec.mjs › idempotency keys replay, conflict, survive parallel submits and stay per user
+passed     475ms password-reset.spec.mjs › reset requests do not reveal accounts; tokens enforce length, expiry and single use
+passed     400ms payments.spec.mjs › payment events are authenticated, validated and fulfill an order exactly once
+passed     313ms payments.spec.mjs › concurrent deliveries never fulfill an order twice
+passed     803ms payments.spec.mjs › a transient fulfillment failure rolls back, the retry succeeds, and state survives restart
+passed     832ms payments.spec.mjs › concurrent deliveries during the transient failure converge to one fulfillment
+stats: {"startTime":"2026-10-22T01:01:50.162Z","duration":5102.219,"expected":11,"skipped":0,"unexpected":0,"flaky":0}

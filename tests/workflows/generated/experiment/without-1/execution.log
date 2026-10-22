@@ -1,0 +1,28 @@
+# Final run 2026-10-21T23:51:34Z
+# cwd: /private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/lab-noskills
+# QA_WORKFLOW_SUITE=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/lab-noskills/tests/workflows/generated/experiment/without-1 QA_WORKFLOW_OUTPUT=/private/tmp/claude-501/-Users-petr-projects-qa-skills/330613cb-1d3d-4f56-8281-040899b2df5a/scratchpad/experiment-without-1 node node_modules/playwright/cli.js test --config tests/workflows/playwright.config.mjs --workers 2
+WORKFLOW RUN: 12 scheduled cases
+WORKFLOW RESULT: passed; attempts=12; {"passed":12}
+# exit=0 elapsed=10s
+# Per-test results (verbose.json)
+PASSED     647ms  account-auth.spec.mjs > sign-in issues a server session that sign-out revokes
+PASSED    1429ms  account-auth.spec.mjs > repeated failed sign-ins are throttled per address until the window passes
+PASSED    2395ms  checkout-browser.spec.mjs > shopper signs in, checks out, sees payment after reload and signs out
+PASSED    2055ms  checkout-browser.spec.mjs > reset link from the inbox opens a working new-password form
+PASSED     717ms  orders.spec.mjs > orders are priced by the server and invalid carts create nothing
+PASSED     566ms  orders.spec.mjs > idempotency keys replay, conflict and stay single under parallel submission
+PASSED     700ms  orders.spec.mjs > a user cannot see another user's orders
+PASSED     910ms  password-reset.spec.mjs > a reset link delivered to Mailpit changes the password once and ends old sessions
+PASSED     937ms  password-reset.spec.mjs > a reset token expires after 300 seconds on the fixture clock
+PASSED     872ms  payments.spec.mjs > only a correctly signed, matching payment fulfills an order, and only once
+PASSED     994ms  payments.spec.mjs > concurrent deliveries fulfill once, including across a transient failure
+PASSED    1358ms  payments.spec.mjs > a failed fulfillment rolls back, and paid state survives restarts
+# stats {"startTime":"2026-10-21T23:51:35.153Z","duration":9652.964,"expected":12,"skipped":0,"unexpected":0,"flaky":0}
+
+# Earlier iteration (same suite, before the helper fix)
+# Run 1: 12 scheduled, 11 passed, 1 failed:
+#   payments.spec.mjs:21 expected 400 for a correctly signed truncated JSON body, received 401.
+#   Cause: the helper passed the body to Playwright as a string; Playwright re-encodes a string
+#   that is not parsable JSON when Content-Type is application/json, so the bytes sent no longer
+#   matched the HMAC. The app was right to answer 401. Fix: send Buffer.from(body) so the signed
+#   bytes are the sent bytes. Rerun of payments.spec.mjs: 3/3 passed; full rerun above: 12/12.
