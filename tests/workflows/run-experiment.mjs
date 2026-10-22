@@ -12,7 +12,12 @@
 //
 // Usage: node tests/workflows/run-experiment.mjs <take>[,<take>...]   (folders under generated/experiment)
 // Env:   QA_EXPERIMENT_OUTPUT (default tests/workflows/artifacts/experiment)
-//        QA_EXPERIMENT_FAULTS comma-separated subset of SHOP_FAULTS, for a smoke check only
+//        QA_EXPERIMENT_SET primary (default) or secondary
+//        QA_EXPERIMENT_FAULTS comma-separated subset of the chosen set, for a smoke check only
+//
+// The primary set is the score fixed before any take was scored. The secondary set is every
+// other Shop fault in the lab, added after authoring but before scoring as an exploratory
+// measure; it is reported in full and never mixed into the primary score.
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 import path from 'node:path';
@@ -29,6 +34,12 @@ export const SHOP_FAULTS = Object.freeze([
   'cross_user_order_read', 'trust_client_amount', 'duplicate_fulfillment', 'receipt_before_commit',
   'idempotency_payload_conflict', 'reusable_reset_token', 'logout_cookie_only', 'compensating_prices',
   'canonicalized_signature',
+]);
+
+export const SECONDARY_FAULTS = Object.freeze([
+  'unlabeled_controls', 'plaintext_session_tokens', 'missing_idempotency_index', 'no_login_throttle',
+  'open_test_support', 'smtp_failure_503', 'slow_health', 'wrong_currency_event', 'reset_email_dropped',
+  'catalog_currency_missing',
 ]);
 
 async function runSuite(take, fault, directory) {
@@ -55,13 +66,16 @@ async function runSuite(take, fault, directory) {
     clean: !result.signal && !assessment.timedOut && !assessment.infrastructureError && !parseError && tests.length > 0 };
 }
 
-const faults = process.env.QA_EXPERIMENT_FAULTS ? process.env.QA_EXPERIMENT_FAULTS.split(',').filter(Boolean) : [...SHOP_FAULTS];
-if (faults.some(fault => !SHOP_FAULTS.includes(fault))) throw new Error('QA_EXPERIMENT_FAULTS names an unknown fault');
+const set = process.env.QA_EXPERIMENT_SET || 'primary';
+const sets = { primary: SHOP_FAULTS, secondary: SECONDARY_FAULTS };
+if (!sets[set]) throw new Error(`QA_EXPERIMENT_SET must be primary or secondary, not ${set}`);
+const faults = process.env.QA_EXPERIMENT_FAULTS ? process.env.QA_EXPERIMENT_FAULTS.split(',').filter(Boolean) : [...sets[set]];
+if (faults.some(fault => !sets[set].includes(fault))) throw new Error(`QA_EXPERIMENT_FAULTS names a fault outside the ${set} set`);
 const cleanFail = run => run.clean && run.failed.length > 0 && run.code === 1;
 const cleanPass = run => run.clean && run.failed.length === 0 && run.code === 0;
 
 await mkdir(output, { recursive: true });
-const manifest = { startedAt: new Date().toISOString(), node: process.version, faults, takes: {} };
+const manifest = { startedAt: new Date().toISOString(), node: process.version, set, faults, takes: {} };
 for (const take of takes) {
   const controls = [];
   for (const attempt of [1, 2]) {
@@ -91,7 +105,7 @@ for (const take of takes) {
 }
 manifest.finishedAt = new Date().toISOString();
 await writeFile(path.join(output, 'experiment.json'), JSON.stringify(manifest, null, 2) + '\n');
-console.log('\nTake | healthy x2 | detected | missed | unstable | invalid');
+console.log(`\n${set} set\nTake | healthy x2 | detected | missed | unstable | invalid`);
 for (const [take, record] of Object.entries(manifest.takes)) {
   console.log(`${take} | ${record.controls.every(cleanPass) ? 'pass' : 'FAIL'} | ${record.detected.length}/${faults.length} | ${record.missed.join(', ') || '-'} | ${record.unstable.join(', ') || '-'} | ${record.invalid.join(', ') || '-'}`);
 }
