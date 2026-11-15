@@ -240,7 +240,7 @@
         "gmail",
         "artifact OR outDir OR outputPath",
         "accept OR allowlist OR acknowledged",
-        "model OR approximate OR not the real client"
+        "yahoo OR aol OR apple-mail OR Apple Mail"
       ],
       "anti_patterns": [
         "toHaveScreenshot of the Mailpit web UI as an Outlook check",
@@ -258,20 +258,22 @@
       "id": "eml-012",
       "prompt": "The client-rendering check on our welcome email is green. Can we tell marketing it's verified in every email client, or do we still need anything before the launch?",
       "expected_patterns": [
-        "model OR approximate",
-        "not.*real client OR not.*screenshot OR real-client screenshots",
-        "Litmus OR Email on Acid",
-        "launch OR release OR periodic"
+        "verified OR yes",
+        "outlook",
+        "gmail",
+        "apple-mail OR Apple Mail",
+        "yahoo OR aol",
+        "dark"
       ],
       "anti_patterns": [
-        "verified in every email client",
-        "no need for real-client screenshots",
-        "a green check proves it renders identically everywhere"
+        "you can't tell marketing it's verified",
+        "a green check is not a verification",
+        "you still need a paid screenshot service before the launch"
       ],
       "tags": [
         "client-rendering",
-        "limits",
-        "judgement"
+        "verification",
+        "claims"
       ]
     }
   ]

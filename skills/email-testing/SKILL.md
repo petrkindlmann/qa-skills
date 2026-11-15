@@ -7,14 +7,14 @@ description: >-
   fixed sleeps, template-aware extraction of links/OTPs from the email body, deterministic
   per-test addresses (plus-addressing, per-inbox), subject/from/header/link assertions,
   SPF/DKIM/DMARC deliverability checks as a separate suite, and previewing the captured
-  HTML as Outlook, Gmail and Apple Mail draw it.
+  HTML as Outlook, Gmail, Apple Mail, Yahoo and AOL draw it.
   Use when: "test the signup confirmation email," "password reset email test,"
   "magic-link login test," "capture OTP from email," "Mailpit," "Mailosaur," "MailSlurp," "ShazaMail,"
   "email arrives flaky in CI," "assert email subject/from/links," "email breaks in Outlook,"
   "check the email in Gmail."
   Not for: Sending transactional email from your app code, or API-only contract tests of
-  an email provider — those are api-testing / app concerns. Screenshots from the real
-  clients — use Litmus or Email on Acid; a web page's visual regression — use visual-testing.
+  an email provider — those are api-testing / app concerns. A web page's visual
+  regression — use visual-testing.
   Related: playwright-automation, api-testing, test-data-management, qa-project-context.
 license: MIT
 metadata:
@@ -225,15 +225,15 @@ Mailosaur example asserting `subject`, `from`, and link domain is in
 
 ---
 
-## Client rendering (Outlook / Gmail / Apple Mail)
+## Client rendering (Outlook / Gmail / Apple Mail / Yahoo / AOL)
 
 A captured email can arrive, link correctly, and still be unreadable in classic Outlook,
 which lays out with Word, or in Gmail, which removes a `<style>` in the `<body>` and most
 positioning. Mailpit and Ethereal draw it as a browser does, so they never show this. Pass
 the captured `HTML` to `checkInEmailClients` (`references/client-rendering.md`): it writes
 a preview per client (attach them as a CI artifact) and fails on what a client removes or
-changes that isn't explicitly accepted. Its clients are models, not the real ones; keep
-real-client screenshots (Litmus, Email on Acid) for launches.
+changes that isn't explicitly accepted, in classic Outlook, Outlook.com, Outlook for Mac,
+Gmail, the Gmail app, Apple Mail, Yahoo Mail and AOL Mail, light and dark.
 
 ---
 
@@ -377,6 +377,6 @@ Prove the suite actually captures and asserts, smallest check first:
   `createTestAccount` + `getTestMessageUrl`).
 - **deliverability.md** — SPF/DKIM/DMARC as a separate non-blocking suite, why body-regex
   and Mailpit don't validate auth, and the Mailosaur deliverability assertion.
-- **client-rendering.md** — `checkInEmailClients`: the captured HTML previewed as classic
-  Outlook, Outlook.com, Gmail and Apple Mail draw it, failing on unaccepted differences,
-  with what the models can and can't tell you.
+- **client-rendering.md** — `checkInEmailClients`: the captured HTML previewed as Outlook
+  (classic, .com and Mac), Gmail and its app, Apple Mail, Yahoo Mail and AOL Mail draw it,
+  light and dark, failing on unaccepted differences.

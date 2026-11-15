@@ -17,8 +17,8 @@ const { checkInEmailClients } = loadFunctions('skills/email-testing/references/c
 const lightOnly = '<meta name="color-scheme" content="light"><meta name="supported-color-schemes" content="light">';
 const healthy = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">${lightOnly}<title>Reset your password</title></head>
-<body style="margin:0;padding:0;background:#f4f4f4">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td align="center" style="padding:24px">
+<body>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f4f4f4" style="background:#f4f4f4"><tr><td align="center" style="padding:24px">
 <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;background:#ffffff">
 <tr><td style="padding:32px;font-family:Arial,sans-serif;font-size:16px;line-height:24px;color:#222222">
 <h1 style="margin:0 0 16px;font-size:24px;line-height:32px">Reset your password</h1>
@@ -58,7 +58,8 @@ test('a table-layout email passes in every client and leaves a preview per clien
   const { page, dir } = await fixture(t);
   const { files } = await checkInEmailClients(page, healthy, dir);
   const written = (await readdir(dir)).sort();
-  for (const name of ['outlook.html', 'outlook-com.html', 'gmail.html', 'apple-mail.html', 'apple-mail.dark.html']) {
+  for (const name of ['outlook.html', 'outlook-com.html', 'outlook-mac.html', 'gmail.html', 'gmail-app.html',
+    'gmail-app-other.html', 'apple-mail.html', 'apple-mail.dark.html', 'yahoo.html', 'aol.html']) {
     assert.ok(written.includes(name), `missing ${name} in ${written}`);
   }
   assert.equal(files.length, written.length);
