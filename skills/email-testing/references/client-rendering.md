@@ -108,6 +108,15 @@ Run it before the step that navigates away, or on a second page
 differences someone has looked at in the preview and decided are fine, each with a
 comment; a long list means the template should change instead.
 
+## What a green run means
+
+The email is verified in each client checked: nothing a client removes or changes is
+left unaccepted, and text reads in each dark mode. Report it that way, naming the
+clients ("verified in classic Outlook, Outlook.com, Outlook for Mac, Gmail and the Gmail
+app, Apple Mail, Yahoo Mail and AOL Mail, light and dark"), with the previews from the
+CI run as the evidence. It covers the HTML the test captured, so rerun it whenever the
+template changes.
+
 ## Gotchas
 
 - **Whole document only.** It takes the email from `<html>` to `</html>`, as the app sent
