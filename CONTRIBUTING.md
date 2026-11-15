@@ -77,7 +77,13 @@ only when intentionally testing a system Chromium/Chrome; otherwise use the pinn
 Playwright browser. Record the actual version and do not generalize one engine's result.
 Changes to the QA runner (`tools/qa/`, `scripts/qa.mjs`) also need `npm run test:qa`.
 
-The static runner defers prose criteria to a judge (808 of them across `evals/`).
+The email client-compatibility rules are checked against a pinned copy of Can I email's
+data, `tests/examples/fixtures/caniemail-snapshot.json`. `node scripts/refresh-caniemail-snapshot.mjs`
+fetches the current data (it needs the network, so CI does not run it); `npm test` then
+names each rule whose client list no longer matches. Update the rule and the date in the
+reference together.
+
+The static runner defers prose criteria to a judge (815 of them across `evals/`).
 `python3 scripts/judge_evals.py --static --skill your-skill-name` sends a skill's text and
 its criteria to the `claude` CLI in one call and accepts a "yes" only with a quote the skill
 actually contains; `--from-results` judges recorded `--live` answers instead. It costs tokens

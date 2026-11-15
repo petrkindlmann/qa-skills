@@ -6,6 +6,17 @@
   correct" (the layout shift and the copied session), drawn with the parent renderer's
   fonts and palette. `render-green-lies.py` now takes Helvetica's bold face on macOS,
   where it had been drawing bold text in the regular face.
+- `email-testing` 1.3 adds `references/client-compatibility.md` with `lintEmailHtml`, a
+  lint of the captured HTML that needs no service and no new dependency. It has 20 rules
+  whose client lists come from [Can I email](https://www.caniemail.com/) data of 2026-09-16
+  for classic Outlook, Outlook.com, Gmail and Yahoo Mail, Gmail's 16 KB `<style>` limit and
+  its clipping at about 102 KB, a check for relative links, and six structure checks from
+  the Email Markup Consortium's 2026 accessibility report. Accepted findings are listed by
+  id and a stale one fails. The skill reports a pass as "no documented client limit hit";
+  how the email renders stays out of scope and goes to seed accounts or a screenshot
+  service. `tests/examples/fixtures/caniemail-snapshot.json` (MIT, Rémi Parmentier) pins
+  the data, a test fails when a rule's client list disagrees with it, and
+  `scripts/refresh-caniemail-snapshot.mjs` refreshes it. The gap was raised in #9.
 
 ## v3.5.0 (2026-10-22)
 

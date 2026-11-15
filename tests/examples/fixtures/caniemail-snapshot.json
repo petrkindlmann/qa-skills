@@ -1,0 +1,679 @@
+{
+  "source": "https://www.caniemail.com/api/data.json",
+  "license": "MIT, Copyright (c) 2019 Rémi Parmentier, https://github.com/hteumeuleu/caniemail",
+  "last_update_date": "2026-09-16 13:05:00 +0000",
+  "clients": [
+    "outlook.windows",
+    "outlook.outlook-com",
+    "gmail.desktop-webmail",
+    "gmail.ios",
+    "gmail.android",
+    "yahoo.desktop-webmail"
+  ],
+  "features": {
+    "css-align-items": {
+      "title": "align-items",
+      "url": "https://www.caniemail.com/features/css-align-items/",
+      "last_test_date": "2023-12-19",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2020-12",
+          "result": "y"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2020-12",
+          "result": "n"
+        },
+        "gmail.ios": {
+          "version": "2020-12",
+          "result": "n"
+        },
+        "gmail.android": {
+          "version": "2020-12",
+          "result": "n"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2020-12",
+          "result": "n"
+        }
+      },
+      "notes": {
+        "1": "Supported. But a default style of `margin:auto` is applied on every element and can prevent the expected result."
+      }
+    },
+    "css-at-import": {
+      "title": "@import",
+      "url": "https://www.caniemail.com/features/css-at-import/",
+      "last_test_date": "2019-02-28",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "y"
+        },
+        "outlook.outlook-com": {
+          "version": "2023-12",
+          "result": "n"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "gmail.ios": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "gmail.android": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2019-02",
+          "result": "n"
+        }
+      },
+      "notes": {}
+    },
+    "css-background-image": {
+      "title": "background-image",
+      "url": "https://www.caniemail.com/features/css-background-image/",
+      "last_test_date": "2023-07-24",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n #5"
+        },
+        "outlook.outlook-com": {
+          "version": "2019-02",
+          "result": "y"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2023-08",
+          "result": "y"
+        },
+        "gmail.ios": {
+          "version": "2019-02",
+          "result": "y"
+        },
+        "gmail.android": {
+          "version": "2019-02",
+          "result": "y"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2021-10",
+          "result": "a #3"
+        }
+      },
+      "notes": {
+        "1": "Partial. Not supported with non Google accounts.",
+        "2": "Buggy. Requires at least one `<img>` element in the email to download all images.",
+        "3": "Partial. Does not support multiple values. The comma between two values is removed.",
+        "4": "Partial. Images URL must be between quotes.",
+        "5": "Background images can be used in VML. See [backgrounds.cm](https://backgrounds.cm/) and [VML documentation](https://docs.microsoft.com/en-us/windows/win32/vml/web-workshop---how-to-use-vml-on-web-pages-----fill--element).",
+        "6": "Partial and buggy. Removes the entire `style` attribute or `<style>` tag when a `url()` function with a valid image URL is present. See [Gmail rolling out changes that strip CSS with background images](https://freshinbox.com/blog/gmail-rolling-out-changes-that-strip-background-image-css/) and [Gmail and background images](https://parcel.io/blog/gmail-and-background-images)."
+      }
+    },
+    "css-display-flex": {
+      "title": "display:flex",
+      "url": "https://www.caniemail.com/features/css-display-flex/",
+      "last_test_date": "2021-11-02",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2019-02",
+          "result": "y"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2019-02",
+          "result": "y"
+        },
+        "gmail.ios": {
+          "version": "2026-03",
+          "result": "a #1"
+        },
+        "gmail.android": {
+          "version": "2026-03",
+          "result": "a #1"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2020-11",
+          "result": "y #2"
+        }
+      },
+      "notes": {
+        "1": "Not supported with non Google accounts.",
+        "2": "`display:inline-flex` is not supported."
+      }
+    },
+    "css-display-grid": {
+      "title": "display:grid",
+      "url": "https://www.caniemail.com/features/css-display-grid/",
+      "last_test_date": "2019-02-28",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2024-01",
+          "result": "y"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2026-03",
+          "result": "y"
+        },
+        "gmail.ios": {
+          "version": "2026-03",
+          "result": "a #1"
+        },
+        "gmail.android": {
+          "version": "2026-03",
+          "result": "a #1"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2026-03",
+          "result": "y"
+        }
+      },
+      "notes": {
+        "1": "Not supported with non Google accounts."
+      }
+    },
+    "css-flex-direction": {
+      "title": "flex-direction:column",
+      "url": "https://www.caniemail.com/features/css-flex-direction/",
+      "last_test_date": "2023-01-17",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2023-01",
+          "result": "y"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2023-01",
+          "result": "n"
+        },
+        "gmail.ios": {
+          "version": "2023-01",
+          "result": "n"
+        },
+        "gmail.android": {
+          "version": "2023-01",
+          "result": "n"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2019-02",
+          "result": "n"
+        }
+      },
+      "notes": {}
+    },
+    "css-float": {
+      "title": "float",
+      "url": "https://www.caniemail.com/features/css-float/",
+      "last_test_date": "2024-05-08",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n #1"
+        },
+        "outlook.outlook-com": {
+          "version": "2019-02",
+          "result": "y"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2019-02",
+          "result": "y"
+        },
+        "gmail.ios": {
+          "version": "2024-05",
+          "result": "a #2"
+        },
+        "gmail.android": {
+          "version": "2024-05",
+          "result": "a #2"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2024-05",
+          "result": "a #2"
+        }
+      },
+      "notes": {
+        "1": "Not supported. `table` and `img` elements can use an `align` attribute to get a similar effect.",
+        "2": "Partial. Logical property values `inline-start` and `inline-end` are not supported."
+      }
+    },
+    "css-justify-content": {
+      "title": "justify-content",
+      "url": "https://www.caniemail.com/features/css-justify-content/",
+      "last_test_date": "2021-03-09",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2023-12",
+          "result": "y"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2020-12",
+          "result": "n"
+        },
+        "gmail.ios": {
+          "version": "2020-12",
+          "result": "n"
+        },
+        "gmail.android": {
+          "version": "2020-12",
+          "result": "n"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2020-12",
+          "result": "n"
+        }
+      },
+      "notes": {}
+    },
+    "css-linear-gradient": {
+      "title": "linear-gradient()",
+      "url": "https://www.caniemail.com/features/css-linear-gradient/",
+      "last_test_date": "2021-12-29",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n #1"
+        },
+        "outlook.outlook-com": {
+          "version": "2023-12",
+          "result": "n"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2021-12",
+          "result": "y"
+        },
+        "gmail.ios": {
+          "version": "2021-12",
+          "result": "y"
+        },
+        "gmail.android": {
+          "version": "2025-04",
+          "result": "a #3"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2021-12",
+          "result": "n"
+        }
+      },
+      "notes": {
+        "1": "Gradients can be created in VML using `type=\"gradient\"` on a `<v:fill>`. See [VML documentation](https://docs.microsoft.com/en-us/windows/win32/vml/web-workshop---how-to-use-vml-on-web-pages-----fill--element#gradient-fill).",
+        "2": "Partial. Not supported with Hotmail/Outlook accounts.",
+        "3": "Buggy. Does not work inline in the `background-image` property. (See [email-bugs#135](https://github.com/hteumeuleu/email-bugs/issues/135))"
+      }
+    },
+    "css-position": {
+      "title": "position",
+      "url": "https://www.caniemail.com/features/css-position/",
+      "last_test_date": "2021-05-16",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2023-12",
+          "result": "a #2"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2021-05",
+          "result": "n"
+        },
+        "gmail.ios": {
+          "version": "2021-05",
+          "result": "n"
+        },
+        "gmail.android": {
+          "version": "2021-05",
+          "result": "n"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2021-05",
+          "result": "a #3"
+        }
+      },
+      "notes": {
+        "1": "Partial. Supports `relative`, `absolute` but not `sticky` and `fixed`.",
+        "2": "Partial. Supports `sticky` but not `relative`, `absolute` and `fixed`.",
+        "3": "Partial. Supports `relative` but not  `absolute`, `sticky` and `fixed`.",
+        "4": "Partial. Supports `relative` and `sticky` but not `absolute` and `fixed`.",
+        "5": "Buggy. `fixed` elements scroll with page.",
+        "6": "Buggy. `fixed` is replaced by `absolute`."
+      }
+    },
+    "css-transform": {
+      "title": "transform",
+      "url": "https://www.caniemail.com/features/css-transform/",
+      "last_test_date": "2019-02-28",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2024-01",
+          "result": "n"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "gmail.ios": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "gmail.android": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2019-02",
+          "result": "n"
+        }
+      },
+      "notes": {
+        "1": "Partial. `scale translate` is not supported."
+      }
+    },
+    "css-unit-calc": {
+      "title": "CSS calc() function",
+      "url": "https://www.caniemail.com/features/css-unit-calc/",
+      "last_test_date": "2020-02-25",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2024-01",
+          "result": "n"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2020-02",
+          "result": "y"
+        },
+        "gmail.ios": {
+          "version": "2020-02",
+          "result": "a #1"
+        },
+        "gmail.android": {
+          "version": "2020-02",
+          "result": "a #1"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2020-02",
+          "result": "n"
+        }
+      },
+      "notes": {
+        "1": "Partial. Not supported with non Google accounts."
+      }
+    },
+    "css-variables": {
+      "title": "CSS Variables (Custom Properties)",
+      "url": "https://www.caniemail.com/features/css-variables/",
+      "last_test_date": "2020-02-25",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2024-01",
+          "result": "n"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2019-08",
+          "result": "n #1"
+        },
+        "gmail.ios": {
+          "version": "2019-08",
+          "result": "n #1 #2"
+        },
+        "gmail.android": {
+          "version": "2019-08",
+          "result": "n #1 #2"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2020-02",
+          "result": "n"
+        }
+      },
+      "notes": {
+        "1": "Partial. The `var()` function is supported, but not the variable declaration.",
+        "2": "Partial. Not supported with non Google accounts."
+      }
+    },
+    "css-visibility": {
+      "title": "visibility",
+      "url": "https://www.caniemail.com/features/css-visibility/",
+      "last_test_date": "2019-02-28",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2024-01",
+          "result": "y"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "gmail.ios": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "gmail.android": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2019-02",
+          "result": "y"
+        }
+      },
+      "notes": {
+        "1": "Buggy. `visibility:collapse` applied to a `<tr>` only hides content and does not \"remove\" it from layout.",
+        "2": "Partially supported. `visibility:collapse` is not supported."
+      }
+    },
+    "html-link": {
+      "title": "<link> element",
+      "url": "https://www.caniemail.com/features/html-link/",
+      "last_test_date": "2023-12-21",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "y"
+        },
+        "outlook.outlook-com": {
+          "version": "2023-12",
+          "result": "n"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "gmail.ios": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "gmail.android": {
+          "version": "2019-02",
+          "result": "n"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2019-02",
+          "result": "n"
+        }
+      },
+      "notes": {}
+    },
+    "html-style": {
+      "title": "<style> element",
+      "url": "https://www.caniemail.com/features/html-style/",
+      "last_test_date": "2023-07-27",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "a #4"
+        },
+        "outlook.outlook-com": {
+          "version": "2024-01",
+          "result": "y"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2023-01",
+          "result": "a #1 #6"
+        },
+        "gmail.ios": {
+          "version": "2023-01",
+          "result": "a #1 #2"
+        },
+        "gmail.android": {
+          "version": "2019-06",
+          "result": "a #1 #2"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2023-01",
+          "result": "y"
+        }
+      },
+      "notes": {
+        "1": "Partial. Not supported inside the `<body>`.",
+        "2": "Partial. Not supported with non Google accounts.",
+        "3": "Buggy. The first `<head>` in the HTML is removed, so `<style>` elements need to be in a second `<head>` element.",
+        "4": "Buggy. `<style>` elements need to be declared before their rules are used.",
+        "5": "A CSS rule following a CSS comment is ignored. (See [email-bugs#25](https://github.com/hteumeuleu/email-bugs/issues/25).)",
+        "6": "The size of the `<style>` tag [is limited to 16 KB](https://github.com/hteumeuleu/email-bugs/issues/90)"
+      }
+    },
+    "html-svg": {
+      "title": "Embedded <svg> image",
+      "url": "https://www.caniemail.com/features/html-svg/",
+      "last_test_date": "2020-02-06",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2024-01",
+          "result": "n"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2020-02",
+          "result": "n"
+        },
+        "gmail.ios": {
+          "version": "2020-02",
+          "result": "n"
+        },
+        "gmail.android": {
+          "version": "2020-02",
+          "result": "n"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2020-02",
+          "result": "n"
+        }
+      },
+      "notes": {
+        "1": "Buggy. Requires a background on the `<body>`. Can be any type of background, image or a color, can be set as attribute, inline style or in `<style>` block",
+        "2": "Not supported. Element is removed along with any fallback content."
+      }
+    },
+    "image-base64": {
+      "title": "Base 64 image format",
+      "url": "https://www.caniemail.com/features/image-base64/",
+      "last_test_date": "2020-02-06",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "a #1"
+        },
+        "outlook.outlook-com": {
+          "version": "2024-01",
+          "result": "y"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2024-05",
+          "result": "n"
+        },
+        "gmail.ios": {
+          "version": "2020-02",
+          "result": "n"
+        },
+        "gmail.android": {
+          "version": "2020-02",
+          "result": "n"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2020-02",
+          "result": "y"
+        }
+      },
+      "notes": {
+        "1": "Partial: Does not render Base 64 gif format.",
+        "2": "Not supported. The `src` is turned into a `nosrc` attribute.",
+        "3": "Partial: Only supports Base 64 png format."
+      }
+    },
+    "image-webp": {
+      "title": "webP image format",
+      "url": "https://www.caniemail.com/features/image-webp/",
+      "last_test_date": "2021-02-06",
+      "results": {
+        "outlook.windows": {
+          "version": "2019",
+          "result": "n"
+        },
+        "outlook.outlook-com": {
+          "version": "2024-01",
+          "result": "y #2"
+        },
+        "gmail.desktop-webmail": {
+          "version": "2020-02",
+          "result": "a #1 #3"
+        },
+        "gmail.ios": {
+          "version": "2021-02",
+          "result": "a #1 #3"
+        },
+        "gmail.android": {
+          "version": "2020-02",
+          "result": "a #1 #3"
+        },
+        "yahoo.desktop-webmail": {
+          "version": "2020-02",
+          "result": "y #2"
+        }
+      },
+      "notes": {
+        "1": "Partial: Converts file to jpg.",
+        "2": "Partial. Webmail rendering depends on browser support.",
+        "3": "Partial. Does not support animation."
+      }
+    }
+  }
+}

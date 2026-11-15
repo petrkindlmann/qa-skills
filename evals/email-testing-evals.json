@@ -229,6 +229,49 @@
         "diagnosis",
         "ci"
       ]
+    },
+    {
+      "id": "eml-011",
+      "prompt": "Our password-reset email passes its Playwright flow test, but a customer says the layout falls apart in Outlook. Add a check to the same CI job that catches this kind of problem. We can't pay for a screenshot service.",
+      "expected_patterns": [
+        "lintEmailHtml",
+        "message.HTML OR captured HTML",
+        "flexbox OR display:flex OR css-display-flex",
+        "Can I email OR caniemail",
+        "accept",
+        "seed accounts OR real client OR account you own OR Litmus"
+      ],
+      "anti_patterns": [
+        "toHaveScreenshot of the Mailpit web UI as an Outlook check",
+        "Mailpit shows how Outlook renders the email",
+        "client rendering is out of scope, so nothing can be checked",
+        "installing a vendor rendering package as the only option"
+      ],
+      "tags": [
+        "client-compatibility",
+        "outlook",
+        "lint"
+      ]
+    },
+    {
+      "id": "eml-012",
+      "prompt": "The client-compatibility lint on our welcome email is green. Can we tell marketing the email is verified in Outlook and Gmail, or is anything still needed before launch?",
+      "expected_patterns": [
+        "not a rendering check OR never draws OR real client",
+        "documented",
+        "seed accounts OR Litmus OR Email on Acid",
+        "dark mode OR wraps OR never draws"
+      ],
+      "anti_patterns": [
+        "yes, a green lint means the email is verified in every client",
+        "a passing lint proves the layout is correct in Outlook",
+        "no further check is needed before the launch"
+      ],
+      "tags": [
+        "client-compatibility",
+        "claims",
+        "evidence"
+      ]
     }
   ]
 }

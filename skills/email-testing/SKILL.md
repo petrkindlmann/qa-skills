@@ -6,19 +6,21 @@ description: >-
   decision tree (Mailpit, Mailosaur, MailSlurp, ShazaMail, Ethereal), Playwright polling without
   fixed sleeps, template-aware extraction of links/OTPs from the email body, deterministic
   per-test addresses (plus-addressing, per-inbox), subject/from/header/link assertions,
-  and SPF/DKIM/DMARC deliverability checks as a separate suite.
+  SPF/DKIM/DMARC deliverability checks as a separate suite, and a lint of the captured HTML
+  against documented Outlook/Gmail/Yahoo limits.
   Use when: "test the signup confirmation email," "password reset email test,"
   "magic-link login test," "capture OTP from email," "Mailpit," "Mailosaur," "MailSlurp," "ShazaMail,"
-  "email arrives flaky in CI," "assert email subject/from/links."
+  "email arrives flaky in CI," "assert email subject/from/links," "email breaks in Outlook,"
+  "lint the email HTML."
   Not for: Sending transactional email from your app code, or API-only contract tests of
-  an email provider — those are api-testing / app concerns. Email HTML rendering across
-  clients (Outlook/Gmail dark mode) is out of scope (note it as a gap; use visual-testing
-  or Litmus).
+  an email provider — those are api-testing / app concerns. How an email actually renders
+  in a client (Outlook/Gmail layout, dark mode) is out of scope: the lint flags documented
+  limits only (note rendering as a gap; use seed accounts, Litmus or visual-testing).
   Related: playwright-automation, api-testing, test-data-management, qa-project-context.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.2"
+  version: "1.3"
   category: specialized
 ---
 
@@ -46,6 +48,7 @@ problem never reds your functional gate.
 | Per-test throwaway inbox | `references/hosted-inboxes.md` (MailSlurp / ShazaMail) |
 | Just preview a template locally | `references/hosted-inboxes.md` (Ethereal) |
 | Flag SPF/DKIM/DMARC problems | `references/deliverability.md` |
+| Email breaks in Outlook / Gmail | `references/client-compatibility.md` (lint, not a render) |
 | Tests pass locally, "no email yet" in CI | "Flaky email in CI" below |
 
 ---
@@ -68,6 +71,9 @@ answered there.
   non-blocking suite, not part of the functional OTP test. Decide upfront.
 - **Local-only preview, or CI assertions?** Previewing a template during dev is Ethereal;
   asserting in CI is Mailpit/Mailosaur/MailSlurp/ShazaMail. Don't confuse the two.
+- **Which email clients do the recipients use?** Mailpit and Ethereal draw the email with
+  a browser engine, so neither shows what classic Outlook or Gmail drop. If layout matters
+  there, add the client-compatibility lint and decide who checks the real clients.
 
 ---
 
@@ -220,6 +226,29 @@ Mailosaur example asserting `subject`, `from`, and link domain is in
 
 ---
 
+## Client compatibility (Outlook / Gmail / Yahoo)
+
+An email can arrive, link correctly and still fall apart for the reader: classic Outlook
+lays out with Word and has no flexbox or `position`, and Gmail drops `justify-content`,
+`var()`, inline `<svg>` and a `<style>` placed in the `<body>`. Mailpit's preview never
+shows this, because it draws with a browser engine.
+
+Pass the captured `HTML` to `lintEmailHtml` (`references/client-compatibility.md`). It
+fails on markup those clients are documented to drop (Can I email data), on Gmail's size
+limits, on relative links, and on the structure checks most emails fail in the Email
+Markup Consortium's accessibility report. Every accepted finding is listed by id, and an
+accepted id that no longer matches fails.
+
+```ts
+await lintEmailHtml(page, message.HTML, { accept: ['css-background-image'] });
+```
+
+A pass means the email uses nothing on that list. It is **not** a rendering check: report
+"no documented client limits hit", never "verified in Outlook and Gmail". How the email
+looks needs the real client, through seed accounts you own or a screenshot service.
+
+---
+
 ## Deliverability: SPF / DKIM / DMARC
 
 Keep this in its **own non-blocking suite**, separate from functional flow tests. SPF,
@@ -296,6 +325,11 @@ Ethereal delivers nothing — it's preview-only (`createTestAccount` + `getTestM
 Don't assert on it in CI; equally, don't spin up a paid hosted service just to eyeball a
 template locally.
 
+### 11. Calling a lint or a Mailpit preview a rendering check
+A browser preview and a clean lint say nothing about how classic Outlook draws the email.
+Don't report "verified in Outlook" from either; name what was linted and what still needs
+the real client.
+
 ---
 
 ## Verification
@@ -313,6 +347,8 @@ Prove the suite actually captures and asserts, smallest check first:
   run proves the per-recipient filter survives parallelism.
 - **Deliverability is isolated:** `--grep @deliverability` selects only the auth suite, and
   that CI job is `continue-on-error` / non-required.
+- **The lint can fail:** add `style="display:flex"` to one element of the captured HTML
+  and confirm `lintEmailHtml` rejects it with `css-display-flex`.
 
 ## Done When
 
@@ -332,6 +368,9 @@ Prove the suite actually captures and asserts, smallest check first:
 - Content assertions on `subject`, `from`, and link domain exist — not just existence.
 - Deliverability (SPF/DKIM/DMARC) tests, if in scope, live in a separate `@deliverability`
   suite that is non-blocking in CI.
+- Client compatibility, if in scope: each template's captured `HTML` passes
+  `lintEmailHtml` with every accepted id commented, and the report says which clients
+  were linted and that rendering in the real clients is unchecked or who checked it.
 
 ---
 
@@ -358,3 +397,7 @@ Prove the suite actually captures and asserts, smallest check first:
   `createTestAccount` + `getTestMessageUrl`).
 - **deliverability.md** — SPF/DKIM/DMARC as a separate non-blocking suite, why body-regex
   and Mailpit don't validate auth, and the Mailosaur deliverability assertion.
+- **client-compatibility.md** — `lintEmailHtml`: the captured HTML checked against Can I
+  email data for classic Outlook, Outlook.com, Gmail and Yahoo Mail, Gmail's size limits,
+  relative links and structure checks; what a pass does and does not mean; Mailpit's
+  HTML Check as a survey.

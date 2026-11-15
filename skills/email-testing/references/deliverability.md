@@ -63,5 +63,6 @@ results from the service, never from the body text.
   DNS / ESP config changes outside your repo.
 
 Email **HTML rendering across clients** (Outlook, Gmail, Apple Mail dark mode) is a
-different concern again and is out of scope for this skill — use Litmus / Email on Acid or
-the `visual-testing` skill for that.
+different concern again. `client-compatibility.md` lints the captured HTML against
+documented client limits; how the email looks in a real client is out of scope for this
+skill — use seed accounts, Litmus / Email on Acid or the `visual-testing` skill for that.
