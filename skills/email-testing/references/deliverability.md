@@ -63,5 +63,5 @@ results from the service, never from the body text.
   DNS / ESP config changes outside your repo.
 
 Email **HTML rendering across clients** (Outlook, Gmail, Apple Mail dark mode) is a
-different concern again and is out of scope for this skill — use Litmus / Email on Acid or
-the `visual-testing` skill for that.
+different concern again: it's a blocking check on the captured HTML, in
+`client-rendering.md`, not part of this suite.

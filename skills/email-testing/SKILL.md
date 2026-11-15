@@ -6,19 +6,20 @@ description: >-
   decision tree (Mailpit, Mailosaur, MailSlurp, ShazaMail, Ethereal), Playwright polling without
   fixed sleeps, template-aware extraction of links/OTPs from the email body, deterministic
   per-test addresses (plus-addressing, per-inbox), subject/from/header/link assertions,
-  and SPF/DKIM/DMARC deliverability checks as a separate suite.
+  SPF/DKIM/DMARC deliverability checks as a separate suite, and previewing the captured
+  HTML as Outlook, Gmail and Apple Mail draw it.
   Use when: "test the signup confirmation email," "password reset email test,"
   "magic-link login test," "capture OTP from email," "Mailpit," "Mailosaur," "MailSlurp," "ShazaMail,"
-  "email arrives flaky in CI," "assert email subject/from/links."
+  "email arrives flaky in CI," "assert email subject/from/links," "email breaks in Outlook,"
+  "check the email in Gmail."
   Not for: Sending transactional email from your app code, or API-only contract tests of
-  an email provider — those are api-testing / app concerns. Email HTML rendering across
-  clients (Outlook/Gmail dark mode) is out of scope (note it as a gap; use visual-testing
-  or Litmus).
+  an email provider — those are api-testing / app concerns. Screenshots from the real
+  clients — use Litmus or Email on Acid; a web page's visual regression — use visual-testing.
   Related: playwright-automation, api-testing, test-data-management, qa-project-context.
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.2"
+  version: "1.3"
   category: specialized
 ---
 
@@ -46,6 +47,7 @@ problem never reds your functional gate.
 | Per-test throwaway inbox | `references/hosted-inboxes.md` (MailSlurp / ShazaMail) |
 | Just preview a template locally | `references/hosted-inboxes.md` (Ethereal) |
 | Flag SPF/DKIM/DMARC problems | `references/deliverability.md` |
+| Does it break in Outlook / Gmail / Apple Mail? | `references/client-rendering.md` |
 | Tests pass locally, "no email yet" in CI | "Flaky email in CI" below |
 
 ---
@@ -68,6 +70,9 @@ answered there.
   non-blocking suite, not part of the functional OTP test. Decide upfront.
 - **Local-only preview, or CI assertions?** Previewing a template during dev is Ethereal;
   asserting in CI is Mailpit/Mailosaur/MailSlurp/ShazaMail. Don't confuse the two.
+- **Does the layout need checking in email clients?** Ethereal and Mailpit show the email
+  as a browser draws it, not as classic Outlook or Gmail do. If layout regressions matter,
+  add the client-rendering check to the flow test (`references/client-rendering.md`).
 
 ---
 
@@ -220,6 +225,18 @@ Mailosaur example asserting `subject`, `from`, and link domain is in
 
 ---
 
+## Client rendering (Outlook / Gmail / Apple Mail)
+
+A captured email can arrive, link correctly, and still be unreadable in classic Outlook,
+which lays out with Word, or in Gmail, which removes a `<style>` in the `<body>` and most
+positioning. Mailpit and Ethereal draw it as a browser does, so they never show this. Pass
+the captured `HTML` to `checkInEmailClients` (`references/client-rendering.md`): it writes
+a preview per client (attach them as a CI artifact) and fails on what a client removes or
+changes that isn't explicitly accepted. Its clients are models, not the real ones; keep
+real-client screenshots (Litmus, Email on Acid) for launches.
+
+---
+
 ## Deliverability: SPF / DKIM / DMARC
 
 Keep this in its **own non-blocking suite**, separate from functional flow tests. SPF,
@@ -332,6 +349,8 @@ Prove the suite actually captures and asserts, smallest check first:
 - Content assertions on `subject`, `from`, and link domain exist — not just existence.
 - Deliverability (SPF/DKIM/DMARC) tests, if in scope, live in a separate `@deliverability`
   suite that is non-blocking in CI.
+- Client rendering, if in scope, runs on the captured `HTML` with every accepted
+  difference listed and commented; the previews are kept as a CI artifact.
 
 ---
 
@@ -358,3 +377,6 @@ Prove the suite actually captures and asserts, smallest check first:
   `createTestAccount` + `getTestMessageUrl`).
 - **deliverability.md** — SPF/DKIM/DMARC as a separate non-blocking suite, why body-regex
   and Mailpit don't validate auth, and the Mailosaur deliverability assertion.
+- **client-rendering.md** — `checkInEmailClients`: the captured HTML previewed as classic
+  Outlook, Outlook.com, Gmail and Apple Mail draw it, failing on unaccepted differences,
+  with what the models can and can't tell you.

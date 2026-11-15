@@ -229,6 +229,50 @@
         "diagnosis",
         "ci"
       ]
+    },
+    {
+      "id": "eml-011",
+      "prompt": "Our password-reset email passes its Playwright flow test, but a customer says it's broken in Outlook. Add a check to the same CI job that catches layout problems in Outlook and Gmail, without paying for a screenshot service.",
+      "expected_patterns": [
+        "renderInEmailClients OR checkInEmailClients OR @hyper-elements/email-clients",
+        "message.HTML OR .HTML OR captured HTML",
+        "outlook",
+        "gmail",
+        "artifact OR outDir OR outputPath",
+        "accept OR allowlist OR acknowledged",
+        "model OR approximate OR not the real client"
+      ],
+      "anti_patterns": [
+        "toHaveScreenshot of the Mailpit web UI as an Outlook check",
+        "Mailpit shows how Outlook renders",
+        "the email is out of scope, so nothing can be checked",
+        "message.Text passed as the HTML"
+      ],
+      "tags": [
+        "client-rendering",
+        "outlook",
+        "gmail"
+      ]
+    },
+    {
+      "id": "eml-012",
+      "prompt": "The client-rendering check on our welcome email is green. Can we tell marketing it's verified in every email client, or do we still need anything before the launch?",
+      "expected_patterns": [
+        "model OR approximate",
+        "not.*real client OR not.*screenshot OR real-client screenshots",
+        "Litmus OR Email on Acid",
+        "launch OR release OR periodic"
+      ],
+      "anti_patterns": [
+        "verified in every email client",
+        "no need for real-client screenshots",
+        "a green check proves it renders identically everywhere"
+      ],
+      "tags": [
+        "client-rendering",
+        "limits",
+        "judgement"
+      ]
     }
   ]
 }
