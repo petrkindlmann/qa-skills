@@ -244,6 +244,49 @@
         "ticket-writeback",
         "documentation"
       ]
+    },
+    {
+      "id": "rep-011",
+      "prompt": "An agent fixed a rounding bug and added a regression test in the same uncommitted change. The test is green. Show that the test actually catches the bug before I merge.",
+      "expected_patterns": [
+        "regressionEvidence",
+        "symptom",
+        "distinguishes",
+        "base OR HEAD",
+        "does_not_distinguish",
+        "frozen OR freezes"
+      ],
+      "anti_patterns": [
+        "accept the green run as proof that the test catches the bug",
+        "run the new test only against the fixed code",
+        "edit the test between the two runs"
+      ],
+      "tags": [
+        "regression-evidence",
+        "agent-patch",
+        "fail-to-pass"
+      ]
+    },
+    {
+      "id": "rep-012",
+      "prompt": "The new regression test fails on the old commit with 'TypeError: formatTotal is not a function' and passes after the fix. Can I report that the test reproduces the reported wrong total and that the fix is proven?",
+      "expected_patterns": [
+        "inconclusive",
+        "symptom",
+        "TypeError OR another reason OR other reasons",
+        "not a pass",
+        "does not show that the fix is correct OR does not say the fix is complete OR fix is complete"
+      ],
+      "anti_patterns": [
+        "report red then green as proof whatever the failure message says",
+        "state that the fix is proven correct",
+        "copy the first failure message into the symptom"
+      ],
+      "tags": [
+        "regression-evidence",
+        "overclaim",
+        "wrong-reason-failure"
+      ]
     }
   ]
 }

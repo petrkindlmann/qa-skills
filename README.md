@@ -165,13 +165,13 @@ the intended routing.
 | [`playwright-automation`](skills/playwright-automation) | Playwright E2E testing. Page Object Model, fixtures, parallel execution, API mocking, visual comparisons, CI integration. | Automation |
 | [`cypress-automation`](skills/cypress-automation) | Cypress test suites with component testing, E2E testing, custom commands, cy.intercept, Cypress Cloud, and TypeScript support. | Automation |
 | [`selector-drift-recovery`](skills/selector-drift-recovery) | Bulk-regenerate broken test selectors after a UI refactor. Snapshot old vs new DOM, map locators with confidence scores, ship a single PR. | Automation |
-| [`api-testing`](skills/api-testing) | REST and GraphQL testing with Playwright APIRequestContext or Supertest: Zod 4/AJV schemas (exact key sets when no schema library is installed), auth flows, CRUD, errors and headers, pagination. Every contract clause gets a test or a "not covered" line. | Automation |
+| [`api-testing`](skills/api-testing) | REST and GraphQL testing with Playwright APIRequestContext or Supertest: Zod 4/AJV schemas (exact key sets when no schema library is installed), auth flows, CRUD, errors and headers, pagination. Every contract clause gets a test or a "not covered" line. A proxy recipe drops the reply to a committed write and counts the effects after the retry. | Automation |
 | [`unit-testing`](skills/unit-testing) | Jest, Vitest, and pytest patterns. Mocking strategies, coverage thresholds, snapshot testing, test doubles taxonomy. | Automation |
 | [`mobile-testing`](skills/mobile-testing) | Native, React Native, hybrid and Flutter apps with Appium 3.x, Detox, Maestro and Patrol. Device farms, gestures, deep links and cold starts, push notifications, biometrics, poor-network simulation. | Automation |
 | [`visual-testing`](skills/visual-testing) | Visual regression testing with Playwright screenshots, Chromatic, Percy, and Argos CI. Baseline management, diff thresholds, dynamic content masking. | Automation |
 | [`performance-testing`](skills/performance-testing) | k6 load/stress/soak scripts, Lighthouse CI for Web Vitals, performance budgets as CI gates. | Automation |
 | [`accessibility-testing`](skills/accessibility-testing) | WCAG 2.2 AA testing with axe-core and Playwright, keyboard and screen-reader audits, ARIA pattern checks, and legal mapping (ADA, EAA, Section 508). Automated and manual testing together. | Specialized |
-| [`security-testing`](skills/security-testing) | OWASP Top 10 (2025) in CI: ZAP DAST, OSV-Scanner and SBOM supply-chain checks, Semgrep SAST, auth and session tests (JWT, OAuth, RBAC), XSS/CSRF/SQLi/SSRF Playwright patterns. | Specialized |
+| [`security-testing`](skills/security-testing) | OWASP Top 10 (2025) in CI: ZAP DAST, OSV-Scanner and SBOM supply-chain checks, Semgrep SAST, auth and session tests (JWT, OAuth, RBAC), XSS/CSRF/SQLi/SSRF Playwright patterns, and a same-browser check of what one account leaves in caches and storage for the next. | Specialized |
 | [`cross-browser-testing`](skills/cross-browser-testing) | Analytics-driven browser test matrices, BrowserStack/Sauce Labs configuration, Playwright browser channels, common rendering issues. | Specialized |
 | [`database-testing`](skills/database-testing) | Database integrity validation, migration testing (forward/backward), schema constraints, seed data management, query performance. | Specialized |
 | [`ai-test-generation`](skills/ai-test-generation) | Generate tests from specs, PRDs, and user stories using a staged pipeline with guardrails. Coverage matrix before code. | AI-QA |
@@ -200,7 +200,7 @@ the intended routing.
 | [`test-migration`](skills/test-migration) | Incremental test suite migration. Selenium to Playwright, Cypress to Playwright, Jest to Vitest, Mocha to Vitest, Protractor to Playwright, with a coverage-parity track. | Knowledge |
 | [`test-case-management`](skills/test-case-management) | Author and maintain manual/hybrid test cases in TestRail, Xray, Zephyr, Qase. Case anatomy, bulk authoring from stories, ambiguous-step linting, CSV/API import-export, traceability. | Process |
 | [`test-suite-curation`](skills/test-suite-curation) | Audit and prune a regression suite with evidence: coverage fingerprinting, AST duplicate clustering, CI-history mining, smoke/core/extended tiering, quarantine-before-delete. | Process |
-| [`bug-reproduction`](skills/bug-reproduction) | Turn a vague bug report into a verified minimal reproduction and a failing regression test. Reproduce-minimize-isolate-capture, git bisect, deterministic repro, red-before-fix. | AI-QA |
+| [`bug-reproduction`](skills/bug-reproduction) | Turn a vague bug report into a verified minimal reproduction and a failing regression test. Reproduce-minimize-isolate-capture, git bisect, deterministic repro, red-before-fix, and a runner that puts the frozen test on the buggy and the fixed revision. | AI-QA |
 | [`agentic-browser-testing`](skills/agentic-browser-testing) | Goal-driven E2E via a browser agent (Playwright MCP / computer-use). Determinism controls, cost/latency budgets, accessibility-tree interaction, graduation to scripted tests. | AI-QA |
 | [`email-testing`](skills/email-testing) | End-to-end email-flow testing: signup, password reset, magic-link, OTP/MFA. Mailpit/Mailosaur/MailSlurp capture, inbox polling, link/OTP extraction, deliverability checks, and a lint of the captured HTML against documented Outlook/Gmail limits. | Specialized |
 | [`payment-testing`](skills/payment-testing) | Payment/checkout testing against PSP sandboxes. Stripe test cards, 3DS/SCA iframe handling, test clocks, webhook signature/idempotency, refunds — never real cards. | Specialized |
@@ -288,6 +288,12 @@ stops. Later changes are listed in [VERSIONS.md](VERSIONS.md), not written back 
 The lab holds 28 deliberate faults, 19 in the Shop and 9 in TodoMVC. The CI gate,
 `npm run test:workflow-controls`, runs the released suites healthy (36 tests) and under 22
 of those faults, each of which must fail its designated assertion.
+
+Four recipes ship as code that `npm test` and `npm run test:browser` load from the skill
+text and run against healthy and broken fixtures: the email client lint (`email-testing`),
+`regressionEvidence` (`bug-reproduction`), `retryAfterLostReply` (`api-testing`) and
+`accountSwitchLeaks` (`security-testing`). Each reference states what a pass may be
+reported as.
 
 Run the local gates with Python 3.12+ and Node 24+ (Linux AMD64 or macOS arm64 for the
 application workflows):

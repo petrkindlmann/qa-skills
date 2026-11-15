@@ -1,0 +1,64 @@
+<testsuites id="" name="" tests="4" failures="1" skipped="1" errors="1" time="2.274738">
+<testsuite name="sample.spec.mjs" timestamp="2026-11-15T18:09:13.400Z" hostname="" tests="4" failures="1" skipped="1" time="0.044" errors="1">
+<testcase name="order total › sums three lines &lt;exactly&gt; &amp; &quot;quoted&quot;" classname="sample.spec.mjs" time="0.026">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/sample-order-total-sums-three-lines-exactly-quoted-/error-context.md]]
+]]>
+</system-out>
+<failure message="expect(received).toBe(expected) // Object.is equality" type="expect.toBe">
+<![CDATA[  sample.spec.mjs:3:3 › order total › sums three lines <exactly> & "quoted" ────────────────────────
+
+    Error: expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0.3
+    Received: 0.30000000000000004
+
+      1 | import { test, expect } from '@playwright/test';
+      2 | test.describe('order total', () => {
+    > 3 |   test('sums three lines <exactly> & "quoted"', () => { expect(0.1 + 0.2).toBe(0.3); });
+        |                                                                           ^
+      4 |   test('keeps the currency', () => { expect('CZK').toBe('CZK'); });
+      5 |   test.skip('rounds half up', () => {});
+      6 |   test('reads the fixture', () => { throw new TypeError('formatTotal is not a function'); });
+        at /work/sample.spec.mjs:3:75
+
+    Error Context: test-results/sample-order-total-sums-three-lines-exactly-quoted-/error-context.md
+]]>
+</failure>
+</testcase>
+<testcase name="order total › keeps the currency" classname="sample.spec.mjs" time="0.017">
+</testcase>
+<testcase name="order total › rounds half up" classname="sample.spec.mjs">
+<properties>
+<property name="skip" value="">
+</property>
+</properties>
+<skipped>
+</skipped>
+</testcase>
+<testcase name="order total › reads the fixture" classname="sample.spec.mjs" time="0.001">
+<system-out>
+<![CDATA[
+[[ATTACHMENT|test-results/sample-order-total-reads-the-fixture/error-context.md]]
+]]>
+</system-out>
+<error message="formatTotal is not a function" type="TypeError">
+<![CDATA[  sample.spec.mjs:6:3 › order total › reads the fixture ────────────────────────────────────────────
+
+    TypeError: formatTotal is not a function
+
+      4 |   test('keeps the currency', () => { expect('CZK').toBe('CZK'); });
+      5 |   test.skip('rounds half up', () => {});
+    > 6 |   test('reads the fixture', () => { throw new TypeError('formatTotal is not a function'); });
+        |                                           ^
+      7 | });
+      8 |
+        at /work/sample.spec.mjs:6:43
+
+    Error Context: test-results/sample-order-total-reads-the-fixture/error-context.md
+]]>
+</error>
+</testcase>
+</testsuite>
+</testsuites>

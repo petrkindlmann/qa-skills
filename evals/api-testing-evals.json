@@ -226,6 +226,49 @@
         "timing",
         "load-testing"
       ]
+    },
+    {
+      "id": "api-011",
+      "prompt": "Our POST /orders takes an Idempotency-Key. Write a test for the case where the server commits the order but the client never receives the response and retries.",
+      "expected_patterns": [
+        "retryAfterLostReply",
+        "countEffects",
+        "restart",
+        "one_effect",
+        "duplicated",
+        "application's own client OR real client OR app's real client"
+      ],
+      "anti_patterns": [
+        "send the same key twice and compare two successful replies as the whole test",
+        "count effects from the response body instead of an independent read",
+        "hard-code one key in two raw requests and skip the client's retry path"
+      ],
+      "tags": [
+        "idempotency",
+        "lost-reply",
+        "retry"
+      ]
+    },
+    {
+      "id": "api-012",
+      "prompt": "retryAfterLostReply returned one_effect, run without a restart. Can the release notes say order creation is exactly-once?",
+      "expected_patterns": [
+        "exactly-once",
+        "restart",
+        "concurrent duplicates",
+        "one lost reply",
+        "inconclusive"
+      ],
+      "anti_patterns": [
+        "report exactly-once delivery from one passing run",
+        "treat an inconclusive verdict as a pass",
+        "omit that the run had no restart"
+      ],
+      "tags": [
+        "idempotency",
+        "overclaim",
+        "evidence"
+      ]
     }
   ]
 }

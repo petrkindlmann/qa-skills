@@ -5,7 +5,7 @@ description: >-
   (DAST), dependency/supply-chain scanning (OSV-Scanner, SBOM, provenance), Semgrep SAST,
   auth/session tests (JWT, OAuth, RBAC), and XSS/CSRF/SQLi/SSRF Playwright patterns.
   Use when: "security test," "OWASP," "vulnerability," "ZAP," "XSS," "SSRF," "dependency scan,"
-  "auth testing," "OWASP LLM Top 10." Scope is automated scanning + negative-path security tests in CI, not manual penetration testing.
+  "auth testing," "OWASP LLM Top 10," "data left after logout," "shared computer," "another user sees my data." Scope is automated scanning + negative-path security tests in CI, not manual penetration testing.
   Not for: mapping security controls to regulations (SOC 2, HIPAA, PCI, GDPR) — use compliance-testing;
   pipeline stage wiring and deploy gating mechanics — use ci-cd-integration; purely functional API auth/input
   tests with no attacker model — see api-testing; testing your product's own LLM features or defending the
@@ -14,7 +14,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.1"
+  version: "2.2"
   category: specialized
 ---
 
@@ -71,6 +71,8 @@ For runnable test code per category, see `references/owasp-tests.md`.
 The #1 vulnerability. Users act outside intended permissions. SSRF is now an access-control failure when the server is induced to reach internal resources for an attacker.
 
 **What to test:** IDOR (change resource IDs to reach other users' data), missing function-level access control (admin endpoints as a regular user), path traversal (`../../etc/passwd`), CORS misconfiguration, SSRF (user URLs reaching internal networks, cloud-metadata endpoints, `file://`).
+
+**The same browser, the next account.** A fresh client per user cannot see what the first user's session left in the browser: a cacheable export, a service worker's copy of the account page, a profile in `localStorage`. `accountSwitchLeaks` in `references/account-switch.md` signs A in, signs out through the app, then checks the signed-out visitor and account B in the same context, online and offline, for A's sentinel. An empty result covers those URLs and that account pair in the browser that ran it. It is not a statement that the app is secure or that database policies are verified.
 
 ### A02: Security Misconfiguration
 
@@ -166,7 +168,7 @@ A complete pipeline layers DAST, dependency/supply-chain scanning, SAST, and sec
 
 ## Auth Testing Patterns
 
-Session management, JWT (expiry, `alg: none` confusion, wrong-key signing), and RBAC matrix tests. Full code in `references/auth-tests.md`. Also test session rotation after login (session fixation) and OAuth state-parameter tampering.
+Session management, JWT (expiry, `alg: none` confusion, wrong-key signing), and RBAC matrix tests. Full code in `references/auth-tests.md`. Also test session rotation after login (session fixation) and OAuth state-parameter tampering. Server-side invalidation at logout is half of sign-out; what stays in the browser for the next person is the other half (`references/account-switch.md`).
 
 ---
 
@@ -202,6 +204,8 @@ A complete security pipeline has five layers, each a CI step:
 
 **Asserting a single status where several are valid.** SSRF/CSRF/exceptional-condition tests have a set of acceptable codes. Use `expect([400, 403, 422]).toContain(response.status())` — `toBeOneOf` is not a built-in matcher and throws at runtime.
 
+**Testing account isolation with one fresh client per user.** Each client starts with an empty cache and empty storage, so data the first account left in the browser is never looked for. Run the account-switch check in a single browser context.
+
 **Testing only known payloads.** The XSS/SQLi payloads in the references are examples, not exhaustive. Use ZAP's maintained payload database for breadth.
 
 ---
@@ -229,6 +233,7 @@ Prove the assertions actually fire — a security suite that passes vacuously (w
 - ZAP baseline scan runs against staging and uploads its report as a CI artifact on every run (`if: always()`).
 - The security Playwright project (`--project=security`) exits 0 against staging AND produces failures when pointed at OWASP Juice Shop (proves assertions fire).
 - Auth/session edge cases each have a passing test: CSRF rejection, expired-token rejection, `alg:none` rejection, session invalidation on logout, RBAC role-escalation prevention.
+- Where the app runs in a browser and keeps a session: the account-switch check returns no findings for the pages and endpoints that show personal data, with the browser and version recorded, or shared-device use is a recorded accepted risk.
 - No real secrets in test files (`grep` / TruffleHog clean).
 
 ## Related Skills
@@ -246,3 +251,4 @@ Prove the assertions actually fire — a security suite that passes vacuously (w
 - **owasp-tests.md** — runnable Playwright code for OWASP A01–A10 (IDOR, SSRF, injection, crypto, security headers, rate-limiting, supply-chain SBOM/provenance, exceptional conditions), plus the acceptable-status-set matcher note.
 - **scanning-and-ci.md** — ZAP, OSV-Scanner/Snyk, Semgrep + ESLint flat-config SAST, secret scanning, and the five-layer CI pipeline with the runnable dependency gate.
 - **auth-tests.md** — session, JWT (`alg:none`, expiry), and RBAC matrix tests for A07.
+- **account-switch.md** — `accountSwitchLeaks` and `sentinelInBrowser`: A signs in and out, then the signed-out visitor and account B are checked in the same browser context, online and offline, for A's sentinel in responses, pages, Cache Storage, `localStorage`, `sessionStorage` and IndexedDB.

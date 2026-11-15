@@ -127,6 +127,22 @@
         "no boundary testing"
       ],
       "tags": ["edge-cases", "date-picker", "boundaries"]
+    },
+    {
+      "id": "aitg-009",
+      "prompt": "Generate a regression test from this bug report and the diff that fixes it. How do I know the generated test would have caught the bug?",
+      "expected_patterns": [
+        "regressionEvidence",
+        "bug-reproduction",
+        "does_not_distinguish",
+        "revision that still has OR revision with the bug",
+        "distinguishes"
+      ],
+      "anti_patterns": [
+        "run the generated test only on the fixed code and call it verified",
+        "skip the run against the buggy revision because the test is green"
+      ],
+      "tags": ["regression-evidence", "bug-report-input", "verification"]
     }
   ]
 }

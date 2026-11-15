@@ -281,6 +281,50 @@
         "supply-chain",
         "provenance"
       ]
+    },
+    {
+      "id": "sec-014",
+      "prompt": "Our web app is used on shared kiosk browsers and has an offline mode. Test that after Alice signs out, the next person cannot get Alice's exported data, including offline.",
+      "expected_patterns": [
+        "accountSwitchLeaks",
+        "sentinel",
+        "offline",
+        "service worker",
+        "single browser context OR one `page` OR same context",
+        "no-store"
+      ],
+      "anti_patterns": [
+        "use a fresh browser context for the second user",
+        "clear cookies from the test instead of using the app's sign-out",
+        "check only the server's response with a new API client"
+      ],
+      "tags": [
+        "OWASP-A01",
+        "account-switch",
+        "browser-cache",
+        "service-worker"
+      ]
+    },
+    {
+      "id": "sec-015",
+      "prompt": "accountSwitchLeaks returned no findings in Chromium for /account and /api/export. Can the release note say account isolation and row-level security are verified?",
+      "expected_patterns": [
+        "Chromium",
+        "row-level security OR database policies",
+        "these URLs OR those URLs",
+        "Back button OR back/forward cache",
+        "not \"the app is secure\" OR not a statement that the app is secure"
+      ],
+      "anti_patterns": [
+        "state that row-level security is verified",
+        "claim the app is secure from an empty findings list",
+        "generalise the Chromium result to every browser"
+      ],
+      "tags": [
+        "OWASP-A01",
+        "overclaim",
+        "evidence"
+      ]
     }
   ]
 }

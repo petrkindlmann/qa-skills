@@ -10,7 +10,8 @@ description: >-
   into the ticket. Distinguishes flaky-not-reproducible from environment-specific.
   Use when: "reproduce this bug," "minimal reproduction," "repro steps," "find the commit
   that broke it," "git bisect," "make the repro deterministic," "write a failing test for
-  this bug," "regression test for a defect," "can't reproduce this bug."
+  this bug," "regression test for a defect," "can't reproduce this bug," "prove the test
+  catches the bug," "does this test fail without the fix."
   Not for: Classifying/deduplicating/severity-routing existing failures without
   reproducing them — that is ai-bug-triage. Generating tests from specs rather than from a
   defect — that is ai-test-generation.
@@ -18,7 +19,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.0"
+  version: "1.1"
   category: ai-qa
 ---
 
@@ -268,6 +269,16 @@ Only when the test is red-without-fix and green-with-fix, repeatably, is the fix
 This revert-to-verify step is the whole point of the regression test and is the one most
 often left out.
 
+`references/regression-evidence.md` has `regressionEvidence`, which runs the check
+mechanically: it freezes the test file, runs it at the revision with the bug and at the
+candidate, and returns `distinguishes` only when the test failed at the base with the
+reported symptom and passes at the candidate. Use it whenever the fix and the test arrived
+together (an agent's patch, a pull request with both), because then nobody saw the test red.
+A test that passes at both revisions comes back `does_not_distinguish`. A base failure for
+another reason, a skipped test, an empty selection or a timeout is `inconclusive`, which is
+not a pass. `distinguishes` says the test separates the two revisions; it does not say the
+fix is complete.
+
 ---
 
 ## Step 7: Flaky vs environment vs not-reproducible
@@ -389,6 +400,8 @@ user's environment and data and use `--repeat-each` before judging (Step 7).
 - `git bisect run …` terminates with "`<sha>` is the first bad commit" and `git bisect
   reset` leaves you on the original `HEAD`.
 - With the fix reverted the regression test exits non-zero; with the fix applied it exits 0.
+  With `regressionEvidence` the verdict is `distinguishes`, and both commit hashes and the
+  frozen test's hash are in the ticket.
 - The ticket block contains all seven write-back elements (Step 8) — grep it for the
   commit SHA, the test path, and the determinism notes.
 

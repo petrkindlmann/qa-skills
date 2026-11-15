@@ -4,13 +4,14 @@ description: >-
   Test REST and GraphQL APIs with Playwright APIRequestContext, Supertest, or standalone
   HTTP clients. Covers schema validation with Zod 4/AJV, auth flow testing, CRUD lifecycle
   tests, error and header validation, pagination, and performance assertions. Use when:
-  "API test," "endpoint test," "REST test," "GraphQL test," "schema validation," "Postman replacement."
+  "API test," "endpoint test," "REST test," "GraphQL test," "schema validation," "Postman replacement,"
+  "retry after a timeout," "lost response," "duplicate order on retry."
   Not for: consumer-driven contract verification (Pact, broker) — use contract-testing; browser UI flows — use playwright-automation.
   Related: contract-testing, test-data-management, ci-cd-integration, playwright-automation.
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.1"
+  version: "2.2"
   category: automation
 ---
 
@@ -137,6 +138,13 @@ Choose observations that distinguish the promised effect from a plausible broken
 - **Idempotency:** assert one durable business effect after concurrent duplicates and after
   restart. Check a changed payload with the same key. Idempotent state does not require the
   same status on every request; repeated DELETE may return 204 then 404 if that is the contract.
+- **Lost reply:** two requests with one key, both answered, skip the case that causes
+  duplicates in production: the write commits, the reply never arrives, and the client
+  sends it again. `references/lost-reply-retry.md` has `retryAfterLostReply`, a proxy that
+  drops the service's reply after the commit, lets the application's own client retry, and
+  counts the effects by an independent read. Run it with a restart where the project can
+  restart the service. Report `one_effect` as one write surviving one lost reply, never as
+  exactly-once delivery; `inconclusive` means nothing was lost and is not a pass.
 
 Keep a healthy control and a deliberately broken control for each critical assertion when
 evaluating test quality. Report a missed control as a coverage gap, not a product failure.
@@ -164,7 +172,7 @@ Tests that create resources without deleting them pollute the database. Use `aft
 Don't mock the database — API tests verify the contract from the consumer's perspective. Mock only genuine third parties you don't own (payment gateways, external SaaS).
 
 ### 7. Ignoring idempotency
-PUT and DELETE should preserve the intended state when repeated. Check state and side effects, using the endpoint's documented response contract for each attempt.
+PUT and DELETE should preserve the intended state when repeated. Check state and side effects, using the endpoint's documented response contract for each attempt. For a POST with an idempotency key, also test the retry after a lost reply (`references/lost-reply-retry.md`), through the client that retries in production.
 
 ---
 
@@ -183,6 +191,7 @@ PUT and DELETE should preserve the intended state when repeated. Check state and
 
 - **playwright-setup.md** — `playwright.config.ts`, standalone API tests, combined browser+API tests, and the authenticated `APIRequestContext` fixture.
 - **schema-validation.md** — Zod 4 and AJV/JSON-Schema response validation, the schema-as-contract pattern, and Schemathesis spec-driven fuzzing.
+- **lost-reply-retry.md** — `startReplyDroppingProxy` and `retryAfterLostReply`: drop the reply to a committed write, retry through the real client (optionally across a restart), count the business effects, and what `one_effect` does and does not show. Applies to REST writes, webhook receivers and MCP `tools/call` over HTTP.
 - **test-patterns.md** — Runnable CRUD lifecycle, auth flows, error responses, response headers, pagination, file upload/download, GraphQL (+ introspection diff), webhook, and performance tests.
 
 ## Related Skills

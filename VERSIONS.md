@@ -1,7 +1,47 @@
 # Versions
 
-## Unreleased
+## v3.6.0 (2026-11-15)
 
+### Four executable recipes: regression evidence, lost replies, account switching, email client limits
+
+Each recipe is code in a skill reference. The tests load it from the Markdown and run it
+against healthy and deliberately broken fixtures, and none of them adds a dependency.
+
+- `bug-reproduction` 1.1 adds `references/regression-evidence.md` with `regressionEvidence`.
+  It freezes the test files, runs them at the revision with the bug (a git worktree) and at
+  the candidate, reads both JUnit reports and returns one of seven verdicts. `distinguishes`
+  needs a failure at the base that carries the reported symptom and a pass at the candidate
+  on the same test bytes. A test that is green at both revisions is `does_not_distinguish`;
+  a base failure for another reason, a skipped test, an empty selection, a timeout or a
+  missing report is `inconclusive`; a test that edits tracked files or itself is `tampered`;
+  other tests that the fix breaks turn the verdict into `breaks_other_tests`. The reference
+  says what the verdict does not show: that the fix is correct or complete. `readJUnit` is
+  checked against reports written by `node --test`, Playwright 1.62.1 and pytest 9.2.0.
+  `ai-test-generation` 2.1 requires the same evidence for a test generated from a bug report.
+- `api-testing` 2.2 adds `references/lost-reply-retry.md` with `startReplyDroppingProxy` and
+  `retryAfterLostReply`. The proxy forwards a write, reads the service's reply and cuts the
+  caller's connection, so the write is committed and the client does not know. The
+  application's own client retries, optionally after a restart of the service, and the
+  business effects are counted by an independent read: `one_effect`, `duplicated`, `missing`
+  or `inconclusive` when no committed write was lost. Fixtures cover a durable key, no
+  deduplication, keys kept in memory (green until the restart), a client that makes a new
+  key per attempt, a client that retries by itself and a retry answered with `409`. The
+  same case is open for MCP `tools/call` in modelcontextprotocol#3394. A pass is reported
+  as one write surviving one lost reply, not as exactly-once.
+- `security-testing` 2.2 adds `references/account-switch.md` with `accountSwitchLeaks` and
+  `sentinelInBrowser`. Account A signs in and out through the app, then the signed-out
+  visitor and account B are checked in the same browser context, online and offline, for
+  A's sentinel in responses, pages, Cache Storage, `localStorage`, `sessionStorage`,
+  IndexedDB and script-readable cookies. Fixtures: a cacheable export, a service worker
+  that stores the export, a profile left in storage, an endpoint without a guard, and the
+  same faults repaired by `Clear-Site-Data` at sign-out. The helper refuses to run when A
+  never received the sentinel. It does not use `networkidle`: Chromium never reports a
+  `fetch` as finished while the page leaves the body unread, so a signed-out page that only
+  checks for `401` kept both `networkidle` and `response.text()` waiting. Run in Playwright's
+  Chromium only; an empty result is reported for those URLs and that account pair.
+- Seven eval cases cover the three recipes, three of them on what a passing result may not
+  be reported as. Planted defects caught by the new tests: 14 of 14 in the regression
+  helper, 10 of 10 in the proxy, 13 of 13 in the account-switch helper.
 - Add `scripts/render-green-lies-shorts.py`: two 5-second vertical cuts of "Green isn't
   correct" (the layout shift and the copied session), drawn with the parent renderer's
   fonts and palette. `render-green-lies.py` now takes Helvetica's bold face on macOS,

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="1" failures="1" skipped="1" tests="4" time="0.061" timestamp="2026-11-15T19:09:22.042611+01:00" hostname="host"><testcase classname="test_total" name="test_sums_three_lines" time="0.001"><failure message="AssertionError: total &lt;wrong&gt; &amp; &quot;quoted&quot;&#10;assert (0.1 + 0.2) == 0.3">def test_sums_three_lines():
+&gt;       assert 0.1 + 0.2 == 0.3, 'total &lt;wrong&gt; &amp; "quoted"'
+E       AssertionError: total &lt;wrong&gt; &amp; "quoted"
+E       assert (0.1 + 0.2) == 0.3
+
+test_total.py:4: AssertionError</failure></testcase><testcase classname="test_total" name="test_keeps_currency" time="0.000" /><testcase classname="test_total" name="test_rounds_half_up" time="0.000"><skipped type="pytest.skip" message="later">/work/test_total.py:9: later</skipped></testcase><testcase classname="test_total" name="test_reads_fixture" time="0.000"><error message="failed on setup with &quot;RuntimeError: database not started&quot;">@pytest.fixture
+    def broken():
+&gt;       raise RuntimeError("database not started")
+E       RuntimeError: database not started
+
+test_total.py:15: RuntimeError</error></testcase></testsuite></testsuites>
