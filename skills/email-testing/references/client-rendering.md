@@ -55,7 +55,8 @@ export async function checkInEmailClients(page: Page, html: string, outDir: stri
   if (unpreviewed.length) {
     throw new Error(`No preview for ${unpreviewed.join(', ')}: ${JSON.stringify(skipped)}`);
   }
-  const problems = diagnostics.map(d => `${d.code}: ${d.message}${d.line ? ` (line ${d.line})` : ''}`);
+  const problems = diagnostics.map(d =>
+    `${d.clients.join(', ')}: ${d.code}: ${d.message}${d.line ? ` (line ${d.line})` : ''}`);
   const missing: string[] = [];
   const files: string[] = [];
   await mkdir(outDir, { recursive: true });
