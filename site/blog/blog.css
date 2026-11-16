@@ -1,0 +1,43 @@
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+::selection{background:#ddd6fe;color:#1c1a18}
+body{font-family:'Inter',-apple-system,sans-serif;background:#fafaf9;color:#1c1a18;line-height:1.7;-webkit-font-smoothing:antialiased}
+a{color:#6366f1;text-decoration:underline;text-underline-offset:3px;font-weight:500}
+a:hover{color:#4f46e5}
+code,pre{font-family:'IBM Plex Mono',monospace}
+.wrap{max-width:720px;margin:0 auto;padding:0 20px}
+@media(min-width:640px){.wrap{padding:0 24px}}
+
+.top{padding:28px 0;border-bottom:1px solid #e7e5e4;font-size:14px}
+.top .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px}
+.top a{text-decoration:none;color:#57534e}
+.top a:hover{color:#1c1a18}
+.top .home{font-weight:700;color:#1c1a18}
+
+article{padding:48px 0 64px}
+.meta{font-size:13px;color:#78716c;margin-bottom:12px}
+h1{font-size:30px;font-weight:800;letter-spacing:-0.03em;line-height:1.18;margin-bottom:16px}
+@media(min-width:640px){h1{font-size:38px}}
+.lead{font-size:17px;color:#57534e;margin-bottom:8px}
+h2{font-size:21px;font-weight:700;letter-spacing:-0.02em;line-height:1.3;margin:44px 0 12px}
+p{font-size:16px;margin:0 0 16px}
+ul,ol{margin:0 0 16px 22px}
+li{font-size:16px;margin-bottom:8px}
+code{font-size:.88em;background:#f1efed;padding:1px 5px;border-radius:4px}
+pre{background:#1c1917;color:#e7e5e4;font-size:13px;line-height:1.6;padding:16px 18px;border-radius:10px;overflow-x:auto;margin:0 0 20px}
+pre code{background:none;padding:0;font-size:inherit;color:inherit}
+.table{overflow-x:auto;margin:0 0 20px}
+table{border-collapse:collapse;width:100%;font-size:14.5px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid #e7e5e4;vertical-align:top}
+th{font-size:12px;font-weight:600;color:#78716c;text-transform:uppercase;letter-spacing:.04em}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.note{font-size:14.5px;color:#57534e;border-left:3px solid #d6d3d1;padding:2px 0 2px 14px;margin:0 0 20px}
+
+.posts{list-style:none;margin:0;padding:8px 0 40px}
+.posts li{padding:24px 0;border-bottom:1px solid #e7e5e4;margin:0}
+.posts h2{margin:0 0 6px;font-size:21px}
+.posts h2 a{color:#1c1a18;text-decoration:none}
+.posts h2 a:hover{color:#6366f1}
+.posts p{color:#57534e;margin:0;font-size:15.5px}
+
+footer{border-top:1px solid #e7e5e4;padding:32px 0 48px;font-size:13px;color:#78716c}
+footer a{color:#78716c}

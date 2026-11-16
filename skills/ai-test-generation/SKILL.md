@@ -14,7 +14,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.1"
+  version: "2.2"
   category: ai-qa
 ---
 
@@ -212,9 +212,12 @@ Convert the "hallucinated APIs" warning into a mechanical gate. After Step 6, be
 
 4. **Show that a test written for a defect fails on the defect.** When the input is a bug
    report or a diff that fixes one, run the generated test at the revision that still has
-   the bug. `regressionEvidence`, from the regression-evidence reference of the
-   `bug-reproduction` skill, does it and returns `does_not_distinguish` for a test that
-   passes on both revisions. A generated test that was only ever run against the
+   the bug. `scripts/regression-check.mjs` of the `bug-reproduction` skill does it for
+   every test in the change, and `regressionEvidence`, from that skill's
+   regression-evidence reference, for one named test; a test that passes on both
+   revisions comes back `green_at_base` or `does_not_distinguish`. A generated test that
+   imports a helper written in the same change is `missing_at_base`: red before the fix
+   without touching the bug. A generated test that was only ever run against the
    fixed code describes that code; it has not been shown to catch the bug.
 
 Any `MISSING` line or `tsc` error is a hallucination to fix before a human spends review time.

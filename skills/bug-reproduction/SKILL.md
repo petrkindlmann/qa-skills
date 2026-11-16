@@ -19,7 +19,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "1.1"
+  version: "1.2"
   category: ai-qa
 ---
 
@@ -269,15 +269,36 @@ Only when the test is red-without-fix and green-with-fix, repeatably, is the fix
 This revert-to-verify step is the whole point of the regression test and is the one most
 often left out.
 
-`references/regression-evidence.md` has `regressionEvidence`, which runs the check
-mechanically: it freezes the test file, runs it at the revision with the bug and at the
-candidate, and returns `distinguishes` only when the test failed at the base with the
-reported symptom and passes at the candidate. Use it whenever the fix and the test arrived
+Two tools run the check mechanically. Use one whenever the fix and the test arrived
 together (an agent's patch, a pull request with both), because then nobody saw the test red.
-A test that passes at both revisions comes back `does_not_distinguish`. A base failure for
-another reason, a skipped test, an empty selection or a timeout is `inconclusive`, which is
-not a pass. `distinguishes` says the test separates the two revisions; it does not say the
-fix is complete.
+
+`scripts/regression-check.mjs` takes a change and a test command and reports every test
+the change adds or edits:
+
+```bash
+node scripts/regression-check.mjs --base origin/main --symptom 'total is 0\.30000000000000004' -- \
+  npx vitest run --reporter=junit --outputFile={report} {tests}
+```
+
+It finds the changed test files, carries them onto the base in a git worktree, and runs the
+base again when a new test passes there. Each test comes back as `shows_the_bug`,
+`red_without_symptom`, `missing_at_base` (it fails only because it uses a helper the fix
+adds, so it never reached the behaviour), `green_at_base` (new, and it never failed on the
+bug), `flaky_at_base` or `fails_at_candidate`. Exit code 0 means at least one test fails at
+the base and passes at the candidate; without `--symptom` that is reported as
+`red_then_green` and the failure is yours to compare with the report.
+
+`regressionEvidence`, in `references/regression-evidence.md`, is the same check for one
+named test as a function, for an assertion in a suite. It returns `distinguishes` only when
+the test failed at the base with the reported symptom and passes at the candidate. A test
+that passes at both revisions comes back `does_not_distinguish`. A base failure for another
+reason, a skipped test, an empty selection or a timeout is `inconclusive`, which is not a
+pass.
+
+Neither verdict says the fix is complete: the test separates two revisions for one symptom.
+A pass at the base can also be the machine. A bug that exists on one runtime version, or a
+fix to types, is red only with that interpreter or under the type checker; the reference
+lists these cases.
 
 ---
 
@@ -387,6 +408,7 @@ user's environment and data and use `--repeat-each` before judging (Step 7).
 | Bisect lands on an obviously unrelated commit | Full suite or flaky failures marking commits bad | Switch to one targeted test; wrap with exit-125 skip + network stub |
 | Repro passes locally, fails in CI (or vice versa) | Environment-specific (TZ, locale, OS, browser) | Pin `TZ`/`LANG`; match the failing environment (Step 7) |
 | Test is green but you're not sure it catches the bug | Never ran it red | Revert the fix and confirm it fails (Step 6) |
+| Test is red before the fix with `ImportError` or `is not a function` | It calls a helper the fix adds | `missing_at_base`: reach the behaviour through what the old code has (Step 6) |
 | `vi.setSystemTime` has no effect | Called before `vi.useFakeTimers()` | Call `useFakeTimers()` first |
 | `page.clock` time not applied to app startup | `install`/`setFixedTime` ran after `page.goto` | Move clock setup before navigation |
 | Repro flips pass/fail run to run | Live time/RNG/network not pinned | Apply Step 4; confirm with `--repeat-each 10` |
@@ -400,8 +422,9 @@ user's environment and data and use `--repeat-each` before judging (Step 7).
 - `git bisect run …` terminates with "`<sha>` is the first bad commit" and `git bisect
   reset` leaves you on the original `HEAD`.
 - With the fix reverted the regression test exits non-zero; with the fix applied it exits 0.
-  With `regressionEvidence` the verdict is `distinguishes`, and both commit hashes and the
-  frozen test's hash are in the ticket.
+  `regression-check.mjs` ends with `shows_the_bug` and no test of the change is listed as
+  `missing_at_base` or `green_at_base` without a reason; or `regressionEvidence` returns
+  `distinguishes`. Both commit hashes and the frozen test's hash are in the ticket.
 - The ticket block contains all seven write-back elements (Step 8) — grep it for the
   commit SHA, the test path, and the determinism notes.
 

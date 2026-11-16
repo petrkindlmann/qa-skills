@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>We ran 250 real bug fixes against the code before the fix | QA Skills</title>
+<meta name="description" content="Do the tests that ship with a bug fix actually fail on the bug? We checked 250 merged fix commits in nine open-source projects. 226 did, none passed silently, and the other 24 changed our tool.">
+<meta name="theme-color" content="#fafaf9">
+<link rel="canonical" href="https://qa-skills.com/blog/250-fix-commits/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236366f1'/><text x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='system-ui' font-weight='700'>Q</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/blog/blog.css">
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="home" href="/">QA Skills</a><a href="/blog/">Blog</a></div></header>
+<main class="wrap">
+<article>
+<p class="meta">16 November 2026</p>
+<h1>We ran 250 real bug fixes against the code before the fix</h1>
+<p class="lead">A regression test is supposed to fail on the bug and pass on the fix. When the fix and the test arrive in one commit, nobody watches it fail. We went back and watched, for 250 merged fixes in nine open-source projects.</p>
+
+<p>The worry is easy to state. An agent, or a person in a hurry, writes a fix and a test in one sitting. The test is green. It has only ever run against the fixed code, so it may describe what the new code does and nothing about the bug. We had shipped a helper for this the day before, tested on our own small lab, and we expected to find such tests in the wild.</p>
+
+<p>We did not find a single one. What we found instead was more useful, and it showed that our own tool was close to unusable on a real test file.</p>
+
+<h2>What we ran</h2>
+
+<p>Nine repositories: undici, fastify, eslint, express and hono on the Node side, pytest, click, fastapi and llm on the Python side. From each we took the most recent merged commits whose title says "fix" and which change both a source file and a test file, and added commits that carry a coding agent's co-author line. That gave 293 commits. Forty-three were set aside by rules written down before the first run (mostly merge commits where only an inner commit, not the pull request, says fix), which left 250.</p>
+
+<p>For each one, three runs: the parent commit with its own tests, the parent commit with the fix commit's test files copied onto it, and the fix commit. The first run tells you which tests are new. The second is the one nobody did at the time.</p>
+
+<h2>The result</h2>
+
+<div class="table"><table>
+<thead><tr><th>What happened</th><th class="num">Commits</th><th class="num">With an agent co-author</th></tr></thead>
+<tbody>
+<tr><td>Tests fail before the fix and pass after</td><td class="num">226</td><td class="num">56</td></tr>
+<tr><td>Could not get a result on our machine</td><td class="num">8</td><td class="num">0</td></tr>
+<tr><td>Fail before the fix only on another runtime or under the type checker</td><td class="num">7</td><td class="num">2</td></tr>
+<tr><td>Fail before the fix for a reason that is not the bug</td><td class="num">5</td><td class="num">3</td></tr>
+<tr><td>Other: a flaky test, a refactor titled fix, a failure at import, one needing Python 3.15</td><td class="num">4</td><td class="num">1</td></tr>
+<tr><td>Total</td><td class="num">250</td><td class="num">62</td></tr>
+</tbody>
+</table></div>
+
+<p>In none of the 250 could we show a test that passes on the buggy code and would keep passing. These are reviewed, mature projects, and their fix commits do what they say. If you maintain one of them, that is the headline. The headline we had in mind, that regression tests are routinely never seen red, is wrong for this sample, and we are not going to write it.</p>
+
+<p>The 62 agent co-authored commits look like the rest: 56 clean. Three of the five "wrong reason" cases below carry an agent's co-author line, against two among the 188 others. Three is too small a number to hang a claim on.</p>
+
+<h2>Five tests that were red for the wrong reason</h2>
+
+<p>All five are in pytest. In each, the new test imports a private helper that the fix itself adds. On the commit before the fix that helper does not exist, so the test fails with <code>ImportError</code>, in four cases before a single test in the file runs. Red before, green after. The red has nothing to do with the bug.</p>
+
+<p>We then made each import tolerant and ran the tests again on the old code. In all five commits at least one test now failed on the actual behaviour. So the tests are sound, and the fixes are real. But nobody reading "red, then green" on those pull requests could have known that, because the same result would have come from a test that checks nothing.</p>
+
+<p>One of them makes a good worked example. <a href="https://github.com/pytest-dev/pytest/issues/14552">Issue 14552</a> reports that after a test directory is moved, a second run fails with <code>assert '…st1/test_a.py' == '…st2/test_a.py'</code>. The fix adds two tests. We ran them at both commits three ways:</p>
+
+<div class="table"><table>
+<thead><tr><th>Test file</th><th>Symptom we asked for</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr><td>As committed</td><td>The one from the report</td><td>Inconclusive. The test failed before the fix with <code>ImportError: cannot import name '_imp_fix_co_filename'</code>, not with the symptom</td></tr>
+<tr><td>As committed</td><td><code>/co_filename/</code>, a word from the issue title</td><td>Accepted, wrongly. The import error contains the helper's name, and the helper's name contains the word</td></tr>
+<tr><td>Import made tolerant</td><td>The one from the report</td><td>Accepted. Both tests fail before the fix with the reported symptom and pass after</td></tr>
+</tbody>
+</table></div>
+
+<p>The middle row is our own tool being fooled by a lazy symptom. We had told people to give the symptom from the bug report. We had not told them that one word from the title can match an identifier in an unrelated error.</p>
+
+<h2>A pass before the fix is sometimes the machine</h2>
+
+<p>Seven commits looked at first like tests that never fail on the bug. Five are hono fixes to types. Their tests pass under vitest on the old code and fail under <code>tsc</code>, with between one and eight type errors that the fix removes. One pytest fix concerns Python 3.12 only and one fastapi fix Python 3.14 only. On those interpreters the tests fail before the fix. On the 3.13 we started with they pass at both commits.</p>
+
+<p>One undici test was recorded as passing on the buggy commit. Run twenty times there, it failed eighteen. A single run before the fix is one sample.</p>
+
+<p>And the eight inconclusive ones are ours: old commits whose tests would not run with today's dependencies, and three where the fix commit's own tests fail on our Mac.</p>
+
+<h2>What it did to our tool</h2>
+
+<p>The helper we had shipped takes test files, a base revision and a symptom, and answers with one verdict. Handed a real changed test file with its defaults, it gave a useful answer for 9 of the 250 commits. For 158 it said the tests do not distinguish the two revisions, because it wants every selected test to fail before the fix and a real test file is mostly old tests. For another 83 it stopped, most often at a duplicate test name or a skipped test. All of that is documented behaviour. It also means nobody would have used it twice.</p>
+
+<p>The survey needed a different shape: look at each test the change adds, say what it did on the old code, and say why. So that is what version 3.6.1 ships, as a command in the <code>bug-reproduction</code> skill:</p>
+
+<pre><code>node scripts/regression-check.mjs --base origin/main --symptom 'total is 0\.30000000000000004' -- \
+  npx vitest run --reporter=junit --outputFile={report} {tests}</code></pre>
+
+<p>It finds the changed test files by itself, carries them onto the base in a git worktree, and reports every new or changed test under one of a few headings: shows the bug, red without the symptom, green at the base, flaky at the base, and <code>missing_at_base</code> for a test that fails only because it uses something the fix adds. That last one is not decided from the error text. The script takes the name out of the error and looks for it in both revisions; the status applies only when the old code does not contain the name anywhere and the new code does. A crash on a name the old code already uses, which may well be the bug, stays a plain red.</p>
+
+<p>It repeats the run on the old code while a new test keeps passing there, and it runs each test command in its own process group, because some buggy revisions leave workers that never exit.</p>
+
+<p>On the pytest fix above it needs no symptom to get the answer:</p>
+
+<pre><code>missing_at_base (2): fails at the base because something the candidate adds does not exist there
+  …test_moved_test_file_updates_code_filename[import-lib]
+      needs _imp_fix_co_filename: ImportError: cannot import name '_imp_fix_co_filename' …
+  …test_moved_test_file_updates_code_filename[pure-python]
+      needs _imp_fix_co_filename: ImportError: cannot import name '_imp_fix_co_filename' …
+
+verdict: no_test_shows_the_bug</code></pre>
+
+<p>Then we ran the command over the same 250 commits with its defaults: no symptom, and the test files found by the command itself. It ran 249 of them. For 228 the verdict was <code>red_then_green</code>, where the old helper had given 9 useful answers. We had read 226 commits as red then green by hand, and the command agreed on 225. The one left over is the commit it did not run, which is the last item in the list below. Twelve commits ended as <code>no_test_shows_the_bug</code>, the five pytest fixes among them: for those it printed <code>missing_at_base</code> with the helper's name, and nobody had to supply a symptom. Eight ended as <code>inconclusive</code>, and one as <code>not_fixed</code> because one of its new tests fails on our Mac at the fix commit. Half the commits took eight seconds or less.</p>
+
+<p>It looked at 2,365 new or changed tests. 1,010 failed before the fix and passed after. 430 passed on the old code every time it ran them. 906 could not find a name the fix adds, and 888 of those sit in four pytest commits where the test file imports the new helper at the top, so every test in the file fails with it.</p>
+
+<p>The trial changed the command twice. At first it refused 14 hono commits. Hono keeps its tests beside the code in <code>src/utils/</code> and <code>src/helper/</code>, and we had those folder names on a list of test support that is never handed to the runner. Now a file named like a test is a test wherever it lives. The other change is about two commits whose only new test is skipped on our Python. The command said no test shows the bug. A test that never ran shows nothing either way, so that is <code>inconclusive</code> now.</p>
+
+<h2>Things we got wrong along the way</h2>
+
+<ul>
+<li>Our first Python runs used a relative <code>PYTHONPATH</code>. Some pytest tests start a subprocess in another directory, which then imported a different, already fixed copy of pytest. We threw those results away and ran the four Python projects again. The numbers came out the same, which was luck.</li>
+<li>The v3.6.0 text said the helper reads Playwright's JUnit report. It could not: Playwright takes the report path from an environment variable the helper never set. That is fixed and has a test now.</li>
+<li>Running the old code's tests is not free of side effects. The commit before a fix to pytest's <code>rm_rf</code> left a directory in the shared temp folder that nothing could delete, and every later pytest run on the machine failed at start-up until we removed it by hand.</li>
+<li>One undici commit is missing from the trial, and it cost us two restarts of the machine. The commit before that fix has a test file, <code>test/client.js</code>, which on our Mac used up the kernel's network buffers within seconds: 55,000 in use where 300 is normal. After that every process that wanted to send on a socket waited, the watchdog saw a system daemon stop answering, and macOS restarted. It did this twice, each time at the end of a long run with nobody at the screen, before we read the panic reports. The third time a small watcher stopped the test. The command's timeout and its process-group cleanup do not help here, because by then it is the kernel that is stuck. We still do not know which test in that file does it. If you do not know a project, run its old revisions in a container or a virtual machine.</li>
+</ul>
+
+<h2>Limits</h2>
+
+<p>One machine. One run per commit, except for undici and fastify, which we ran twice (83 of 85 commits gave the same result). Only commits titled "fix", only the test files the fix commit touches, only projects whose tests run locally in a couple of minutes. Reviewed open-source projects are the easy case for this question; a repository where agents merge their own work may look different, and we have not measured one. A co-author line shows that an agent took part in a commit, not who wrote the test. And where a test failed before the fix with an assertion error, we did not compare the message with the bug report, apart from the pytest example.</p>
+
+<p>The <a href="https://github.com/petrkindlmann/qa-skills/blob/main/docs/REAL-PROJECT-RUNS-2026-11-16.md">full report</a> has the method, every commit and its result, the hand readings and the scripts. The command is in the <a href="https://github.com/petrkindlmann/qa-skills/tree/main/skills/bug-reproduction"><code>bug-reproduction</code> skill</a>, and needs Node and git, nothing else.</p>
+</article>
+</main>
+<footer><div class="wrap"><a href="/">QA Skills</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="https://github.com/petrkindlmann/qa-skills">GitHub</a> &middot; Built by <a href="https://kindlmann.com">Petr Kindlmann</a></div></footer>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drop one reply and an MCP tool runs twice | QA Skills</title>
+<meta name="description" content="A tools/call that commits and whose reply is lost gets called again, and the tool runs twice. Five runs with the official MCP TypeScript SDK, and what a server has to remember to stop it.">
+<meta name="theme-color" content="#fafaf9">
+<link rel="canonical" href="https://qa-skills.com/blog/mcp-lost-reply/">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%236366f1'/><text x='50' y='68' text-anchor='middle' fill='white' font-size='52' font-family='system-ui' font-weight='700'>Q</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/blog/blog.css">
+</head>
+<body>
+<header class="top"><div class="wrap"><a class="home" href="/">QA Skills</a><a href="/blog/">Blog</a></div></header>
+<main class="wrap">
+<article>
+<p class="meta">16 November 2026</p>
+<h1>Drop one reply and an MCP tool runs twice</h1>
+<p class="lead">An agent calls a tool that writes something. The server does the write and answers, and the answer never arrives. The agent sees an error and calls the tool again. Now there are two notes, or two refunds.</p>
+
+<p>This is an old problem, and payment APIs deal with it through idempotency keys. MCP tool calls have the same shape and, as of today, no rule about it. The specification says nothing on retrying a <code>tools/call</code>, and the question is <a href="https://github.com/modelcontextprotocol/modelcontextprotocol/issues/3394">open as issue 3394</a>.</p>
+
+<p>We had a test recipe for the HTTP version of this case and wanted to see whether it works against the real MCP stack. It does. The result is worth showing because the first fix one reaches for passes the test and still writes twice after a deploy.</p>
+
+<h2>The setup</h2>
+
+<p>The client is the official TypeScript SDK's <code>Client</code> over <code>StreamableHTTPClientTransport</code>. The server is the SDK's <code>McpServer</code> on a stateless <code>StreamableHTTPServerTransport</code>, version 1.32.2. One tool, <code>create_note</code>, appends a line to a file. We wrote the tool. The client, the transport and the protocol are the SDK's.</p>
+
+<p>Between them sits a small proxy from the <code>api-testing</code> skill. It forwards every request. For one chosen request it reads the server's whole reply, throws it away and cuts the caller's connection. So the write is committed and the caller cannot know. Then the caller sends the same call again, and an independent read counts the notes.</p>
+
+<p>The reply that got dropped was an ordinary success: HTTP 200 with the result as one server-sent event.</p>
+
+<pre><code>event: message
+data: {"result":{"content":[{"type":"text","text":"note-1"}]},"jsonrpc":"2.0","id":1}</code></pre>
+
+<h2>Five runs</h2>
+
+<div class="table"><table>
+<thead><tr><th>Server</th><th>Verdict</th><th class="num">Notes written</th></tr></thead>
+<tbody>
+<tr><td>The tool as written. The caller calls it again</td><td><code>duplicated</code></td><td class="num">2</td></tr>
+<tr><td>The caller sends an <code>idempotency_key</code>. The tool ignores it</td><td><code>duplicated</code></td><td class="num">2</td></tr>
+<tr><td>The tool remembers keys in memory</td><td><code>one_effect</code></td><td class="num">1</td></tr>
+<tr><td>Keys in memory, server restarted between the two calls</td><td><code>duplicated</code></td><td class="num">2</td></tr>
+<tr><td>Keys on disk, server restarted between the two calls</td><td><code>one_effect</code></td><td class="num">1</td></tr>
+</tbody>
+</table></div>
+
+<p>Rows one and two are what you would expect. Row two is still worth a look: an argument named <code>idempotency_key</code> in the schema does nothing unless the handler reads it. The caller fills it in and gets two notes anyway.</p>
+
+<p>Rows three and four are the reason to run this with a restart. A <code>Map</code> in the process is the first thing anyone writes. It passes. It keeps passing in every test that does not restart the server, and then the first lost reply that straddles a deploy or a crashed pod writes the note twice. Only the version that stores the key with the write survives.</p>
+
+<h2>What the SDK does and does not do</h2>
+
+<p>The SDK client did not retry by itself. In all five runs the first call ended in an error and the second call was ours, standing in for an agent that sees a failed tool call and tries again. That is what agents do. An agent host with its own retry policy does the same thing one layer down.</p>
+
+<p>So this is not a bug in the SDK. The protocol allows it, and a server cannot tell a retry from a second request unless the tool's own arguments carry something stable. Until the specification says more, that is the tool author's job.</p>
+
+<h2>If you write MCP tools</h2>
+
+<ul>
+<li>Give every tool that creates or moves something a key argument, and make the handler use it. Return the first result for a key you have seen.</li>
+<li>Store the key in the same place as the effect, in the same transaction where there is one. Memory is not enough.</li>
+<li>Where the effect is in someone else's system, pass the key through. Most payment and email providers accept one.</li>
+<li>Where a tool cannot be made idempotent, say so in its description and give the agent a way to look up what happened instead of calling again.</li>
+</ul>
+
+<h2>Running it on your server</h2>
+
+<p>The helper is one function in a Markdown file. The first POST of an MCP session is <code>initialize</code>, so the proxy has to be told which request to lose:</p>
+
+<pre><code>let lostOnce = false;
+const outcome = await retryAfterLostReply({
+  target: serverUrl,
+  send: async baseUrl =&gt; {
+    const client = new Client({ name: 'agent', version: '1.0.0' });
+    try {
+      await client.connect(new StreamableHTTPClientTransport(new URL(`${baseUrl}/mcp`)));
+      const result = await client.callTool({ name: 'create_note', arguments: { text, idempotency_key: key } });
+      return result.content[0].text;
+    } finally {
+      await client.close().catch(() =&gt; {});
+    }
+  },
+  countEffects: async () =&gt; (await readNotes()).filter(note =&gt; note.text === text).length,
+  drop: exchange =&gt; !lostOnce &amp;&amp; /"method":"tools\/call"/.test(exchange.requestBody) &amp;&amp; (lostOnce = true),
+  restart: () =&gt; restartServer(),
+});
+expect(outcome.verdict, outcome.reason).toBe('one_effect');</code></pre>
+
+<p><code>countEffects</code> is the part to get right. It has to read the effect itself, the row or the file or the provider's sandbox, and not the tool's reply. The helper answers <code>inconclusive</code> when nothing was lost, for example when the proxy dropped the handshake, and that is not a pass.</p>
+
+<p>The recipe is <a href="https://github.com/petrkindlmann/qa-skills/blob/main/skills/api-testing/references/lost-reply-retry.md"><code>lost-reply-retry.md</code></a> in the <code>api-testing</code> skill. The server and the script behind the table are in the <a href="https://github.com/petrkindlmann/qa-skills/tree/main/docs/evidence/real-project-runs-2026-11-16/mcp">run's evidence folder</a>.</p>
+
+<h2>What this does not show</h2>
+
+<p>One tool, one transport, one SDK version, on one machine. The proxy buffers the whole reply before it decides, which fits a call answered with one event; a server that keeps a stream open was not tried. And <code>one_effect</code> means one write survived one lost reply and one retry. It says nothing about two calls in flight at once, or a retry after the key has expired.</p>
+</article>
+</main>
+<footer><div class="wrap"><a href="/">QA Skills</a> &middot; <a href="/blog/">Blog</a> &middot; <a href="https://github.com/petrkindlmann/qa-skills">GitHub</a> &middot; Built by <a href="https://kindlmann.com">Petr Kindlmann</a></div></footer>
+</body>
+</html>

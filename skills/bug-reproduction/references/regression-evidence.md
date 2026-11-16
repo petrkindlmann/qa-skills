@@ -1,14 +1,86 @@
 # Regression evidence: the same test at two revisions
 
-Step 6 of the skill reverts the fix by hand and re-runs the test. This helper does it
+Step 6 of the skill reverts the fix by hand and re-runs the test. The two tools here do it
 mechanically, which matters most when an agent wrote both the fix and the test in one
 sitting: the test was never seen red, and it may only describe what the new code does.
 
-It freezes the test files, runs them at the revision that has the bug and at the candidate,
-and returns a verdict. It needs Node 24, `git` and a runner that can write JUnit XML
-(`node --test`, Playwright, Vitest and pytest have it built in; Jest needs `jest-junit`).
+- **`scripts/regression-check.mjs`** is a command. It looks at every test a change adds or
+  edits and says which of them fail on the code that still has the bug, and why. Start here.
+- **`regressionEvidence`** is a function for one named test, to assert inside a suite or a
+  gate. It demands the reported symptom and has stricter verdicts.
 
-## Verdicts
+Both freeze the test files, run them at the revision that has the bug and at the candidate,
+and compare JUnit reports. They need `git` and a runner that can write JUnit XML
+(`node --test`, Playwright, Vitest and pytest have it built in; Jest needs `jest-junit`).
+The script runs on Node 20 or later, the function as written on Node 24.
+
+## The script: every new test, at both revisions
+
+The fix and its tests are in the working tree and `HEAD` still has the bug:
+
+```bash
+node scripts/regression-check.mjs --symptom '0\.30000000000000004' -- \
+  node --test --test-reporter=junit --test-reporter-destination={report} {tests}
+```
+
+A branch or a pull request against its base:
+
+```bash
+node scripts/regression-check.mjs --base origin/main --candidate HEAD --prepare 'npm ci' -- \
+  npx vitest run --reporter=junit --outputFile={report} {tests}
+```
+
+The path is relative to this skill's folder. `{report}` becomes the JUnit file the runner
+must write and `{tests}` the test files. Without `--tests` the script carries every file
+changed since the base whose path looks like a test or test data, and hands the runner
+those that are code and not fixtures, helpers or snapshots. A file named like a test
+(`url.test.ts`, `test_url.py`) is run wherever it lives, also under `src/utils/`. `--help`
+lists the options.
+
+It runs the base three ways: with its own tests, to learn which test names are new; with
+the candidate's tests; and with the candidate's tests again, up to `--repeat` times
+(default 3), while a new test keeps passing there. Then the candidate once. Each run is in
+its own process group, which is removed when the run ends, so workers that a buggy
+revision leaves hanging do not survive the check.
+
+Every new or changed test gets one status:
+
+| Status | Observed at the base | What it tells you |
+|---|---|---|
+| `shows_the_bug` | Failed with the `--symptom` | The evidence you want |
+| `red_then_green` | Failed, and no `--symptom` was given | Compare the printed failure with the report, or pass `--symptom` |
+| `red_without_symptom` | Failed with something else | Red for another reason. Read it |
+| `missing_at_base` | Failed, or its file did not load, on a name that only the candidate has; printed as `needs <name>` | The test never reached the behaviour. It is red on any revision without the new helper |
+| `did_not_load` | The file failed to load, with or without a report from the runner, and the error is not the symptom | Read the error. A support file that was not carried is named with `--tests` |
+| `green_at_base` | New, and passed in every base run | It never showed this bug. A neighbouring case is fine; the regression test must not be here |
+| `flaky_at_base` | Passed in some base runs, failed in others | Its green after the fix proves little. Make it deterministic first (Step 4) |
+| `fails_at_candidate` | Any | The change does not make it pass |
+| `skipped` | Skipped in a run | No result |
+
+The verdict is `shows_the_bug` (or `red_then_green` without a symptom) when at least one
+test is in the first two rows and nothing fails at the candidate. Otherwise it is
+`no_test_shows_the_bug`, `not_fixed`, `breaks_other_tests` (a test that passed at the base
+now fails), `inconclusive` (no report, a timeout, no new or changed test, or every one of
+them skipped) or `tampered`.
+Exit code 0 is for the first two verdicts, 2 for `inconclusive` and `tampered`, 1 for the
+rest. `--json` writes the revisions, the hashes of the carried files and every row, which is
+what goes into the ticket.
+
+`missing_at_base` is decided from the repository and not from the wording of the failure:
+the name in an `ImportError`, a `TypeError: x is not a function` or a failed module lookup
+is searched at both revisions, and the status applies only when the base does not contain
+it anywhere and the candidate does. A crash on a name the base already uses, which may be
+the bug itself, stays red. To repair such a test, reach the behaviour through what the base
+already has, or import the new helper inside the one test that is about the helper.
+
+`green_at_base` has three ordinary causes besides a test that does not catch the bug. The
+bug may exist only on another runtime version, in which case run the check with that
+interpreter. The base may need the dependencies of its time. And a fix to types is red only
+under the type checker, so use the type checker as the test command for it.
+
+## The function: one test, as an assertion
+
+### Verdicts
 
 | Verdict | What was observed |
 |---|---|
@@ -29,7 +101,7 @@ introduced fails at the base with `TypeError: formatTotal is not a function`. Th
 then green, and it has nothing to do with the bug. Give the symptom as the user would have
 seen it: the wrong value, the status code, the duplicated row.
 
-## The helper
+### The helper
 
 ```ts
 import { spawnSync } from 'node:child_process';
@@ -131,7 +203,7 @@ export function regressionEvidence({ repo, tests, command, symptom, select = /./
       const before = tracked();
       const report = path.join(scratch, 'junit.xml');
       const [program, ...args] = command.map(part => part.replaceAll('{report}', report));
-      const result = spawnSync(program, args, { cwd, env, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 1 << 28 });
+      const result = spawnSync(program, args, { cwd, env: { ...env, PLAYWRIGHT_JUNIT_OUTPUT_FILE: report }, encoding: 'utf8', timeout: timeoutMs, maxBuffer: 1 << 28 });
       const changed = frozen.filter(({ file, sha256: expected }) => !fs.existsSync(path.join(cwd, file))
         || sha256(fs.readFileSync(path.join(cwd, file))) !== expected).map(({ file }) => file);
       if (tracked() !== before) changed.push('a tracked file');
@@ -158,7 +230,7 @@ export function regressionEvidence({ repo, tests, command, symptom, select = /./
 }
 ```
 
-## Using it
+### Using it
 
 The usual case: the fix and its test are in the working tree, uncommitted, and `HEAD` still
 has the bug.
@@ -176,11 +248,18 @@ assert.equal(evidence.verdict, 'distinguishes', evidence.reason);
 
 - `base` is any revision that has the bug: `HEAD` by default, the parent of the fix commit,
   or the commit `git bisect` named. `candidate` is a revision, or `null` for the working tree.
-- `{report}` is replaced with a path outside the tree. Playwright:
-  `PLAYWRIGHT_JUNIT_OUTPUT_FILE` in `env` with `--reporter=junit`. pytest: `--junitxml={report}`.
-  Vitest: `--reporter=junit --outputFile={report}`.
+- `{report}` is replaced with a path outside the tree. pytest: `--junitxml={report}`.
+  Vitest: `--reporter=junit --outputFile={report}`. Playwright takes the path from
+  `PLAYWRIGHT_JUNIT_OUTPUT_FILE`, which the helper sets to the same file; pass
+  `--reporter=junit`.
+- `select` is needed on any real test file. With the default, every test in the command has
+  to fail at the base, and an old test, a skipped test or two tests with one name end the
+  check as `does_not_distinguish` or `inconclusive`.
 - `prepare` runs in each tree before the tests, for example `['npm', 'ci']`. A worktree has
-  no `node_modules`, and the base may need other dependencies than the candidate.
+  no `node_modules`, and the base may need other dependencies than the candidate. With
+  `candidate: null` it also runs in your working tree, so it must be safe to run twice
+  (`[ -e node_modules ] || ln -s …`, not a bare `ln -s`). The script's `--prepare` runs in
+  worktrees only.
 - Let `command` run more than the selected test when the suite is fast. Tests outside
   `select` are compared too, and one that passed at the base and fails at the candidate
   turns the verdict into `breaks_other_tests`.
@@ -188,7 +267,7 @@ assert.equal(evidence.verdict, 'distinguishes', evidence.reason);
   base, so a source file in the list carries the fix with it and the result is
   `does_not_distinguish`. The returned `frozen` list with hashes goes into the ticket.
 
-## What `distinguishes` means
+## What `distinguishes` and `shows_the_bug` mean
 
 The frozen test separates these two revisions, for this symptom, on this machine. Write that
 in the ticket with both commit hashes and the hashes of the test files.
@@ -202,6 +281,23 @@ nothing about flakiness; repeat it as Step 6 asks before closing.
 
 - **The symptom has to come from the report, not from the first red run.** Copying whatever
   the test printed at the base into `symptom` makes the check circular.
+- **A symptom of one word can match the wrong failure.** A report titled "the old
+  `co_filename` is used" and a symptom of `/co_filename/` accepted
+  `ImportError: cannot import name '_imp_fix_co_filename'` as the bug. Use the wrong value,
+  the status code or the sentence the user saw. The script catches this case by itself;
+  the function does not.
+- **A pass at the base can be the machine.** Before reading `green_at_base` or
+  `does_not_distinguish` as a weak test, check the runtime version the report names, the
+  dependency versions of the base's date, and whether the fix is to types.
+- **One base run is one sample.** A test can fail on the bug nine times in ten. The script
+  repeats the base while a new test passes there; with the function, loop it yourself.
+- **A buggy revision can damage more than its worktree.** Its tests may leave processes
+  running, or files in the shared temp directory that the next run trips over. The script
+  ends each run's process group. Files outside the worktree are yours to check when a later
+  run fails for no visible reason. One old revision's network tests used up the kernel's
+  socket buffers on macOS within seconds and the machine restarted; a timeout does not help
+  once the kernel is stuck. Run the old revisions of a project you do not know in a
+  container or a virtual machine.
 - **Names must match between the runs.** Parameterized tests whose titles contain the data,
   or a test file that fails to load at the base and reports under the file's name, give
   `inconclusive` with both name lists. Fix the test so it loads at the base.

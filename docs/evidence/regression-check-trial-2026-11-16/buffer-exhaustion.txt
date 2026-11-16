@@ -1,0 +1,56 @@
+Network-buffer exhaustion during the trial, 2026-11-16 (macOS 27.2.1, Mac16,12, Node 26.0.0)
+
+The 250th commit of the trial is undici d0b28993ef ("fix: catch synchronous errors in request
+callbacks"). The script's first step runs the base's own copy of the changed test files, here
+`node --test ... test/client.js` at the parent 9358f06. The trial reached that step three times.
+
+Runs 1 and 2: the machine restarted (09:17 and 13:33 local time). Both panic reports read
+
+  panic: userspace watchdog timeout: no successful checkins from configd in 180 seconds
+
+and in the stackshot taken 60 seconds into each stall the unresponsive configd thread, and the
+thread at the head of the wait queue (51 and 129 threads behind it, in node, git, Docker,
+mDNSResponder and other processes), sleep in the kernel under
+
+  sosend > m_gethdr > (sleep)                     waiting for an mbuf
+  spec_write > mbuf_allocpacket > (sleep)         the configd thread in run 1
+
+(frames matched to the nearest exported symbol of kernel.release.t8132, xnu-13432.41.4~25).
+Thermal pressure was nominal in both. The commit the trial was on is not recorded for these
+two runs, whose output was in a temp directory that the restart cleared. Run 1's driver
+ended about three minutes before the restart. Run 2 was 60 minutes in when the first
+processes froze; run 3 reached commit 249 after 62 minutes.
+
+Run 3: netwatch.sh logged `netstat -m` every 15 seconds. Its limit was 100 MB allocated at the
+time and is 15,000 mbufs in use now. The base run of test/client.js started at 15:40:28.
+
+15:39:33 net_kb=15167 mbufs=196/783 files=6320 load=17.53 trial=241 undici 838053dfb3 2s
+15:39:48 net_kb=15167 mbufs=236/823 files=6026 load=14.93 trial=244 undici d2e8178693 1s
+15:40:03 net_kb=15732 mbufs=284/910 files=5944 load=13.04 trial=245 undici 330f4e47d1 11s
+15:40:18 net_kb=15732 mbufs=292/918 files=6130 load=11.34 trial=248 undici 6fe3602190 5s
+15:40:33 net_kb=43267 mbufs=55510/56183 files=6128 load=10.09 trial=249 undici 992c6d8406 10s
+15:40:48 net_kb=88531 mbufs=27000/27674 files=5992 load=8.97 trial=249 undici 992c6d8406 10s
+15:41:04 net_kb=88503 mbufs=53600/119782 files=6455 load=10.17 trial=249 undici 992c6d8406 10s
+15:41:19 net_kb=127657 mbufs=27782/225021 files=6455 load=8.97 trial=249 undici 992c6d8406 10s
+
+At the limit:
+  27782/225021 mbufs in use:
+      141 mbufs allocated to data
+      27513 mbufs allocated to packet headers
+      128 mbufs allocated to socket names and addresses
+      197239 mbufs allocated to caches
+  1/1840 mbuf 2KB clusters in use
+  0/1160 mbuf 4KB clusters in use
+  0/407 mbuf 16KB clusters in use
+  127657 KB allocated to network (88.1% in use)
+  26 requests for memory denied
+
+The watcher stopped the driver. The test's own process group (the runner and one child) was
+still alive, since the driver starts each run detached, and was killed by hand 70 seconds
+after it started. Ten seconds later, 43,701 mbufs were in use with 168 MB allocated; thirty
+seconds after the kill, 36. From commit 95 on, where the watcher started, no other commit
+took use above 950 mbufs.
+
+Not established: which test in test/client.js does it, and whether it needs Node 26 or macOS.
+The survey ran the fix commit's version of the same file at the same parent the day before
+without a restart. The commit is recorded in trial.jsonl as not run.

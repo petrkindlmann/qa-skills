@@ -17,6 +17,8 @@ const sentinel = 'sentinel-4c1d9a7e-a-only';
 //   missing_guard      /api/export?owner=a answers anyone; the page also prefetches it and
 //                      never reads the reply
 //   clears_on_sign_out sign-out sends Clear-Site-Data (a repair, used with a fault)
+//   holds_stream       the page keeps a request open that the server never answers (not a
+//                      leak; the helper cannot tell by itself when such a page is loaded)
 async function accountApp(t, faults = []) {
   const has = fault => faults.includes(fault);
   const notes = { a: sentinel, b: 'note of account b' };
@@ -30,6 +32,7 @@ async function accountApp(t, faults = []) {
   if (!navigator.serviceWorker.controller) await new Promise(resolve => navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true }));
   const show = text => { document.getElementById('note').textContent = text; };
   if (${has('missing_guard')}) window.prefetched = fetch('/api/export?owner=a');
+  if (${has('holds_stream')}) fetch('/events').catch(() => {});
   try {
     const reply = await fetch('/api/export');
     if (!reply.ok) return show('signed out');
@@ -74,6 +77,7 @@ self.addEventListener('fetch', event => {
         ...(has('clears_on_sign_out') ? { 'clear-site-data': '"cache", "storage"' } : {}),
       });
     }
+    if (url.pathname === '/events') return;      // held open until the server closes
     if (url.pathname === '/account') return send(200, 'text/html', page);
     if (url.pathname === '/sw.js') return send(200, 'text/javascript', worker);
     if (url.pathname === '/api/export') {
@@ -196,4 +200,17 @@ test('the flow leaves the context online and sentinelInBrowser needs an applicat
   }, sentinel);
   assert.deepEqual(await sentinelInBrowser(page, sentinel),
     [`localStorage: seen:${sentinel}`, 'sessionStorage: draft', 'Cache Storage data: /api/export', 'document.cookie']);
+});
+
+test('a page that holds a request open: the error names the request, and settled() gets past it', async t => {
+  const app = await accountApp(t, ['holds_stream']);
+  await assert.rejects(accountSwitchLeaks(await newPage(t), app.flow({ timeoutMs: 2_000 })),
+    /\/account still had 1 unanswered request\(s\) after 2000 ms \(A\): http:\/\/127\.0\.0\.1:\d+\/events; pass settled\(\)/);
+  const settled = page => page.waitForFunction(() => document.getElementById('note')?.textContent !== 'loading');
+  assert.deepEqual(await accountSwitchLeaks(await newPage(t), app.flow({ settled })), []);
+
+  // The positive control still holds with settled(): a leak behind the open stream is found.
+  const leaky = await accountApp(t, ['holds_stream', 'export_cacheable']);
+  const found = places(await accountSwitchLeaks(await newPage(t), leaky.flow({ settled })));
+  assert.ok(found.some(place => /signed out, online \| response \/api\/export/.test(place)), found.join('\n'));
 });

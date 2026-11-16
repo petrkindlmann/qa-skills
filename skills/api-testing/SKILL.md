@@ -11,7 +11,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.2"
+  version: "2.3"
   category: automation
 ---
 
@@ -143,7 +143,8 @@ Choose observations that distinguish the promised effect from a plausible broken
   sends it again. `references/lost-reply-retry.md` has `retryAfterLostReply`, a proxy that
   drops the service's reply after the commit, lets the application's own client retry, and
   counts the effects by an independent read. Run it with a restart where the project can
-  restart the service. Report `one_effect` as one write surviving one lost reply, never as
+  restart the service. The same reference shows it for an MCP `tools/call`, where a
+  retried call runs the tool again unless the server remembers the key. Report `one_effect` as one write surviving one lost reply, never as
   exactly-once delivery; `inconclusive` means nothing was lost and is not a pass.
 
 Keep a healthy control and a deliberately broken control for each critical assertion when

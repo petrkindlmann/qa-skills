@@ -131,6 +131,40 @@ Three things decide whether the result means anything:
   passes without a restart and duplicates after a deploy. Run it with a restart wherever
   the project can restart the service under test.
 
+### An MCP tool call
+
+The caller here is the official TypeScript SDK client. Its first `POST` is `initialize`, so
+the default `drop` would lose the handshake and the verdict would be `inconclusive`. Pick
+the tool call by its body:
+
+```ts
+let lostOnce = false;
+const outcome = await retryAfterLostReply({
+  target: serverUrl,
+  send: async baseUrl => {                          // what an agent host does: connect, call, read
+    const client = new Client({ name: 'agent', version: '1.0.0' });
+    try {
+      await client.connect(new StreamableHTTPClientTransport(new URL(`${baseUrl}/mcp`)));
+      return (await client.callTool({ name: 'create_note', arguments: { text, idempotency_key: key } })).content[0].text;
+    } finally {
+      await client.close().catch(() => {});
+    }
+  },
+  countEffects: async () => (await readNotes()).filter(note => note.text === text).length,
+  drop: exchange => !lostOnce && /"method":"tools\/call"/.test(exchange.requestBody) && (lostOnce = true),
+  restart: () => restartServer(),
+});
+```
+
+Run on 2026-11-16 with `@modelcontextprotocol/sdk` 1.32.2, a stateless
+`StreamableHTTPServerTransport` and a tool that appends a note to a file: the tool as written
+gave `duplicated`, and so did a tool that received `idempotency_key` and ignored it. Keys
+remembered in memory gave `one_effect`, and `duplicated` again once the server was restarted
+between the attempts. Keys on disk gave `one_effect` across the restart. The SDK client did
+not retry by itself (`clientRetried` was `false`); the second call stands for an agent that
+sees the error and calls the tool again. The SDK is not a dependency of this repository, so
+its tests do not repeat this run.
+
 ## Verdicts
 
 | Verdict | Observed |
@@ -168,8 +202,9 @@ The mirror case, an answer sent before the commit, needs a fault inside the serv
   first non-GET request once. Narrow it by `path` when `send` makes other writes first, such
   as a login.
 - **Streaming replies are buffered.** The proxy reads the whole reply before it decides, so
-  it fits request/response calls and an MCP `tools/call` answered as JSON. It was not run
-  against a server that answers with a long-lived event stream.
+  it fits request/response calls and an MCP `tools/call` answered as JSON or as a single
+  server-sent event that then closes, which is what the TypeScript SDK's Streamable HTTP
+  transport sent. It was not run against a server that keeps an event stream open.
 - **TLS and absolute URLs.** The proxy listens on plain HTTP on loopback. It has code for
   an HTTPS `target`, and this repository's tests only run it against HTTP. A client that
   pins the host or builds absolute URLs from a discovery document will bypass it;

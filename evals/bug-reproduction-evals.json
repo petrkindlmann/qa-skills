@@ -287,6 +287,28 @@
         "overclaim",
         "wrong-reason-failure"
       ]
+    },
+    {
+      "id": "rep-013",
+      "prompt": "A pull request from an agent contains a fix and six new tests, all green. Which of those tests actually failed before the fix, and are any of them red only because they call code the fix adds?",
+      "expected_patterns": [
+        "regression-check",
+        "--base OR base revision OR at the base",
+        "shows_the_bug",
+        "missing_at_base",
+        "green_at_base",
+        "symptom"
+      ],
+      "anti_patterns": [
+        "count a test that fails with ImportError before the fix as evidence",
+        "treat every new test in the pull request as a regression test",
+        "run the new tests only at the head of the pull request"
+      ],
+      "tags": [
+        "regression-evidence",
+        "agent-patch",
+        "per-test-report"
+      ]
     }
   ]
 }

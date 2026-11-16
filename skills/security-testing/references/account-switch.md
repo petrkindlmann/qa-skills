@@ -93,7 +93,10 @@ export async function accountSwitchLeaks(page: Page, { sentinel, urls, signInA, 
   const quiet = async (url: string) => {
     const deadline = Date.now() + timeoutMs;
     while (unanswered.size || Date.now() - lastActivity < 500) {
-      if (Date.now() > deadline) throw new Error(`${url} still had ${unanswered.size} unanswered request(s) after ${timeoutMs} ms (${stage}); pass settled() to say when the page is loaded`);
+      if (Date.now() > deadline) {
+        const waiting = [...unanswered].slice(0, 3).map(request => request.url()).join(', ') || 'none, the page kept making requests';
+        throw new Error(`${url} still had ${unanswered.size} unanswered request(s) after ${timeoutMs} ms (${stage}): ${waiting}; pass settled() to say when the page is loaded`);
+      }
       await pause(50);
     }
   };
@@ -233,8 +236,9 @@ two roles; this recipe only shows what reached the browser.
   while the page leaves the body unread, and a signed-out page that only checks for `401`
   does exactly that. `networkidle` and `response.text()` then wait until the timeout. The
   helper waits until every request has an answer and 500 ms pass with no network activity.
-  An app that polls or holds a request open needs `settled`, for example
-  `page => page.getByTestId('account-loaded').waitFor()`.
+  An app that polls or holds a request open (a notification stream, a long poll) needs
+  `settled`, for example `page => page.getByTestId('account-loaded').waitFor()`. Without it
+  the helper stops with an error that names the requests it was still waiting for.
 - **Unread bodies are requested a second time.** A response the page did not read within a
   second is fetched again from the page, with the same cookies, cache and service worker,
   and that copy is searched. Only `GET` is repeated. A `POST` reply the page ignores, or a
@@ -242,5 +246,10 @@ two roles; this recipe only shows what reached the browser.
 - **The first visit must finish caching.** A service worker that precaches in the
   background may not be done when A's page looks loaded. Wait for the app's own "ready for
   offline" signal in `signInA`, or the offline pass has nothing to find.
+- **A finding in one URL out of several is normal.** On a self-hosted application checked
+  with this recipe on 2026-11-16, the pages that render a private file left nothing and the
+  file's direct download did: it was served with `Cache-Control: private` and a `max-age`,
+  and the browser showed it after sign-out without asking the server. List the download,
+  export and raw endpoints in `urls`, not only the pages.
 - **A shared device is the threat here.** Where a product is only ever used on personal
   devices, record that as an accepted risk; do not delete the test to get a green run.

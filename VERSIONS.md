@@ -1,5 +1,69 @@
 # Versions
 
+## v3.6.1 (2026-11-16)
+
+### The regression check becomes a command, after 250 real fix commits
+
+The three v3.6.0 recipes were run on projects outside this repository
+(`docs/REAL-PROJECT-RUNS-2026-11-16.md`). Over 250 merged fix commits in undici, fastify,
+eslint, express, hono, pytest, click, fastapi and llm, the tests of 226 fail at the parent
+and pass at the fix, and none was shown to pass on the buggy code for good. The other 24
+and the friction of getting there are what this release changes.
+
+- `bug-reproduction` 1.2 adds `scripts/regression-check.mjs`, a command with no
+  dependencies beyond Node 20 and git. `regressionEvidence` with its defaults gave a useful
+  verdict for 9 of the 250 commits, because it wants every selected test to fail at the
+  base and stops at a duplicate name or a skipped test. The script reports per test. It
+  finds the changed test files, carries them onto the base in a worktree, runs the base
+  with its own tests to learn which names are new, and gives every new or changed test one
+  status: `shows_the_bug`, `red_then_green` (no symptom given), `red_without_symptom`,
+  `missing_at_base`, `did_not_load`, `green_at_base`, `flaky_at_base`, `fails_at_candidate`
+  or `skipped`. `missing_at_base` is a test that fails at the base only because it uses a
+  name the candidate adds, as five pytest fixes did; the name is taken from the failure
+  and searched in both revisions, so a crash on a name the base already uses stays red.
+  The base is run again, three times by default, while a new test passes there (one undici
+  test fails 18 times in 20 on the buggy commit). Each run gets its own process group,
+  which is removed afterwards. Exit codes: 0 a test fails at the base and passes at the
+  candidate, 1 none does or the candidate fails, 2 inconclusive.
+  Run with its defaults over the same 250 commits, the script ran 249 and gave
+  `red_then_green` for 228, `no_test_shows_the_bug` for 12, `inconclusive` for 8 and
+  `not_fixed` for 1. It agreed with the hand reading on 225 of the 226 red-then-green
+  commits, and the five pytest fixes came out as `missing_at_base` with the helper named.
+  The trial changed the script twice. A file named like a test is run wherever it lives:
+  hono keeps tests in `src/utils/` and `src/helper/`, and 14 commits were refused at
+  first. New tests that were all skipped end `inconclusive`, not `no_test_shows_the_bug`.
+  One undici commit was not run. The base run of its `test/client.js` used up the kernel's
+  network buffers, and macOS restarted twice on a watchdog panic before a watcher caught
+  it. The records are in `docs/evidence/regression-check-trial-2026-11-16/`.
+- `regressionEvidence` now sets `PLAYWRIGHT_JUNIT_OUTPUT_FILE` to the report path. The
+  v3.6.0 reference said a Playwright report is read that way and the helper never set the
+  variable, so a Playwright run ended `inconclusive` with no report. A browser test now
+  runs a Playwright test at two revisions through both the script and the function. The
+  reference gains the cases real projects showed: a one-word symptom that matches an
+  identifier in an unrelated error, a pass at the base that comes from the runtime
+  version, the dependency versions or the missing type checker, a single base run of a
+  test that is flaky on the bug, `select` as a necessity on a real test file, and a
+  `prepare` step that must be safe to run twice. `ai-test-generation` 2.2 points at the
+  script and names `missing_at_base` for a generated test that imports its own new helper.
+- `api-testing` 2.3: `lost-reply-retry.md` shows the helper on an MCP `tools/call` with the
+  official TypeScript SDK 1.32.2 as client and server transport. The first `POST` of a
+  session is `initialize`, so `drop` has to pick the tool call. Observed: the tool as
+  written and a tool that ignores `idempotency_key` are `duplicated`; keys in memory are
+  `one_effect` until the server restarts between the attempts; keys on disk are
+  `one_effect` across the restart. The SDK is not a dependency here and the repository's
+  tests do not repeat that run.
+- `security-testing` 2.3: when `accountSwitchLeaks` gives up waiting for a page, the error
+  names the requests it was still waiting for, and a fixture that holds a request open
+  covers it with and without `settled`. On a self-hosted application the recipe found a
+  private file's direct download readable after sign-out from the browser's HTTP cache,
+  while the pages that render the file left nothing; the reference now says to list
+  download and export URLs. The application is not named until its maintainers have been
+  told.
+- The site gains a blog, `site/blog/`, with two posts on these runs.
+
+`regression-check.mjs` is not wired into `scripts/qa.mjs`: the runner needs the full
+checkout and the script has to work where only the skill is installed.
+
 ## v3.6.0 (2026-11-15)
 
 ### Four executable recipes: regression evidence, lost replies, account switching, email client limits

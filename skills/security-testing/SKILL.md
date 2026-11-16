@@ -14,7 +14,7 @@ description: >-
 license: MIT
 metadata:
   author: kindlmann
-  version: "2.2"
+  version: "2.3"
   category: specialized
 ---
 

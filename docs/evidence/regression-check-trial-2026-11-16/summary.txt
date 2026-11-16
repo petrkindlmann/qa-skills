@@ -1,0 +1,59 @@
+250 commits, 3871 s
+verdicts {
+  red_then_green: 228,
+  inconclusive: 8,
+  no_test_shows_the_bug: 12,
+  not_fixed: 1,
+  not_run: 1
+}
+survey -> trial
+     5  inconclusive -> inconclusive
+     1  inconclusive -> not_fixed
+     2  inconclusive -> red_then_green
+     1  no_behaviour_change -> no_test_shows_the_bug
+     1  not_runnable_here -> inconclusive
+     1  red_at_import -> no_test_shows_the_bug
+     1  red_but_flaky_on_the_bug -> red_then_green
+     5  red_for_another_reason -> no_test_shows_the_bug
+     2  red_in_other_environment -> inconclusive
+     5  red_in_other_environment -> no_test_shows_the_bug
+     1  red_then_green -> not_run
+   225  red_then_green -> red_then_green
+per test (2365) {
+  red_then_green: 1010,
+  green_at_base: 430,
+  did_not_load: 5,
+  missing_at_base: 906,
+  skipped: 13,
+  fails_at_candidate: 1
+}
+commits with at least one {
+  red_then_green: 228,
+  green_at_base: 105,
+  did_not_load: 2,
+  missing_at_base: 8,
+  skipped: 8,
+  fails_at_candidate: 1
+}
+base runs { '1': 144, '3': 105 }
+timed out none
+
+9 to read:
+fastapi 65e42bd5ec [dated] red_at_import -> no_test_shows_the_bug | 4 did_not_load | none of the 4 new or changed test(s) fails at the base on the behaviour
+    did_not_load tests.test_nested_annotated_in_sequence › test_endpoint_none | collection failure | tests/test_nested_annotated_in_sequence.py:14: in <module> | @app.get("/") | ^^^^^^^^^^^^
+    did_not_load tests.test_nested_annotated_in_sequence › test_endpoint_valid | collection failure | tests/test_nested_annotated_in_sequence.py:14: in <module> | @app.get("/") | ^^^^^^^^^^^^
+    did_not_load tests.test_nested_annotated_in_sequence › test_endpoint_too_long | collection failure | tests/test_nested_annotated_in_sequence.py:14: in <module> | @app.get("/") | ^^^^^^^^^^^^
+hono e9c01079a9 red_in_other_environment -> inconclusive |  | no new or changed test was found in src/hono.test.ts
+undici 26c42c2598 inconclusive -> not_fixed | 4 green_at_base, 1 fails_at_candidate | 1 new or changed test(s) fail at the candidate
+    green_at_base test › cache does not store a same-origin redirect for a credential-bearing request under  | 
+    green_at_base test › cache does not store a same-origin redirect for a credential-bearing request under  | 
+    green_at_base test › cache does not store a same-origin redirect for a credential-bearing request under  | 
+    fails_at_candidate test › cache still stores an unauthenticated same-origin redirect under the original key | Expected values to be strictly equal: | 2 !== 1 | [Error [ERR_TEST_FAILURE]: Expected values to be strictly equal: | 2 !== 1
+undici 1b7b18e59f inconclusive -> red_then_green | 3 red_then_green | 3 test(s) fail at the base and pass at the candidate; no symptom was given, so read the base failures below
+undici 0f6739a10f inconclusive -> red_then_green | 2 red_then_green | 2 test(s) fail at the base and pass at the candidate; no symptom was given, so read the base failures below
+undici 2f66db7322 red_but_flaky_on_the_bug -> red_then_green | 1 red_then_green | 1 test(s) fail at the base and pass at the candidate; no symptom was given, so read the base failures below
+undici d0b28993ef red_then_green -> not_run |  | the base run of test/client.js exhausted the kernel network buffers on this machine; stopped by hand
+fastapi 09f5941f0e [dated] red_in_other_environment -> inconclusive | 1 skipped | the 1 new or changed test(s) were skipped, so none ran at both revisions
+    skipped tests.test_stringified_annotation_dependency_py314 › test_stringified_annotation | 
+pytest 7d646b595c not_runnable_here -> inconclusive | 1 skipped | the 1 new or changed test(s) were skipped, so none ran at both revisions
+    skipped testing.io.test_pprint › test_frozendict | 

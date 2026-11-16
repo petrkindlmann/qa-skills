@@ -293,7 +293,10 @@ Four recipes ship as code that `npm test` and `npm run test:browser` load from t
 text and run against healthy and broken fixtures: the email client lint (`email-testing`),
 `regressionEvidence` (`bug-reproduction`), `retryAfterLostReply` (`api-testing`) and
 `accountSwitchLeaks` (`security-testing`). Each reference states what a pass may be
-reported as.
+reported as. `bug-reproduction` also ships `scripts/regression-check.mjs`, a command that
+reports which tests of a change fail on the code that still has the bug. The last three
+were run on open-source projects outside this repository:
+[`docs/REAL-PROJECT-RUNS-2026-11-16.md`](docs/REAL-PROJECT-RUNS-2026-11-16.md).
 
 Run the local gates with Python 3.12+ and Node 24+ (Linux AMD64 or macOS arm64 for the
 application workflows):
