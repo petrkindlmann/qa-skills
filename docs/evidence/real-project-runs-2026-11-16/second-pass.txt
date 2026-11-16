@@ -1,0 +1,4 @@
+undici: second pass 54 commits, same result 52, different 2
+  2f66db7322 never_red_new_tests () -> red_all_added () | fix(mock): do not persist snapshots on close in playback mode (#5359)
+  d0b28993ef red_some_added () -> inconclusive (candidate: 2 test(s) fail on this machine at the fix commit) | fix: catch synchronous errors in request callbacks (#4443)
+fastify: second pass 31 commits, same result 31, different 0

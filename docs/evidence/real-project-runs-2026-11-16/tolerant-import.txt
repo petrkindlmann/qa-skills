@@ -1,0 +1,35 @@
+pytest 35f21fdcfc: fix commit's tests at its first parent, new-helper import made tolerant: 58 tests, 7 failed
+  test_rm_rf_with_no_exec_permission_directories :: AssertionError: assert not True
+  test_on_rm_rf_error_os_open_handles_file :: AssertionError: assert not True
+  test_on_rm_rf_error_os_open_handles_directory :: AssertionError: assert not True
+  test_on_rm_rf_error_os_open_parent_perms :: assert False is True
+  test_chmod_rwx_returns_false_on_nonexistent_path :: TypeError: 'NoneType' object is not callable
+  test_chmod_rwx_returns_false_when_chmod_fails :: TypeError: 'NoneType' object is not callable
+  test_chmod_rwx_returns_false_when_already_sufficient :: TypeError: 'NoneType' object is not callable
+pytest 4fa645fe43: fix commit's tests at its first parent, new-helper import made tolerant: 312 tests, 2 failed
+  test_plugin_rewrite_name_skips_namespace_packages :: TypeError: 'NoneType' object is not callable
+  test_mark_plugins_for_rewrite_editable_install[{"dir_info": {"editable": true},  :: AssertionError: assert [] == ['myplug']
+pytest 59dc7f6fa0: fix commit's tests at its first parent, new-helper import made tolerant: 255 tests, 8 failed
+  test_get_prog_name_direct_pytest :: TypeError: 'NoneType' object is not callable
+  test_get_prog_name_python_m_pytest :: TypeError: 'NoneType' object is not callable
+  test_get_prog_name_empty_argv :: TypeError: 'NoneType' object is not callable
+  test_console_main_deprecated :: AttributeError: 'module' object at _pytest.config has no attribute '_console_main'
+  test_prog_in_error_message_programmatic :: Failed: nomatch: '*pytest.main(): error:*invalid-option-xyz*'
+  test_prog_in_usage_programmatic :: Failed: nomatch: 'usage: pytest.main() *'
+  test_prog_in_error_message_cli :: Failed: nomatch: '*python -m pytest: error:*invalid-option-xyz*'
+  test_prog_in_usage_cli :: Failed: nomatch: 'usage: python -m pytest *'
+pytest 5fd2be03b1: fix commit's tests at its first parent, new-helper import made tolerant: 267 tests, 14 failed
+  test_unknown_marker_with_strict_markers :: TypeError: 'NoneType' object is not callable
+  test_unknown_marker_with_strict :: TypeError: 'NoneType' object is not callable
+  test_registered_marker_passes :: TypeError: 'NoneType' object is not callable
+  test_no_validation_without_strict :: TypeError: 'NoneType' object is not callable
+  test_expression_idents[-expected_idents0] :: AttributeError: 'Expression' object has no attribute 'idents'
+  test_expression_idents[foo-expected_idents1] :: AttributeError: 'Expression' object has no attribute 'idents'
+  test_expression_idents[foo and bar-expected_idents2] :: AttributeError: 'Expression' object has no attribute 'idents'
+  test_expression_idents[foo or bar-expected_idents3] :: AttributeError: 'Expression' object has no attribute 'idents'
+  test_expression_idents[not foo-expected_idents4] :: AttributeError: 'Expression' object has no attribute 'idents'
+  test_expression_idents[(foo and bar) or baz-expected_idents5] :: AttributeError: 'Expression' object has no attribute 'idents'
+  test_expression_idents[foo and foo-expected_idents6] :: AttributeError: 'Expression' object has no attribute 'idents'
+  test_expression_idents[mark(a=1)-expected_idents7] :: AttributeError: 'Expression' object has no attribute 'idents'
+  test_strict_prohibits_unregistered_markers_in_markexpr[--strict-markers] :: assert <ExitCode.OK: 0> == <ExitCode.USAGE_ERROR: 4>
+  test_strict_prohibits_unregistered_markers_in_markexpr[--strict] :: assert <ExitCode.OK: 0> == <ExitCode.USAGE_ERROR: 4>

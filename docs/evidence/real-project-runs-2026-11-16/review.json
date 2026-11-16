@@ -1,0 +1,66 @@
+{
+ "6cd404eb28": [
+  "no_behaviour_change",
+  "express: titled fix, the change is a refactor (apply -> spread); the new test passes before and after"
+ ],
+ "1534ffa3e9": [
+  "red_in_other_environment",
+  "hono: type-level test; 1 type error at the parent under tsc, 0 at the fix"
+ ],
+ "456fe46354": [
+  "red_in_other_environment",
+  "hono: type-level test; 4 type errors at the parent under tsc, 0 at the fix"
+ ],
+ "f23b146afc": [
+  "red_in_other_environment",
+  "hono: type-level test; 1 type error at the parent under tsc, 0 at the fix"
+ ],
+ "5d4e6aa897": [
+  "red_in_other_environment",
+  "hono: type-level test; 8 type errors at the parent under tsc 5.9.2, 0 at the fix"
+ ],
+ "e9c01079a9": [
+  "red_in_other_environment",
+  "hono: type-level test; 1 unused @ts-expect-error at the parent under tsc, 0 at the fix"
+ ],
+ "e7355d7077": [
+  "red_in_other_environment",
+  "pytest: bug exists on Python 3.12 only; on 3.12.13 the test fails at the parent (assert None is not None) and passes at the fix"
+ ],
+ "09f5941f0e": [
+  "red_in_other_environment",
+  "fastapi: bug exists on Python 3.14 only; on 3.14.6 the test fails at the parent (NameError: DummyUser) and passes at the fix"
+ ],
+ "7d646b595c": [
+  "not_runnable_here",
+  "pytest: frozendict needs Python 3.15; the test is skipped on 3.13 and 3.15 was not available"
+ ],
+ "2f66db7322": [
+  "red_but_flaky_on_the_bug",
+  "undici: 20 runs at the parent, the new test failed 18 and passed 2"
+ ],
+ "f8ad1f6f95": [
+  "red_for_another_reason",
+  "pytest: the test imports _imp_fix_co_filename, which the fix adds; at the parent it fails with ImportError. With the import made tolerant both variants fail at the parent with the reported symptom"
+ ],
+ "4fa645fe43": [
+  "red_for_another_reason",
+  "pytest: test module imports _plugin_rewrite_name, which the fix adds; the whole file fails to import at the parent. With the import made tolerant, 1 behaviour test fails at the parent (assert [] == ['myplug']) and 1 fails on the missing helper"
+ ],
+ "5fd2be03b1": [
+  "red_for_another_reason",
+  "pytest: test module imports RegisteredMarker and _validate_marker_names, which the fix adds; the whole file fails to import at the parent. With the imports made tolerant, 2 behaviour tests fail at the parent (exit code OK instead of USAGE_ERROR) and 12 fail on missing helpers"
+ ],
+ "35f21fdcfc": [
+  "red_for_another_reason",
+  "pytest: test module imports _chmod_rwx, which the fix adds; the whole file fails to import at the parent. With the import made tolerant, 4 behaviour tests fail at the parent and 3 fail on the missing helper"
+ ],
+ "59dc7f6fa0": [
+  "red_for_another_reason",
+  "pytest: test module imports _get_prog_name, which the fix adds; the whole file fails to import at the parent. With the import made tolerant, 4 behaviour tests fail at the parent (usage line), 3 fail on the missing helper and 1 on a missing attribute"
+ ],
+ "65e42bd5ec": [
+  "red_at_import",
+  "fastapi: the bug raises while the routes are declared, so the test file fails to collect at the parent with the reported error"
+ ]
+}

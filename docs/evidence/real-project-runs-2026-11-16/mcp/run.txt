@@ -1,0 +1,10 @@
+tool as written, agent calls it again        duplicated   effects=2 clientRetried=false result="note-2" retryError=null
+   lost reply: HTTP 200 event: message data: {"result":{"content":[{"type":"text","text":"note-1"}]},"jsonrpc":"2.0","id":1} 
+agent sends idempotency_key, tool ignores it duplicated   effects=2 clientRetried=false result="note-2" retryError=null
+   lost reply: HTTP 200 event: message data: {"result":{"content":[{"type":"text","text":"note-1"}]},"jsonrpc":"2.0","id":1} 
+key remembered in memory                     one_effect   effects=1 clientRetried=false result="note-1" retryError=null
+   lost reply: HTTP 200 event: message data: {"result":{"content":[{"type":"text","text":"note-1"}]},"jsonrpc":"2.0","id":1} 
+key remembered in memory, server restarted   duplicated   effects=2 clientRetried=false result="note-2" retryError=null
+   lost reply: HTTP 200 event: message data: {"result":{"content":[{"type":"text","text":"note-1"}]},"jsonrpc":"2.0","id":1} 
+key remembered on disk, server restarted     one_effect   effects=1 clientRetried=false result="note-1" retryError=null
+   lost reply: HTTP 200 event: message data: {"result":{"content":[{"type":"text","text":"note-1"}]},"jsonrpc":"2.0","id":1} 

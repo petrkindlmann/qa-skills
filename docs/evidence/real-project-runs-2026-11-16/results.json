@@ -1,0 +1,4543 @@
+[
+ {
+  "repo": "click",
+  "commit": "dd149eb3129d887a22202c3fafa5ceb0e0d7018d",
+  "date": "2026-11-06",
+  "title": "Merge stable into main (#3910)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_abort_interrupt.py",
+   "tests/test_arguments.py",
+   "tests/test_basic.py",
+   "tests/test_commands.py",
+   "tests/test_context.py",
+   "tests/test_defaults.py",
+   "tests/test_formatting.py",
+   "tests/test_options.py",
+   "tests/test_stream_lifecycle.py",
+   "tests/test_termui.py",
+   "tests/test_testing.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "3cbaa76b6014be7427d1ab06b4af40f01e7c278e",
+  "date": "2026-09-21",
+  "title": "Merge stable into main (#3876)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_arguments.py",
+   "tests/test_info_dict.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "6aabf099bfdd4c1e75fe8d0e0d4241372b988ab1",
+  "date": "2026-09-05",
+  "title": "Stable (#3851)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_abort_interrupt.py",
+   "tests/test_basic.py",
+   "tests/test_defaults.py",
+   "tests/test_options.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "2103e157683c5e4cadc8ee1838df526a54bde9a4",
+  "date": "2026-08-19",
+  "title": "Forward all user's parameters set in `PAGER` and improve flag detection (#3777)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_termui.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "fc5c7f45da0a4443f60ba2d322fe4bf829977739",
+  "date": "2026-08-16",
+  "title": "Fix error reporting on Windows when an error is raised in the pager  (#3764)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_termui.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "click",
+  "commit": "cfa01eeb7894a408af70b29d28c0b24f8680f9fb",
+  "date": "2026-07-20",
+  "title": "Deprecate `isolated_filesystem` and document its limits (#3704)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_arguments.py",
+   "tests/test_basic.py",
+   "tests/test_deprecations.py",
+   "tests/test_shell_completion.py",
+   "tests/test_testing.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "7df2f82305f20f1611a9668b38d26933b648d807",
+  "date": "2026-07-16",
+  "title": "Add built-in PowerShell shell completion support (#3637)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_shell_completion.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "b67832c2167e5b0ff6764a8c04a0a9087e697b5a",
+  "date": "2026-07-09",
+  "title": "Fix parsing when a parameter is named `help` (#3678)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_basic.py",
+   "tests/test_info_dict.py",
+   "tests/test_options.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 8,
+  "newTestsRedAtParent": 6,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "click",
+  "commit": "16fc00e2f4a2717a521084f193709a6058afc693",
+  "date": "2026-07-02",
+  "title": "Do not trigger a `BytesWarning` under `python -bb` (#3642)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_types.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "fe3ad76e5807e7a401ed7520f051071c6ae1fa6e",
+  "date": "2026-07-02",
+  "title": "Strip ANSI from `confirm()` and `prompt()` (#3653)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_termui.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "240603f240a9ff179d834fede836060d897c6980",
+  "date": "2026-07-01",
+  "title": "Merge remote-tracking branch 'upstream/stable' into merge-stable-into-main",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_basic.py",
+   "tests/test_options.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "8a1b1a33d739be05b7e91251e3c0dde77c5e152f",
+  "date": "2026-06-07",
+  "title": "Merge `stable` into `main` after `CHANGES` rST to Markdown conversion (#3563)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_stream_lifecycle.py",
+   "tests/test_termui.py",
+   "tests/test_types.py",
+   "tests/test_utils.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "1a994adbb114d402275a614942e2f838a654e648",
+  "date": "2026-05-27",
+  "title": "Merge stable into main (#3521)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_arguments.py",
+   "tests/test_commands.py",
+   "tests/test_options.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "3a40e43e8f61761cb7bd4f3e27ae3060690a84eb",
+  "date": "2026-05-23",
+  "title": "Merge branch 'stable'",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_shell_completion.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "c3535905c77a29afc84861b29d3ad366ce5451bd",
+  "date": "2026-05-23",
+  "title": "Fix broken fish completion and multiline help string",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_shell_completion.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "click",
+  "commit": "bc36cd1a2b3bc18f401a98476154dbc5a2d212c9",
+  "date": "2026-05-21",
+  "title": "Merge branch 'stable'",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_defaults.py",
+   "tests/test_options.py",
+   "tests/test_termui.py",
+   "tests/test_testing.py",
+   "tests/test_utils.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "dbf4d14c712750c31e15916b659925683150533b",
+  "date": "2026-05-19",
+  "title": "Merge stable into main (#3479)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_shell_completion.py",
+   "tests/test_utils.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "3bb230dcd5d751f8605b46e9df5a541639d5fd4e",
+  "date": "2026-05-16",
+  "title": "WIP: Fix `HelpFormatter.write_usage` producing spurious characters (#3434)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_formatting.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 8,
+  "newTestsRedAtParent": 7,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "click",
+  "commit": "63274a79d08fdc5c19220696144489f7144a8547",
+  "date": "2026-05-16",
+  "title": "`click.get_pager_file`: add tests (#1572 followup) (#3405)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_termui.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "7c99ebe23b931f27562d926814423cce85fd9766",
+  "date": "2026-05-15",
+  "title": "Make `TextWrapper` ANSI-aware (#3420)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_formatting.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "d959898db264aaf07e70ad4eafa254286f9a5185",
+  "date": "2026-05-15",
+  "title": "Add capture mode to `CliRunner` and revert default `fileno` exposure (#3391)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_testing.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "ec8226954e2657324e7a25fec6657e4fbde33bcb",
+  "date": "2026-05-15",
+  "title": "Dual-option value arbitration: `first` vs. `last` vs. `most explicit` policy (#3404)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_options.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "c943271a269e6941fcc51e3506ead074b9dda6be",
+  "date": "2026-05-13",
+  "title": "Show custom error message in prompt with `hide_input=True` (#3256)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_termui.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "19fd4d6e18bc9fce451f92f422696b11169faa57",
+  "date": "2026-04-30",
+  "title": "Fix: Ensure fish completion handles multiline help strings correctly (#3126)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_shell_completion.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "click",
+  "commit": "2468b70997a6ec27ced4b4867954c90da3f92075",
+  "date": "2026-04-30",
+  "title": "Fix readline backspace/line-wrapping on linux (#2969)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_utils.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "click",
+  "commit": "0cd28d6548f92e46396e0ffdd19ec5ea75b4b5e4",
+  "date": "2026-04-29",
+  "title": "fix help hint showing shadowed option name (#3208)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_formatting.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 6,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "click",
+  "commit": "c8da1fcc2cb4523c1fb5bef7f0ca82394dde1efd",
+  "date": "2026-04-28",
+  "title": "Split string values from `default_map` for multi-value parameters (#3364)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_defaults.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "8c95c73bd5ef89eac638f85f1904a104ba4b1a32",
+  "date": "2026-04-16",
+  "title": "Reconcile default value passing and default activation (#3239)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_options.py",
+   "tests/test_termui.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "89af4ae2d682e8ab9f14a036bad19e8990d828d4",
+  "date": "2026-04-16",
+  "title": "Expose original file descriptor in `CliRunner` (#3244)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_testing.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "click",
+  "commit": "ac2dd7aadf08aa0ce7f75bf0e96b95ad5e62d1b9",
+  "date": "2026-04-11",
+  "title": "Allow debugger interactions in tests (#3235)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_testing.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "eslint",
+  "commit": "df71e34a8bfa084feb5c6423fbdd5ad807ea13b3",
+  "date": "2026-11-13",
+  "title": "fix: skip `no-prototype-builtins` suggestion when object is `super` (#21535)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/no-prototype-builtins.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 8,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "eslint",
+  "commit": "899065e556c90ef72d96b2228182d93aa5e9570d",
+  "date": "2026-11-13",
+  "title": "fix: preserve inline `type` modifier in `no-useless-rename` autofix (#21527)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/no-useless-rename.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 11,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 9
+ },
+ {
+  "repo": "eslint",
+  "commit": "af4c3a9cc7c770419532b191ac465d4a1566eb0c",
+  "date": "2026-11-10",
+  "title": "fix: preserve TypeScript type parameters in `prefer-arrow-callback` (#21507)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/prefer-arrow-callback.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 12,
+  "newTestsRedAtParent": 9,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "eslint",
+  "commit": "b11bcb3675871ebffbac2088f85650718f4cf481",
+  "date": "2026-11-08",
+  "title": "fix: preserve necessary parens in `no-unneeded-ternary` autofix (#21495)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/no-unneeded-ternary.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 9,
+  "newTestsRedAtParent": 9,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "eslint",
+  "commit": "827a8f3cca710d3efd76c1d7088d894deff08434",
+  "date": "2026-10-30",
+  "title": "fix: `no-restricted-globals` crash on global objects as property values (#21449)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/no-restricted-globals.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "eslint",
+  "commit": "161558ae1391a8649a8d69a8b2c2e555b40121b9",
+  "date": "2026-10-26",
+  "title": "fix: handle LS, PS and empty hashbang comments (#21419)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/languages/js/source-code/source-code.js",
+   "tests/lib/rules/capitalized-comments.js",
+   "tests/lib/rules/no-inline-comments.js",
+   "tests/lib/rules/no-warning-comments.js",
+   "tests/lib/shared/ast-utils.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 47,
+  "newTestsRedAtParent": 27,
+  "newTestsGreenAtParent": 20
+ },
+ {
+  "repo": "eslint",
+  "commit": "6194939873960e605b9df3892aa1f5acd648df34",
+  "date": "2026-10-26",
+  "title": "fix: `no-invalid-this` crash on `accessor` fields without initializer (#21442)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/no-invalid-this.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "eslint",
+  "commit": "cb2b9d47a1a14e287ffd473083e97370801ea21e",
+  "date": "2026-10-23",
+  "title": "fix: avoid invalid object-shorthand fixes for super methods (#21323)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/object-shorthand.js"
+  ],
+  "result": "inconclusive",
+  "automatic": "inconclusive",
+  "why": "candidate: no report"
+ },
+ {
+  "repo": "eslint",
+  "commit": "d23a7f9eed78e2733fa2d17d7d7dbb9891bbb692",
+  "date": "2026-10-23",
+  "title": "feat: fix property descriptor handling in `func-name-matching` (#21400)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/func-name-matching.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 26,
+  "newTestsRedAtParent": 24,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "eslint",
+  "commit": "5ee39156b5abb606170a289844cd25aebda6d302",
+  "date": "2026-10-21",
+  "title": "fix: yoda invalid autofix at statement start (#21424)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/yoda.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 33,
+  "newTestsRedAtParent": 18,
+  "newTestsGreenAtParent": 15
+ },
+ {
+  "repo": "eslint",
+  "commit": "87bd2cef7b2309739c29598fb2be335f4bed71a3",
+  "date": "2026-10-07",
+  "title": "fix: avoid redeclared `let` when `no-var` and `one-var` fix together (#21389)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/no-var.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "eslint",
+  "commit": "bc51eee6e3e816622b2dd1bc08acb9cfb2d3a6a7",
+  "date": "2026-10-02",
+  "title": "fix: `prefer-arrow-callback` false positive in conditional test (#21373)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/prefer-arrow-callback.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 9,
+  "newTestsRedAtParent": 9,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "eslint",
+  "commit": "bbff86c41521cc435e20754e26007f657a843038",
+  "date": "2026-10-02",
+  "title": "fix: skip lines with multiple comments in `max-lines-per-function` (#21332)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/max-lines-per-function.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 7,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "eslint",
+  "commit": "efc4d6bdc4c4d1dfba8bdab6a8f44f27a1b1d00a",
+  "date": "2026-09-29",
+  "title": "fix: astral letters in `consistent-return`, `no-eval`, `no-invalid-this` (#21360)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/consistent-return.js",
+   "tests/lib/rules/no-eval.js",
+   "tests/lib/rules/no-invalid-this.js",
+   "tests/lib/rules/utils/ast-utils.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 51,
+  "newTestsRedAtParent": 18,
+  "newTestsGreenAtParent": 33
+ },
+ {
+  "repo": "eslint",
+  "commit": "93de066d4125f8df013d40305e8009f4634a5cba",
+  "date": "2026-09-27",
+  "title": "fix: prefer-exponentiation-operator autofix for async function base (#21322)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/prefer-exponentiation-operator.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 8,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 4
+ },
+ {
+  "repo": "eslint",
+  "commit": "02e34ffba6adbed72365177c7caee71d950834e5",
+  "date": "2026-09-27",
+  "title": "fix: add missing space after `else` in `curly` autofix (#21355)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/curly.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "eslint",
+  "commit": "69aac01d898837a934c9e735e0b7881cc1df09e8",
+  "date": "2026-09-22",
+  "title": "fix: support `TSFunctionType` in `getFunctionHeadLoc` (#21335)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/max-params.js",
+   "tests/lib/rules/utils/ast-utils.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 7,
+  "newTestsRedAtParent": 7,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "eslint",
+  "commit": "686630eb34ec1cddf399a4e6eaeebb080116a532",
+  "date": "2026-09-21",
+  "title": "fix: `no-loss-of-precision` false positive with `0.e5` (#21337)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/no-loss-of-precision.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 10,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 5
+ },
+ {
+  "repo": "eslint",
+  "commit": "22b09f54f67a9512d4cea39ddbab9b6973d5c476",
+  "date": "2026-09-16",
+  "title": "fix: ignore `__proto__` properties in `prefer-object-spread` (#21311)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/prefer-object-spread.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 14,
+  "newTestsRedAtParent": 7,
+  "newTestsGreenAtParent": 7
+ },
+ {
+  "repo": "eslint",
+  "commit": "b684bb1cd7e6be03ad1b7a951baead936d9c2166",
+  "date": "2026-09-10",
+  "title": "fix: make TimePass.parse optional in types and docs (#21313)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/eslint/eslint.js"
+  ],
+  "result": "inconclusive",
+  "automatic": "inconclusive",
+  "why": "candidate: no report"
+ },
+ {
+  "repo": "eslint",
+  "commit": "26d11bce3e0e21f223613d4bb4be3423839b229e",
+  "date": "2026-09-09",
+  "title": "fix: don't report `__proto__` properties in `object-shorthand` (#21310)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/object-shorthand.js"
+  ],
+  "result": "inconclusive",
+  "automatic": "inconclusive",
+  "why": "candidate: no report"
+ },
+ {
+  "repo": "eslint",
+  "commit": "bb47dc6da2399a8f76c0c0c3273e6bc314c480e5",
+  "date": "2026-09-04",
+  "title": "fix: update dependency file-entry-cache to v11 (#20801)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/cli-engine/lint-result-cache.js",
+   "tests/lib/eslint/eslint.js"
+  ],
+  "result": "inconclusive",
+  "automatic": "inconclusive",
+  "why": "candidate: no report"
+ },
+ {
+  "repo": "eslint",
+  "commit": "9d8153223dbf47b9aecdc1474202aaee4845f146",
+  "date": "2026-09-04",
+  "title": "fix: support `__proto__` in `/* exported */` comments (#21261)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/languages/js/source-code/source-code.js",
+   "tests/lib/linter/linter.js",
+   "tests/lib/rules/no-implicit-globals.js",
+   "tests/lib/rules/no-unused-vars.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 6,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "eslint",
+  "commit": "87e0a082438264ad90b87fd74165ab4fd90f63ef",
+  "date": "2026-09-01",
+  "title": "fix: prefer-object-has-own autofix breaks when Object is shadowed (#21282)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/prefer-object-has-own.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "eslint",
+  "commit": "8e2cb142217f2efee1d10dcc02bfb75145ae775d",
+  "date": "2026-09-01",
+  "title": "fix: `new-cap` false positive for `UTC` calls with `properties: false` (#21275)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/new-cap.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "eslint",
+  "commit": "9f4a364ab0ade048dfce1f37792b1d461d866e55",
+  "date": "2026-09-01",
+  "title": "fix: Ignore static imports in no-unreachable (#21276)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/no-unreachable.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "eslint",
+  "commit": "1e641c919fc1421493bf913feb607896982451a3",
+  "date": "2026-08-24",
+  "title": "fix: no-loss-of-precision false positive with trailing decimal point (#21251)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/no-loss-of-precision.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "eslint",
+  "commit": "2ba302554e7a24e9909bbdd026fd0c2d1d0d8638",
+  "date": "2026-08-16",
+  "title": "fix: prevent unsafe `no-var` autofix with hoisted functions (#21213)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/no-var.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 6,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "eslint",
+  "commit": "8e6962219a605c5f5add10953aa31027da839194",
+  "date": "2026-08-11",
+  "title": "fix: Prevent no-var autofix when var is shadowed by catch parameter (#21204)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/no-var.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 9,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 4
+ },
+ {
+  "repo": "eslint",
+  "commit": "684b57972e1ddf25e076fb36189c60bbcacee635",
+  "date": "2026-08-11",
+  "title": "fix: prefer-template invalid autofix creates a tagged template call (#21207)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/lib/rules/prefer-template.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 9,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 4
+ },
+ {
+  "repo": "express",
+  "commit": "9a34acf03cb818ff3f8bc40e44176e277a25cbb9",
+  "date": "2026-09-15",
+  "title": "fix(res.send): preserve ETag generation with Transfer-Encoding (#7459)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/res.send.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "express",
+  "commit": "18e5985b8a9d5e8423db0a9121f22bdaecd5b120",
+  "date": "2026-06-15",
+  "title": "fix(res.send): add Content-Length header only if Transfer-Encoding is not present (#4893)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/res.send.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "express",
+  "commit": "6cd404eb28ff861180f435b3015f8d0c8c0b44d4",
+  "date": "2026-01-07",
+  "title": "fix: enhance req.acceptsCharsets method (#6088)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/req.acceptsCharsets.js"
+  ],
+  "result": "no_behaviour_change",
+  "automatic": "never_red_new_tests",
+  "note": "express: titled fix, the change is a refactor (apply -> spread); the new test passes before and after",
+  "newTests": 1,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "express",
+  "commit": "41113599afb01040436dba993f06cacbdb8f8e13",
+  "date": "2025-01-10",
+  "title": "fix(refactor): prefix built-in node module imports",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/Route.js",
+   "test/Router.js",
+   "test/app.engine.js",
+   "test/app.head.js",
+   "test/app.js",
+   "test/app.listen.js",
+   "test/app.locals.js",
+   "test/app.render.js",
+   "test/app.request.js",
+   "test/app.router.js",
+   "test/app.routes.error.js",
+   "test/app.use.js",
+   "test/config.js",
+   "test/exports.js",
+   "test/express.json.js",
+   "test/express.raw.js",
+   "test/express.static.js",
+   "test/express.text.js",
+   "test/express.urlencoded.js",
+   "test/middleware.basic.js",
+   "test/req.get.js",
+   "test/req.query.js",
+   "test/res.append.js",
+   "test/res.download.js",
+   "test/res.format.js",
+   "test/res.json.js",
+   "test/res.jsonp.js",
+   "test/res.location.js",
+   "test/res.render.js",
+   "test/res.send.js",
+   "test/res.sendFile.js",
+   "test/utils.js"
+  ],
+  "result": "skipped_wide",
+  "automatic": "skipped_wide"
+ },
+ {
+  "repo": "express",
+  "commit": "246f6f5aeebad1b9d6a0ea08cd96d3fe19f8f23c",
+  "date": "2025-01-08",
+  "title": "fix: Remove `utils-merge` dependency - use spread syntax instead (#6091)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/res.cookie.js"
+  ],
+  "result": "inconclusive",
+  "automatic": "inconclusive",
+  "why": "base: no report"
+ },
+ {
+  "repo": "fastapi",
+  "commit": "a1a05b75d3e60f6ced5f3bb067232ebc6b47e201",
+  "date": "2026-11-15",
+  "title": "🐛 Fix OpenAPI for response model with nested computed field (#14490)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_computed_fields.py",
+   "tests/test_openapi_separate_input_output_schemas.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 6,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "fastapi",
+  "commit": "5f4f9c197654e22c39456bd9c3928069d54c0c41",
+  "date": "2026-11-13",
+  "title": "🐛 Fix async yield dependency cleanup on cancellation (#16739)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_async_dependency_cleanup.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 104,
+  "newTestsRedAtParent": 58,
+  "newTestsGreenAtParent": 46
+ },
+ {
+  "repo": "fastapi",
+  "commit": "eb2f4926de7c9f79f5d2f8a7823742737ca2a978",
+  "date": "2026-11-11",
+  "title": "🐛 Fix synchronous dependency cleanup on cancellation (#16734)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_concurrency.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 39,
+  "newTestsRedAtParent": 21,
+  "newTestsGreenAtParent": 18
+ },
+ {
+  "repo": "fastapi",
+  "commit": "f90d0369380a539c673b1bbbbd86535b8cdee746",
+  "date": "2026-10-22",
+  "title": "🐛 Fix OpenAPI schemas for standalone nullable form unions (#16598)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_forms_optional_unions.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_modified_test",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-10-23",
+  "newTests": 0,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastapi",
+  "commit": "1282e9a9f1ac0647cb2031c6dd9c1d5631ade4d4",
+  "date": "2026-10-21",
+  "title": "🐛 Fix validation error locations for form and file `AliasChoices` (#16564)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_request_params/test_file/test_nullable_and_defaults.py",
+   "tests/test_request_params/test_form/test_nullable_and_defaults.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-10-22",
+  "newTests": 9,
+  "newTestsRedAtParent": 6,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "fastapi",
+  "commit": "89317c7003d0cca25e56b5acbfc11aa2c1810e08",
+  "date": "2026-10-21",
+  "title": "🐛 Fix `AliasChoices` for path parameters (#16560)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_header_cookie_alias_choices.py",
+   "tests/test_path_alias_choices.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 14,
+  "newTestsRedAtParent": 10,
+  "newTestsGreenAtParent": 4
+ },
+ {
+  "repo": "fastapi",
+  "commit": "2d1851f35da7025273b51fc3aa3deb88839a6a33",
+  "date": "2026-10-21",
+  "title": "🐛 Fix `AliasChoices` for named JSON body parameters (#16559)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_body_alias_choices.py",
+   "tests/test_request_params/test_file/test_nullable_and_defaults.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-10-22",
+  "newTests": 34,
+  "newTestsRedAtParent": 26,
+  "newTestsGreenAtParent": 8
+ },
+ {
+  "repo": "fastapi",
+  "commit": "75f3a149359bfd39665aaf81dc223fb6fc28da23",
+  "date": "2026-10-20",
+  "title": "🐛 Fix `AliasChoices` extraction for form models (#16557)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_request_params/test_file/test_nullable_and_defaults.py",
+   "tests/test_request_params/test_form/test_nullable_and_defaults.py",
+   "tests/test_union_form_normalization.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-10-21",
+  "newTests": 9,
+  "newTestsRedAtParent": 8,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "fastapi",
+  "commit": "dfb3b91b7c6102cddde6e2cb1422d0faaa273be5",
+  "date": "2026-10-20",
+  "title": "🐛 Fix `AliasChoices` for query parameters, headers, and cookies (#16555)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_header_cookie_alias_choices.py",
+   "tests/test_query_alias_choices.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 103,
+  "newTestsRedAtParent": 69,
+  "newTestsGreenAtParent": 34
+ },
+ {
+  "repo": "fastapi",
+  "commit": "5ef18bfe8e9d098866ccb232f4290e42b9440ae7",
+  "date": "2026-10-20",
+  "title": "🐛 Fix header model validation errors to report HTTP header names (#16538)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_query_cookie_header_model_extra_params.py",
+   "tests/test_request_params/test_header/test_nullable_and_defaults.py",
+   "tests/test_tutorial/test_header_param_models/test_tutorial001.py",
+   "tests/test_tutorial/test_header_param_models/test_tutorial002.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 11,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 7
+ },
+ {
+  "repo": "fastapi",
+  "commit": "32240026ad8bdea0b78fd06ac607bba7e4d9da8a",
+  "date": "2026-10-19",
+  "title": "🐛 Fix default handling for request parameters and models (#16527)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_forms_single_model.py",
+   "tests/test_request_params/test_default_validation.py",
+   "tests/test_request_params/test_nullable_and_defaults.py",
+   "tests/test_tutorial/test_header_param_models/test_tutorial001.py",
+   "tests/test_tutorial/test_header_param_models/test_tutorial002.py",
+   "tests/test_tutorial/test_header_param_models/test_tutorial003.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-10-20",
+  "newTests": 46,
+  "newTestsRedAtParent": 30,
+  "newTestsGreenAtParent": 16
+ },
+ {
+  "repo": "fastapi",
+  "commit": "fab6eeacae4a37d983f545f4cb3479f101942d58",
+  "date": "2026-10-18",
+  "title": "🐛 Fix handling of empty value for `byte` file list parameter (#9383)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_optional_file_list.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_missing_api",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-10-19",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastapi",
+  "commit": "d1fd422fd9c3b24b0e2bcf1cc89f1e7249b5fcd6",
+  "date": "2026-10-16",
+  "title": "🐛 Fix non-finite float serialization in JSONL and SSE streams (#16509)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_stream_non_finite_floats.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "fastapi",
+  "commit": "d0282a388b3875dfdfd69813693608676006254f",
+  "date": "2026-10-15",
+  "title": "🐛 Fix blocking frontend fallback file checks (#16503)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_frontend.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_modified_test",
+  "newTests": 0,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastapi",
+  "commit": "5e6a1eec1fbc0acbe0a813e981cfd69539051b52",
+  "date": "2026-10-14",
+  "title": "🐛 Fix included route metadata in `iter_route_contexts()` (#16484)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_router_include_context.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastapi",
+  "commit": "ac88f563db5f4d3300d43355eca728c93ed9ffe2",
+  "date": "2026-09-29",
+  "title": "🐛 Fix repeated endpoint wrapping in included routers (#16414)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_route_handler_wrapping.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 5,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "fastapi",
+  "commit": "d62354434b2e508fe89024213b220ca8e67dea5e",
+  "date": "2026-07-29",
+  "title": "🐛 Fix support for background tasks and headers from dependencies in `app.frontend()` (#16105)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_frontend.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-07-30",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastapi",
+  "commit": "e92a0dc3ce5ecbebb8655dbe5465cb61d48f9fc0",
+  "date": "2026-07-28",
+  "title": "🐛 Fix `status_code` being ignored for SSE and JSONL streaming endpoints (#15937)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_stream_status_code.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 10,
+  "newTestsRedAtParent": 6,
+  "newTestsGreenAtParent": 4
+ },
+ {
+  "repo": "fastapi",
+  "commit": "0f3e7bd682a81488919227f2b5f1f7de1718ecdd",
+  "date": "2026-07-28",
+  "title": "🐛 Fix line splitting in `format_sse_event` to comply with SSE spec (#15515)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_sse.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 9,
+  "newTestsRedAtParent": 7,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "fastapi",
+  "commit": "d6537f774b0e80e376e2cf4e0fa998a38c6d0c09",
+  "date": "2026-07-28",
+  "title": "🐛 Fix `response_model_*` params ignored for non-generator endpoints with `Iterable[..]` return type (#15093)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_skip_defaults.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastapi",
+  "commit": "65e42bd5eca657daf97c6762b9632e7c2cb3317a",
+  "date": "2026-07-28",
+  "title": "🐛 Fix handling sequences with nested Annotated types (#14874)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_nested_annotated_in_sequence.py"
+  ],
+  "result": "red_at_import",
+  "automatic": "base_did_not_load",
+  "why": "collection failure",
+  "note": "fastapi: the bug raises while the routes are declared, so the test file fails to collect at the parent with the reported error",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-07-29",
+  "newTests": 4,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastapi",
+  "commit": "aadfcce76380ab169fe172d5cda21722e53c4924",
+  "date": "2026-07-28",
+  "title": "🐛 Fix `exclude_defaults` not propagated to dict keys and values in `jsonable_encoder` (#16043)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_jsonable_encoder.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastapi",
+  "commit": "ad03e117c0010a563067740c97cb7ab011cb5174",
+  "date": "2026-07-28",
+  "title": "🐛 Fix stream item type lost when using `include_router()` (#15077)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_sse.py",
+   "tests/test_stream_bare_type.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 8,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "fastapi",
+  "commit": "eb75fd078e83aed935016bcdf0705cd58bbf0d0e",
+  "date": "2026-07-16",
+  "title": "🐛 Fix frontend fallback support for doted paths like `/users/john.doe` (#16011)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_frontend.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-07-17",
+  "newTests": 8,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 6
+ },
+ {
+  "repo": "fastapi",
+  "commit": "d8aad201eba558b20419a832e51a026b0e6ede0e",
+  "date": "2026-06-15",
+  "title": "🐛 Fix bug, allow empty path in path operation in prefixless router (#15763)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_router_include_context.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "fastapi",
+  "commit": "e8b98d21871f64234520c1e770f39e6bfea3b0d5",
+  "date": "2026-02-21",
+  "title": "🐛 Fix JSON Schema for files, use `contentMediaType` instead of `format: binary` (#14953)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_request_params/test_file/test_list.py",
+   "tests/test_request_params/test_file/test_optional.py",
+   "tests/test_request_params/test_file/test_optional_list.py",
+   "tests/test_request_params/test_file/test_required.py",
+   "tests/test_tutorial/test_json_base64_bytes/test_tutorial001.py",
+   "tests/test_tutorial/test_request_files/test_tutorial001.py",
+   "tests/test_tutorial/test_request_files/test_tutorial001_02.py",
+   "tests/test_tutorial/test_request_files/test_tutorial001_03.py",
+   "tests/test_tutorial/test_request_files/test_tutorial002.py",
+   "tests/test_tutorial/test_request_files/test_tutorial003.py",
+   "tests/test_tutorial/test_request_forms_and_files/test_tutorial001.py"
+  ],
+  "result": "skipped_wide",
+  "automatic": "skipped_wide"
+ },
+ {
+  "repo": "fastapi",
+  "commit": "ed2512a5ec33d9d70f7a9ef2e5f9fe52d3b77ab2",
+  "date": "2026-02-09",
+  "title": "🐛 Fix `on_startup` and `on_shutdown` parameters of `APIRouter` (#14873)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_router_events.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-02-10",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastapi",
+  "commit": "c5fd75a321496b1f8212744bde217ec8ea956154",
+  "date": "2026-02-05",
+  "title": "🐛 Fix using `Json[list[str]]` type (issue #10997) (#14616)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_json_type.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-02-06",
+  "newTests": 4,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "fastapi",
+  "commit": "09f5941f0e18db2b28b40d35a5da7a94c23eb9ed",
+  "date": "2026-02-04",
+  "title": "🐛 Fix TYPE_CHECKING annotations for Python 3.14 (PEP 649) (#14789)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_stringified_annotation_dependency_py314.py",
+   "tests/test_tutorial/test_dependencies/test_tutorial008.py"
+  ],
+  "result": "red_in_other_environment",
+  "automatic": "never_red_no_new_names",
+  "note": "fastapi: bug exists on Python 3.14 only; on 3.14.6 the test fails at the parent (NameError: DummyUser) and passes at the fix",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-02-05",
+  "newTests": 0,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastapi",
+  "commit": "08dad5c69fbeac83616226b4d56b6c79b8683767",
+  "date": "2026-02-04",
+  "title": "🐛 Fix OpenAPI duplication of `anyOf` refs for app-level responses with specified `content` and `model` as `Union` (#14463)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_additional_responses_union_duplicate_anyof.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "environment": ".[all] --group pyproject.toml:tests as of 2026-02-05",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "7e0c8febb2a1ba4d55309cdc2ccd51694eca46d3",
+  "date": "2026-11-13",
+  "title": "fix(route): apply prefixTrailingSlash to HEAD routes declared explicitly",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/route.7.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "fastify",
+  "commit": "728056175a3ad99e563aac002af30c9f213fd2e2",
+  "date": "2026-11-06",
+  "title": "fix(validation): case-normalize header schemas with a registered $id (#7183)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/schema-validation.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "fastify",
+  "commit": "2a64ae1627d78fe1f22fb021a7e5763581384473",
+  "date": "2026-10-24",
+  "title": "fix(decorators): evaluate instance getters once in getDecorator (#7124)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/decorator.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "37df44a421817e7bb048fce834bf691abb0999d6",
+  "date": "2026-10-15",
+  "title": "fix: contain synchronous throws from custom content type parsers (#7118)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/content-parser.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "9e9f61a6bf092bbd3cf8d10b792432aa8be085af",
+  "date": "2026-10-15",
+  "title": "fix: clamp error statusCode between 400 and 599 with 500 fallback (#7089)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/diagnostics-channel/error-status.test.js",
+   "test/reply-error.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "a479a7ce59f99b6f5a0d20f0745dbd16a3906c09",
+  "date": "2026-10-14",
+  "title": "fix(reply): send stream trailers after the stream actually finishes (#6953)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/reply-trailers.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 5,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "fastify",
+  "commit": "5c081d4b7237f0eb2db9f1204dc6400e3aa1325e",
+  "date": "2026-10-08",
+  "title": "fix: copy a set-cookie array passed to reply.header instead of storing it (#7068)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/internals/reply.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "19d5be0daf1c0daace758efe3ea788f924ca1224",
+  "date": "2026-09-29",
+  "title": "fix: resolve reply.mediaType from raw response headers (#7054)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/internals/reply.test.js",
+   "test/reply-media-type.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "fastify",
+  "commit": "bc25b7499acedb803ef3cef644d0d56cf4e7c725",
+  "date": "2026-09-27",
+  "title": "fix: remove error when HTTP QUERY request has empty body (#6929)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/internals/errors.test.js",
+   "test/rfc-10008.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "c3051e5b60c0e0e95ac0638fae342e82099fe534",
+  "date": "2026-09-26",
+  "title": "fix: omit absent compileSerializationSchema metadata instead of passing null (#7001)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/internals/reply-serialize.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "a34c3e530ffcbe3740b044a1599bea77ccc71d67",
+  "date": "2026-09-03",
+  "title": "fix(validation): do not unwrap async validator results",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/schema-special-usage.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "d66ebd121c5a621ab0b03569fc75bd1cf829e52a",
+  "date": "2026-09-03",
+  "title": "fix: reject malformed URLs before custom 404 handlers",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/404s.test.js",
+   "test/router-options.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "0c170ca13f70aafa8ade685406c913591900e1f4",
+  "date": "2026-09-03",
+  "title": "fix(validation): compile boolean false request schemas",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/schema-feature.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 7,
+  "newTestsRedAtParent": 7,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "3aa8dfd7298c6e02399a7b3c29c637eb092dc9ef",
+  "date": "2026-09-03",
+  "title": "fix(validation): normalize header names in every schema subschema",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/schema-validation.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 8,
+  "newTestsRedAtParent": 6,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "fastify",
+  "commit": "4176096a31f5b4c31512c36f578b08a596a72435",
+  "date": "2026-08-23",
+  "title": "fix: callNotFound should run not-found preHandler regardless of registration order (#6965)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/404s.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "9493c0fb716cb7eb7c3568702912e3abb92f3193",
+  "date": "2026-08-18",
+  "title": "fix(validation): preserve coerced root values",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/fix-root-primitive-coercion.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "af079bd4c60c3cbebedc7640517d7288468fb5eb",
+  "date": "2026-08-18",
+  "title": "fix: disable numeric trustProxy hop-count trust",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/trust-proxy.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "6e95cb9f6de47deaf145138661c70a1eec34ec97",
+  "date": "2026-08-16",
+  "title": "Fix prefix route options url (#6719)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/route-prefix.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "f5ef34443c5be0cfc7fbde44f84253ef5d0ec66e",
+  "date": "2026-08-14",
+  "title": "fix: run preClose hook exactly once per declaring instance (#6940)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/close.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "15c2fb1933461f846a6160923a2bc4e091039826",
+  "date": "2026-08-13",
+  "title": "fix(content-type): return undefined for invalid media types (#6942)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/content-type.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_modified_test",
+  "newTests": 0,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "e4ffc205328db294d550c5855d2573b33f5e9d62",
+  "date": "2026-08-12",
+  "title": "fix: remove raw response headers (#6860)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/internals/reply.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "fastify",
+  "commit": "1e08dfd9f0c866b97b52e1d176110849c3330e54",
+  "date": "2026-08-11",
+  "title": "Merge branch 'next'",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/404s.test.js",
+   "test/allow-unsafe-regex.test.js",
+   "test/case-insensitive.test.js",
+   "test/custom-querystring-parser.test.js",
+   "test/hooks.test.js",
+   "test/http-methods/custom-http-methods.test.js",
+   "test/http-methods/trace.test.js",
+   "test/https/custom-https-server.test.js",
+   "test/internals/errors.test.js",
+   "test/internals/initial-config.test.js",
+   "test/internals/logger.test.js",
+   "test/internals/reply.test.js",
+   "test/internals/request.test.js",
+   "test/logger/logging.test.js",
+   "test/logger/request.test.js",
+   "test/route-prefix.test.js",
+   "test/route.1.test.js",
+   "test/router-options.test.js",
+   "test/set-error-handler.test.js",
+   "test/use-semicolon-delimiter.test.js"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "fastify",
+  "commit": "16a74e7cb2d1abdc2feca9097f2936fe8b851a5c",
+  "date": "2026-08-08",
+  "title": "fix: reset lastIndex before testing global/sticky content-type RegExp parsers (#6846)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/content-parser.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "27938ac777c15482a81881b29f86c82b025f7fae",
+  "date": "2026-08-08",
+  "title": "fix: recognize constructor-assigned built-in properties as decorator dependencies (#6892)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/decorator-instance-properties.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 5,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "fastify",
+  "commit": "7299a57d3fdce7da49f2c6d19ba08dc673e53f22",
+  "date": "2026-08-03",
+  "title": "fix: clear trailer state when removing all trailers (#6845)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/reply-trailers.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "fastify",
+  "commit": "9ba6d6016fa932118e6cb2a2f68617cab0824f12",
+  "date": "2026-08-03",
+  "title": "fix: do not force close in-flight connections on 'idle' (#6889)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/close.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "0e9a3b35d8b13c9f261bf29bef46168a5d43c28f",
+  "date": "2026-07-30",
+  "title": "fix: add http method override warning (#6879)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/http-methods/custom-http-methods.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "fastify",
+  "commit": "29bdcbb91f1318dc90ae8c0e52ab6f4e13c42744",
+  "date": "2026-07-30",
+  "title": "fix: honor quoted-string in Content-Type parameter values (#6865)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/content-type.test.js",
+   "test/internals/reply.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "01ca8393b9d10a897f0d2daedbe2f9eb90076ef5",
+  "date": "2026-07-30",
+  "title": "fix: uncatchable throws in writeHead when using async hook (#6881)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/reply-error.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "325682c9e5abb4dce494770c7cdf27139934347d",
+  "date": "2026-07-26",
+  "title": "fix(validation): correctly update falsy values from validator (#6483)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/fix-6411.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "fastify",
+  "commit": "2ae3e1d73491c023080efed566204c470cb49fd0",
+  "date": "2026-04-21",
+  "title": "fix: validate invalid route logLevel at registration (#6523)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/internals/errors.test.js",
+   "test/logger/options.test.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "hono",
+  "commit": "1534ffa3e9c576dc3b13d8d514c85c6e2e28c1a4",
+  "date": "2026-11-07",
+  "title": "fix(factory): keep independent return types for nine handlers (#5618)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/helper/factory/index.test.ts"
+  ],
+  "result": "red_in_other_environment",
+  "automatic": "never_red_new_tests",
+  "note": "hono: type-level test; 1 type error at the parent under tsc, 0 at the fix",
+  "newTests": 1,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "hono",
+  "commit": "eb754bd5ef22c63f1634a4c374a86be086f85710",
+  "date": "2026-11-05",
+  "title": "fix(jsx): do not render ref objects as attributes (#5615)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/jsx/index.test.tsx",
+   "src/jsx/jsx-runtime.test.tsx"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "6cbe361b7ad2947fd672f23ed689eef81c2f0615",
+  "date": "2026-11-05",
+  "title": "fix(jsx): escape element and object attribute values (#5512)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/jsx/base.test.tsx",
+   "src/jsx/jsx-runtime.test.tsx"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 30,
+  "newTestsRedAtParent": 25,
+  "newTestsGreenAtParent": 5
+ },
+ {
+  "repo": "hono",
+  "commit": "8b7f9e97d661dbc8e933cf81dc36fec8d35b9146",
+  "date": "2026-11-04",
+  "title": "fix(aws-lambda): sanitize non-ASCII header values in API Gateway v2 events (#5483)",
+  "agentCoAuthored": true,
+  "tests": [
+   "src/adapter/aws-lambda/handler.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "7852e0a1e07f1d686f78f91589c7f9b573ca8bae",
+  "date": "2026-11-04",
+  "title": "fix(ssg): do not reuse created directories across toSSG runs (#5381)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/helper/ssg/ssg.test.tsx"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "bcfd02bb50fb015587aac7fe1745b5b2b61361ec",
+  "date": "2026-11-04",
+  "title": "fix(jsx): add the CSP nonce to all scripts generated by ErrorBoundary (#5430)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/jsx/components.test.tsx"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "456fe46354ca06bd3c403e6a4b1c249bf1275d2c",
+  "date": "2026-11-04",
+  "title": "fix(cookie): match the __Secure- and __Host- prefixes case-insensitively in CookieConstraint (#5611)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/utils/cookie.test.ts"
+  ],
+  "result": "red_in_other_environment",
+  "automatic": "never_red_new_tests",
+  "note": "hono: type-level test; 4 type errors at the parent under tsc, 0 at the fix",
+  "newTests": 1,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "hono",
+  "commit": "98b35afc0e8d70dc07bf59c3b796c9cbfdd4c7a7",
+  "date": "2026-11-04",
+  "title": "fix(accepts): preserve exact media type quality over subtype wildcards (#5427)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/helper/accepts/accepts.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 11,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 6
+ },
+ {
+  "repo": "hono",
+  "commit": "b3f127207b49a98be52d626c026f61054286e5c6",
+  "date": "2026-11-04",
+  "title": "fix(etag): preserve commas within quoted entity tags (#5353)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/middleware/etag/index.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 5,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "hono",
+  "commit": "28e7498e88cc3d0dad2bc22ffece685dfb16eff7",
+  "date": "2026-11-04",
+  "title": "fix(timing): escape double quotes and backslashes in Server-Timing descriptions (#5478)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/middleware/timing/index.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "e44d0a5329b0c2c7b540020abe86e3a8e8666f37",
+  "date": "2026-11-04",
+  "title": "fix(utils/mime,ssg): match media types case-insensitively (#5449)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/helper/ssg/ssg.test.tsx",
+   "src/utils/mime.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "edae2bf701e37e49f4603e9ce62d7466624e3ed4",
+  "date": "2026-11-04",
+  "title": "fix(timing): honor an explicit precision of 0 in setMetric (#5363)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/middleware/timing/index.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 5,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "hono",
+  "commit": "c0fd46eb6f9f3330f0763913b0b74548a966718d",
+  "date": "2026-11-04",
+  "title": "fix(client): detect the JSON media type with whitespace before a parameter (#5609)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/client/utils.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "a512ba4feeca157090dfd894dbaf1380f214ccf4",
+  "date": "2026-11-04",
+  "title": "fix(etag,pretty-json): cancel the discarded response body (#5606)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/middleware/etag/index.test.ts",
+   "src/middleware/pretty-json/index.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "846e95259bd452fd07286898658897d0fef436dd",
+  "date": "2026-11-04",
+  "title": "fix(utils/url): do not match a query key across separators (#5607)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/utils/url.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "hono",
+  "commit": "f98dcc9cc613b3e2b76326604a9338c79187f929",
+  "date": "2026-11-04",
+  "title": "fix(cookie): match the __Secure- and __Host- prefixes case-insensitively (#5608)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/utils/cookie.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "e1dd58856eea8c3e91494ca6a12578325b01cf46",
+  "date": "2026-11-01",
+  "title": "fix(jwt): reject a signature segment outside the base64url alphabet and a header with crit (#5597)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/utils/jwt/jwt.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "17ad0e21f5a91c939eeafa3df05793a8ea60f016",
+  "date": "2026-10-30",
+  "title": "fix(context): allow `c.header()` after the response body is consumed (#5587)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/context.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "ed1d5f72135ccf7e09c17d64dc4af7588dd3e491",
+  "date": "2026-10-28",
+  "title": "fix(auth): escape backslashes in the WWW-Authenticate realm (#5590)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/middleware/basic-auth/index.test.ts",
+   "src/middleware/bearer-auth/index.test.ts",
+   "src/middleware/jwt/index.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "eb78ecaabe26baa8addc053cf8a94b5b7603c001",
+  "date": "2026-10-25",
+  "title": "fix(utils/url): preserve encoded duplicate query order (#5495)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/request.test.ts",
+   "src/utils/url.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 9,
+  "newTestsRedAtParent": 7,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "hono",
+  "commit": "5ca49b0720755c585c9a9835f0a479ceea36fb52",
+  "date": "2026-10-17",
+  "title": "fix(css): Fix multiline CSS handling in style replacement (#5405)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/helper/css/index.test.tsx"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "e9c01079a932ffdfa269c0011075ac43fd8a1035",
+  "date": "2026-10-17",
+  "title": "fix(hono-base): disallow `getPath` when `strict` is `false` (#5563)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/hono.test.ts"
+  ],
+  "result": "red_in_other_environment",
+  "automatic": "never_red_no_new_names",
+  "note": "hono: type-level test; 1 unused @ts-expect-error at the parent under tsc, 0 at the fix",
+  "newTests": 0,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "08807ce12aa3aa27c8c5adf63e677bbab6bceda9",
+  "date": "2026-10-16",
+  "title": "fix(trie-router): keep first value for duplicate path params (#5422) (#5423)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/hono.test.ts",
+   "src/router/common.case.test.ts",
+   "src/router/pattern-router/router.test.ts",
+   "src/router/trie-router/node.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "e77c7c8eb9fea50a496ba10010063998b55d7a6b",
+  "date": "2026-10-16",
+  "title": "fix(helper/route): match regex params in basePath() the same way as the router (#5498)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/helper/route/index.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "d54720da80134a180f5fe2dd98a7676cfc8f08b4",
+  "date": "2026-10-16",
+  "title": "fix(serve-static): respect q-values in Accept-Encoding for precompressed files (#5436)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/middleware/serve-static/index.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "ae401f080004872678100e890fd3398d3df09e67",
+  "date": "2026-10-16",
+  "title": "fix(css): keep the descendant combinator before a pseudo-class when minifying (#5451)",
+  "agentCoAuthored": true,
+  "tests": [
+   "src/helper/css/index.test.tsx"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "2013fed5b21719bb1e6f44ce7f49757660946856",
+  "date": "2026-10-16",
+  "title": "fix(css): keep \"//\" inside an unquoted url() when minifying (#5450)",
+  "agentCoAuthored": true,
+  "tests": [
+   "src/helper/css/index.test.tsx"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "43379d93e23abaaa54ff85f2ce64a149f50d4295",
+  "date": "2026-10-16",
+  "title": "fix(jsx): preserve self-closing void elements in cloneElement (#5314)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/jsx/base.test.tsx"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "hono",
+  "commit": "588ec13fa68ea44fed1b5e1b503341db2bf09d70",
+  "date": "2026-10-13",
+  "title": "fix(serve-static): only serve GET and HEAD requests (#5514)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/middleware/serve-static/index.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 10,
+  "newTestsRedAtParent": 8,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "hono",
+  "commit": "f23b146afcec63606144cde50b5fbd360dd60238",
+  "date": "2026-10-01",
+  "title": "fix(jsx): allow JSXNode function component results (#5476)",
+  "agentCoAuthored": false,
+  "tests": [
+   "src/jsx/base.test.tsx"
+  ],
+  "result": "red_in_other_environment",
+  "automatic": "never_red_new_tests",
+  "note": "hono: type-level test; 1 type error at the parent under tsc, 0 at the fix",
+  "newTests": 1,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "hono",
+  "commit": "9b4e9c2864c30ea9275cf426e2d2716bd9f05195",
+  "date": "2026-09-12",
+  "title": "fix(accept): clamp a negative q to 0, not 1 (#5357)",
+  "agentCoAuthored": true,
+  "tests": [
+   "src/utils/accept.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "d22ff9c6fec1b256bd72a3bcf95d73f2fd798f18",
+  "date": "2026-06-02",
+  "title": "fix(utils/ipaddr): expand \"::\" to eight zero groups (#4973)",
+  "agentCoAuthored": true,
+  "tests": [
+   "src/utils/ipaddr.test.ts"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "hono",
+  "commit": "bfba97ca7ea3d4541a3419f1749e5a1a3e8f1727",
+  "date": "2026-05-01",
+  "title": "fix(jsx): normalize SVG attributes on the <svg> root element (#4893)",
+  "agentCoAuthored": true,
+  "tests": [
+   "src/jsx/base.test.tsx",
+   "src/jsx/index.test.tsx"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "hono",
+  "commit": "01e78adc637de2bc4ae532cf4a80bf7863652f8e",
+  "date": "2026-02-19",
+  "title": "Merge pull request #4735 from honojs/next",
+  "agentCoAuthored": true,
+  "tests": [
+   "src/adapter/aws-lambda/conninfo.test.ts",
+   "src/adapter/cloudflare-pages/conninfo.test.ts",
+   "src/adapter/netlify/conninfo.test.ts",
+   "src/client/client.test.ts",
+   "src/client/types.test.ts",
+   "src/helper/ssg/plugins.test.tsx",
+   "src/helper/ssg/ssg.test.tsx",
+   "src/middleware/basic-auth/index.test.ts",
+   "src/middleware/language/index.test.ts",
+   "src/middleware/trailing-slash/index.test.ts",
+   "src/router/trie-router/node.test.ts"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "hono",
+  "commit": "5d4e6aa897f0d41f4ccc21519d4461bbd26b8a24",
+  "date": "2026-01-22",
+  "title": "fix(client): exclude $all from ClientRequest type (#4611)",
+  "agentCoAuthored": true,
+  "tests": [
+   "src/client/types.test.ts"
+  ],
+  "result": "red_in_other_environment",
+  "automatic": "never_red_new_tests",
+  "note": "hono: type-level test; 8 type errors at the parent under tsc 5.9.2, 0 at the fix",
+  "newTests": 4,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 4
+ },
+ {
+  "repo": "hono",
+  "commit": "25d4b9d09599878da213222137b18313ca6fdac8",
+  "date": "2025-06-18",
+  "title": "Merge pull request #4227 from honojs/next",
+  "agentCoAuthored": true,
+  "tests": [
+   "src/adapter/cloudflare-pages/handler.test.ts",
+   "src/context.test.ts",
+   "src/helper/route/index.test.ts",
+   "src/helper/ssg/ssg.test.tsx",
+   "src/helper/testing/index.test.ts",
+   "src/jsx/components.test.tsx",
+   "src/jsx/streaming.test.tsx",
+   "src/middleware/cache/index.test.ts",
+   "src/middleware/cors/index.test.ts",
+   "src/middleware/jwk/index.test.ts",
+   "src/middleware/jwt/index.test.ts",
+   "src/request.test.ts",
+   "src/utils/body.test.ts",
+   "src/utils/color.test.ts",
+   "src/utils/mime.test.ts",
+   "src/utils/url.test.ts"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "llm",
+  "commit": "8b475ffdfc2d33aa86c9518baff3ac94bcea409e",
+  "date": "2026-11-11",
+  "title": "Fix streamed tool calls that omit index (#1862)",
+  "agentCoAuthored": true,
+  "tests": [
+   "tests/test_tools_streaming.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "llm",
+  "commit": "e3c6eafe9466d25c43615dc0f5c26a4b634643f1",
+  "date": "2026-11-11",
+  "title": "Fix endpoint additions to indented YAML lists (#1865)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_openai_endpoint_add.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 13,
+  "newTestsRedAtParent": 11,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "llm",
+  "commit": "6b1d1f877fd0d51c00978ff242f40e3d88a9fb44",
+  "date": "2026-11-03",
+  "title": "Fix crash when a legacy tool result has a stored attachment (#1775)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_llm_logs.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "520b21b06ca916b7eb315747b11d029392b90063",
+  "date": "2026-11-03",
+  "title": "Fix crash when a non-streaming Chat Completions response has no usage (#1698)",
+  "agentCoAuthored": true,
+  "tests": [
+   "tests/test_cli_openai_models.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_missing_api",
+  "newTests": 4,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "6ee57e695283181a603546ce7cbd085139966c48",
+  "date": "2026-11-03",
+  "title": "Fix endpoint additions to flow-style YAML lists (#1845)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_openai_endpoint_add.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 8,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "llm",
+  "commit": "14c50f6bf1f9ebe79cc1df09d81829204336b77c",
+  "date": "2026-11-03",
+  "title": "Fix llm logs -q for multi-part and multi-message turns",
+  "agentCoAuthored": true,
+  "tests": [
+   "tests/test_llm_logs.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "5e69138a555739c1e445a4f081898705f54349e4",
+  "date": "2026-11-02",
+  "title": "Fix logging fresh synchronous responses (#1817)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_logs_store.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 6,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 4
+ },
+ {
+  "repo": "llm",
+  "commit": "7f04cb0bc747d885fee4f7961ed9a8da0d7d9342",
+  "date": "2026-11-02",
+  "title": "Fix schema summaries with boolean properties (#1748)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_llm_logs.py",
+   "tests/test_utils.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_missing_api",
+  "newTests": 8,
+  "newTestsRedAtParent": 6,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "llm",
+  "commit": "1ae00f227daadd48975629c9704f5c450e53a3d6",
+  "date": "2026-11-02",
+  "title": "fix: include new turns in schema usage listings (#1808)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_schema_turn_usage.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 5,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "0bbccd7786ecf1ca04dfbe54199ca5f278954206",
+  "date": "2026-11-02",
+  "title": "Scope Collection.embed() dedup skip to the same id, fixes #1789 (#1812)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_embed.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "llm",
+  "commit": "c953cecef0b4fd8048a94d93db8c9333cabc1157",
+  "date": "2026-11-02",
+  "title": "fix: honor the first successful file encoding in embed-multi (#1750)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_embed_cli.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 6,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "llm",
+  "commit": "b7931fe62a5eeda8407eed1494a77bc981a63c22",
+  "date": "2026-11-02",
+  "title": "fix: preserve callbacks in Response.reply() (#1836)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_parts.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "43839203b95c882f89398882df68b35318a16178",
+  "date": "2026-11-02",
+  "title": "Fix schema being dropped on tool-call rounds in chains (#1825)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_pause_resume.py",
+   "tests/test_tools.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "cbeeb8f2b93b642107e51c735c7eb55734355da1",
+  "date": "2026-10-18",
+  "title": "Fix for tool spec kwargs starting with true/false/null (#1704)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_utils.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "19cd1fce9fc16138fbf95911208c398ad8b97a4f",
+  "date": "2026-10-18",
+  "title": "Fix llm prompt --usage crash with --async and tools (#1709)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_tools.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_missing_api",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "llm",
+  "commit": "2fb4a7908a29fb4b6e55035113a1c0041d93fb69",
+  "date": "2026-10-18",
+  "title": "Fix AsyncChainResponse.log_to_db() inside a running event loop, closes #1727 (#1734)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_logs_store.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "508b4f8bd7fb1441e13e3d5ac914537dbe78b700",
+  "date": "2026-09-19",
+  "title": "Fix default model options when constructing Prompt directly (#1663)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_options_parameter.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_missing_api",
+  "newTests": 4,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "llm",
+  "commit": "c9ccd3fcf812539ece5242478982c5978bd76205",
+  "date": "2026-09-19",
+  "title": "Fix AsyncResponse.log_to_db (#1668)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_logs_store.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 6,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "llm",
+  "commit": "80b42caaf43d620ddba2b6461f7c7c5bce8b74b8",
+  "date": "2026-09-19",
+  "title": "fix: close provider generator with async event stream (#1659)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_parts.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "8eff21758b24263a5ac777794d9083594ea30fa6",
+  "date": "2026-09-19",
+  "title": "fix: KeyError 'options_json' crash in 'llm logs -t' markdown output (#1656)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_llm_logs.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "9baf340a82eff925f1305582964300cbf1c30e56",
+  "date": "2026-09-02",
+  "title": "fix: extract fenced code blocks with CRLF line endings",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_llm.py",
+   "tests/test_utils.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "environment": ". --group pyproject.toml:dev as of 2026-09-03",
+  "newTests": 4,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "llm",
+  "commit": "ef69dfb9e02c89562b202525109bcf526a1e2ce3",
+  "date": "2026-08-22",
+  "title": "fix: guard empty aliases list in 'llm aliases list' (#1604)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_aliases.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "0b22f8615f5cdf5299c98c700065ec00a608d400",
+  "date": "2026-08-21",
+  "title": "fix: set conversation_id from the conversation in --data-ids",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_llm_logs.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_modified_test",
+  "newTests": 0,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "4ed661ebf98c375a228fcc0dcf05e27c2a4617b2",
+  "date": "2026-08-08",
+  "title": "Fix embed-multi without a default model",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_embed_cli.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_modified_test",
+  "environment": ". --group pyproject.toml:dev as of 2026-08-09",
+  "newTests": 1,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "llm",
+  "commit": "847056dbea7c77fb17b7f6b045b98b50b756a693",
+  "date": "2026-08-04",
+  "title": "Fix streamed server tool payload reconciliation",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_openai_responses.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "environment": ". --group pyproject.toml:dev as of 2026-08-05",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "671fc6cc39e2e7f2a1a34e2f1e558e8ff7ca80e8",
+  "date": "2026-08-03",
+  "title": "Add model-declared server-side tools",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_cli_openai_models.py",
+   "tests/test_llm.py",
+   "tests/test_openai_endpoint.py",
+   "tests/test_openai_responses.py",
+   "tests/test_parts.py",
+   "tests/test_tools.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "llm",
+  "commit": "6afc1c494bfa2ef1d9d3b304b0496432a1a8f0fa",
+  "date": "2026-08-03",
+  "title": "Fix for response.reply() with tools returning attachments",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_parts.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "environment": ". --group pyproject.toml:dev as of 2026-08-04",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "6fb155df7a78ad6e5e5f854aab0c8380a9c5afea",
+  "date": "2026-08-03",
+  "title": "Fix llm openai endpoint ignoring --schema when template also defines schema_object",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_openai_endpoint.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_modified_test",
+  "environment": ". --group pyproject.toml:dev as of 2026-08-04",
+  "newTests": 1,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "llm",
+  "commit": "e945eb53f07bc07c95ec74fc47d61fe1d749af0b",
+  "date": "2026-08-03",
+  "title": "Store response.json() on turns, condensed with condense-json",
+  "agentCoAuthored": true,
+  "tests": [
+   "tests/test_logs_store.py",
+   "tests/test_openai_responses.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "llm",
+  "commit": "293d8ecfe72bd8c094015fb42c1ffceec6f3e69f",
+  "date": "2026-07-30",
+  "title": "Fix pending_tool_calls to exclude server_executed tool calls (#1575)",
+  "agentCoAuthored": false,
+  "tests": [
+   "tests/test_logs_store.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "environment": ". --group pyproject.toml:dev as of 2026-07-31",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "llm",
+  "commit": "5aa61fc6335d365306a68183435c71819b7e2de8",
+  "date": "2026-07-29",
+  "title": "Merge PR #1562: Log new message shapes to SQLite, content-addressed de-duplication",
+  "agentCoAuthored": true,
+  "tests": [
+   "tests/test_async_parity.py",
+   "tests/test_attachments.py",
+   "tests/test_chat.py",
+   "tests/test_chat_templates.py",
+   "tests/test_cli_openai_models.py",
+   "tests/test_llm.py",
+   "tests/test_llm_logs.py",
+   "tests/test_logs_store.py",
+   "tests/test_migrate.py",
+   "tests/test_parts.py",
+   "tests/test_plugins.py",
+   "tests/test_tools.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "llm",
+  "commit": "31a4ea73c3b5e89c3d0ca48dbb242a74f7b1b856",
+  "date": "2026-04-28",
+  "title": "prompt(messages=[]) and response.stream_events() refactor",
+  "agentCoAuthored": true,
+  "tests": [
+   "tests/test_async_parity.py",
+   "tests/test_chat.py",
+   "tests/test_cli_streaming.py",
+   "tests/test_llm_logs.py",
+   "tests/test_migrate.py",
+   "tests/test_openai_messages.py",
+   "tests/test_parts.py",
+   "tests/test_serialization.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "pytest",
+  "commit": "50234b4e670064c42a4c29cb6258115a2079ba4c",
+  "date": "2026-11-15",
+  "title": "Fix startup crash on Python 3.10.0 caused by missing NodeId cache (#15342)",
+  "agentCoAuthored": false,
+  "tests": [
+   "testing/test_nodeid.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_missing_api",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "1b6f4419c6fe9371a8d8c52c12ed0a1577c2504a",
+  "date": "2026-11-10",
+  "title": "Merge pull request #15361 from pytest-dev/claude/project-thread-zb2mnu",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_nodes.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "pytest",
+  "commit": "08017d9ada4c72a7b6a78f7873c238070e24c982",
+  "date": "2026-11-04",
+  "title": "Merge pull request #15296 from pytest-dev/claude/project-thread-cukdhn",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_config.py",
+   "testing/test_tmpdir.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "pytest",
+  "commit": "0212785e34eb635b3359e4eccc757de95bf39036",
+  "date": "2026-10-30",
+  "title": "Merge pull request #15298 from RonnyPfannschmidt/callinfo-duration",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_runner.py",
+   "testing/test_subtests.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "pytest",
+  "commit": "7d646b595cf6e5e0111bbb41bac5e1f5cdf2881b",
+  "date": "2026-10-25",
+  "title": "Merge pull request #15173 from HakeemTheEmperor/fix-frozendict-print",
+  "agentCoAuthored": false,
+  "tests": [
+   "testing/io/test_pprint.py"
+  ],
+  "result": "not_runnable_here",
+  "automatic": "never_red_no_new_names",
+  "note": "pytest: frozendict needs Python 3.15; the test is skipped on 3.13 and 3.15 was not available",
+  "newTests": 0,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "4e64e831268758cf0040c52c144e0f09f46cd8a3",
+  "date": "2026-10-10",
+  "title": "Merge pull request #15145 from pytest-dev/claude/project-thread-0ll2wg",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_terminal.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 9,
+  "newTestsRedAtParent": 9,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "4fa645fe43855630b4492fc3fdec13050152f4ef",
+  "date": "2026-10-10",
+  "title": "Merge pull request #15040 from GangEunzzang/fix/mark-editable-plugins-for-rewrite",
+  "agentCoAuthored": false,
+  "tests": [
+   "testing/test_config.py"
+  ],
+  "result": "red_for_another_reason",
+  "automatic": "base_did_not_load",
+  "why": "collection failure",
+  "note": "pytest: test module imports _plugin_rewrite_name, which the fix adds; the whole file fails to import at the parent. With the import made tolerant, 1 behaviour test fails at the parent (assert [] == ['myplug']) and 1 fails on the missing helper",
+  "newTests": 5,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "e4f7f174bc4a1686b31639d29a3e211941390979",
+  "date": "2026-10-09",
+  "title": "Merge pull request #15153 from pytest-dev/claude/project-thread-ts7rab",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/logging/test_reporting.py",
+   "testing/test_config.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "pytest",
+  "commit": "adf183f4d3113b50e6eefa488c0e2a37a782d14a",
+  "date": "2026-10-09",
+  "title": "Merge pull request #15133 from hfycium/codex/faulthandler-toml-type",
+  "agentCoAuthored": false,
+  "tests": [
+   "testing/test_faulthandler.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "pytest",
+  "commit": "aaa3e7ec82875eac1edd6885a5b33c3f6911baad",
+  "date": "2026-10-09",
+  "title": "Merge pull request #14463 from RonnyPfannschmidt/fix/14461-mapping-assertrepr",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_assertion.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "pytest",
+  "commit": "8cb80978556fe0211d2f797216e171d7405e733d",
+  "date": "2026-10-08",
+  "title": "Merge pull request #15150 from pytest-dev/claude/project-thread-73tyoe",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_junitxml.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "pytest",
+  "commit": "3e34325a991b0f3b77f2ca27a227addcc0570bc2",
+  "date": "2026-10-08",
+  "title": "Merge pull request #15149 from pytest-dev/claude/project-thread-o2uoxy",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/code/test_excinfo.py",
+   "testing/test_subtests.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "pytest",
+  "commit": "f9554ee56d264da285f3951ebfdf6f1d59ba4077",
+  "date": "2026-09-23",
+  "title": "Fix doctest option flags leaking between docstrings (#15033)",
+  "agentCoAuthored": false,
+  "tests": [
+   "testing/test_doctest.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 16,
+  "newTestsRedAtParent": 10,
+  "newTestsGreenAtParent": 6
+ },
+ {
+  "repo": "pytest",
+  "commit": "f8ad1f6f95307ed5b7da9b73f1c585695bf2b51a",
+  "date": "2026-09-16",
+  "title": "Merge pull request #14989 from 15r10nk/fix-stale-cached-bytecode-on-file-move",
+  "agentCoAuthored": false,
+  "tests": [
+   "testing/test_assertrewrite.py"
+  ],
+  "result": "red_for_another_reason",
+  "automatic": "red_missing_api",
+  "note": "pytest: the test imports _imp_fix_co_filename, which the fix adds; at the parent it fails with ImportError. With the import made tolerant both variants fail at the parent with the reported symptom",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "a453d653f92bfbdbfe47d2af9bfd8801860ff9e3",
+  "date": "2026-09-15",
+  "title": "Merge pull request #15032 from RonnyPfannschmidt/fix/help-text-wrapping",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_helpconfig.py",
+   "testing/test_parseopt.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 17,
+  "newTestsRedAtParent": 16,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "pytest",
+  "commit": "a315b97ce61f158bef9957152c8415fe743aa553",
+  "date": "2026-09-13",
+  "title": "Merge pull request #14978 from RonnyPfannschmidt/claude/pytest-pr-history-preserve-25hub3",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_mark.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "pytest",
+  "commit": "472b4de93d83c118e0d089a34918fd1210d9ebc8",
+  "date": "2026-09-07",
+  "title": "Merge pull request #14969 from Irahan2/fix-10644-monkeypatch-inherited-attr",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_monkeypatch.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 6,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "pytest",
+  "commit": "ae777851d8b324de5eb3d0e860c28b219ce3fcd8",
+  "date": "2026-09-07",
+  "title": "Merge pull request #14910 from sharonyao1127/fix-monkey-patch-delattr-setitem-delitem-stale-undo",
+  "agentCoAuthored": false,
+  "tests": [
+   "testing/test_monkeypatch.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "pytest",
+  "commit": "51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7",
+  "date": "2026-09-01",
+  "title": "Merge pull request #14447 from RonnyPfannschmidt/ronny/fix-14445-assert-walrus",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_assertrewrite.py",
+   "testing/test_assertrewrite_coverage.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 18,
+  "newTestsRedAtParent": 13,
+  "newTestsGreenAtParent": 5
+ },
+ {
+  "repo": "pytest",
+  "commit": "814d3da7f473ffde635559af58292ed90f23793d",
+  "date": "2026-08-27",
+  "title": "[ruff] Enable a dozen rules from ruff 0.16 (#14915)",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_assertrewrite.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "pytest",
+  "commit": "c7f9e75c5d3b04bf96e8389a9eac6d98da2be8f4",
+  "date": "2026-08-26",
+  "title": "Merge pull request #14284 from oaksprout/fix-nested-caplog-filtering",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/logging/test_fixture.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "75e6815c55ac66dacf033ababa40c2a91b82e99c",
+  "date": "2026-08-25",
+  "title": "Merge pull request #14649 from EternalRights/fix-exceptiongroup-tracebackhide",
+  "agentCoAuthored": false,
+  "tests": [
+   "testing/code/test_excinfo.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "977575388358e8c00b77a397546304c91dc5794b",
+  "date": "2026-08-25",
+  "title": "Merge pull request #14811 from EternalRights/fix-config-getini-string-validation",
+  "agentCoAuthored": false,
+  "tests": [
+   "testing/test_config.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "efa117ad49ce197c5971b12310d53b73ed678d92",
+  "date": "2026-08-19",
+  "title": "[ruff] Apply unsafe autofixes from ruff 0.16 (#14913)",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_assertion.py",
+   "testing/test_cacheprovider.py",
+   "testing/test_reports.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "pytest",
+  "commit": "e9eb967ea2fbb037bbf679df7dd59ac285bdbfd2",
+  "date": "2026-08-19",
+  "title": "Merge pull request #14905 from RonnyPfannschmidt/pr11418-checked-hash-pyc",
+  "agentCoAuthored": false,
+  "tests": [
+   "testing/test_assertrewrite.py"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "pytest",
+  "commit": "c0ab40c93b3a6bc0c1d586f5c313b265f7ceabed",
+  "date": "2026-08-18",
+  "title": "Merge pull request #14903 from RonnyPfannschmidt/fix-10745-cheaper-recursion-tracebacks",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/code/test_excinfo.py",
+   "testing/code/test_source.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "pytest",
+  "commit": "d6f66d42df86624ed128b84ce57df3d173fe1b95",
+  "date": "2026-08-18",
+  "title": "Merge pull request #14865 from RonnyPfannschmidt/fix-14864-samefile-zero-file-id",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_pathlib.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "pytest",
+  "commit": "e739014f38d284f1ce57745cdd4e13392fb56165",
+  "date": "2026-08-16",
+  "title": "Fix duplicated exception chain output when an exception group has a cause (#14829)",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/code/test_excinfo.py",
+   "testing/test_unittest.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "aa4c208fc0f11f0572cf010f72fe497f46e81ec1",
+  "date": "2026-08-16",
+  "title": "Merge pull request #14875 from royy92/fix-6997",
+  "agentCoAuthored": false,
+  "tests": [
+   "testing/test_skipping.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "d45fc1c74989e7c71093cc8c24a775c0cf56bba6",
+  "date": "2026-08-12",
+  "title": "Merge pull request #14780 from ace2016/fix-9436-xfail-traceback",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_skipping.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "b9353807eb8c4d7232556138f9e81ce53556f43c",
+  "date": "2026-08-12",
+  "title": "Merge pull request #14833 from ace2016/fix-13354-marker-default",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_mark.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "5fd2be03b1f8b5eef48d507d001ebf0a82e875a1",
+  "date": "2026-08-12",
+  "title": "Merge pull request #14127 from RonnyPfannschmidt/fix-2781-strict-markers-m-expression",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_mark.py",
+   "testing/test_mark_expression.py"
+  ],
+  "result": "red_for_another_reason",
+  "automatic": "base_did_not_load",
+  "why": "collection failure",
+  "note": "pytest: test module imports RegisteredMarker and _validate_marker_names, which the fix adds; the whole file fails to import at the parent. With the imports made tolerant, 2 behaviour tests fail at the parent (exit code OK instead of USAGE_ERROR) and 12 fail on missing helpers",
+  "newTests": 16,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "0d6fbdeffa57c796123f62f81f7dd370d9b7ecdc",
+  "date": "2026-08-11",
+  "title": "Fix duplicated exception chain output for exceptions without a traceback (#14781)",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/code/test_excinfo.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "pytest",
+  "commit": "36704f9b54c40b3de715f5d5d28666faf566b843",
+  "date": "2026-07-25",
+  "title": "Fix elision of long collections in assertion messages with -vv (#14748)",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_assertrewrite.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "a933cf5de4d64192d1d588a851ca4e76eec71efc",
+  "date": "2026-07-22",
+  "title": "Merge pull request #14645 from RonnyPfannschmidt/fix/14635-deduplicate-directory-nodes-on-recollection",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_conftest.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "35f21fdcfc9b5817a2aafc449dc5cff5aba83725",
+  "date": "2026-07-22",
+  "title": "Merge pull request #14331 from RonnyPfannschmidt/fix/rm-rf-no-exec-permission-7940",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_tmpdir.py"
+  ],
+  "result": "red_for_another_reason",
+  "automatic": "base_did_not_load",
+  "why": "collection failure",
+  "note": "pytest: test module imports _chmod_rwx, which the fix adds; the whole file fails to import at the parent. With the import made tolerant, 4 behaviour tests fail at the parent and 3 fail on the missing helper",
+  "newTests": 10,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "1c36631c68427619646d9f12904cc513e48d472b",
+  "date": "2026-07-22",
+  "title": "Fix pytest.warns re-emitting warnings with module=\"warnings\" (#14747)",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_recwarn.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "34b6a4e5354dbd0e169de7cd22425bc34038dbf6",
+  "date": "2026-07-21",
+  "title": "Fix missing traceback source for code with cwd-relative filenames (#14744)",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/code/test_source.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "e7355d70771b5f34f78d7012f73bdc8eb79574d6",
+  "date": "2026-07-21",
+  "title": "Merge pull request #14702 from vetrovk/fix/doctest-fixture-line-number",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_doctest.py"
+  ],
+  "result": "red_in_other_environment",
+  "automatic": "never_red_new_tests",
+  "note": "pytest: bug exists on Python 3.12 only; on 3.12.13 the test fails at the parent (assert None is not None) and passes at the fix",
+  "newTests": 1,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "pytest",
+  "commit": "b375b79ec913630af83ceff58944347408a6534a",
+  "date": "2026-06-19",
+  "title": "Merge pull request #14622 from chrisburr/fix-14608-initial-conftest-test-subdir",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_conftest.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "2ce9c6d94eb691ea4da7f91f330602cbb67a6daf",
+  "date": "2026-06-08",
+  "title": "Merge pull request #14540 from minbang930/fix-14533-doctest-module-fixtures",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_doctest.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "59dc7f6fa08389798b69a9df2de9a8519181f92c",
+  "date": "2026-05-25",
+  "title": "Merge pull request #14126 from RonnyPfannschmidt/fix-1764-argparse-program-name",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_config.py"
+  ],
+  "result": "red_for_another_reason",
+  "automatic": "base_did_not_load",
+  "why": "collection failure",
+  "note": "pytest: test module imports _get_prog_name, which the fix adds; the whole file fails to import at the parent. With the import made tolerant, 4 behaviour tests fail at the parent (usage line), 3 fail on the missing helper and 1 on a missing attribute",
+  "newTests": 8,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "47ed628df2b39ff114c069e70a5cc4ccbdc89b97",
+  "date": "2026-05-23",
+  "title": "Fix monkeypatch.setattr() teardown crash on failed setattr (#14161) (#14209)",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_monkeypatch.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_missing_api",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "pytest",
+  "commit": "bd001370538cf19cced79376a74a9e46ea0fdf68",
+  "date": "2026-05-23",
+  "title": "Merge pull request #14098 from RonnyPfannschmidt/fix-14004-contest-nodeid-assingnment",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/test_conftest.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "pytest",
+  "commit": "206b9716abd936702689381e8cee0d84ff61945f",
+  "date": "2026-05-03",
+  "title": "Merge pull request #14369 from bluetech/fixture-override-with-parametrization",
+  "agentCoAuthored": true,
+  "tests": [
+   "testing/example_scripts/fixtures/test_getfixturevalue_dynamic.py"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_modified_test",
+  "newTests": 0,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "02c4f8c6e39787fba79cdc7d1912be63ddace0ed",
+  "date": "2026-11-13",
+  "title": "fix(h1): do not reuse idle sockets whose keep-alive timeout expired (#6171)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/client-keep-alive-blocked-loop.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "undici",
+  "commit": "e1a425cacea07dedfd9accdd525d6c9bb37d765c",
+  "date": "2026-11-07",
+  "title": "fix(h2): preserve transport errors and mismatch causes (#6176)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/http2-content-length-errors.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 6,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "undici",
+  "commit": "55bf29469dc86deb6e6e5522fba934e9d7cb4adb",
+  "date": "2026-11-06",
+  "title": "fix(pool): release saturated h2 protocol probes after SETTINGS (#6170)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/http2-pool-saturation.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 16,
+  "newTestsRedAtParent": 14,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "undici",
+  "commit": "26c42c25988767ac78db02aab7a5c490e3441a79",
+  "date": "2026-11-04",
+  "title": "fix(cache): do not cache credential-bearing same-origin redirects under the alias key",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/interceptors/cache-redirect-origin.js"
+  ],
+  "result": "inconclusive",
+  "automatic": "inconclusive",
+  "why": "candidate: 1 test(s) fail on this machine at the fix commit",
+  "newTests": 5,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 4
+ },
+ {
+  "repo": "undici",
+  "commit": "f08caffb96e20e2471a2bda932f0e78f7dd9978f",
+  "date": "2026-11-04",
+  "title": "fix(cache): converge async store get() failures to per-request errors",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/interceptors/cache-replay-handler-throws.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "c6b3cfc6d819c48cf2e204e0fe11dee777f8e69b",
+  "date": "2026-11-04",
+  "title": "fix(cache): converge 304 revalidation replay downstream throws to a request error",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/interceptors/cache-replay-handler-throws.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "700ec7c43e819d6113dfed56d31352312f088b55",
+  "date": "2026-11-04",
+  "title": "fix(cache): never rethrow replay stream errors when onResponseError is missing",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/interceptors/cache-replay-handler-throws.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "35d066ffdb363bcf3d94cd0f09bf317a37659631",
+  "date": "2026-11-04",
+  "title": "fix(cache): converge downstream handler throws during cache replay to per-request errors",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/interceptors/cache-replay-handler-throws.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "0f1cfa964c6d6004f59059bbda61e074730b78f6",
+  "date": "2026-11-04",
+  "title": "fix(cache): validate redirected revalidation responses",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/interceptors/cache-redirect-origin.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "8875831fe7d0d973e89d05cb34d528c1435e8c50",
+  "date": "2026-11-04",
+  "title": "fix(cache): enforce redirect hop policy",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/cache-interceptor/sqlite-cache-store-tests.js",
+   "test/interceptors/cache-redirect-origin.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 6,
+  "newTestsRedAtParent": 6,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "03feee2770bf7eacc9c5185d9c48bfb43ab2ea7b",
+  "date": "2026-11-04",
+  "title": "fix(cache): prevent cross-origin redirect cache bypass",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/interceptors/cache-redirect-origin.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 7,
+  "newTestsRedAtParent": 6,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "undici",
+  "commit": "874a2794cb1efa6ed1f8bb111ed006b7bc370738",
+  "date": "2026-11-04",
+  "title": "fix(redirect): strip credentials from array-of-tuples headers",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/interceptors/redirect.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "1104ffbc440f4432f09c2ec7d9d7128b7a0db7fc",
+  "date": "2026-11-04",
+  "title": "fix(sri): parse ASCII whitespace",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/subresource-integrity/GHSA-r4pc-4jcp-7pqc.js",
+   "test/subresource-integrity/parse-metadata.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "489bc9d18a046ee4f2f934e57ab6f965a9bacbae",
+  "date": "2026-10-30",
+  "title": "fix(fetch): preserve abort propagation after garbage collection (#6070)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/fetch/request-abort-gc.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 8,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 7
+ },
+ {
+  "repo": "undici",
+  "commit": "1b7b18e59f6c1e9d59af188bb0488890166a0c84",
+  "date": "2026-10-29",
+  "title": "fix(h2): preserve accepted streams with deferred ids (#6090)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/http2-dispatcher.js",
+   "test/http2-goaway-retry-body.js",
+   "test/http2-goaway.js"
+  ],
+  "result": "inconclusive",
+  "automatic": "inconclusive",
+  "why": "candidate: 3 test(s) fail on this machine at the fix commit",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "609c6efca79f1592954d5fe10e58f69cda342a07",
+  "date": "2026-10-27",
+  "title": "fix(mock): expose aborted on the mock dispatch controller (#5964)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/mock-agent.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "046bb4c6fe413a32ecb6d51eb3ecaa56c8c15b87",
+  "date": "2026-10-23",
+  "title": "fix(h2): replay requests whose HEADERS raced a GOAWAY (#6065)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/http2-goaway-frame-error.js",
+   "test/http2-graceful-goaway.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 13,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 9
+ },
+ {
+  "repo": "undici",
+  "commit": "1f452240899a1bbbfa7cbd64ade03ec11c7cef2c",
+  "date": "2026-10-21",
+  "title": "fix(http2): keep persistent error sink on released streams (#5983)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/issue-5936.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "b5588246585f4925f250f928011180e0de679668",
+  "date": "2026-10-21",
+  "title": "fix(cache): ignore SQLITE_BUSY in the sqlite cache store (#6049)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/cache-interceptor/sqlite-cache-store-tests.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "0f6739a10f311d31b59450394d10ad8a6f55a7bf",
+  "date": "2026-10-21",
+  "title": "fix: let interim 1xx responses through DecoratorHandler (#6028)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/decorator-handler.js",
+   "test/interceptors/dns.js"
+  ],
+  "result": "inconclusive",
+  "automatic": "inconclusive",
+  "why": "candidate: 1 test(s) fail on this machine at the fix commit",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "f4e4e4507a1fe5407093cb3d58ca240882897a3e",
+  "date": "2026-10-19",
+  "title": "fix(mock): ignore the trailing slash before a query string (#6031)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/mock-interceptor.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 9,
+  "newTestsRedAtParent": 4,
+  "newTestsGreenAtParent": 5
+ },
+ {
+  "repo": "undici",
+  "commit": "0bbf614b81ecd9e6fffc9d2edc5082d3c1b0b4bd",
+  "date": "2026-10-19",
+  "title": "fix(pool): keep caller async context for queued requests (#5982)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/issue-5981.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "aa1eef17b816caba4b62514f6a38505cf6c60677",
+  "date": "2026-10-19",
+  "title": "fix(h2): replace a connection that stops responding after a stream timeout (#6052)",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/http2-timeout.js",
+   "test/http2-unresponsive-connection.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "undici",
+  "commit": "b217373bb024cd93f85eb5b3ffd25684855f60f8",
+  "date": "2026-10-14",
+  "title": "fix(websocket): bound automatic PONG writes under backpressure",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/websocket/pong-backpressure.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 3,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "789ef26461c648480433846607154f52d74ec9ab",
+  "date": "2026-10-14",
+  "title": "fix(eventsource): bound retained SSE parser state",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/eventsource/eventsource-constructor.js",
+   "test/eventsource/eventsource-stream.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 23,
+  "newTestsRedAtParent": 10,
+  "newTestsGreenAtParent": 13
+ },
+ {
+  "repo": "undici",
+  "commit": "4f7ef6806e532ab9e29ccd6229b1b9d241e1b1f0",
+  "date": "2026-10-14",
+  "title": "fix(sri): accept non-lowercase algorithm tokens",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/subresource-integrity/GHSA-f72v-6w45-q472.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 4,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "undici",
+  "commit": "f851f315db1f2acce0ea668f88d9d0fa61c8420c",
+  "date": "2026-10-14",
+  "title": "fix(decompress): converge downstream handler throws to per-request errors",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/interceptors/decompress.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "b5084c7dc239172d75c336b1cd51ddac023938a5",
+  "date": "2026-10-14",
+  "title": "fix(fetch): abort excessive content encoding responses",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/fetch/encoding.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "26c2bfb3def0b67241ce878e80657ed5d6c3efa8",
+  "date": "2026-10-14",
+  "title": "fix(cache): prevent cross-origin redirect cache confusion",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/interceptors/cache-redirect-origin.js",
+   "test/interceptors/deduplicate-terminal.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 8,
+  "newTestsRedAtParent": 5,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "undici",
+  "commit": "f75eac00ac177f7b2e6c8bfbd52d4113164286e6",
+  "date": "2026-10-14",
+  "title": "fix: preserve Agent connection options",
+  "agentCoAuthored": false,
+  "tests": [
+   "test/node-test/agent.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "undici",
+  "commit": "e960331c83346ce770a7a58d7cfb6afb4aec0ccf",
+  "date": "2026-10-08",
+  "title": "fix(cache): always treat zero-lifetime entries as stale (#5980)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/interceptors/cache.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "eeb44ef79aadf44790de6e230e8a7985c035c323",
+  "date": "2026-10-08",
+  "title": "fix(cache): preserve abort reasons after completion (#5958)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/interceptors/cache.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "65fd635cc9bb9ed50087ad1ca1271a5bbc573129",
+  "date": "2026-09-15",
+  "title": "fix(cache): do not report aborted on successful cache hits (#5819)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/interceptors/cache.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "undici",
+  "commit": "181c2939aae5fc673767be2309ac9217c77e3242",
+  "date": "2026-08-19",
+  "title": "fix: forward onBodySent/onRequestSent through interceptor handlers (#5696)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/decorator-handler.js",
+   "test/interceptors/body-sent-hooks.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 9,
+  "newTestsRedAtParent": 6,
+  "newTestsGreenAtParent": 3
+ },
+ {
+  "repo": "undici",
+  "commit": "721cd232e35b10584674dbe57b2b9061c23ea433",
+  "date": "2026-08-13",
+  "title": "fix(interceptor/dump): reject aborted requests when response is smaller than maxSize (#5685)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/interceptors/dump-interceptor.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "f2e02f69a3c1de5f462403e342cde2f71fe88990",
+  "date": "2026-08-13",
+  "title": "fix(retry): honor the retryAfter option in the default retry strategy (#5683)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/retry-handler.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "392649944c3b989681af1eae2e0970661f9ca464",
+  "date": "2026-08-03",
+  "title": "fix: retry refused HTTP/2 streams (#5598)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/http2-goaway-refusal-storm.js",
+   "test/http2-refused-stream.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 6,
+  "newTestsRedAtParent": 6,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "de01babccb69bf3dc2b2ebd064bc302d7c31f9f1",
+  "date": "2026-07-16",
+  "title": "fix: store revalidation-only responses so etag revalidation can engage (#5515)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/interceptors/cache.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "undici",
+  "commit": "e1cc0d436cc43ee737a083f9e6348ec45614e796",
+  "date": "2026-07-16",
+  "title": "fix: honor stale-if-error on connection errors during revalidation (#5513)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/interceptors/cache.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "db34f5ffa4b40f71c43dfbde1046040a350767e8",
+  "date": "2026-07-04",
+  "title": "fix(readable): ignore late consume chunks (#5375)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/readable.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "47ea3d23d29655f0f267d5518c3319a7fb34ae57",
+  "date": "2026-07-01",
+  "title": "fix(h2): deliver an early final response to an Expect: 100-continue request (#5470)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/http2-continue.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "2f66db7322f4eefa3a014ec990becde802f08436",
+  "date": "2026-06-05",
+  "title": "fix(mock): do not persist snapshots on close in playback mode (#5359)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/snapshot-testing.js"
+  ],
+  "result": "red_but_flaky_on_the_bug",
+  "automatic": "red_all_added",
+  "note": "undici: 20 runs at the parent, the new test failed 18 and passed 2",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "2a6f9c7dbd1d37b36e2269bb0d13194de8fe615b",
+  "date": "2026-04-21",
+  "title": "fix(mock): make filterCalls AND operator actually intersect results (#5045)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/mock-call-history.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "838053dfb375ac48defdf281a65d679bc1bf7f05",
+  "date": "2026-04-17",
+  "title": "fix(socks5): correctly expand IPv6 '::' compressed notation (#5046)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/socks5-utils.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_modified_test",
+  "newTests": 0,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "e0e61d31714de9f9b7e9c4f4d4cf4af1fd9fc7cd",
+  "date": "2026-04-17",
+  "title": "fix(cache): evict oldest entries first in SqliteCacheStore prune (#5039)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/cache-interceptor/sqlite-cache-store-tests.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "a516f87098aad3c2daedfc24eada6f5a1594ed9e",
+  "date": "2026-04-17",
+  "title": "fix(socks5-proxy-agent): use per-origin pools to prevent cross-origin routing (#5041)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/socks5-proxy-agent.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "d2e8178693ff6e395a57f6e9eb4a5dedb31881cf",
+  "date": "2026-04-16",
+  "title": "fix(webidl): correct signed integer bounds in ConvertToInt (#5038)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/webidl/util.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_modified_test",
+  "newTests": 0,
+  "newTestsRedAtParent": 0,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "deb95868cbc4ac78891f4cc964fc707b4dae1983",
+  "date": "2026-04-02",
+  "title": "Merge branch 'next'",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/client-request.js",
+   "test/client-timeout.js",
+   "test/decorator-handler.js",
+   "test/env-http-proxy-agent-nodejs-bundle.js",
+   "test/env-http-proxy-agent.js",
+   "test/fetch/issue-4897.js",
+   "test/http2-body.js",
+   "test/http2-dispatcher.js",
+   "test/http2-late-data.js",
+   "test/http2-trailers.js",
+   "test/interceptors/cache.js",
+   "test/interceptors/deduplicate.js",
+   "test/issue-3934.js",
+   "test/issue-4780.js",
+   "test/mock-agent.js",
+   "test/mock-client.js",
+   "test/mock-interceptor.js",
+   "test/mock-pool.js",
+   "test/node-test/agent.js",
+   "test/node-test/client-abort.js",
+   "test/node-test/client-dispatch.js",
+   "test/node-test/global-dispatcher-version.js",
+   "test/node-test/util.js",
+   "test/node-test/validations.js",
+   "test/pool.js",
+   "test/retry-handler.js",
+   "test/retry-handler2.js",
+   "test/util.js",
+   "test/web-platform-tests/runner/test-runner.mjs",
+   "test/web-platform-tests/wpt-runner.mjs"
+  ],
+  "result": "not_titled_fix",
+  "automatic": "not_titled_fix"
+ },
+ {
+  "repo": "undici",
+  "commit": "330f4e47d15028fa274f5c63fd7273bebf7ed0a3",
+  "date": "2026-03-21",
+  "title": "fix(mock): improve error message when intercepts are exhausted (#4912)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/mock-agent.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 1,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "90775009148e5956ac58ace0eb493001db8b2b7c",
+  "date": "2026-03-19",
+  "title": "fix(cache): only apply 1-year deleteAt for immutable responses (#4913)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/interceptors/cache.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 2
+ },
+ {
+  "repo": "undici",
+  "commit": "b04e3cbb569c1596f86c108e9b52c79d8475dcb3",
+  "date": "2026-01-06",
+  "title": "fix(decompress): limit Content-Encoding chain to 5 to prevent resource exhaustion (#4729)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/interceptors/decompress.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "undici",
+  "commit": "6fe3602190b6fd3125ec687e8e9303c4acaa3178",
+  "date": "2025-10-29",
+  "title": "fix: ensure HTTP/2 sends Content-Length for empty POST requests (#4613)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/fetch/http2.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 1,
+  "newTestsGreenAtParent": 1
+ },
+ {
+  "repo": "undici",
+  "commit": "992c6d84069054b2bd23e1803fc4cec6ade56cce",
+  "date": "2025-09-01",
+  "title": "fix: implement proper stale-while-revalidate behavior per RFC 5861 (#4492)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/interceptors/cache.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_all_added",
+  "newTests": 2,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 0
+ },
+ {
+  "repo": "undici",
+  "commit": "d0b28993efb9a66ab4c50445b958ea32f86915f1",
+  "date": "2025-08-26",
+  "title": "fix: catch synchronous errors in request callbacks (#4443)",
+  "agentCoAuthored": true,
+  "tests": [
+   "test/client.js",
+   "test/sync-error-in-callback.js"
+  ],
+  "result": "red_then_green",
+  "automatic": "red_some_added",
+  "newTests": 3,
+  "newTestsRedAtParent": 2,
+  "newTestsGreenAtParent": 1
+ }
+]

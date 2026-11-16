@@ -1,0 +1,18 @@
+1. test as committed, symptom from the report
+  symptom /'failed': 1|st1\/test_a\.py' == /
+  verdict: inconclusive
+  reason:  base: "testing.test_assertrewrite.TestRewriteOnImport › test_moved_test_file_updates_code_filename[import-lib]" failed without the symptom /'failed': 1|st1\/test_a\.py' == /: ImportError: cannot import name '_imp_fix_co_filename' from '_pytest.assertion.rewrit
+  base: test_moved_test_file_updates_code_filename[import-lib]=failed, test_moved_test_file_updates_code_filename[pure-python]=failed
+  candidate: test_moved_test_file_updates_code_filename[import-lib]=passed, test_moved_test_file_updates_code_filename[pure-python]=passed
+2. test as committed, symptom written as a keyword from the title
+  symptom /co_filename/
+  verdict: distinguishes
+  reason:  2 test(s) failed at the base with the symptom and passed at the candidate
+  base: test_moved_test_file_updates_code_filename[import-lib]=failed, test_moved_test_file_updates_code_filename[pure-python]=failed
+  candidate: test_moved_test_file_updates_code_filename[import-lib]=passed, test_moved_test_file_updates_code_filename[pure-python]=passed
+3. import of the new helper made tolerant, symptom from the report
+  symptom /'failed': 1|st1\/test_a\.py' == /
+  verdict: distinguishes
+  reason:  2 test(s) failed at the base with the symptom and passed at the candidate
+  base: test_moved_test_file_updates_code_filename[import-lib]=failed, test_moved_test_file_updates_code_filename[pure-python]=failed
+  candidate: test_moved_test_file_updates_code_filename[import-lib]=passed, test_moved_test_file_updates_code_filename[pure-python]=passed

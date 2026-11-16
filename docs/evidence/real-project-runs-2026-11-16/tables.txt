@@ -1,0 +1,33 @@
+click     n=30  red_all_added=4  red_some_added=3  not_titled_fix=23
+eslint    n=30  red_all_added=9  red_some_added=17  inconclusive=4
+express   n=5   red_all_added=2  never_red_new_tests=1  inconclusive=1  skipped_wide=1
+fastapi   n=30  red_all_added=6  red_some_added=18  red_modified_test=2  red_missing_api=1  base_did_not_load=1  never_red_no_new_names=1  skipped_wide=1
+fastify   n=31  red_all_added=19  red_some_added=10  red_modified_test=1  not_titled_fix=1
+          agent n=1: red_some_added=1
+hono      n=36  red_all_added=20  red_some_added=9  never_red_new_tests=4  never_red_no_new_names=1  not_titled_fix=2
+          agent n=9: red_all_added=5  red_some_added=1  never_red_new_tests=1  not_titled_fix=2
+llm       n=32  red_all_added=13  red_some_added=8  red_modified_test=3  red_missing_api=4  not_titled_fix=4
+          agent n=6: red_all_added=1  red_some_added=1  red_missing_api=1  not_titled_fix=3
+pytest    n=45  red_all_added=14  red_some_added=11  red_modified_test=1  red_missing_api=3  base_did_not_load=4  never_red_new_tests=1  never_red_no_new_names=1  not_titled_fix=10
+          agent n=34: red_all_added=11  red_some_added=9  red_modified_test=1  red_missing_api=1  base_did_not_load=3  never_red_new_tests=1  not_titled_fix=8
+undici    n=54  red_all_added=29  red_some_added=19  red_modified_test=2  inconclusive=3  not_titled_fix=1
+          agent n=26: red_all_added=14  red_some_added=9  red_modified_test=2  not_titled_fix=1
+ALL       n=293 red_all_added=116  red_some_added=95  red_modified_test=9  red_missing_api=8  base_did_not_load=5  never_red_new_tests=6  never_red_no_new_names=3  inconclusive=8  skipped_wide=2  not_titled_fix=41
+  agent   n=76  red_all_added=31  red_some_added=21  red_modified_test=3  red_missing_api=2  base_did_not_load=3  never_red_new_tests=2  not_titled_fix=14
+  other   n=217 red_all_added=85  red_some_added=74  red_modified_test=6  red_missing_api=6  base_did_not_load=2  never_red_new_tests=4  never_red_no_new_names=3  inconclusive=8  skipped_wide=2  not_titled_fix=27
+
+FINAL  evaluated=250 (of 293; 43 set aside)
+  all:   red_then_green=226  inconclusive=8  red_in_other_environment=7  red_for_another_reason=5  no_behaviour_change=1  red_at_import=1  not_runnable_here=1  red_but_flaky_on_the_bug=1
+  agent: n=62  red_then_green=56  red_for_another_reason=3  red_in_other_environment=2  red_but_flaky_on_the_bug=1
+  other: n=188  red_then_green=170  inconclusive=8  red_in_other_environment=5  red_for_another_reason=2  no_behaviour_change=1  red_at_import=1  not_runnable_here=1
+  click    n=7   red_then_green=7
+  eslint   n=30  red_then_green=26  inconclusive=4
+  express  n=4   red_then_green=2  no_behaviour_change=1  inconclusive=1
+  fastapi  n=29  red_then_green=27  red_at_import=1  red_in_other_environment=1
+  fastify  n=30  red_then_green=30
+  hono     n=34  red_then_green=29  red_in_other_environment=5
+  llm      n=28  red_then_green=28
+  pytest   n=35  red_then_green=28  red_for_another_reason=5  not_runnable_here=1  red_in_other_environment=1
+  undici   n=53  red_then_green=49  inconclusive=3  red_but_flaky_on_the_bug=1
+  new tests in the 226 red-then-green commits: 1345 added, 920 fail at the parent, 425 pass at the parent; 100 commits have at least one new test that passes at the parent
+  dated environments used: 19
